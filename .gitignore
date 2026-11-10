@@ -1,0 +1,4 @@
+/build/
+/tools/gen-stubs/target/
+/tests/apps/*/*.exe
+/tests/apps/*/*.dll

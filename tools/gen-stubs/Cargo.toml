@@ -1,0 +1,8 @@
+[package]
+name = "gen-stubs"
+version = "0.1.0"
+edition = "2021"
+description = "Generuje szkielet logujący obiektów COM WebView2 (C, styl Wine) z nagłówka widl + IDL"
+publish = false
+
+[dependencies]

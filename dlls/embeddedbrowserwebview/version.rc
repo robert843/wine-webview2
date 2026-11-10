@@ -1,0 +1,52 @@
+/*
+ * Copyright 2026 wine-webview2 contributors
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ */
+
+#include "winver.h"
+#include "webview2_private.h"
+
+/* The loader reads ProductVersion/FileVersion in "embedded" mode
+ * (WEBVIEW2_BROWSER_EXECUTABLE_FOLDER / fixed version runtime). */
+#define WEBVIEW2_VERSION WEBVIEW2_VERSION_MAJOR,WEBVIEW2_VERSION_MINOR,WEBVIEW2_VERSION_BUILD,WEBVIEW2_VERSION_PATCH
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION WEBVIEW2_VERSION
+PRODUCTVERSION WEBVIEW2_VERSION
+FILEFLAGSMASK 63
+FILEFLAGS 0
+FILEOS VOS_NT_WINDOWS32
+FILETYPE VFT_DLL
+FILESUBTYPE VFT2_UNKNOWN
+{
+    BLOCK "StringFileInfo"
+    {
+        BLOCK "040904B0"
+        {
+            VALUE "CompanyName", "wine-webview2"
+            VALUE "FileDescription", "Wine WebView2 client"
+            VALUE "FileVersion", WEBVIEW2_VERSION_STR
+            VALUE "InternalName", "EmbeddedBrowserWebView"
+            VALUE "OriginalFilename", "EmbeddedBrowserWebView.dll"
+            VALUE "ProductName", "Wine WebView2"
+            VALUE "ProductVersion", WEBVIEW2_VERSION_STR
+        }
+    }
+    BLOCK "VarFileInfo"
+    {
+        VALUE "Translation", 0x0409, 0x04B0
+    }
+}
