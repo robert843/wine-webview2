@@ -1,0 +1,12 @@
+[package]
+name = "wine-webview2-helper"
+version = "0.1.0"
+edition = "2021"
+description = "Natywny proces przeglądarki dla wine-webview2 (CEF, renderowanie off-screen)"
+license = "LGPL-2.1-or-later"
+publish = false
+
+[dependencies]
+# Wersja CEF wynika z crate'a (156.0.26); binarki pobiera build.rs do $CEF_PATH.
+cef = { version = "=156.4.0", default-features = false }
+libc = "0.2"

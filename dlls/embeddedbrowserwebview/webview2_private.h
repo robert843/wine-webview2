@@ -28,8 +28,23 @@
 #define WEBVIEW2_VERSION_STR   "143.0.9999.0"
 #define WEBVIEW2_VERSION_WSTR  L"143.0.9999.0"
 
+#ifndef RC_INVOKED
+
+extern HINSTANCE webview2_instance;
+
 /* Runs func(arg) later on the calling thread through its message loop (like WebView2 delivers
  * completion handlers). Returns FALSE if the call could not be queued. */
 BOOL webview2_queue_async(void (*func)(void *arg), void *arg);
+/* Same, but on the thread owning async window hwnd (see webview2_get_async_window). */
+BOOL webview2_queue_async_to(HWND hwnd, void (*func)(void *arg), void *arg);
+/* Per-thread message-only window used for asynchronous delivery. */
+HWND webview2_get_async_window(void);
+
+/* controller.c */
+void controller_init(void);
+void helper_ensure_started(void);
+HRESULT controller_create(HWND parent, ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler);
+
+#endif /* RC_INVOKED */
 
 #endif /* __WEBVIEW2_PRIVATE_H */

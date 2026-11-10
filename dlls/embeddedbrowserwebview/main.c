@@ -35,7 +35,7 @@
 
 WINE_DEFAULT_DEBUG_CHANNEL(webview2);
 
-static HINSTANCE webview2_instance;
+HINSTANCE webview2_instance;
 
 /*
  * Asynchronous callbacks.
@@ -67,7 +67,7 @@ static LRESULT CALLBACK async_wndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM
     return DefWindowProcW(hwnd, msg, wparam, lparam);
 }
 
-static HWND get_async_window(void)
+HWND webview2_get_async_window(void)
 {
     HWND hwnd = TlsGetValue(async_window_tls);
 
@@ -81,12 +81,11 @@ static HWND get_async_window(void)
     return hwnd;
 }
 
-BOOL webview2_queue_async(void (*func)(void *arg), void *arg)
+BOOL webview2_queue_async_to(HWND hwnd, void (*func)(void *arg), void *arg)
 {
     struct async_call *call;
-    HWND hwnd;
 
-    if (!(hwnd = get_async_window())) return FALSE;
+    if (!hwnd) return FALSE;
     if (!(call = malloc(sizeof(*call)))) return FALSE;
     call->func = func;
     call->arg = arg;
@@ -98,6 +97,11 @@ BOOL webview2_queue_async(void (*func)(void *arg), void *arg)
     return TRUE;
 }
 
+BOOL webview2_queue_async(void (*func)(void *arg), void *arg)
+{
+    return webview2_queue_async_to(webview2_get_async_window(), func, arg);
+}
+
 /*
  * Hand-written overrides of generated stubs. During the skeleton phase only the calls needed
  * to get an application from environment creation to a usable ICoreWebView2 are implemented;
@@ -106,58 +110,11 @@ BOOL webview2_queue_async(void (*func)(void *arg), void *arg)
 
 static ICoreWebView2Environment15Vtbl environment_vtbl;
 static struct stub_family environment_family;
-static ICoreWebView2Controller4Vtbl controller_vtbl;
-static struct stub_family controller_family;
-
-struct controller_created_ctx
-{
-    ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler;
-    ICoreWebView2Controller *controller;
-};
-
-static void controller_created_cb(void *arg)
-{
-    struct controller_created_ctx *ctx = arg;
-    HRESULT hr;
-
-    TRACE("invoking controller completed handler %p, controller %p\n", ctx->handler, ctx->controller);
-    hr = ICoreWebView2CreateCoreWebView2ControllerCompletedHandler_Invoke(ctx->handler, S_OK, ctx->controller);
-    TRACE("handler returned %#lx\n", hr);
-    ICoreWebView2CreateCoreWebView2ControllerCompletedHandler_Release(ctx->handler);
-    ICoreWebView2Controller_Release(ctx->controller);
-    free(ctx);
-}
-
-static HRESULT create_controller(HWND parent,
-        ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler)
-{
-    struct controller_created_ctx *ctx;
-
-    if (!handler) return E_POINTER;
-    if (!IsWindow(parent)) return E_INVALIDARG;
-    if (!(ctx = calloc(1, sizeof(*ctx)))) return E_OUTOFMEMORY;
-    if (!(ctx->controller = stub_create(&controller_family)))
-    {
-        free(ctx);
-        return E_OUTOFMEMORY;
-    }
-    ctx->handler = handler;
-    ICoreWebView2CreateCoreWebView2ControllerCompletedHandler_AddRef(handler);
-    if (!webview2_queue_async(controller_created_cb, ctx))
-    {
-        ICoreWebView2CreateCoreWebView2ControllerCompletedHandler_Release(handler);
-        ICoreWebView2Controller_Release(ctx->controller);
-        free(ctx);
-        return E_FAIL;
-    }
-    return S_OK;
-}
-
 static HRESULT STDMETHODCALLTYPE environment_CreateCoreWebView2Controller(ICoreWebView2Environment15 *iface,
         HWND parent, ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler)
 {
     TRACE("iface %p, parent %p, handler %p.\n", iface, parent, handler);
-    return create_controller(parent, handler);
+    return controller_create(parent, handler);
 }
 
 static HRESULT STDMETHODCALLTYPE environment_CreateCoreWebView2ControllerWithOptions(ICoreWebView2Environment15 *iface,
@@ -165,7 +122,7 @@ static HRESULT STDMETHODCALLTYPE environment_CreateCoreWebView2ControllerWithOpt
         ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler)
 {
     FIXME("iface %p, parent %p, options %p, handler %p, options ignored.\n", iface, parent, options, handler);
-    return create_controller(parent, handler);
+    return controller_create(parent, handler);
 }
 
 static HRESULT STDMETHODCALLTYPE environment_get_BrowserVersionString(ICoreWebView2Environment15 *iface,
@@ -178,25 +135,6 @@ static HRESULT STDMETHODCALLTYPE environment_get_BrowserVersionString(ICoreWebVi
     return S_OK;
 }
 
-static void controller_destroy(struct stub_object *obj)
-{
-    if (obj->data) ICoreWebView2_Release((ICoreWebView2 *)obj->data);
-}
-
-static HRESULT STDMETHODCALLTYPE controller_get_CoreWebView2(ICoreWebView2Controller4 *iface,
-        ICoreWebView2 **webview)
-{
-    struct stub_object *obj = (struct stub_object *)iface;
-
-    TRACE("iface %p, webview %p.\n", iface, webview);
-    if (!webview) return E_POINTER;
-    if (!obj->data && !(obj->data = stub_create(&stub_family_ICoreWebView2_29)))
-        return E_OUTOFMEMORY;
-    *webview = obj->data;
-    ICoreWebView2_AddRef(*webview);
-    return S_OK;
-}
-
 static void init_overrides(void)
 {
     environment_vtbl = *(const ICoreWebView2Environment15Vtbl *)stub_family_ICoreWebView2Environment15.vtbl;
@@ -206,10 +144,7 @@ static void init_overrides(void)
     environment_family = stub_family_ICoreWebView2Environment15;
     environment_family.vtbl = &environment_vtbl;
 
-    controller_vtbl = *(const ICoreWebView2Controller4Vtbl *)stub_family_ICoreWebView2Controller4.vtbl;
-    controller_vtbl.get_CoreWebView2 = controller_get_CoreWebView2;
-    controller_family = stub_family_ICoreWebView2Controller4;
-    controller_family.vtbl = &controller_vtbl;
+    controller_init();
 }
 
 /*
@@ -283,6 +218,8 @@ HRESULT WINAPI CreateWebViewEnvironmentWithOptionsInternal(BOOLEAN check_running
      * exported; objects we hand out must keep the module alive. Pin it for now. */
     GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_PIN,
                        (const WCHAR *)CreateWebViewEnvironmentWithOptionsInternal, &module);
+
+    helper_ensure_started();
 
     if (!(ctx = calloc(1, sizeof(*ctx)))) return E_OUTOFMEMORY;
     if (!(ctx->environment = stub_create(&environment_family)))
