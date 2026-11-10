@@ -35,8 +35,15 @@ rt="$WINEPREFIX/drive_c/Program Files (x86)/Microsoft/EdgeWebView/Application/$v
 mkdir -p "$rt/x64" "$rt/x86"
 cp "$ROOT/build/x86_64/EmbeddedBrowserWebView.dll" "$ROOT/build/x86_64/embeddedbrowserwebview.so" "$rt/x64/"
 [ -f "$ROOT/build/i386/EmbeddedBrowserWebView.dll" ] && cp "$ROOT/build/i386/EmbeddedBrowserWebView.dll" "$rt/x86/"
-WINEDEBUG=-all "$WINE" reg add 'HKLM\SOFTWARE\Microsoft\EdgeUpdate\ClientState\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}' \
-    /v EBWebView /t REG_SZ /d "$rtwin" /f /reg:32 >/dev/null
+cp "$ROOT/build/x86_64/msedgewebview2.exe" "$rt/../"
+# Loader czyta ClientState\…\EBWebView; aplikacje wykrywają runtime (wg dokumentacji Microsoftu)
+# po Clients\…\pv — potrzebne oba.
+key='{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}'
+reg() { WINEDEBUG=-all "$WINE" reg add "$@" /f /reg:32 >/dev/null; }
+reg "HKLM\SOFTWARE\Microsoft\EdgeUpdate\ClientState\\$key" /v EBWebView /t REG_SZ /d "$rtwin"
+reg "HKLM\SOFTWARE\Microsoft\EdgeUpdate\Clients\\$key" /v pv /t REG_SZ /d "$ver"
+reg "HKLM\SOFTWARE\Microsoft\EdgeUpdate\Clients\\$key" /v name /t REG_SZ /d "Microsoft Edge WebView2 Runtime"
+reg "HKLM\SOFTWARE\Microsoft\EdgeUpdate\Clients\\$key" /v location /t REG_SZ /d "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application"
 
 # Pomocnik z CEF (docelowo /usr/lib/wine-webview2/; tu katalog z make runtime).
 export WINE_WEBVIEW2_HELPER=${WINE_WEBVIEW2_HELPER:-$ROOT/build/runtime/wine-webview2-helper}

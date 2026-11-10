@@ -38,9 +38,11 @@
 #ifndef __WEBVIEW2_PROTOCOL_H
 #define __WEBVIEW2_PROTOCOL_H
 
-#define WV2_PROTOCOL_VERSION 3
+#define WV2_PROTOCOL_VERSION 4
 #define WV2_FRAME_SLOTS      2
-#define WV2_MAX_MESSAGE      (1024 * 1024)
+/* SOCK_SEQPACKET messages must fit the socket send buffer (net.core.wmem_default, usually
+ * 212992 bytes), larger ones fail with EMSGSIZE. Bulk data is therefore sent in chunks. */
+#define WV2_MAX_MESSAGE      (128 * 1024)
 
 /* DLL -> helper */
 enum wv2_command
@@ -60,6 +62,11 @@ enum wv2_command
     WV2_CMD_MOUSE,                  /* wv2_mouse */
     WV2_CMD_KEY,                    /* wv2_key */
     WV2_CMD_FOCUS,                  /* wv2_flag */
+    WV2_CMD_ADD_RESOURCE_FILTER,    /* wv2_resource_filter + UTF-8 URI pattern (* and ? wildcards) */
+    WV2_CMD_REMOVE_RESOURCE_FILTER, /* wv2_resource_filter + UTF-8 URI pattern */
+    WV2_CMD_RESOURCE_RESPONSE,      /* wv2_resource_response + UTF-8 reason + UTF-8 headers */
+    WV2_CMD_RESOURCE_DATA,          /* wv2_resource_id + content bytes */
+    WV2_CMD_RESOURCE_END,           /* wv2_resource_id */
 };
 
 /* helper -> DLL */
@@ -74,6 +81,7 @@ enum wv2_event
     WV2_EVT_ERROR,                  /* UTF-8 message */
     WV2_EVT_WEB_MESSAGE,            /* wv2_web_message + UTF-8 source URL + UTF-8 JSON */
     WV2_EVT_CURSOR,                 /* wv2_flag: cef_cursor_type_t */
+    WV2_EVT_RESOURCE_REQUEST,       /* wv2_resource_request + URL + method + headers + body */
 };
 
 enum wv2_mouse_kind
@@ -152,6 +160,44 @@ struct wv2_key
     UINT32 is_system_key;
     UINT16 character;
     UINT16 unmodified_character;
+};
+
+/*
+ * WebResourceRequested: the helper pauses a request matching a filter and sends
+ * WV2_EVT_RESOURCE_REQUEST; the DLL answers with WV2_CMD_RESOURCE_RESPONSE (handled = 0 lets the
+ * request continue to the network), then any number of WV2_CMD_RESOURCE_DATA chunks and
+ * WV2_CMD_RESOURCE_END. Headers are "Name: value\r\n" lines.
+ */
+struct wv2_resource_filter
+{
+    UINT32 context;         /* COREWEBVIEW2_WEB_RESOURCE_CONTEXT */
+    UINT32 reserved;
+};
+
+struct wv2_resource_id
+{
+    UINT64 id;
+};
+
+struct wv2_resource_request
+{
+    UINT64 id;
+    UINT32 context;         /* COREWEBVIEW2_WEB_RESOURCE_CONTEXT */
+    UINT32 url_size;
+    UINT32 method_size;
+    UINT32 headers_size;
+    UINT32 body_size;
+    UINT32 reserved;
+};
+
+struct wv2_resource_response
+{
+    UINT64 id;
+    UINT32 handled;
+    UINT32 status;
+    UINT32 reason_size;
+    UINT32 headers_size;
+    UINT64 content_size;
 };
 
 struct wv2_web_message

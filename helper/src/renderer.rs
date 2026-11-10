@@ -33,7 +33,7 @@ const BOOTSTRAP: &str = r#"(function () {
     removeEventListener: target.removeEventListener.bind(target),
     dispatchEvent: target.dispatchEvent.bind(target),
     __dispatch: function (data) {
-      target.dispatchEvent(new MessageEvent("message", { data: data, source: webview }));
+      target.dispatchEvent(new MessageEvent("message", { data: data }));
     }
   };
   if (!window.chrome) window.chrome = {};

@@ -103,7 +103,11 @@ static NTSTATUS send_message(struct helper *helper, UINT32 type, UINT32 view, co
     struct msghdr msg = {0};
     ssize_t ret;
 
-    if (header.size > WV2_MAX_MESSAGE) return STATUS_BUFFER_OVERFLOW;
+    if (header.size > WV2_MAX_MESSAGE)
+    {
+        FIXME("message %u of %u bytes exceeds the protocol limit\n", type, header.size);
+        return STATUS_BUFFER_OVERFLOW;
+    }
     msg.msg_iov = iov;
     msg.msg_iovlen = size ? 2 : 1;
     do ret = sendmsg(helper->fd, &msg, MSG_NOSIGNAL);

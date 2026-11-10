@@ -23,18 +23,26 @@ CEF_DIR      = $(CEF_PATH)/$(CEF_VERSION)/cef_linux_x86_64
 
 B   = build
 DLL = dlls/embeddedbrowserwebview
-SRCS = main.c controller.c stubs.c
+SRCS = main.c controller.c resource.c stubs.c
 
 INCLUDES = -I$(B) -I$(DLL) -I$(WINE_BUILD)/include -I$(WINE_SRC)/include -I$(WINE_SRC)/include/msvcrt
 CFLAGS   = -O2 -g -Wall -fno-strict-aliasing -D_UCRT -D__WINESRC__ -D__WINE_PE_BUILD \
            -Wno-unused-function
-LIBS     = -lole32 -luser32 -lgdi32 -lkernel32 -luuid -lucrtbase -lntdll
+LIBS     = -lole32 -luser32 -lgdi32 -lshlwapi -lkernel32 -luuid -lucrtbase -lntdll
 
 UNIX_CFLAGS = -O2 -g -Wall -fPIC -fno-strict-aliasing -fvisibility=hidden -DWINE_UNIX_LIB -D__WINESRC__ \
               -I$(DLL) -I$(WINE_BUILD)/include -I$(WINE_SRC)/include
 
 all: $(B)/x86_64/EmbeddedBrowserWebView.dll $(B)/i386/EmbeddedBrowserWebView.dll \
-     $(B)/x86_64/embeddedbrowserwebview.so runtime
+     $(B)/x86_64/embeddedbrowserwebview.so $(B)/x86_64/msedgewebview2.exe runtime
+
+# Atrapa procesu przeglądarki (aplikacje sprawdzają, czy plik istnieje w katalogu runtime'u).
+$(B)/x86_64/msedgewebview2.exe: programs/msedgewebview2/main.c $(B)/version.res
+	@mkdir -p $(B)/x86_64
+	x86_64-w64-mingw32-gcc -c -o $(B)/x86_64/msedgewebview2.o $< $(INCLUDES) $(CFLAGS)
+	$(WINEGCC) -o $@ --wine-objdir $(WINE_BUILD) --cc-cmd="x86_64-w64-mingw32-gcc" -b x86_64-w64-mingw32 \
+	  -mwindows -municode $(B)/x86_64/msedgewebview2.o $(B)/version.res -lkernel32 -lucrtbase -lntdll \
+	  -L$(WINE_BUILD)/libs/winecrt0/x86_64-windows -lwinecrt0 -lkernel32 -lntdll
 
 # Część uniksowa: ładowana przez __wine_load_unix_lib (Wine >= 11.2) z katalogu DLL-ki.
 $(B)/x86_64/embeddedbrowserwebview.so: $(DLL)/unixlib.c $(DLL)/unixlib.h $(DLL)/protocol.h

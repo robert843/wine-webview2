@@ -44,6 +44,15 @@ HWND webview2_get_async_window(void);
 void controller_init(void);
 void helper_ensure_started(void);
 HRESULT controller_create(HWND parent, ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler);
+/* Sends a protocol command for a view (any thread). */
+HRESULT webview2_send(UINT32 view, UINT32 type, const void *data, UINT32 size);
+
+/* resource.c */
+void resource_init(void);
+HRESULT resource_create_response(IStream *content, int status, LPCWSTR reason, LPCWSTR headers,
+                                 ICoreWebView2WebResourceResponse **response);
+void resource_dispatch_request(UINT32 view, ICoreWebView2 *webview, IUnknown **handlers, unsigned int count,
+                               const BYTE *payload, UINT32 size);
 
 #endif /* RC_INVOKED */
 

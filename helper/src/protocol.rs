@@ -2,9 +2,10 @@
 
 #![allow(dead_code)]
 
-pub const PROTOCOL_VERSION: u32 = 3;
+pub const PROTOCOL_VERSION: u32 = 4;
 pub const FRAME_SLOTS: u32 = 2;
-pub const MAX_MESSAGE: usize = 1024 * 1024;
+/// Musi się zmieścić w buforze gniazda (net.core.wmem_default, zwykle 212992 B) — patrz protocol.h.
+pub const MAX_MESSAGE: usize = 128 * 1024;
 pub const HEADER_SIZE: usize = 16;
 
 // DLL -> helper
@@ -23,6 +24,11 @@ pub const CMD_POST_WEB_MESSAGE: u32 = 12;
 pub const CMD_MOUSE: u32 = 13;
 pub const CMD_KEY: u32 = 14;
 pub const CMD_FOCUS: u32 = 15;
+pub const CMD_ADD_RESOURCE_FILTER: u32 = 16;
+pub const CMD_REMOVE_RESOURCE_FILTER: u32 = 17;
+pub const CMD_RESOURCE_RESPONSE: u32 = 18;
+pub const CMD_RESOURCE_DATA: u32 = 19;
+pub const CMD_RESOURCE_END: u32 = 20;
 
 // helper -> DLL
 pub const EVT_HELLO: u32 = 0x1001;
@@ -34,6 +40,7 @@ pub const EVT_SCRIPT_RESULT: u32 = 0x1006;
 pub const EVT_ERROR: u32 = 0x1007;
 pub const EVT_WEB_MESSAGE: u32 = 0x1008;
 pub const EVT_CURSOR: u32 = 0x1009;
+pub const EVT_RESOURCE_REQUEST: u32 = 0x100a;
 
 pub const MOUSE_MOVE: u32 = 0;
 pub const MOUSE_DOWN: u32 = 1;
@@ -85,6 +92,14 @@ impl<'a> Reader<'a> {
         let (a, b) = self.0.split_at_checked(2)?;
         self.0 = b;
         Some(u16::from_le_bytes(a.try_into().ok()?))
+    }
+    pub fn take(&mut self, n: usize) -> Option<&'a [u8]> {
+        let (a, b) = self.0.split_at_checked(n)?;
+        self.0 = b;
+        Some(a)
+    }
+    pub fn rest(&self) -> &'a [u8] {
+        self.0
     }
     pub fn rest_str(&self) -> String {
         String::from_utf8_lossy(self.0).into_owned()

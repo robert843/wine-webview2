@@ -264,6 +264,7 @@ struct view
     ICoreWebView2Controller *controller;    /* weak */
     struct stub_object *webview;            /* strong, created lazily */
     struct handler_list web_message_handlers;
+    struct handler_list web_resource_handlers;
     struct list pending_scripts;            /* struct pending_script */
     HCURSOR cursor;
     BOOL tracking_mouse;
@@ -289,6 +290,7 @@ static void view_release(struct view *view)
 
     TRACE("destroying view %u\n", view->id);
     handler_list_clear(&view->web_message_handlers);
+    handler_list_clear(&view->web_resource_handlers);
     EnterCriticalSection(&views_cs);
     list_remove(&view->entry);
     LeaveCriticalSection(&views_cs);
@@ -330,6 +332,14 @@ static HRESULT helper_send(struct view *view, UINT32 type, const void *data, UIN
         return E_FAIL;
     }
     return S_OK;
+}
+
+HRESULT webview2_send(UINT32 view, UINT32 type, const void *data, UINT32 size)
+{
+    struct helper_send_params params = {helper, type, view, data, size};
+
+    if (!helper) return E_FAIL;
+    return UNIX_CALL(helper_send, &params) ? E_FAIL : S_OK;
 }
 
 static HRESULT helper_send_string(struct view *view, UINT32 type, const void *prefix, UINT32 prefix_size,
@@ -588,6 +598,17 @@ static void dispatch_event_cb(void *arg)
     case WV2_EVT_SCRIPT_RESULT:
         handle_script_result(view, event->payload, payload);
         break;
+    case WV2_EVT_RESOURCE_REQUEST:
+    {
+        unsigned int count;
+        IUnknown **handlers = view->webview ? handler_list_snapshot(&view->web_resource_handlers, &count) : NULL;
+
+        if (!handlers) count = 0;
+        resource_dispatch_request(view->id, (ICoreWebView2 *)view->webview, handlers, count, event->payload, payload);
+        while (count--) IUnknown_Release(handlers[count]);
+        free(handlers);
+        break;
+    }
     case WV2_EVT_ERROR:
         ERR("view %u: helper error %s\n", view->id, debugstr_an((const char *)event->payload, payload));
         invoke_controller_created(view, E_FAIL);
@@ -820,6 +841,7 @@ static void close_view(struct view *view)
     view->closed = TRUE;
     complete_pending_scripts(view);
     handler_list_clear(&view->web_message_handlers);
+    handler_list_clear(&view->web_resource_handlers);
     helper_send(view, WV2_CMD_CLOSE_VIEW, NULL, 0);
     if (view->hwnd)
     {
@@ -832,6 +854,8 @@ static void close_view(struct view *view)
         ICoreWebView2_Release((ICoreWebView2 *)view->webview);
         view->webview = NULL;
     }
+    /* Drop the reference owned by the view; may destroy the controller (and release the view). */
+    ICoreWebView2Controller_Release(view->controller);
 }
 
 static void controller_destroy(struct stub_object *obj)
@@ -1082,6 +1106,62 @@ static HRESULT STDMETHODCALLTYPE webview_PostWebMessageAsString(ICoreWebView2_29
     return hr;
 }
 
+static HRESULT STDMETHODCALLTYPE webview_add_WebResourceRequested(ICoreWebView2_29 *iface,
+        ICoreWebView2WebResourceRequestedEventHandler *handler, EventRegistrationToken *token)
+{
+    struct view *view = view_from_webview(iface);
+
+    TRACE("iface %p, handler %p, token %p.\n", iface, handler, token);
+    if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
+    return handler_list_add(&view->web_resource_handlers, (IUnknown *)handler, token);
+}
+
+static HRESULT STDMETHODCALLTYPE webview_remove_WebResourceRequested(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct view *view = view_from_webview(iface);
+
+    TRACE("iface %p, token %s.\n", iface, wine_dbgstr_longlong(token.value));
+    if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
+    return handler_list_remove(&view->web_resource_handlers, token);
+}
+
+static HRESULT send_resource_filter(struct view *view, UINT32 type, LPCWSTR uri, COREWEBVIEW2_WEB_RESOURCE_CONTEXT context)
+{
+    struct wv2_resource_filter filter = {context, 0};
+
+    if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
+    if (!uri) return E_INVALIDARG;
+    return helper_send_string(view, type, &filter, sizeof(filter), uri);
+}
+
+static HRESULT STDMETHODCALLTYPE webview_AddWebResourceRequestedFilter(ICoreWebView2_29 *iface, LPCWSTR uri,
+        COREWEBVIEW2_WEB_RESOURCE_CONTEXT context)
+{
+    TRACE("iface %p, uri %s, context %d.\n", iface, debugstr_w(uri), context);
+    return send_resource_filter(view_from_webview(iface), WV2_CMD_ADD_RESOURCE_FILTER, uri, context);
+}
+
+static HRESULT STDMETHODCALLTYPE webview_RemoveWebResourceRequestedFilter(ICoreWebView2_29 *iface, LPCWSTR uri,
+        COREWEBVIEW2_WEB_RESOURCE_CONTEXT context)
+{
+    TRACE("iface %p, uri %s, context %d.\n", iface, debugstr_w(uri), context);
+    return send_resource_filter(view_from_webview(iface), WV2_CMD_REMOVE_RESOURCE_FILTER, uri, context);
+}
+
+static HRESULT STDMETHODCALLTYPE webview_AddWebResourceRequestedFilterWithRequestSourceKinds(ICoreWebView2_29 *iface,
+        LPCWSTR uri, COREWEBVIEW2_WEB_RESOURCE_CONTEXT context, COREWEBVIEW2_WEB_RESOURCE_REQUEST_SOURCE_KINDS kinds)
+{
+    TRACE("iface %p, uri %s, context %d, kinds %#x.\n", iface, debugstr_w(uri), context, kinds);
+    return send_resource_filter(view_from_webview(iface), WV2_CMD_ADD_RESOURCE_FILTER, uri, context);
+}
+
+static HRESULT STDMETHODCALLTYPE webview_RemoveWebResourceRequestedFilterWithRequestSourceKinds(ICoreWebView2_29 *iface,
+        LPCWSTR uri, COREWEBVIEW2_WEB_RESOURCE_CONTEXT context, COREWEBVIEW2_WEB_RESOURCE_REQUEST_SOURCE_KINDS kinds)
+{
+    TRACE("iface %p, uri %s, context %d, kinds %#x.\n", iface, debugstr_w(uri), context, kinds);
+    return send_resource_filter(view_from_webview(iface), WV2_CMD_REMOVE_RESOURCE_FILTER, uri, context);
+}
+
 /* ICoreWebView2WebMessageReceivedEventArgs */
 
 struct web_message
@@ -1222,6 +1302,8 @@ HRESULT controller_create(HWND parent, ICoreWebView2CreateCoreWebView2Controller
     view->cursor = LoadCursorW(NULL, (const WCHAR *)IDC_ARROW);
     view->parent = parent;
     view->async_hwnd = webview2_get_async_window();
+    /* Like the real runtime, the view keeps the controller alive until Close() (applications such
+     * as Wails do not AddRef the controller they receive); released in close_view(). */
     view->controller = (ICoreWebView2Controller *)controller;
     view->visible = TRUE;
     GetClientRect(parent, &view->bounds);
@@ -1253,7 +1335,6 @@ HRESULT controller_create(HWND parent, ICoreWebView2CreateCoreWebView2Controller
         size.height = max(1, view->bounds.bottom - view->bounds.top);
         if (SUCCEEDED(helper_send(view, WV2_CMD_CREATE_VIEW, &size, sizeof(size))))
         {
-            ICoreWebView2Controller_Release(view->controller);  /* creation reference */
             return S_OK;    /* handler runs on WV2_EVT_VIEW_CREATED */
         }
     }
@@ -1261,7 +1342,6 @@ HRESULT controller_create(HWND parent, ICoreWebView2CreateCoreWebView2Controller
     /* Skeleton mode (no helper): complete right away, asynchronously. */
     view_addref(view);
     webview2_queue_async(controller_created_skeleton_cb, view);
-    ICoreWebView2Controller_Release(view->controller);  /* creation reference */
     return S_OK;
 }
 
@@ -1298,6 +1378,12 @@ void controller_init(void)
     webview_vtbl.remove_WebMessageReceived = webview_remove_WebMessageReceived;
     webview_vtbl.PostWebMessageAsJson = webview_PostWebMessageAsJson;
     webview_vtbl.PostWebMessageAsString = webview_PostWebMessageAsString;
+    webview_vtbl.add_WebResourceRequested = webview_add_WebResourceRequested;
+    webview_vtbl.remove_WebResourceRequested = webview_remove_WebResourceRequested;
+    webview_vtbl.AddWebResourceRequestedFilter = webview_AddWebResourceRequestedFilter;
+    webview_vtbl.RemoveWebResourceRequestedFilter = webview_RemoveWebResourceRequestedFilter;
+    webview_vtbl.AddWebResourceRequestedFilterWithRequestSourceKinds = webview_AddWebResourceRequestedFilterWithRequestSourceKinds;
+    webview_vtbl.RemoveWebResourceRequestedFilterWithRequestSourceKinds = webview_RemoveWebResourceRequestedFilterWithRequestSourceKinds;
     webview_family = stub_family_ICoreWebView2_29;
     webview_family.vtbl = &webview_vtbl;
 

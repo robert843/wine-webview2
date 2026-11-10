@@ -11,6 +11,7 @@
 mod ipc;
 mod protocol;
 mod renderer;
+mod resources;
 
 use cef::args::Args;
 use cef::rc::Rc as _;
@@ -131,6 +132,10 @@ wrap_client! {
 
         fn display_handler(&self) -> Option<DisplayHandler> {
             Some(ViewDisplayHandlerBuilder::new(self.client.clone()))
+        }
+
+        fn request_handler(&self) -> Option<RequestHandler> {
+            Some(resources::RequestHandlerBuilder::new(resources::ViewRequests { view: self.client.view }))
         }
 
         fn on_process_message_received(
@@ -266,6 +271,21 @@ wrap_display_handler! {
     }
 
     impl DisplayHandler {
+        fn on_console_message(
+            &self,
+            _browser: Option<&mut Browser>,
+            _level: LogSeverity,
+            message: Option<&CefString>,
+            source: Option<&CefString>,
+            line: ::std::os::raw::c_int,
+        ) -> ::std::os::raw::c_int {
+            // Diagnostyka aplikacji: konsola JS na stderr (widoczna w logu Wine).
+            let message = message.map(|m| m.to_string()).unwrap_or_default();
+            let source = source.map(|s| s.to_string()).unwrap_or_default();
+            eprintln!("helper: console[view {}] {source}:{line}: {message}", self.client.view);
+            0
+        }
+
         fn on_cursor_change(
             &self,
             _browser: Option<&mut Browser>,
@@ -364,6 +384,7 @@ fn handle_command(msg: Message) {
             send_event(EVT_VIEW_CREATED, msg.view, &[]);
         }
         CMD_CLOSE_VIEW => {
+            resources::remove_view(msg.view);
             if let Some(view) = with_state(|st| st.views.remove(&msg.view)).flatten() {
                 if let Some(host) = view.browser.and_then(|b| b.host()) {
                     host.close_browser(1);
@@ -503,6 +524,19 @@ fn handle_command(msg: Message) {
                 host.set_focus(focus as i32);
             }
         }
+        CMD_ADD_RESOURCE_FILTER | CMD_REMOVE_RESOURCE_FILTER => {
+            let context = r.u32().unwrap_or(0);
+            let _ = r.u32();
+            let pattern = r.rest_str();
+            if msg.ty == CMD_ADD_RESOURCE_FILTER {
+                resources::add_filter(msg.view, pattern, context);
+            } else {
+                resources::remove_filter(msg.view, &pattern, context);
+            }
+        }
+        CMD_RESOURCE_RESPONSE => resources::handle_response(&mut r),
+        CMD_RESOURCE_DATA => resources::handle_data(&mut r),
+        CMD_RESOURCE_END => resources::handle_end(&mut r),
         CMD_SHUTDOWN => shutdown_ipc(),
         other => eprintln!("helper: unknown command {other:#x}"),
     }
@@ -659,6 +693,10 @@ wrap_app! {
             cl.append_switch(Some(&"noerrdialogs".into()));
             cl.append_switch(Some(&"use-mock-keychain".into()));
             cl.append_switch(Some(&"password-store=basic".into()));
+            // Diagnostyka: zdalne DevTools (chrome://inspect w zwykłym Chrome).
+            if let Ok(port) = std::env::var("WINE_WEBVIEW2_DEVTOOLS_PORT") {
+                cl.append_switch_with_value(Some(&"remote-debugging-port".into()), Some(&port.as_str().into()));
+            }
         }
 
         fn browser_process_handler(&self) -> Option<BrowserProcessHandler> {
@@ -709,6 +747,10 @@ wrap_browser_process_handler! {
                             return;
                         }
                     };
+                    match chan.try_clone() {
+                        Ok(c) => resources::set_sender(c),
+                        Err(e) => eprintln!("helper: cannot clone channel: {e}"),
+                    }
                     STATE.with(|s| {
                         *s.borrow_mut() = Some(IpcState { chan, views: HashMap::new(), next_generation: 0 })
                     });

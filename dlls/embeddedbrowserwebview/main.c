@@ -135,16 +135,26 @@ static HRESULT STDMETHODCALLTYPE environment_get_BrowserVersionString(ICoreWebVi
     return S_OK;
 }
 
+static HRESULT STDMETHODCALLTYPE environment_CreateWebResourceResponse(ICoreWebView2Environment15 *iface,
+        IStream *content, int status, LPCWSTR reason, LPCWSTR headers, ICoreWebView2WebResourceResponse **response)
+{
+    TRACE("iface %p, content %p, status %d, reason %s, headers %s, response %p.\n", iface, content, status,
+          debugstr_w(reason), debugstr_w(headers), response);
+    return resource_create_response(content, status, reason, headers, response);
+}
+
 static void init_overrides(void)
 {
     environment_vtbl = *(const ICoreWebView2Environment15Vtbl *)stub_family_ICoreWebView2Environment15.vtbl;
     environment_vtbl.CreateCoreWebView2Controller = environment_CreateCoreWebView2Controller;
     environment_vtbl.CreateCoreWebView2ControllerWithOptions = environment_CreateCoreWebView2ControllerWithOptions;
     environment_vtbl.get_BrowserVersionString = environment_get_BrowserVersionString;
+    environment_vtbl.CreateWebResourceResponse = environment_CreateWebResourceResponse;
     environment_family = stub_family_ICoreWebView2Environment15;
     environment_family.vtbl = &environment_vtbl;
 
     controller_init();
+    resource_init();
 }
 
 /*
