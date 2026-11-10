@@ -56,11 +56,6 @@ HRESULT resource_create_response(IStream *content, int status, LPCWSTR reason, L
 void resource_dispatch_request(UINT32 view, ICoreWebView2 *webview, IUnknown **handlers, unsigned int count,
                                const BYTE *payload, UINT32 size);
 
-/* settings.c */
-void settings_init(void);
-ICoreWebView2Settings *settings_create(UINT32 view);
-UINT32 settings_get_flags(ICoreWebView2Settings *settings);
-
 /* navigation.c */
 struct navigation_info
 {

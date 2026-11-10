@@ -39,7 +39,7 @@
 #ifndef __WEBVIEW2_PROTOCOL_H
 #define __WEBVIEW2_PROTOCOL_H
 
-#define WV2_PROTOCOL_VERSION 7
+#define WV2_PROTOCOL_VERSION 8
 #define WV2_FRAME_SLOTS      2
 /* SOCK_SEQPACKET messages must fit the socket send buffer (net.core.wmem_default, usually
  * 212992 bytes). Payloads larger than WV2_INLINE_MAX therefore travel in a sealed memfd attached
@@ -80,6 +80,9 @@ enum wv2_command
     WV2_CMD_SET_BACKGROUND,         /* wv2_flag: ARGB (alpha 0 = transparent) */
     WV2_CMD_SET_USER_AGENT,         /* UTF-8 user agent (empty = default) */
     WV2_CMD_SET_SETTINGS,           /* wv2_flag: WV2_SETTING_* bits, applied from the next document */
+    WV2_CMD_CALL,                   /* wv2_call + arguments (docs/architektura-proxy.md) */
+    WV2_CMD_INVOKE_REPLY,           /* wv2_reply + [out] values of an EVT_INVOKE */
+    WV2_CMD_RELEASE,                /* wv2_release: proxies of a runtime object are gone */
 };
 
 #define WV2_SETTING_SCRIPT          0x0001
@@ -110,6 +113,52 @@ enum wv2_event
     WV2_EVT_NAVIGATION_COMPLETED,   /* wv2_navigation_completed */
     WV2_EVT_TITLE_CHANGED,          /* UTF-8 title */
     WV2_EVT_HISTORY_CHANGED,        /* wv2_navigation (a = can go back, b = can go forward) */
+    WV2_EVT_REPLY,                  /* wv2_reply + [out] values of a CMD_CALL */
+    WV2_EVT_INVOKE,                 /* wv2_call on an application object + arguments */
+    WV2_EVT_RELEASE_APP,            /* wv2_release: the helper dropped an application object */
+};
+
+/* Generic calls (protocol v8). Methods are numbered by the generated API table (proxy_gen.h /
+ * api_gen.rs, checked through WV2_API_HASH in the handshake). Object 0 is the root object with
+ * WV2_ROOT_* methods. Value encoding: integers LE, strings u32 length + UTF-8 (0xffffffff =
+ * NULL), structures raw, streams u32 length + bytes, interfaces wv2_objref. */
+#define WV2_CALL_ASYNC              0x1     /* EVT_INVOKE: no reply expected */
+#define WV2_ROOT_CREATE_SETTINGS    0x80000001u /* (u32 view) -> settings */
+
+enum wv2_objref_kind
+{
+    WV2_OBJREF_NULL,
+    WV2_OBJREF_RUNTIME,     /* object living in the helper */
+    WV2_OBJREF_APP,         /* object living in the application (handler, options, ...) */
+};
+
+struct wv2_objref
+{
+    UINT32 kind;
+    UINT32 family;          /* WV2_OBJREF_RUNTIME: enum wv2_family */
+    UINT64 id;
+};
+
+struct wv2_call
+{
+    UINT64 call_id;
+    UINT64 object;
+    UINT32 method;
+    UINT32 flags;
+};
+
+struct wv2_reply
+{
+    UINT64 call_id;
+    INT32  hresult;
+    UINT32 reserved;
+};
+
+struct wv2_release
+{
+    UINT64 id;
+    UINT32 count;           /* references received so far */
+    UINT32 reserved;
 };
 
 enum wv2_mouse_kind
@@ -148,6 +197,7 @@ struct wv2_hello
 {
     UINT32 version;
     UINT32 pid;
+    UINT64 api_hash;        /* WV2_API_HASH of the generated API table */
 };
 
 struct wv2_view_size

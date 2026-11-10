@@ -1,0 +1,16551 @@
+/* Wygenerowane przez tools/gen-stubs (proxy) — NIE EDYTOWAĆ ręcznie. */
+
+#include <stdarg.h>
+#include <stdlib.h>
+
+#define COBJMACROS
+#include "windef.h"
+#include "winbase.h"
+#include "objbase.h"
+#include "webview2.h"
+#include "proxy.h"
+#include "proxy_gen.h"
+
+#include "wine/debug.h"
+
+WINE_DEFAULT_DEBUG_CHANNEL(webview2);
+
+/* ===== ICoreWebView2RegionRectCollectionView ===== */
+
+static const IID *const ICoreWebView2RegionRectCollectionView_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2RegionRectCollectionView,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2RegionRectCollectionView_ICoreWebView2RegionRectCollectionView_get_Count(ICoreWebView2RegionRectCollectionView *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2RegionRectCollectionView_get_Count, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2RegionRectCollectionView_ICoreWebView2RegionRectCollectionView_GetValueAtIndex(ICoreWebView2RegionRectCollectionView *iface, UINT32 index, RECT *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_u32(&args, (UINT32)index);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2RegionRectCollectionView_GetValueAtIndex, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, value, sizeof(RECT));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2RegionRectCollectionViewVtbl ICoreWebView2RegionRectCollectionView_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2RegionRectCollectionView_ICoreWebView2RegionRectCollectionView_get_Count,
+    proxy_ICoreWebView2RegionRectCollectionView_ICoreWebView2RegionRectCollectionView_GetValueAtIndex,
+};
+
+/* ===== ICoreWebView2StringCollection ===== */
+
+static const IID *const ICoreWebView2StringCollection_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2StringCollection,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2StringCollection_ICoreWebView2StringCollection_get_Count(ICoreWebView2StringCollection *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2StringCollection_get_Count, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2StringCollection_ICoreWebView2StringCollection_GetValueAtIndex(ICoreWebView2StringCollection *iface, UINT32 index, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_u32(&args, (UINT32)index);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2StringCollection_GetValueAtIndex, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2StringCollectionVtbl ICoreWebView2StringCollection_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2StringCollection_ICoreWebView2StringCollection_get_Count,
+    proxy_ICoreWebView2StringCollection_ICoreWebView2StringCollection_GetValueAtIndex,
+};
+
+/* ===== ICoreWebView2ClientCertificateCollection ===== */
+
+static const IID *const ICoreWebView2ClientCertificateCollection_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ClientCertificateCollection,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificateCollection_ICoreWebView2ClientCertificateCollection_get_Count(ICoreWebView2ClientCertificateCollection *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificateCollection_get_Count, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificateCollection_ICoreWebView2ClientCertificateCollection_GetValueAtIndex(ICoreWebView2ClientCertificateCollection *iface, UINT32 index, ICoreWebView2ClientCertificate **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_u32(&args, (UINT32)index);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificateCollection_GetValueAtIndex, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ClientCertificate *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ClientCertificateCollectionVtbl ICoreWebView2ClientCertificateCollection_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ClientCertificateCollection_ICoreWebView2ClientCertificateCollection_get_Count,
+    proxy_ICoreWebView2ClientCertificateCollection_ICoreWebView2ClientCertificateCollection_GetValueAtIndex,
+};
+
+/* ===== ICoreWebView2CookieList ===== */
+
+static const IID *const ICoreWebView2CookieList_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2CookieList,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CookieList_ICoreWebView2CookieList_get_Count(ICoreWebView2CookieList *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CookieList_get_Count, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CookieList_ICoreWebView2CookieList_GetValueAtIndex(ICoreWebView2CookieList *iface, UINT32 index, ICoreWebView2Cookie **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_u32(&args, (UINT32)index);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CookieList_GetValueAtIndex, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2Cookie *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2CookieListVtbl ICoreWebView2CookieList_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2CookieList_ICoreWebView2CookieList_get_Count,
+    proxy_ICoreWebView2CookieList_ICoreWebView2CookieList_GetValueAtIndex,
+};
+
+/* ===== ICoreWebView2BasicAuthenticationRequestedEventArgs ===== */
+
+static const IID *const ICoreWebView2BasicAuthenticationRequestedEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2BasicAuthenticationRequestedEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BasicAuthenticationRequestedEventArgs_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Uri(ICoreWebView2BasicAuthenticationRequestedEventArgs *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Uri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BasicAuthenticationRequestedEventArgs_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Challenge(ICoreWebView2BasicAuthenticationRequestedEventArgs *iface, LPWSTR *challenge)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!challenge) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Challenge, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *challenge = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BasicAuthenticationRequestedEventArgs_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Response(ICoreWebView2BasicAuthenticationRequestedEventArgs *iface, ICoreWebView2BasicAuthenticationResponse **response)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!response) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Response, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *response = (ICoreWebView2BasicAuthenticationResponse *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BasicAuthenticationRequestedEventArgs_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Cancel(ICoreWebView2BasicAuthenticationRequestedEventArgs *iface, BOOL *cancel)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!cancel) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Cancel, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *cancel = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BasicAuthenticationRequestedEventArgs_ICoreWebView2BasicAuthenticationRequestedEventArgs_put_Cancel(ICoreWebView2BasicAuthenticationRequestedEventArgs *iface, BOOL cancel)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)cancel);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BasicAuthenticationRequestedEventArgs_put_Cancel, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BasicAuthenticationRequestedEventArgs_ICoreWebView2BasicAuthenticationRequestedEventArgs_GetDeferral(ICoreWebView2BasicAuthenticationRequestedEventArgs *iface, ICoreWebView2Deferral **deferral)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!deferral) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BasicAuthenticationRequestedEventArgs_GetDeferral, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *deferral = (ICoreWebView2Deferral *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2BasicAuthenticationRequestedEventArgsVtbl ICoreWebView2BasicAuthenticationRequestedEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2BasicAuthenticationRequestedEventArgs_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Uri,
+    proxy_ICoreWebView2BasicAuthenticationRequestedEventArgs_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Challenge,
+    proxy_ICoreWebView2BasicAuthenticationRequestedEventArgs_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Response,
+    proxy_ICoreWebView2BasicAuthenticationRequestedEventArgs_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Cancel,
+    proxy_ICoreWebView2BasicAuthenticationRequestedEventArgs_ICoreWebView2BasicAuthenticationRequestedEventArgs_put_Cancel,
+    proxy_ICoreWebView2BasicAuthenticationRequestedEventArgs_ICoreWebView2BasicAuthenticationRequestedEventArgs_GetDeferral,
+};
+
+/* ===== ICoreWebView2BasicAuthenticationResponse ===== */
+
+static const IID *const ICoreWebView2BasicAuthenticationResponse_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2BasicAuthenticationResponse,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BasicAuthenticationResponse_ICoreWebView2BasicAuthenticationResponse_get_UserName(ICoreWebView2BasicAuthenticationResponse *iface, LPWSTR *userName)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!userName) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BasicAuthenticationResponse_get_UserName, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *userName = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BasicAuthenticationResponse_ICoreWebView2BasicAuthenticationResponse_put_UserName(ICoreWebView2BasicAuthenticationResponse *iface, LPCWSTR userName)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, userName);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BasicAuthenticationResponse_put_UserName, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BasicAuthenticationResponse_ICoreWebView2BasicAuthenticationResponse_get_Password(ICoreWebView2BasicAuthenticationResponse *iface, LPWSTR *password)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!password) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BasicAuthenticationResponse_get_Password, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *password = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BasicAuthenticationResponse_ICoreWebView2BasicAuthenticationResponse_put_Password(ICoreWebView2BasicAuthenticationResponse *iface, LPCWSTR password)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, password);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BasicAuthenticationResponse_put_Password, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2BasicAuthenticationResponseVtbl ICoreWebView2BasicAuthenticationResponse_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2BasicAuthenticationResponse_ICoreWebView2BasicAuthenticationResponse_get_UserName,
+    proxy_ICoreWebView2BasicAuthenticationResponse_ICoreWebView2BasicAuthenticationResponse_put_UserName,
+    proxy_ICoreWebView2BasicAuthenticationResponse_ICoreWebView2BasicAuthenticationResponse_get_Password,
+    proxy_ICoreWebView2BasicAuthenticationResponse_ICoreWebView2BasicAuthenticationResponse_put_Password,
+};
+
+/* ===== ICoreWebView2BrowserExtension ===== */
+
+static const IID *const ICoreWebView2BrowserExtension_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2BrowserExtension,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BrowserExtension_ICoreWebView2BrowserExtension_get_Id(ICoreWebView2BrowserExtension *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BrowserExtension_get_Id, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BrowserExtension_ICoreWebView2BrowserExtension_get_Name(ICoreWebView2BrowserExtension *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BrowserExtension_get_Name, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BrowserExtension_ICoreWebView2BrowserExtension_Remove(ICoreWebView2BrowserExtension *iface, ICoreWebView2BrowserExtensionRemoveCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BrowserExtension_Remove, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BrowserExtension_ICoreWebView2BrowserExtension_get_IsEnabled(ICoreWebView2BrowserExtension *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BrowserExtension_get_IsEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BrowserExtension_ICoreWebView2BrowserExtension_Enable(ICoreWebView2BrowserExtension *iface, BOOL isEnabled, ICoreWebView2BrowserExtensionEnableCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)isEnabled);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BrowserExtension_Enable, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2BrowserExtensionVtbl ICoreWebView2BrowserExtension_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2BrowserExtension_ICoreWebView2BrowserExtension_get_Id,
+    proxy_ICoreWebView2BrowserExtension_ICoreWebView2BrowserExtension_get_Name,
+    proxy_ICoreWebView2BrowserExtension_ICoreWebView2BrowserExtension_Remove,
+    proxy_ICoreWebView2BrowserExtension_ICoreWebView2BrowserExtension_get_IsEnabled,
+    proxy_ICoreWebView2BrowserExtension_ICoreWebView2BrowserExtension_Enable,
+};
+
+/* ===== ICoreWebView2Certificate ===== */
+
+static const IID *const ICoreWebView2Certificate_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2Certificate,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Certificate_ICoreWebView2Certificate_get_Subject(ICoreWebView2Certificate *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Certificate_get_Subject, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Certificate_ICoreWebView2Certificate_get_Issuer(ICoreWebView2Certificate *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Certificate_get_Issuer, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Certificate_ICoreWebView2Certificate_get_ValidFrom(ICoreWebView2Certificate *iface, double *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Certificate_get_ValidFrom, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_f64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Certificate_ICoreWebView2Certificate_get_ValidTo(ICoreWebView2Certificate *iface, double *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Certificate_get_ValidTo, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_f64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Certificate_ICoreWebView2Certificate_get_DerEncodedSerialNumber(ICoreWebView2Certificate *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Certificate_get_DerEncodedSerialNumber, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Certificate_ICoreWebView2Certificate_get_DisplayName(ICoreWebView2Certificate *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Certificate_get_DisplayName, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Certificate_ICoreWebView2Certificate_ToPemEncoding(ICoreWebView2Certificate *iface, LPWSTR *pemEncodedData)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!pemEncodedData) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Certificate_ToPemEncoding, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *pemEncodedData = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Certificate_ICoreWebView2Certificate_get_PemEncodedIssuerCertificateChain(ICoreWebView2Certificate *iface, ICoreWebView2StringCollection **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Certificate_get_PemEncodedIssuerCertificateChain, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2StringCollection *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2CertificateVtbl ICoreWebView2Certificate_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2Certificate_ICoreWebView2Certificate_get_Subject,
+    proxy_ICoreWebView2Certificate_ICoreWebView2Certificate_get_Issuer,
+    proxy_ICoreWebView2Certificate_ICoreWebView2Certificate_get_ValidFrom,
+    proxy_ICoreWebView2Certificate_ICoreWebView2Certificate_get_ValidTo,
+    proxy_ICoreWebView2Certificate_ICoreWebView2Certificate_get_DerEncodedSerialNumber,
+    proxy_ICoreWebView2Certificate_ICoreWebView2Certificate_get_DisplayName,
+    proxy_ICoreWebView2Certificate_ICoreWebView2Certificate_ToPemEncoding,
+    proxy_ICoreWebView2Certificate_ICoreWebView2Certificate_get_PemEncodedIssuerCertificateChain,
+};
+
+/* ===== ICoreWebView2ClientCertificate ===== */
+
+static const IID *const ICoreWebView2ClientCertificate_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ClientCertificate,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_get_Subject(ICoreWebView2ClientCertificate *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificate_get_Subject, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_get_Issuer(ICoreWebView2ClientCertificate *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificate_get_Issuer, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_get_ValidFrom(ICoreWebView2ClientCertificate *iface, double *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificate_get_ValidFrom, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_f64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_get_ValidTo(ICoreWebView2ClientCertificate *iface, double *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificate_get_ValidTo, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_f64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_get_DerEncodedSerialNumber(ICoreWebView2ClientCertificate *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificate_get_DerEncodedSerialNumber, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_get_DisplayName(ICoreWebView2ClientCertificate *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificate_get_DisplayName, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_ToPemEncoding(ICoreWebView2ClientCertificate *iface, LPWSTR *pemEncodedData)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!pemEncodedData) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificate_ToPemEncoding, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *pemEncodedData = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_get_PemEncodedIssuerCertificateChain(ICoreWebView2ClientCertificate *iface, ICoreWebView2StringCollection **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificate_get_PemEncodedIssuerCertificateChain, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2StringCollection *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_get_Kind(ICoreWebView2ClientCertificate *iface, COREWEBVIEW2_CLIENT_CERTIFICATE_KIND *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificate_get_Kind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_CLIENT_CERTIFICATE_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ClientCertificateVtbl ICoreWebView2ClientCertificate_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_get_Subject,
+    proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_get_Issuer,
+    proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_get_ValidFrom,
+    proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_get_ValidTo,
+    proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_get_DerEncodedSerialNumber,
+    proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_get_DisplayName,
+    proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_ToPemEncoding,
+    proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_get_PemEncodedIssuerCertificateChain,
+    proxy_ICoreWebView2ClientCertificate_ICoreWebView2ClientCertificate_get_Kind,
+};
+
+/* ===== ICoreWebView2ClientCertificateRequestedEventArgs ===== */
+
+static const IID *const ICoreWebView2ClientCertificateRequestedEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ClientCertificateRequestedEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_get_Host(ICoreWebView2ClientCertificateRequestedEventArgs *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificateRequestedEventArgs_get_Host, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_get_Port(ICoreWebView2ClientCertificateRequestedEventArgs *iface, int *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificateRequestedEventArgs_get_Port, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (int)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_get_IsProxy(ICoreWebView2ClientCertificateRequestedEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificateRequestedEventArgs_get_IsProxy, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_get_AllowedCertificateAuthorities(ICoreWebView2ClientCertificateRequestedEventArgs *iface, ICoreWebView2StringCollection **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificateRequestedEventArgs_get_AllowedCertificateAuthorities, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2StringCollection *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_get_MutuallyTrustedCertificates(ICoreWebView2ClientCertificateRequestedEventArgs *iface, ICoreWebView2ClientCertificateCollection **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificateRequestedEventArgs_get_MutuallyTrustedCertificates, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ClientCertificateCollection *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_get_SelectedCertificate(ICoreWebView2ClientCertificateRequestedEventArgs *iface, ICoreWebView2ClientCertificate **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificateRequestedEventArgs_get_SelectedCertificate, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ClientCertificate *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_put_SelectedCertificate(ICoreWebView2ClientCertificateRequestedEventArgs *iface, ICoreWebView2ClientCertificate *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificateRequestedEventArgs_put_SelectedCertificate, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_get_Cancel(ICoreWebView2ClientCertificateRequestedEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificateRequestedEventArgs_get_Cancel, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_put_Cancel(ICoreWebView2ClientCertificateRequestedEventArgs *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificateRequestedEventArgs_put_Cancel, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_get_Handled(ICoreWebView2ClientCertificateRequestedEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificateRequestedEventArgs_get_Handled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_put_Handled(ICoreWebView2ClientCertificateRequestedEventArgs *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificateRequestedEventArgs_put_Handled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_GetDeferral(ICoreWebView2ClientCertificateRequestedEventArgs *iface, ICoreWebView2Deferral **deferral)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!deferral) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ClientCertificateRequestedEventArgs_GetDeferral, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *deferral = (ICoreWebView2Deferral *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ClientCertificateRequestedEventArgsVtbl ICoreWebView2ClientCertificateRequestedEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_get_Host,
+    proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_get_Port,
+    proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_get_IsProxy,
+    proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_get_AllowedCertificateAuthorities,
+    proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_get_MutuallyTrustedCertificates,
+    proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_get_SelectedCertificate,
+    proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_put_SelectedCertificate,
+    proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_get_Cancel,
+    proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_put_Cancel,
+    proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_get_Handled,
+    proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_put_Handled,
+    proxy_ICoreWebView2ClientCertificateRequestedEventArgs_ICoreWebView2ClientCertificateRequestedEventArgs_GetDeferral,
+};
+
+/* ===== ICoreWebView2ContextMenuItem ===== */
+
+static const IID *const ICoreWebView2ContextMenuItem_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ContextMenuItem,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_Name(ICoreWebView2ContextMenuItem *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItem_get_Name, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_Label(ICoreWebView2ContextMenuItem *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItem_get_Label, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_CommandId(ICoreWebView2ContextMenuItem *iface, INT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItem_get_CommandId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (INT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_ShortcutKeyDescription(ICoreWebView2ContextMenuItem *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItem_get_ShortcutKeyDescription, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_Icon(ICoreWebView2ContextMenuItem *iface, IStream **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItem_get_Icon, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_stream(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_Kind(ICoreWebView2ContextMenuItem *iface, COREWEBVIEW2_CONTEXT_MENU_ITEM_KIND *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItem_get_Kind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_CONTEXT_MENU_ITEM_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_put_IsEnabled(ICoreWebView2ContextMenuItem *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItem_put_IsEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_IsEnabled(ICoreWebView2ContextMenuItem *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItem_get_IsEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_put_IsChecked(ICoreWebView2ContextMenuItem *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItem_put_IsChecked, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_IsChecked(ICoreWebView2ContextMenuItem *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItem_get_IsChecked, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_Children(ICoreWebView2ContextMenuItem *iface, ICoreWebView2ContextMenuItemCollection **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItem_get_Children, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ContextMenuItemCollection *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_add_CustomItemSelected(ICoreWebView2ContextMenuItem *iface, ICoreWebView2CustomItemSelectedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItem_add_CustomItemSelected, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_remove_CustomItemSelected(ICoreWebView2ContextMenuItem *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItem_remove_CustomItemSelected, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ContextMenuItemVtbl ICoreWebView2ContextMenuItem_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_Name,
+    proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_Label,
+    proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_CommandId,
+    proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_ShortcutKeyDescription,
+    proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_Icon,
+    proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_Kind,
+    proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_put_IsEnabled,
+    proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_IsEnabled,
+    proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_put_IsChecked,
+    proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_IsChecked,
+    proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_get_Children,
+    proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_add_CustomItemSelected,
+    proxy_ICoreWebView2ContextMenuItem_ICoreWebView2ContextMenuItem_remove_CustomItemSelected,
+};
+
+/* ===== ICoreWebView2ContextMenuTarget ===== */
+
+static const IID *const ICoreWebView2ContextMenuTarget_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ContextMenuTarget,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_Kind(ICoreWebView2ContextMenuTarget *iface, COREWEBVIEW2_CONTEXT_MENU_TARGET_KIND *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuTarget_get_Kind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_CONTEXT_MENU_TARGET_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_IsEditable(ICoreWebView2ContextMenuTarget *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuTarget_get_IsEditable, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_IsRequestedForMainFrame(ICoreWebView2ContextMenuTarget *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuTarget_get_IsRequestedForMainFrame, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_PageUri(ICoreWebView2ContextMenuTarget *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuTarget_get_PageUri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_FrameUri(ICoreWebView2ContextMenuTarget *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuTarget_get_FrameUri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_HasLinkUri(ICoreWebView2ContextMenuTarget *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuTarget_get_HasLinkUri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_LinkUri(ICoreWebView2ContextMenuTarget *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuTarget_get_LinkUri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_HasLinkText(ICoreWebView2ContextMenuTarget *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuTarget_get_HasLinkText, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_LinkText(ICoreWebView2ContextMenuTarget *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuTarget_get_LinkText, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_HasSourceUri(ICoreWebView2ContextMenuTarget *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuTarget_get_HasSourceUri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_SourceUri(ICoreWebView2ContextMenuTarget *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuTarget_get_SourceUri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_HasSelection(ICoreWebView2ContextMenuTarget *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuTarget_get_HasSelection, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_SelectionText(ICoreWebView2ContextMenuTarget *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuTarget_get_SelectionText, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ContextMenuTargetVtbl ICoreWebView2ContextMenuTarget_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_Kind,
+    proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_IsEditable,
+    proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_IsRequestedForMainFrame,
+    proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_PageUri,
+    proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_FrameUri,
+    proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_HasLinkUri,
+    proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_LinkUri,
+    proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_HasLinkText,
+    proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_LinkText,
+    proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_HasSourceUri,
+    proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_SourceUri,
+    proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_HasSelection,
+    proxy_ICoreWebView2ContextMenuTarget_ICoreWebView2ContextMenuTarget_get_SelectionText,
+};
+
+/* ===== ICoreWebView2ContextMenuRequestedEventArgs ===== */
+
+static const IID *const ICoreWebView2ContextMenuRequestedEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ContextMenuRequestedEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuRequestedEventArgs_ICoreWebView2ContextMenuRequestedEventArgs_get_MenuItems(ICoreWebView2ContextMenuRequestedEventArgs *iface, ICoreWebView2ContextMenuItemCollection **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuRequestedEventArgs_get_MenuItems, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ContextMenuItemCollection *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuRequestedEventArgs_ICoreWebView2ContextMenuRequestedEventArgs_get_ContextMenuTarget(ICoreWebView2ContextMenuRequestedEventArgs *iface, ICoreWebView2ContextMenuTarget **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuRequestedEventArgs_get_ContextMenuTarget, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ContextMenuTarget *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuRequestedEventArgs_ICoreWebView2ContextMenuRequestedEventArgs_get_Location(ICoreWebView2ContextMenuRequestedEventArgs *iface, POINT *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuRequestedEventArgs_get_Location, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, value, sizeof(POINT));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuRequestedEventArgs_ICoreWebView2ContextMenuRequestedEventArgs_put_SelectedCommandId(ICoreWebView2ContextMenuRequestedEventArgs *iface, INT32 value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuRequestedEventArgs_put_SelectedCommandId, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuRequestedEventArgs_ICoreWebView2ContextMenuRequestedEventArgs_get_SelectedCommandId(ICoreWebView2ContextMenuRequestedEventArgs *iface, INT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuRequestedEventArgs_get_SelectedCommandId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (INT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuRequestedEventArgs_ICoreWebView2ContextMenuRequestedEventArgs_put_Handled(ICoreWebView2ContextMenuRequestedEventArgs *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuRequestedEventArgs_put_Handled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuRequestedEventArgs_ICoreWebView2ContextMenuRequestedEventArgs_get_Handled(ICoreWebView2ContextMenuRequestedEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuRequestedEventArgs_get_Handled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuRequestedEventArgs_ICoreWebView2ContextMenuRequestedEventArgs_GetDeferral(ICoreWebView2ContextMenuRequestedEventArgs *iface, ICoreWebView2Deferral **deferral)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!deferral) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuRequestedEventArgs_GetDeferral, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *deferral = (ICoreWebView2Deferral *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ContextMenuRequestedEventArgsVtbl ICoreWebView2ContextMenuRequestedEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ContextMenuRequestedEventArgs_ICoreWebView2ContextMenuRequestedEventArgs_get_MenuItems,
+    proxy_ICoreWebView2ContextMenuRequestedEventArgs_ICoreWebView2ContextMenuRequestedEventArgs_get_ContextMenuTarget,
+    proxy_ICoreWebView2ContextMenuRequestedEventArgs_ICoreWebView2ContextMenuRequestedEventArgs_get_Location,
+    proxy_ICoreWebView2ContextMenuRequestedEventArgs_ICoreWebView2ContextMenuRequestedEventArgs_put_SelectedCommandId,
+    proxy_ICoreWebView2ContextMenuRequestedEventArgs_ICoreWebView2ContextMenuRequestedEventArgs_get_SelectedCommandId,
+    proxy_ICoreWebView2ContextMenuRequestedEventArgs_ICoreWebView2ContextMenuRequestedEventArgs_put_Handled,
+    proxy_ICoreWebView2ContextMenuRequestedEventArgs_ICoreWebView2ContextMenuRequestedEventArgs_get_Handled,
+    proxy_ICoreWebView2ContextMenuRequestedEventArgs_ICoreWebView2ContextMenuRequestedEventArgs_GetDeferral,
+};
+
+/* ===== ICoreWebView2Cookie ===== */
+
+static const IID *const ICoreWebView2Cookie_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2Cookie,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_Name(ICoreWebView2Cookie *iface, LPWSTR *name)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!name) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Cookie_get_Name, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *name = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_Value(ICoreWebView2Cookie *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Cookie_get_Value, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_put_Value(ICoreWebView2Cookie *iface, LPCWSTR value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Cookie_put_Value, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_Domain(ICoreWebView2Cookie *iface, LPWSTR *domain)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!domain) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Cookie_get_Domain, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *domain = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_Path(ICoreWebView2Cookie *iface, LPWSTR *path)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!path) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Cookie_get_Path, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *path = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_Expires(ICoreWebView2Cookie *iface, double *expires)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!expires) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Cookie_get_Expires, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *expires = wv2_get_f64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_put_Expires(ICoreWebView2Cookie *iface, double expires)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_f64(&args, expires);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Cookie_put_Expires, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_IsHttpOnly(ICoreWebView2Cookie *iface, BOOL *isHttpOnly)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!isHttpOnly) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Cookie_get_IsHttpOnly, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *isHttpOnly = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_put_IsHttpOnly(ICoreWebView2Cookie *iface, BOOL isHttpOnly)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)isHttpOnly);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Cookie_put_IsHttpOnly, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_SameSite(ICoreWebView2Cookie *iface, COREWEBVIEW2_COOKIE_SAME_SITE_KIND *sameSite)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!sameSite) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Cookie_get_SameSite, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *sameSite = (COREWEBVIEW2_COOKIE_SAME_SITE_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_put_SameSite(ICoreWebView2Cookie *iface, COREWEBVIEW2_COOKIE_SAME_SITE_KIND sameSite)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)sameSite);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Cookie_put_SameSite, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_IsSecure(ICoreWebView2Cookie *iface, BOOL *isSecure)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!isSecure) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Cookie_get_IsSecure, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *isSecure = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_put_IsSecure(ICoreWebView2Cookie *iface, BOOL isSecure)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)isSecure);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Cookie_put_IsSecure, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_IsSession(ICoreWebView2Cookie *iface, BOOL *isSession)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!isSession) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Cookie_get_IsSession, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *isSession = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2CookieVtbl ICoreWebView2Cookie_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_Name,
+    proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_Value,
+    proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_put_Value,
+    proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_Domain,
+    proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_Path,
+    proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_Expires,
+    proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_put_Expires,
+    proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_IsHttpOnly,
+    proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_put_IsHttpOnly,
+    proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_SameSite,
+    proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_put_SameSite,
+    proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_IsSecure,
+    proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_put_IsSecure,
+    proxy_ICoreWebView2Cookie_ICoreWebView2Cookie_get_IsSession,
+};
+
+/* ===== ICoreWebView2CookieManager ===== */
+
+static const IID *const ICoreWebView2CookieManager_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2CookieManager,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CookieManager_ICoreWebView2CookieManager_CreateCookie(ICoreWebView2CookieManager *iface, LPCWSTR name, LPCWSTR value, LPCWSTR domain, LPCWSTR path, ICoreWebView2Cookie **cookie)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!cookie) return E_POINTER;
+    wv2_put_str(&args, name);
+    wv2_put_str(&args, value);
+    wv2_put_str(&args, domain);
+    wv2_put_str(&args, path);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CookieManager_CreateCookie, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *cookie = (ICoreWebView2Cookie *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CookieManager_ICoreWebView2CookieManager_CopyCookie(ICoreWebView2CookieManager *iface, ICoreWebView2Cookie *cookieParam, ICoreWebView2Cookie **cookie)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!cookie) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)cookieParam);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CookieManager_CopyCookie, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *cookie = (ICoreWebView2Cookie *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CookieManager_ICoreWebView2CookieManager_GetCookies(ICoreWebView2CookieManager *iface, LPCWSTR uri, ICoreWebView2GetCookiesCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, uri);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CookieManager_GetCookies, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CookieManager_ICoreWebView2CookieManager_AddOrUpdateCookie(ICoreWebView2CookieManager *iface, ICoreWebView2Cookie *cookie)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)cookie);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CookieManager_AddOrUpdateCookie, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CookieManager_ICoreWebView2CookieManager_DeleteCookie(ICoreWebView2CookieManager *iface, ICoreWebView2Cookie *cookie)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)cookie);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CookieManager_DeleteCookie, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CookieManager_ICoreWebView2CookieManager_DeleteCookies(ICoreWebView2CookieManager *iface, LPCWSTR name, LPCWSTR uri)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, name);
+    wv2_put_str(&args, uri);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CookieManager_DeleteCookies, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CookieManager_ICoreWebView2CookieManager_DeleteCookiesWithDomainAndPath(ICoreWebView2CookieManager *iface, LPCWSTR name, LPCWSTR domain, LPCWSTR path)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, name);
+    wv2_put_str(&args, domain);
+    wv2_put_str(&args, path);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CookieManager_DeleteCookiesWithDomainAndPath, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CookieManager_ICoreWebView2CookieManager_DeleteAllCookies(ICoreWebView2CookieManager *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CookieManager_DeleteAllCookies, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2CookieManagerVtbl ICoreWebView2CookieManager_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2CookieManager_ICoreWebView2CookieManager_CreateCookie,
+    proxy_ICoreWebView2CookieManager_ICoreWebView2CookieManager_CopyCookie,
+    proxy_ICoreWebView2CookieManager_ICoreWebView2CookieManager_GetCookies,
+    proxy_ICoreWebView2CookieManager_ICoreWebView2CookieManager_AddOrUpdateCookie,
+    proxy_ICoreWebView2CookieManager_ICoreWebView2CookieManager_DeleteCookie,
+    proxy_ICoreWebView2CookieManager_ICoreWebView2CookieManager_DeleteCookies,
+    proxy_ICoreWebView2CookieManager_ICoreWebView2CookieManager_DeleteCookiesWithDomainAndPath,
+    proxy_ICoreWebView2CookieManager_ICoreWebView2CookieManager_DeleteAllCookies,
+};
+
+/* ===== ICoreWebView2DownloadOperation ===== */
+
+static const IID *const ICoreWebView2DownloadOperation_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2DownloadOperation,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_add_BytesReceivedChanged(ICoreWebView2DownloadOperation *iface, ICoreWebView2BytesReceivedChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_add_BytesReceivedChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_remove_BytesReceivedChanged(ICoreWebView2DownloadOperation *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_remove_BytesReceivedChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_add_EstimatedEndTimeChanged(ICoreWebView2DownloadOperation *iface, ICoreWebView2EstimatedEndTimeChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_add_EstimatedEndTimeChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_remove_EstimatedEndTimeChanged(ICoreWebView2DownloadOperation *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_remove_EstimatedEndTimeChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_add_StateChanged(ICoreWebView2DownloadOperation *iface, ICoreWebView2StateChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_add_StateChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_remove_StateChanged(ICoreWebView2DownloadOperation *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_remove_StateChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_Uri(ICoreWebView2DownloadOperation *iface, LPWSTR *uri)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!uri) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_get_Uri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *uri = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_ContentDisposition(ICoreWebView2DownloadOperation *iface, LPWSTR *contentDisposition)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!contentDisposition) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_get_ContentDisposition, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *contentDisposition = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_MimeType(ICoreWebView2DownloadOperation *iface, LPWSTR *mimeType)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!mimeType) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_get_MimeType, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *mimeType = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_TotalBytesToReceive(ICoreWebView2DownloadOperation *iface, INT64 *totalBytesToReceive)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!totalBytesToReceive) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_get_TotalBytesToReceive, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *totalBytesToReceive = (INT64)wv2_get_u64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_BytesReceived(ICoreWebView2DownloadOperation *iface, INT64 *bytesReceived)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!bytesReceived) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_get_BytesReceived, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *bytesReceived = (INT64)wv2_get_u64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_EstimatedEndTime(ICoreWebView2DownloadOperation *iface, LPWSTR *estimatedEndTime)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!estimatedEndTime) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_get_EstimatedEndTime, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *estimatedEndTime = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_ResultFilePath(ICoreWebView2DownloadOperation *iface, LPWSTR *resultFilePath)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!resultFilePath) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_get_ResultFilePath, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *resultFilePath = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_State(ICoreWebView2DownloadOperation *iface, COREWEBVIEW2_DOWNLOAD_STATE *downloadState)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!downloadState) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_get_State, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *downloadState = (COREWEBVIEW2_DOWNLOAD_STATE)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_InterruptReason(ICoreWebView2DownloadOperation *iface, COREWEBVIEW2_DOWNLOAD_INTERRUPT_REASON *interruptReason)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!interruptReason) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_get_InterruptReason, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *interruptReason = (COREWEBVIEW2_DOWNLOAD_INTERRUPT_REASON)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_Cancel(ICoreWebView2DownloadOperation *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_Cancel, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_Pause(ICoreWebView2DownloadOperation *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_Pause, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_Resume(ICoreWebView2DownloadOperation *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_Resume, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_CanResume(ICoreWebView2DownloadOperation *iface, BOOL *canResume)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!canResume) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_get_CanResume, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *canResume = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2DownloadOperationVtbl ICoreWebView2DownloadOperation_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_add_BytesReceivedChanged,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_remove_BytesReceivedChanged,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_add_EstimatedEndTimeChanged,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_remove_EstimatedEndTimeChanged,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_add_StateChanged,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_remove_StateChanged,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_Uri,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_ContentDisposition,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_MimeType,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_TotalBytesToReceive,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_BytesReceived,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_EstimatedEndTime,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_ResultFilePath,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_State,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_InterruptReason,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_Cancel,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_Pause,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_Resume,
+    proxy_ICoreWebView2DownloadOperation_ICoreWebView2DownloadOperation_get_CanResume,
+};
+
+/* ===== ICoreWebView2DownloadStartingEventArgs ===== */
+
+static const IID *const ICoreWebView2DownloadStartingEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2DownloadStartingEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadStartingEventArgs_ICoreWebView2DownloadStartingEventArgs_get_DownloadOperation(ICoreWebView2DownloadStartingEventArgs *iface, ICoreWebView2DownloadOperation **downloadOperation)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!downloadOperation) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadStartingEventArgs_get_DownloadOperation, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *downloadOperation = (ICoreWebView2DownloadOperation *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadStartingEventArgs_ICoreWebView2DownloadStartingEventArgs_get_Cancel(ICoreWebView2DownloadStartingEventArgs *iface, BOOL *cancel)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!cancel) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadStartingEventArgs_get_Cancel, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *cancel = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadStartingEventArgs_ICoreWebView2DownloadStartingEventArgs_put_Cancel(ICoreWebView2DownloadStartingEventArgs *iface, BOOL cancel)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)cancel);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadStartingEventArgs_put_Cancel, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadStartingEventArgs_ICoreWebView2DownloadStartingEventArgs_get_ResultFilePath(ICoreWebView2DownloadStartingEventArgs *iface, LPWSTR *resultFilePath)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!resultFilePath) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadStartingEventArgs_get_ResultFilePath, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *resultFilePath = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadStartingEventArgs_ICoreWebView2DownloadStartingEventArgs_put_ResultFilePath(ICoreWebView2DownloadStartingEventArgs *iface, LPCWSTR resultFilePath)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, resultFilePath);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadStartingEventArgs_put_ResultFilePath, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadStartingEventArgs_ICoreWebView2DownloadStartingEventArgs_get_Handled(ICoreWebView2DownloadStartingEventArgs *iface, BOOL *handled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!handled) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadStartingEventArgs_get_Handled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *handled = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadStartingEventArgs_ICoreWebView2DownloadStartingEventArgs_put_Handled(ICoreWebView2DownloadStartingEventArgs *iface, BOOL handled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)handled);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadStartingEventArgs_put_Handled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadStartingEventArgs_ICoreWebView2DownloadStartingEventArgs_GetDeferral(ICoreWebView2DownloadStartingEventArgs *iface, ICoreWebView2Deferral **deferral)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!deferral) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadStartingEventArgs_GetDeferral, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *deferral = (ICoreWebView2Deferral *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2DownloadStartingEventArgsVtbl ICoreWebView2DownloadStartingEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2DownloadStartingEventArgs_ICoreWebView2DownloadStartingEventArgs_get_DownloadOperation,
+    proxy_ICoreWebView2DownloadStartingEventArgs_ICoreWebView2DownloadStartingEventArgs_get_Cancel,
+    proxy_ICoreWebView2DownloadStartingEventArgs_ICoreWebView2DownloadStartingEventArgs_put_Cancel,
+    proxy_ICoreWebView2DownloadStartingEventArgs_ICoreWebView2DownloadStartingEventArgs_get_ResultFilePath,
+    proxy_ICoreWebView2DownloadStartingEventArgs_ICoreWebView2DownloadStartingEventArgs_put_ResultFilePath,
+    proxy_ICoreWebView2DownloadStartingEventArgs_ICoreWebView2DownloadStartingEventArgs_get_Handled,
+    proxy_ICoreWebView2DownloadStartingEventArgs_ICoreWebView2DownloadStartingEventArgs_put_Handled,
+    proxy_ICoreWebView2DownloadStartingEventArgs_ICoreWebView2DownloadStartingEventArgs_GetDeferral,
+};
+
+/* ===== ICoreWebView2ExecuteScriptResult ===== */
+
+static const IID *const ICoreWebView2ExecuteScriptResult_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ExecuteScriptResult,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ExecuteScriptResult_ICoreWebView2ExecuteScriptResult_get_Succeeded(ICoreWebView2ExecuteScriptResult *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ExecuteScriptResult_get_Succeeded, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ExecuteScriptResult_ICoreWebView2ExecuteScriptResult_get_ResultAsJson(ICoreWebView2ExecuteScriptResult *iface, LPWSTR *jsonResult)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!jsonResult) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ExecuteScriptResult_get_ResultAsJson, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *jsonResult = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ExecuteScriptResult_ICoreWebView2ExecuteScriptResult_TryGetResultAsString(ICoreWebView2ExecuteScriptResult *iface, LPWSTR *stringResult, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!stringResult) return E_POINTER;
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ExecuteScriptResult_TryGetResultAsString, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *stringResult = wv2_get_str_co(&ret);
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ExecuteScriptResult_ICoreWebView2ExecuteScriptResult_get_Exception(ICoreWebView2ExecuteScriptResult *iface, ICoreWebView2ScriptException **exception)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!exception) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ExecuteScriptResult_get_Exception, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *exception = (ICoreWebView2ScriptException *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ExecuteScriptResultVtbl ICoreWebView2ExecuteScriptResult_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ExecuteScriptResult_ICoreWebView2ExecuteScriptResult_get_Succeeded,
+    proxy_ICoreWebView2ExecuteScriptResult_ICoreWebView2ExecuteScriptResult_get_ResultAsJson,
+    proxy_ICoreWebView2ExecuteScriptResult_ICoreWebView2ExecuteScriptResult_TryGetResultAsString,
+    proxy_ICoreWebView2ExecuteScriptResult_ICoreWebView2ExecuteScriptResult_get_Exception,
+};
+
+/* ===== ICoreWebView2FrameInfo2 ===== */
+
+static const IID *const ICoreWebView2FrameInfo2_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2FrameInfo,
+    &IID_ICoreWebView2FrameInfo2,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FrameInfo2_ICoreWebView2FrameInfo_get_Name(ICoreWebView2FrameInfo2 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FrameInfo_get_Name, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FrameInfo2_ICoreWebView2FrameInfo_get_Source(ICoreWebView2FrameInfo2 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FrameInfo_get_Source, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FrameInfo2_ICoreWebView2FrameInfo2_get_ParentFrameInfo(ICoreWebView2FrameInfo2 *iface, ICoreWebView2FrameInfo **frameInfo)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!frameInfo) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FrameInfo2_get_ParentFrameInfo, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *frameInfo = (ICoreWebView2FrameInfo *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FrameInfo2_ICoreWebView2FrameInfo2_get_FrameId(ICoreWebView2FrameInfo2 *iface, UINT32 *id)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!id) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FrameInfo2_get_FrameId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *id = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FrameInfo2_ICoreWebView2FrameInfo2_get_FrameKind(ICoreWebView2FrameInfo2 *iface, COREWEBVIEW2_FRAME_KIND *kind)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!kind) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FrameInfo2_get_FrameKind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *kind = (COREWEBVIEW2_FRAME_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2FrameInfo2Vtbl ICoreWebView2FrameInfo2_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2FrameInfo2_ICoreWebView2FrameInfo_get_Name,
+    proxy_ICoreWebView2FrameInfo2_ICoreWebView2FrameInfo_get_Source,
+    proxy_ICoreWebView2FrameInfo2_ICoreWebView2FrameInfo2_get_ParentFrameInfo,
+    proxy_ICoreWebView2FrameInfo2_ICoreWebView2FrameInfo2_get_FrameId,
+    proxy_ICoreWebView2FrameInfo2_ICoreWebView2FrameInfo2_get_FrameKind,
+};
+
+/* ===== ICoreWebView2HttpHeadersCollectionIterator ===== */
+
+static const IID *const ICoreWebView2HttpHeadersCollectionIterator_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2HttpHeadersCollectionIterator,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2HttpHeadersCollectionIterator_ICoreWebView2HttpHeadersCollectionIterator_GetCurrentHeader(ICoreWebView2HttpHeadersCollectionIterator *iface, LPWSTR *name, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!name) return E_POINTER;
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2HttpHeadersCollectionIterator_GetCurrentHeader, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *name = wv2_get_str_co(&ret);
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2HttpHeadersCollectionIterator_ICoreWebView2HttpHeadersCollectionIterator_get_HasCurrentHeader(ICoreWebView2HttpHeadersCollectionIterator *iface, BOOL *hasCurrent)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!hasCurrent) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2HttpHeadersCollectionIterator_get_HasCurrentHeader, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *hasCurrent = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2HttpHeadersCollectionIterator_ICoreWebView2HttpHeadersCollectionIterator_MoveNext(ICoreWebView2HttpHeadersCollectionIterator *iface, BOOL *hasNext)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!hasNext) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2HttpHeadersCollectionIterator_MoveNext, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *hasNext = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2HttpHeadersCollectionIteratorVtbl ICoreWebView2HttpHeadersCollectionIterator_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2HttpHeadersCollectionIterator_ICoreWebView2HttpHeadersCollectionIterator_GetCurrentHeader,
+    proxy_ICoreWebView2HttpHeadersCollectionIterator_ICoreWebView2HttpHeadersCollectionIterator_get_HasCurrentHeader,
+    proxy_ICoreWebView2HttpHeadersCollectionIterator_ICoreWebView2HttpHeadersCollectionIterator_MoveNext,
+};
+
+/* ===== ICoreWebView2LaunchingExternalUriSchemeEventArgs ===== */
+
+static const IID *const ICoreWebView2LaunchingExternalUriSchemeEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2LaunchingExternalUriSchemeEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2LaunchingExternalUriSchemeEventArgs_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_Uri(ICoreWebView2LaunchingExternalUriSchemeEventArgs *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_Uri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2LaunchingExternalUriSchemeEventArgs_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_InitiatingOrigin(ICoreWebView2LaunchingExternalUriSchemeEventArgs *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_InitiatingOrigin, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2LaunchingExternalUriSchemeEventArgs_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_IsUserInitiated(ICoreWebView2LaunchingExternalUriSchemeEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_IsUserInitiated, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2LaunchingExternalUriSchemeEventArgs_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_Cancel(ICoreWebView2LaunchingExternalUriSchemeEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_Cancel, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2LaunchingExternalUriSchemeEventArgs_ICoreWebView2LaunchingExternalUriSchemeEventArgs_put_Cancel(ICoreWebView2LaunchingExternalUriSchemeEventArgs *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2LaunchingExternalUriSchemeEventArgs_put_Cancel, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2LaunchingExternalUriSchemeEventArgs_ICoreWebView2LaunchingExternalUriSchemeEventArgs_GetDeferral(ICoreWebView2LaunchingExternalUriSchemeEventArgs *iface, ICoreWebView2Deferral **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2LaunchingExternalUriSchemeEventArgs_GetDeferral, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2Deferral *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2LaunchingExternalUriSchemeEventArgsVtbl ICoreWebView2LaunchingExternalUriSchemeEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2LaunchingExternalUriSchemeEventArgs_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_Uri,
+    proxy_ICoreWebView2LaunchingExternalUriSchemeEventArgs_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_InitiatingOrigin,
+    proxy_ICoreWebView2LaunchingExternalUriSchemeEventArgs_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_IsUserInitiated,
+    proxy_ICoreWebView2LaunchingExternalUriSchemeEventArgs_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_Cancel,
+    proxy_ICoreWebView2LaunchingExternalUriSchemeEventArgs_ICoreWebView2LaunchingExternalUriSchemeEventArgs_put_Cancel,
+    proxy_ICoreWebView2LaunchingExternalUriSchemeEventArgs_ICoreWebView2LaunchingExternalUriSchemeEventArgs_GetDeferral,
+};
+
+/* ===== ICoreWebView2MoveFocusRequestedEventArgs ===== */
+
+static const IID *const ICoreWebView2MoveFocusRequestedEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2MoveFocusRequestedEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2MoveFocusRequestedEventArgs_ICoreWebView2MoveFocusRequestedEventArgs_get_Reason(ICoreWebView2MoveFocusRequestedEventArgs *iface, COREWEBVIEW2_MOVE_FOCUS_REASON *reason)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!reason) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2MoveFocusRequestedEventArgs_get_Reason, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *reason = (COREWEBVIEW2_MOVE_FOCUS_REASON)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2MoveFocusRequestedEventArgs_ICoreWebView2MoveFocusRequestedEventArgs_get_Handled(ICoreWebView2MoveFocusRequestedEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2MoveFocusRequestedEventArgs_get_Handled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2MoveFocusRequestedEventArgs_ICoreWebView2MoveFocusRequestedEventArgs_put_Handled(ICoreWebView2MoveFocusRequestedEventArgs *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2MoveFocusRequestedEventArgs_put_Handled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2MoveFocusRequestedEventArgsVtbl ICoreWebView2MoveFocusRequestedEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2MoveFocusRequestedEventArgs_ICoreWebView2MoveFocusRequestedEventArgs_get_Reason,
+    proxy_ICoreWebView2MoveFocusRequestedEventArgs_ICoreWebView2MoveFocusRequestedEventArgs_get_Handled,
+    proxy_ICoreWebView2MoveFocusRequestedEventArgs_ICoreWebView2MoveFocusRequestedEventArgs_put_Handled,
+};
+
+/* ===== ICoreWebView2PermissionSettingCollectionView ===== */
+
+static const IID *const ICoreWebView2PermissionSettingCollectionView_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2PermissionSettingCollectionView,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PermissionSettingCollectionView_ICoreWebView2PermissionSettingCollectionView_GetValueAtIndex(ICoreWebView2PermissionSettingCollectionView *iface, UINT32 index, ICoreWebView2PermissionSetting **permissionSetting)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!permissionSetting) return E_POINTER;
+    wv2_put_u32(&args, (UINT32)index);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PermissionSettingCollectionView_GetValueAtIndex, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *permissionSetting = (ICoreWebView2PermissionSetting *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PermissionSettingCollectionView_ICoreWebView2PermissionSettingCollectionView_get_Count(ICoreWebView2PermissionSettingCollectionView *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PermissionSettingCollectionView_get_Count, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2PermissionSettingCollectionViewVtbl ICoreWebView2PermissionSettingCollectionView_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2PermissionSettingCollectionView_ICoreWebView2PermissionSettingCollectionView_GetValueAtIndex,
+    proxy_ICoreWebView2PermissionSettingCollectionView_ICoreWebView2PermissionSettingCollectionView_get_Count,
+};
+
+/* ===== ICoreWebView2PointerInfo ===== */
+
+static const IID *const ICoreWebView2PointerInfo_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2PointerInfo,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PointerKind(ICoreWebView2PointerInfo *iface, DWORD *pointerKind)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!pointerKind) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_PointerKind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *pointerKind = (DWORD)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PointerKind(ICoreWebView2PointerInfo *iface, DWORD pointerKind)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)pointerKind);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_PointerKind, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PointerId(ICoreWebView2PointerInfo *iface, UINT32 *pointerId)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!pointerId) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_PointerId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *pointerId = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PointerId(ICoreWebView2PointerInfo *iface, UINT32 pointerId)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)pointerId);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_PointerId, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_FrameId(ICoreWebView2PointerInfo *iface, UINT32 *frameId)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!frameId) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_FrameId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *frameId = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_FrameId(ICoreWebView2PointerInfo *iface, UINT32 frameId)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)frameId);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_FrameId, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PointerFlags(ICoreWebView2PointerInfo *iface, UINT32 *pointerFlags)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!pointerFlags) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_PointerFlags, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *pointerFlags = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PointerFlags(ICoreWebView2PointerInfo *iface, UINT32 pointerFlags)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)pointerFlags);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_PointerFlags, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PointerDeviceRect(ICoreWebView2PointerInfo *iface, RECT *pointerDeviceRect)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!pointerDeviceRect) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_PointerDeviceRect, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, pointerDeviceRect, sizeof(RECT));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PointerDeviceRect(ICoreWebView2PointerInfo *iface, RECT pointerDeviceRect)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &pointerDeviceRect, sizeof(RECT));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_PointerDeviceRect, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_DisplayRect(ICoreWebView2PointerInfo *iface, RECT *displayRect)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!displayRect) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_DisplayRect, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, displayRect, sizeof(RECT));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_DisplayRect(ICoreWebView2PointerInfo *iface, RECT displayRect)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &displayRect, sizeof(RECT));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_DisplayRect, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PixelLocation(ICoreWebView2PointerInfo *iface, POINT *pixelLocation)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!pixelLocation) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_PixelLocation, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, pixelLocation, sizeof(POINT));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PixelLocation(ICoreWebView2PointerInfo *iface, POINT pixelLocation)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &pixelLocation, sizeof(POINT));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_PixelLocation, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_HimetricLocation(ICoreWebView2PointerInfo *iface, POINT *himetricLocation)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!himetricLocation) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_HimetricLocation, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, himetricLocation, sizeof(POINT));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_HimetricLocation(ICoreWebView2PointerInfo *iface, POINT himetricLocation)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &himetricLocation, sizeof(POINT));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_HimetricLocation, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PixelLocationRaw(ICoreWebView2PointerInfo *iface, POINT *pixelLocationRaw)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!pixelLocationRaw) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_PixelLocationRaw, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, pixelLocationRaw, sizeof(POINT));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PixelLocationRaw(ICoreWebView2PointerInfo *iface, POINT pixelLocationRaw)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &pixelLocationRaw, sizeof(POINT));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_PixelLocationRaw, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_HimetricLocationRaw(ICoreWebView2PointerInfo *iface, POINT *himetricLocationRaw)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!himetricLocationRaw) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_HimetricLocationRaw, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, himetricLocationRaw, sizeof(POINT));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_HimetricLocationRaw(ICoreWebView2PointerInfo *iface, POINT himetricLocationRaw)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &himetricLocationRaw, sizeof(POINT));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_HimetricLocationRaw, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_Time(ICoreWebView2PointerInfo *iface, DWORD *time)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!time) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_Time, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *time = (DWORD)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_Time(ICoreWebView2PointerInfo *iface, DWORD time)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)time);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_Time, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_HistoryCount(ICoreWebView2PointerInfo *iface, UINT32 *historyCount)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!historyCount) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_HistoryCount, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *historyCount = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_HistoryCount(ICoreWebView2PointerInfo *iface, UINT32 historyCount)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)historyCount);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_HistoryCount, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_InputData(ICoreWebView2PointerInfo *iface, INT32 *inputData)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!inputData) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_InputData, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *inputData = (INT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_InputData(ICoreWebView2PointerInfo *iface, INT32 inputData)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)inputData);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_InputData, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_KeyStates(ICoreWebView2PointerInfo *iface, DWORD *keyStates)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!keyStates) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_KeyStates, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *keyStates = (DWORD)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_KeyStates(ICoreWebView2PointerInfo *iface, DWORD keyStates)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)keyStates);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_KeyStates, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PerformanceCount(ICoreWebView2PointerInfo *iface, UINT64 *performanceCount)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!performanceCount) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_PerformanceCount, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *performanceCount = (UINT64)wv2_get_u64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PerformanceCount(ICoreWebView2PointerInfo *iface, UINT64 performanceCount)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u64(&args, (UINT64)performanceCount);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_PerformanceCount, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_ButtonChangeKind(ICoreWebView2PointerInfo *iface, INT32 *buttonChangeKind)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!buttonChangeKind) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_ButtonChangeKind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *buttonChangeKind = (INT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_ButtonChangeKind(ICoreWebView2PointerInfo *iface, INT32 buttonChangeKind)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)buttonChangeKind);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_ButtonChangeKind, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PenFlags(ICoreWebView2PointerInfo *iface, UINT32 *penFLags)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!penFLags) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_PenFlags, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *penFLags = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PenFlags(ICoreWebView2PointerInfo *iface, UINT32 penFLags)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)penFLags);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_PenFlags, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PenMask(ICoreWebView2PointerInfo *iface, UINT32 *penMask)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!penMask) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_PenMask, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *penMask = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PenMask(ICoreWebView2PointerInfo *iface, UINT32 penMask)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)penMask);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_PenMask, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PenPressure(ICoreWebView2PointerInfo *iface, UINT32 *penPressure)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!penPressure) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_PenPressure, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *penPressure = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PenPressure(ICoreWebView2PointerInfo *iface, UINT32 penPressure)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)penPressure);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_PenPressure, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PenRotation(ICoreWebView2PointerInfo *iface, UINT32 *penRotation)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!penRotation) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_PenRotation, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *penRotation = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PenRotation(ICoreWebView2PointerInfo *iface, UINT32 penRotation)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)penRotation);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_PenRotation, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PenTiltX(ICoreWebView2PointerInfo *iface, INT32 *penTiltX)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!penTiltX) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_PenTiltX, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *penTiltX = (INT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PenTiltX(ICoreWebView2PointerInfo *iface, INT32 penTiltX)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)penTiltX);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_PenTiltX, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PenTiltY(ICoreWebView2PointerInfo *iface, INT32 *penTiltY)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!penTiltY) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_PenTiltY, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *penTiltY = (INT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PenTiltY(ICoreWebView2PointerInfo *iface, INT32 penTiltY)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)penTiltY);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_PenTiltY, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_TouchFlags(ICoreWebView2PointerInfo *iface, UINT32 *touchFlags)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!touchFlags) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_TouchFlags, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *touchFlags = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_TouchFlags(ICoreWebView2PointerInfo *iface, UINT32 touchFlags)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)touchFlags);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_TouchFlags, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_TouchMask(ICoreWebView2PointerInfo *iface, UINT32 *touchMask)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!touchMask) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_TouchMask, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *touchMask = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_TouchMask(ICoreWebView2PointerInfo *iface, UINT32 touchMask)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)touchMask);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_TouchMask, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_TouchContact(ICoreWebView2PointerInfo *iface, RECT *touchContact)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!touchContact) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_TouchContact, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, touchContact, sizeof(RECT));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_TouchContact(ICoreWebView2PointerInfo *iface, RECT touchContact)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &touchContact, sizeof(RECT));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_TouchContact, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_TouchContactRaw(ICoreWebView2PointerInfo *iface, RECT *touchContactRaw)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!touchContactRaw) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_TouchContactRaw, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, touchContactRaw, sizeof(RECT));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_TouchContactRaw(ICoreWebView2PointerInfo *iface, RECT touchContactRaw)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &touchContactRaw, sizeof(RECT));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_TouchContactRaw, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_TouchOrientation(ICoreWebView2PointerInfo *iface, UINT32 *touchOrientation)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!touchOrientation) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_TouchOrientation, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *touchOrientation = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_TouchOrientation(ICoreWebView2PointerInfo *iface, UINT32 touchOrientation)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)touchOrientation);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_TouchOrientation, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_TouchPressure(ICoreWebView2PointerInfo *iface, UINT32 *touchPressure)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!touchPressure) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_get_TouchPressure, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *touchPressure = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_TouchPressure(ICoreWebView2PointerInfo *iface, UINT32 touchPressure)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)touchPressure);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PointerInfo_put_TouchPressure, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2PointerInfoVtbl ICoreWebView2PointerInfo_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PointerKind,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PointerKind,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PointerId,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PointerId,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_FrameId,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_FrameId,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PointerFlags,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PointerFlags,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PointerDeviceRect,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PointerDeviceRect,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_DisplayRect,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_DisplayRect,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PixelLocation,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PixelLocation,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_HimetricLocation,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_HimetricLocation,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PixelLocationRaw,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PixelLocationRaw,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_HimetricLocationRaw,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_HimetricLocationRaw,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_Time,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_Time,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_HistoryCount,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_HistoryCount,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_InputData,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_InputData,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_KeyStates,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_KeyStates,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PerformanceCount,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PerformanceCount,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_ButtonChangeKind,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_ButtonChangeKind,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PenFlags,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PenFlags,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PenMask,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PenMask,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PenPressure,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PenPressure,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PenRotation,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PenRotation,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PenTiltX,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PenTiltX,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_PenTiltY,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_PenTiltY,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_TouchFlags,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_TouchFlags,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_TouchMask,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_TouchMask,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_TouchContact,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_TouchContact,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_TouchContactRaw,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_TouchContactRaw,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_TouchOrientation,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_TouchOrientation,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_get_TouchPressure,
+    proxy_ICoreWebView2PointerInfo_ICoreWebView2PointerInfo_put_TouchPressure,
+};
+
+/* ===== ICoreWebView2PrintSettings2 ===== */
+
+static const IID *const ICoreWebView2PrintSettings2_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2PrintSettings,
+    &IID_ICoreWebView2PrintSettings2,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_Orientation(ICoreWebView2PrintSettings2 *iface, COREWEBVIEW2_PRINT_ORIENTATION *orientation)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!orientation) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_get_Orientation, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *orientation = (COREWEBVIEW2_PRINT_ORIENTATION)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_Orientation(ICoreWebView2PrintSettings2 *iface, COREWEBVIEW2_PRINT_ORIENTATION orientation)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)orientation);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_put_Orientation, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_ScaleFactor(ICoreWebView2PrintSettings2 *iface, double *scaleFactor)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!scaleFactor) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_get_ScaleFactor, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *scaleFactor = wv2_get_f64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_ScaleFactor(ICoreWebView2PrintSettings2 *iface, double scaleFactor)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_f64(&args, scaleFactor);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_put_ScaleFactor, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_PageWidth(ICoreWebView2PrintSettings2 *iface, double *pageWidth)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!pageWidth) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_get_PageWidth, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *pageWidth = wv2_get_f64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_PageWidth(ICoreWebView2PrintSettings2 *iface, double pageWidth)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_f64(&args, pageWidth);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_put_PageWidth, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_PageHeight(ICoreWebView2PrintSettings2 *iface, double *pageHeight)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!pageHeight) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_get_PageHeight, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *pageHeight = wv2_get_f64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_PageHeight(ICoreWebView2PrintSettings2 *iface, double pageHeight)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_f64(&args, pageHeight);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_put_PageHeight, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_MarginTop(ICoreWebView2PrintSettings2 *iface, double *marginTop)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!marginTop) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_get_MarginTop, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *marginTop = wv2_get_f64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_MarginTop(ICoreWebView2PrintSettings2 *iface, double marginTop)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_f64(&args, marginTop);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_put_MarginTop, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_MarginBottom(ICoreWebView2PrintSettings2 *iface, double *marginBottom)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!marginBottom) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_get_MarginBottom, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *marginBottom = wv2_get_f64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_MarginBottom(ICoreWebView2PrintSettings2 *iface, double marginBottom)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_f64(&args, marginBottom);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_put_MarginBottom, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_MarginLeft(ICoreWebView2PrintSettings2 *iface, double *marginLeft)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!marginLeft) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_get_MarginLeft, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *marginLeft = wv2_get_f64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_MarginLeft(ICoreWebView2PrintSettings2 *iface, double marginLeft)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_f64(&args, marginLeft);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_put_MarginLeft, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_MarginRight(ICoreWebView2PrintSettings2 *iface, double *marginRight)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!marginRight) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_get_MarginRight, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *marginRight = wv2_get_f64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_MarginRight(ICoreWebView2PrintSettings2 *iface, double marginRight)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_f64(&args, marginRight);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_put_MarginRight, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_ShouldPrintBackgrounds(ICoreWebView2PrintSettings2 *iface, BOOL *shouldPrintBackgrounds)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!shouldPrintBackgrounds) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_get_ShouldPrintBackgrounds, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *shouldPrintBackgrounds = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_ShouldPrintBackgrounds(ICoreWebView2PrintSettings2 *iface, BOOL shouldPrintBackgrounds)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)shouldPrintBackgrounds);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_put_ShouldPrintBackgrounds, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_ShouldPrintSelectionOnly(ICoreWebView2PrintSettings2 *iface, BOOL *shouldPrintSelectionOnly)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!shouldPrintSelectionOnly) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_get_ShouldPrintSelectionOnly, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *shouldPrintSelectionOnly = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_ShouldPrintSelectionOnly(ICoreWebView2PrintSettings2 *iface, BOOL shouldPrintSelectionOnly)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)shouldPrintSelectionOnly);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_put_ShouldPrintSelectionOnly, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_ShouldPrintHeaderAndFooter(ICoreWebView2PrintSettings2 *iface, BOOL *shouldPrintHeaderAndFooter)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!shouldPrintHeaderAndFooter) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_get_ShouldPrintHeaderAndFooter, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *shouldPrintHeaderAndFooter = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_ShouldPrintHeaderAndFooter(ICoreWebView2PrintSettings2 *iface, BOOL shouldPrintHeaderAndFooter)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)shouldPrintHeaderAndFooter);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_put_ShouldPrintHeaderAndFooter, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_HeaderTitle(ICoreWebView2PrintSettings2 *iface, LPWSTR *headerTitle)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!headerTitle) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_get_HeaderTitle, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *headerTitle = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_HeaderTitle(ICoreWebView2PrintSettings2 *iface, LPCWSTR headerTitle)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, headerTitle);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_put_HeaderTitle, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_FooterUri(ICoreWebView2PrintSettings2 *iface, LPWSTR *footerUri)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!footerUri) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_get_FooterUri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *footerUri = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_FooterUri(ICoreWebView2PrintSettings2 *iface, LPCWSTR footerUri)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, footerUri);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings_put_FooterUri, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_get_PageRanges(ICoreWebView2PrintSettings2 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings2_get_PageRanges, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_put_PageRanges(ICoreWebView2PrintSettings2 *iface, LPCWSTR value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings2_put_PageRanges, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_get_PagesPerSide(ICoreWebView2PrintSettings2 *iface, INT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings2_get_PagesPerSide, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (INT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_put_PagesPerSide(ICoreWebView2PrintSettings2 *iface, INT32 value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings2_put_PagesPerSide, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_get_Copies(ICoreWebView2PrintSettings2 *iface, INT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings2_get_Copies, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (INT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_put_Copies(ICoreWebView2PrintSettings2 *iface, INT32 value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings2_put_Copies, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_get_Collation(ICoreWebView2PrintSettings2 *iface, COREWEBVIEW2_PRINT_COLLATION *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings2_get_Collation, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_PRINT_COLLATION)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_put_Collation(ICoreWebView2PrintSettings2 *iface, COREWEBVIEW2_PRINT_COLLATION value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings2_put_Collation, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_get_ColorMode(ICoreWebView2PrintSettings2 *iface, COREWEBVIEW2_PRINT_COLOR_MODE *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings2_get_ColorMode, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_PRINT_COLOR_MODE)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_put_ColorMode(ICoreWebView2PrintSettings2 *iface, COREWEBVIEW2_PRINT_COLOR_MODE value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings2_put_ColorMode, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_get_Duplex(ICoreWebView2PrintSettings2 *iface, COREWEBVIEW2_PRINT_DUPLEX *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings2_get_Duplex, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_PRINT_DUPLEX)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_put_Duplex(ICoreWebView2PrintSettings2 *iface, COREWEBVIEW2_PRINT_DUPLEX value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings2_put_Duplex, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_get_MediaSize(ICoreWebView2PrintSettings2 *iface, COREWEBVIEW2_PRINT_MEDIA_SIZE *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings2_get_MediaSize, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_PRINT_MEDIA_SIZE)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_put_MediaSize(ICoreWebView2PrintSettings2 *iface, COREWEBVIEW2_PRINT_MEDIA_SIZE value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings2_put_MediaSize, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_get_PrinterName(ICoreWebView2PrintSettings2 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings2_get_PrinterName, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_put_PrinterName(ICoreWebView2PrintSettings2 *iface, LPCWSTR value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PrintSettings2_put_PrinterName, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2PrintSettings2Vtbl ICoreWebView2PrintSettings2_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_Orientation,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_Orientation,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_ScaleFactor,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_ScaleFactor,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_PageWidth,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_PageWidth,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_PageHeight,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_PageHeight,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_MarginTop,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_MarginTop,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_MarginBottom,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_MarginBottom,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_MarginLeft,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_MarginLeft,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_MarginRight,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_MarginRight,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_ShouldPrintBackgrounds,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_ShouldPrintBackgrounds,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_ShouldPrintSelectionOnly,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_ShouldPrintSelectionOnly,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_ShouldPrintHeaderAndFooter,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_ShouldPrintHeaderAndFooter,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_HeaderTitle,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_HeaderTitle,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_get_FooterUri,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings_put_FooterUri,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_get_PageRanges,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_put_PageRanges,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_get_PagesPerSide,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_put_PagesPerSide,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_get_Copies,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_put_Copies,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_get_Collation,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_put_Collation,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_get_ColorMode,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_put_ColorMode,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_get_Duplex,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_put_Duplex,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_get_MediaSize,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_put_MediaSize,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_get_PrinterName,
+    proxy_ICoreWebView2PrintSettings2_ICoreWebView2PrintSettings2_put_PrinterName,
+};
+
+/* ===== ICoreWebView2ProcessExtendedInfo ===== */
+
+static const IID *const ICoreWebView2ProcessExtendedInfo_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ProcessExtendedInfo,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ProcessExtendedInfo_ICoreWebView2ProcessExtendedInfo_get_ProcessInfo(ICoreWebView2ProcessExtendedInfo *iface, ICoreWebView2ProcessInfo **processInfo)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!processInfo) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ProcessExtendedInfo_get_ProcessInfo, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *processInfo = (ICoreWebView2ProcessInfo *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ProcessExtendedInfo_ICoreWebView2ProcessExtendedInfo_get_AssociatedFrameInfos(ICoreWebView2ProcessExtendedInfo *iface, ICoreWebView2FrameInfoCollection **frames)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!frames) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ProcessExtendedInfo_get_AssociatedFrameInfos, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *frames = (ICoreWebView2FrameInfoCollection *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ProcessExtendedInfoVtbl ICoreWebView2ProcessExtendedInfo_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ProcessExtendedInfo_ICoreWebView2ProcessExtendedInfo_get_ProcessInfo,
+    proxy_ICoreWebView2ProcessExtendedInfo_ICoreWebView2ProcessExtendedInfo_get_AssociatedFrameInfos,
+};
+
+/* ===== ICoreWebView2ProcessInfo ===== */
+
+static const IID *const ICoreWebView2ProcessInfo_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ProcessInfo,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ProcessInfo_ICoreWebView2ProcessInfo_get_ProcessId(ICoreWebView2ProcessInfo *iface, INT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ProcessInfo_get_ProcessId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (INT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ProcessInfo_ICoreWebView2ProcessInfo_get_Kind(ICoreWebView2ProcessInfo *iface, COREWEBVIEW2_PROCESS_KIND *kind)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!kind) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ProcessInfo_get_Kind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *kind = (COREWEBVIEW2_PROCESS_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ProcessInfoVtbl ICoreWebView2ProcessInfo_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ProcessInfo_ICoreWebView2ProcessInfo_get_ProcessId,
+    proxy_ICoreWebView2ProcessInfo_ICoreWebView2ProcessInfo_get_Kind,
+};
+
+/* ===== ICoreWebView2ScriptDialogOpeningEventArgs ===== */
+
+static const IID *const ICoreWebView2ScriptDialogOpeningEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ScriptDialogOpeningEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScriptDialogOpeningEventArgs_ICoreWebView2ScriptDialogOpeningEventArgs_get_Uri(ICoreWebView2ScriptDialogOpeningEventArgs *iface, LPWSTR *uri)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!uri) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScriptDialogOpeningEventArgs_get_Uri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *uri = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScriptDialogOpeningEventArgs_ICoreWebView2ScriptDialogOpeningEventArgs_get_Kind(ICoreWebView2ScriptDialogOpeningEventArgs *iface, COREWEBVIEW2_SCRIPT_DIALOG_KIND *kind)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!kind) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScriptDialogOpeningEventArgs_get_Kind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *kind = (COREWEBVIEW2_SCRIPT_DIALOG_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScriptDialogOpeningEventArgs_ICoreWebView2ScriptDialogOpeningEventArgs_get_Message(ICoreWebView2ScriptDialogOpeningEventArgs *iface, LPWSTR *message)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!message) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScriptDialogOpeningEventArgs_get_Message, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *message = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScriptDialogOpeningEventArgs_ICoreWebView2ScriptDialogOpeningEventArgs_Accept(ICoreWebView2ScriptDialogOpeningEventArgs *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScriptDialogOpeningEventArgs_Accept, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScriptDialogOpeningEventArgs_ICoreWebView2ScriptDialogOpeningEventArgs_get_DefaultText(ICoreWebView2ScriptDialogOpeningEventArgs *iface, LPWSTR *defaultText)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!defaultText) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScriptDialogOpeningEventArgs_get_DefaultText, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *defaultText = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScriptDialogOpeningEventArgs_ICoreWebView2ScriptDialogOpeningEventArgs_get_ResultText(ICoreWebView2ScriptDialogOpeningEventArgs *iface, LPWSTR *resultText)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!resultText) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScriptDialogOpeningEventArgs_get_ResultText, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *resultText = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScriptDialogOpeningEventArgs_ICoreWebView2ScriptDialogOpeningEventArgs_put_ResultText(ICoreWebView2ScriptDialogOpeningEventArgs *iface, LPCWSTR resultText)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, resultText);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScriptDialogOpeningEventArgs_put_ResultText, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScriptDialogOpeningEventArgs_ICoreWebView2ScriptDialogOpeningEventArgs_GetDeferral(ICoreWebView2ScriptDialogOpeningEventArgs *iface, ICoreWebView2Deferral **deferral)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!deferral) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScriptDialogOpeningEventArgs_GetDeferral, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *deferral = (ICoreWebView2Deferral *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ScriptDialogOpeningEventArgsVtbl ICoreWebView2ScriptDialogOpeningEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ScriptDialogOpeningEventArgs_ICoreWebView2ScriptDialogOpeningEventArgs_get_Uri,
+    proxy_ICoreWebView2ScriptDialogOpeningEventArgs_ICoreWebView2ScriptDialogOpeningEventArgs_get_Kind,
+    proxy_ICoreWebView2ScriptDialogOpeningEventArgs_ICoreWebView2ScriptDialogOpeningEventArgs_get_Message,
+    proxy_ICoreWebView2ScriptDialogOpeningEventArgs_ICoreWebView2ScriptDialogOpeningEventArgs_Accept,
+    proxy_ICoreWebView2ScriptDialogOpeningEventArgs_ICoreWebView2ScriptDialogOpeningEventArgs_get_DefaultText,
+    proxy_ICoreWebView2ScriptDialogOpeningEventArgs_ICoreWebView2ScriptDialogOpeningEventArgs_get_ResultText,
+    proxy_ICoreWebView2ScriptDialogOpeningEventArgs_ICoreWebView2ScriptDialogOpeningEventArgs_put_ResultText,
+    proxy_ICoreWebView2ScriptDialogOpeningEventArgs_ICoreWebView2ScriptDialogOpeningEventArgs_GetDeferral,
+};
+
+/* ===== ICoreWebView2ScriptException ===== */
+
+static const IID *const ICoreWebView2ScriptException_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ScriptException,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScriptException_ICoreWebView2ScriptException_get_LineNumber(ICoreWebView2ScriptException *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScriptException_get_LineNumber, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScriptException_ICoreWebView2ScriptException_get_ColumnNumber(ICoreWebView2ScriptException *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScriptException_get_ColumnNumber, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScriptException_ICoreWebView2ScriptException_get_Name(ICoreWebView2ScriptException *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScriptException_get_Name, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScriptException_ICoreWebView2ScriptException_get_Message(ICoreWebView2ScriptException *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScriptException_get_Message, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScriptException_ICoreWebView2ScriptException_get_ToJson(ICoreWebView2ScriptException *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScriptException_get_ToJson, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ScriptExceptionVtbl ICoreWebView2ScriptException_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ScriptException_ICoreWebView2ScriptException_get_LineNumber,
+    proxy_ICoreWebView2ScriptException_ICoreWebView2ScriptException_get_ColumnNumber,
+    proxy_ICoreWebView2ScriptException_ICoreWebView2ScriptException_get_Name,
+    proxy_ICoreWebView2ScriptException_ICoreWebView2ScriptException_get_Message,
+    proxy_ICoreWebView2ScriptException_ICoreWebView2ScriptException_get_ToJson,
+};
+
+/* ===== ICoreWebView2ServerCertificateErrorDetectedEventArgs ===== */
+
+static const IID *const ICoreWebView2ServerCertificateErrorDetectedEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ServerCertificateErrorDetectedEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServerCertificateErrorDetectedEventArgs_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_ErrorStatus(ICoreWebView2ServerCertificateErrorDetectedEventArgs *iface, COREWEBVIEW2_WEB_ERROR_STATUS *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_ErrorStatus, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_WEB_ERROR_STATUS)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServerCertificateErrorDetectedEventArgs_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_RequestUri(ICoreWebView2ServerCertificateErrorDetectedEventArgs *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_RequestUri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServerCertificateErrorDetectedEventArgs_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_ServerCertificate(ICoreWebView2ServerCertificateErrorDetectedEventArgs *iface, ICoreWebView2Certificate **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_ServerCertificate, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2Certificate *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServerCertificateErrorDetectedEventArgs_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_Action(ICoreWebView2ServerCertificateErrorDetectedEventArgs *iface, COREWEBVIEW2_SERVER_CERTIFICATE_ERROR_ACTION *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_Action, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_SERVER_CERTIFICATE_ERROR_ACTION)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServerCertificateErrorDetectedEventArgs_ICoreWebView2ServerCertificateErrorDetectedEventArgs_put_Action(ICoreWebView2ServerCertificateErrorDetectedEventArgs *iface, COREWEBVIEW2_SERVER_CERTIFICATE_ERROR_ACTION value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServerCertificateErrorDetectedEventArgs_put_Action, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServerCertificateErrorDetectedEventArgs_ICoreWebView2ServerCertificateErrorDetectedEventArgs_GetDeferral(ICoreWebView2ServerCertificateErrorDetectedEventArgs *iface, ICoreWebView2Deferral **deferral)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!deferral) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServerCertificateErrorDetectedEventArgs_GetDeferral, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *deferral = (ICoreWebView2Deferral *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ServerCertificateErrorDetectedEventArgsVtbl ICoreWebView2ServerCertificateErrorDetectedEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ServerCertificateErrorDetectedEventArgs_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_ErrorStatus,
+    proxy_ICoreWebView2ServerCertificateErrorDetectedEventArgs_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_RequestUri,
+    proxy_ICoreWebView2ServerCertificateErrorDetectedEventArgs_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_ServerCertificate,
+    proxy_ICoreWebView2ServerCertificateErrorDetectedEventArgs_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_Action,
+    proxy_ICoreWebView2ServerCertificateErrorDetectedEventArgs_ICoreWebView2ServerCertificateErrorDetectedEventArgs_put_Action,
+    proxy_ICoreWebView2ServerCertificateErrorDetectedEventArgs_ICoreWebView2ServerCertificateErrorDetectedEventArgs_GetDeferral,
+};
+
+/* ===== ICoreWebView2SharedBuffer ===== */
+
+static const IID *const ICoreWebView2SharedBuffer_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2SharedBuffer,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedBuffer_ICoreWebView2SharedBuffer_get_Size(ICoreWebView2SharedBuffer *iface, UINT64 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SharedBuffer_get_Size, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT64)wv2_get_u64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedBuffer_ICoreWebView2SharedBuffer_get_Buffer(ICoreWebView2SharedBuffer *iface, BYTE **value)
+{
+    FIXME("iface %p: ICoreWebView2SharedBuffer_get_Buffer not marshallable (BYTE **), stub!\n", iface);
+    return E_NOTIMPL;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedBuffer_ICoreWebView2SharedBuffer_OpenStream(ICoreWebView2SharedBuffer *iface, IStream **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SharedBuffer_OpenStream, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_stream(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedBuffer_ICoreWebView2SharedBuffer_get_FileMappingHandle(ICoreWebView2SharedBuffer *iface, HANDLE *value)
+{
+    FIXME("iface %p: ICoreWebView2SharedBuffer_get_FileMappingHandle not marshallable (HANDLE *), stub!\n", iface);
+    return E_NOTIMPL;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedBuffer_ICoreWebView2SharedBuffer_Close(ICoreWebView2SharedBuffer *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SharedBuffer_Close, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2SharedBufferVtbl ICoreWebView2SharedBuffer_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2SharedBuffer_ICoreWebView2SharedBuffer_get_Size,
+    proxy_ICoreWebView2SharedBuffer_ICoreWebView2SharedBuffer_get_Buffer,
+    proxy_ICoreWebView2SharedBuffer_ICoreWebView2SharedBuffer_OpenStream,
+    proxy_ICoreWebView2SharedBuffer_ICoreWebView2SharedBuffer_get_FileMappingHandle,
+    proxy_ICoreWebView2SharedBuffer_ICoreWebView2SharedBuffer_Close,
+};
+
+/* ===== ICoreWebView2WebResourceRequest ===== */
+
+static const IID *const ICoreWebView2WebResourceRequest_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2WebResourceRequest,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceRequest_ICoreWebView2WebResourceRequest_get_Uri(ICoreWebView2WebResourceRequest *iface, LPWSTR *uri)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!uri) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceRequest_get_Uri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *uri = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceRequest_ICoreWebView2WebResourceRequest_put_Uri(ICoreWebView2WebResourceRequest *iface, LPCWSTR uri)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, uri);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceRequest_put_Uri, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceRequest_ICoreWebView2WebResourceRequest_get_Method(ICoreWebView2WebResourceRequest *iface, LPWSTR *method)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!method) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceRequest_get_Method, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *method = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceRequest_ICoreWebView2WebResourceRequest_put_Method(ICoreWebView2WebResourceRequest *iface, LPCWSTR method)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, method);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceRequest_put_Method, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceRequest_ICoreWebView2WebResourceRequest_get_Content(ICoreWebView2WebResourceRequest *iface, IStream **content)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!content) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceRequest_get_Content, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *content = wv2_get_stream(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceRequest_ICoreWebView2WebResourceRequest_put_Content(ICoreWebView2WebResourceRequest *iface, IStream *content)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_stream(&args, content);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceRequest_put_Content, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceRequest_ICoreWebView2WebResourceRequest_get_Headers(ICoreWebView2WebResourceRequest *iface, ICoreWebView2HttpRequestHeaders **headers)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!headers) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceRequest_get_Headers, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *headers = (ICoreWebView2HttpRequestHeaders *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2WebResourceRequestVtbl ICoreWebView2WebResourceRequest_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2WebResourceRequest_ICoreWebView2WebResourceRequest_get_Uri,
+    proxy_ICoreWebView2WebResourceRequest_ICoreWebView2WebResourceRequest_put_Uri,
+    proxy_ICoreWebView2WebResourceRequest_ICoreWebView2WebResourceRequest_get_Method,
+    proxy_ICoreWebView2WebResourceRequest_ICoreWebView2WebResourceRequest_put_Method,
+    proxy_ICoreWebView2WebResourceRequest_ICoreWebView2WebResourceRequest_get_Content,
+    proxy_ICoreWebView2WebResourceRequest_ICoreWebView2WebResourceRequest_put_Content,
+    proxy_ICoreWebView2WebResourceRequest_ICoreWebView2WebResourceRequest_get_Headers,
+};
+
+/* ===== ICoreWebView2WebResourceResponse ===== */
+
+static const IID *const ICoreWebView2WebResourceResponse_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2WebResourceResponse,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceResponse_ICoreWebView2WebResourceResponse_get_Content(ICoreWebView2WebResourceResponse *iface, IStream **content)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!content) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceResponse_get_Content, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *content = wv2_get_stream(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceResponse_ICoreWebView2WebResourceResponse_put_Content(ICoreWebView2WebResourceResponse *iface, IStream *content)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_stream(&args, content);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceResponse_put_Content, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceResponse_ICoreWebView2WebResourceResponse_get_Headers(ICoreWebView2WebResourceResponse *iface, ICoreWebView2HttpResponseHeaders **headers)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!headers) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceResponse_get_Headers, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *headers = (ICoreWebView2HttpResponseHeaders *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceResponse_ICoreWebView2WebResourceResponse_get_StatusCode(ICoreWebView2WebResourceResponse *iface, int *statusCode)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!statusCode) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceResponse_get_StatusCode, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *statusCode = (int)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceResponse_ICoreWebView2WebResourceResponse_put_StatusCode(ICoreWebView2WebResourceResponse *iface, int statusCode)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)statusCode);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceResponse_put_StatusCode, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceResponse_ICoreWebView2WebResourceResponse_get_ReasonPhrase(ICoreWebView2WebResourceResponse *iface, LPWSTR *reasonPhrase)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!reasonPhrase) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceResponse_get_ReasonPhrase, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *reasonPhrase = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceResponse_ICoreWebView2WebResourceResponse_put_ReasonPhrase(ICoreWebView2WebResourceResponse *iface, LPCWSTR reasonPhrase)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, reasonPhrase);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceResponse_put_ReasonPhrase, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2WebResourceResponseVtbl ICoreWebView2WebResourceResponse_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2WebResourceResponse_ICoreWebView2WebResourceResponse_get_Content,
+    proxy_ICoreWebView2WebResourceResponse_ICoreWebView2WebResourceResponse_put_Content,
+    proxy_ICoreWebView2WebResourceResponse_ICoreWebView2WebResourceResponse_get_Headers,
+    proxy_ICoreWebView2WebResourceResponse_ICoreWebView2WebResourceResponse_get_StatusCode,
+    proxy_ICoreWebView2WebResourceResponse_ICoreWebView2WebResourceResponse_put_StatusCode,
+    proxy_ICoreWebView2WebResourceResponse_ICoreWebView2WebResourceResponse_get_ReasonPhrase,
+    proxy_ICoreWebView2WebResourceResponse_ICoreWebView2WebResourceResponse_put_ReasonPhrase,
+};
+
+/* ===== ICoreWebView2WebResourceResponseView ===== */
+
+static const IID *const ICoreWebView2WebResourceResponseView_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2WebResourceResponseView,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceResponseView_ICoreWebView2WebResourceResponseView_get_Headers(ICoreWebView2WebResourceResponseView *iface, ICoreWebView2HttpResponseHeaders **headers)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!headers) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceResponseView_get_Headers, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *headers = (ICoreWebView2HttpResponseHeaders *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceResponseView_ICoreWebView2WebResourceResponseView_get_StatusCode(ICoreWebView2WebResourceResponseView *iface, int *statusCode)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!statusCode) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceResponseView_get_StatusCode, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *statusCode = (int)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceResponseView_ICoreWebView2WebResourceResponseView_get_ReasonPhrase(ICoreWebView2WebResourceResponseView *iface, LPWSTR *reasonPhrase)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!reasonPhrase) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceResponseView_get_ReasonPhrase, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *reasonPhrase = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceResponseView_ICoreWebView2WebResourceResponseView_GetContent(ICoreWebView2WebResourceResponseView *iface, ICoreWebView2WebResourceResponseViewGetContentCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceResponseView_GetContent, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2WebResourceResponseViewVtbl ICoreWebView2WebResourceResponseView_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2WebResourceResponseView_ICoreWebView2WebResourceResponseView_get_Headers,
+    proxy_ICoreWebView2WebResourceResponseView_ICoreWebView2WebResourceResponseView_get_StatusCode,
+    proxy_ICoreWebView2WebResourceResponseView_ICoreWebView2WebResourceResponseView_get_ReasonPhrase,
+    proxy_ICoreWebView2WebResourceResponseView_ICoreWebView2WebResourceResponseView_GetContent,
+};
+
+/* ===== ICoreWebView2WindowFeatures ===== */
+
+static const IID *const ICoreWebView2WindowFeatures_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2WindowFeatures,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_HasPosition(ICoreWebView2WindowFeatures *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WindowFeatures_get_HasPosition, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_HasSize(ICoreWebView2WindowFeatures *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WindowFeatures_get_HasSize, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_Left(ICoreWebView2WindowFeatures *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WindowFeatures_get_Left, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_Top(ICoreWebView2WindowFeatures *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WindowFeatures_get_Top, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_Height(ICoreWebView2WindowFeatures *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WindowFeatures_get_Height, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_Width(ICoreWebView2WindowFeatures *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WindowFeatures_get_Width, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_ShouldDisplayMenuBar(ICoreWebView2WindowFeatures *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WindowFeatures_get_ShouldDisplayMenuBar, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_ShouldDisplayStatus(ICoreWebView2WindowFeatures *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WindowFeatures_get_ShouldDisplayStatus, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_ShouldDisplayToolbar(ICoreWebView2WindowFeatures *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WindowFeatures_get_ShouldDisplayToolbar, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_ShouldDisplayScrollBars(ICoreWebView2WindowFeatures *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WindowFeatures_get_ShouldDisplayScrollBars, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2WindowFeaturesVtbl ICoreWebView2WindowFeatures_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_HasPosition,
+    proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_HasSize,
+    proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_Left,
+    proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_Top,
+    proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_Height,
+    proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_Width,
+    proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_ShouldDisplayMenuBar,
+    proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_ShouldDisplayStatus,
+    proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_ShouldDisplayToolbar,
+    proxy_ICoreWebView2WindowFeatures_ICoreWebView2WindowFeatures_get_ShouldDisplayScrollBars,
+};
+
+/* ===== ICoreWebView2ObjectCollection ===== */
+
+static const IID *const ICoreWebView2ObjectCollection_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ObjectCollectionView,
+    &IID_ICoreWebView2ObjectCollection,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ObjectCollection_ICoreWebView2ObjectCollectionView_get_Count(ICoreWebView2ObjectCollection *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ObjectCollectionView_get_Count, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ObjectCollection_ICoreWebView2ObjectCollectionView_GetValueAtIndex(ICoreWebView2ObjectCollection *iface, UINT32 index, IUnknown **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_u32(&args, (UINT32)index);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ObjectCollectionView_GetValueAtIndex, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (IUnknown *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ObjectCollection_ICoreWebView2ObjectCollection_RemoveValueAtIndex(ICoreWebView2ObjectCollection *iface, UINT32 index)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)index);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ObjectCollection_RemoveValueAtIndex, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ObjectCollection_ICoreWebView2ObjectCollection_InsertValueAtIndex(ICoreWebView2ObjectCollection *iface, UINT32 index, IUnknown *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)index);
+    wv2_put_iface(&args, (IUnknown *)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ObjectCollection_InsertValueAtIndex, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ObjectCollectionVtbl ICoreWebView2ObjectCollection_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ObjectCollection_ICoreWebView2ObjectCollectionView_get_Count,
+    proxy_ICoreWebView2ObjectCollection_ICoreWebView2ObjectCollectionView_GetValueAtIndex,
+    proxy_ICoreWebView2ObjectCollection_ICoreWebView2ObjectCollection_RemoveValueAtIndex,
+    proxy_ICoreWebView2ObjectCollection_ICoreWebView2ObjectCollection_InsertValueAtIndex,
+};
+
+/* ===== ICoreWebView2Notification ===== */
+
+static const IID *const ICoreWebView2Notification_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2Notification,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_add_CloseRequested(ICoreWebView2Notification *iface, ICoreWebView2NotificationCloseRequestedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_add_CloseRequested, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_remove_CloseRequested(ICoreWebView2Notification *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_remove_CloseRequested, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_ReportShown(ICoreWebView2Notification *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_ReportShown, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_ReportClicked(ICoreWebView2Notification *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_ReportClicked, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_ReportClosed(ICoreWebView2Notification *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_ReportClosed, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_Body(ICoreWebView2Notification *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_get_Body, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_Direction(ICoreWebView2Notification *iface, COREWEBVIEW2_TEXT_DIRECTION_KIND *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_get_Direction, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_TEXT_DIRECTION_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_Language(ICoreWebView2Notification *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_get_Language, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_Tag(ICoreWebView2Notification *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_get_Tag, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_IconUri(ICoreWebView2Notification *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_get_IconUri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_Title(ICoreWebView2Notification *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_get_Title, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_BadgeUri(ICoreWebView2Notification *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_get_BadgeUri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_BodyImageUri(ICoreWebView2Notification *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_get_BodyImageUri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_ShouldRenotify(ICoreWebView2Notification *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_get_ShouldRenotify, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_RequiresInteraction(ICoreWebView2Notification *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_get_RequiresInteraction, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_IsSilent(ICoreWebView2Notification *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_get_IsSilent, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_Timestamp(ICoreWebView2Notification *iface, double *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_get_Timestamp, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_f64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2Notification_GetVibrationPattern(ICoreWebView2Notification *iface, UINT32 *count, UINT64 **vibrationPattern)
+{
+    FIXME("iface %p: ICoreWebView2Notification_GetVibrationPattern not marshallable (UINT64 **), stub!\n", iface);
+    return E_NOTIMPL;
+}
+
+static const ICoreWebView2NotificationVtbl ICoreWebView2Notification_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_add_CloseRequested,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_remove_CloseRequested,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_ReportShown,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_ReportClicked,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_ReportClosed,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_Body,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_Direction,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_Language,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_Tag,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_IconUri,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_Title,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_BadgeUri,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_BodyImageUri,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_ShouldRenotify,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_RequiresInteraction,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_IsSilent,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_get_Timestamp,
+    proxy_ICoreWebView2Notification_ICoreWebView2Notification_GetVibrationPattern,
+};
+
+/* ===== ICoreWebView2NotificationReceivedEventArgs ===== */
+
+static const IID *const ICoreWebView2NotificationReceivedEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2NotificationReceivedEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NotificationReceivedEventArgs_ICoreWebView2NotificationReceivedEventArgs_get_SenderOrigin(ICoreWebView2NotificationReceivedEventArgs *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NotificationReceivedEventArgs_get_SenderOrigin, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NotificationReceivedEventArgs_ICoreWebView2NotificationReceivedEventArgs_get_Notification(ICoreWebView2NotificationReceivedEventArgs *iface, ICoreWebView2Notification **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NotificationReceivedEventArgs_get_Notification, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2Notification *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NotificationReceivedEventArgs_ICoreWebView2NotificationReceivedEventArgs_put_Handled(ICoreWebView2NotificationReceivedEventArgs *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NotificationReceivedEventArgs_put_Handled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NotificationReceivedEventArgs_ICoreWebView2NotificationReceivedEventArgs_get_Handled(ICoreWebView2NotificationReceivedEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NotificationReceivedEventArgs_get_Handled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NotificationReceivedEventArgs_ICoreWebView2NotificationReceivedEventArgs_GetDeferral(ICoreWebView2NotificationReceivedEventArgs *iface, ICoreWebView2Deferral **deferral)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!deferral) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NotificationReceivedEventArgs_GetDeferral, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *deferral = (ICoreWebView2Deferral *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2NotificationReceivedEventArgsVtbl ICoreWebView2NotificationReceivedEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2NotificationReceivedEventArgs_ICoreWebView2NotificationReceivedEventArgs_get_SenderOrigin,
+    proxy_ICoreWebView2NotificationReceivedEventArgs_ICoreWebView2NotificationReceivedEventArgs_get_Notification,
+    proxy_ICoreWebView2NotificationReceivedEventArgs_ICoreWebView2NotificationReceivedEventArgs_put_Handled,
+    proxy_ICoreWebView2NotificationReceivedEventArgs_ICoreWebView2NotificationReceivedEventArgs_get_Handled,
+    proxy_ICoreWebView2NotificationReceivedEventArgs_ICoreWebView2NotificationReceivedEventArgs_GetDeferral,
+};
+
+/* ===== ICoreWebView2SaveAsUIShowingEventArgs ===== */
+
+static const IID *const ICoreWebView2SaveAsUIShowingEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2SaveAsUIShowingEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_get_ContentMimeType(ICoreWebView2SaveAsUIShowingEventArgs *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveAsUIShowingEventArgs_get_ContentMimeType, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_put_Cancel(ICoreWebView2SaveAsUIShowingEventArgs *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveAsUIShowingEventArgs_put_Cancel, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_get_Cancel(ICoreWebView2SaveAsUIShowingEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveAsUIShowingEventArgs_get_Cancel, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_put_SuppressDefaultDialog(ICoreWebView2SaveAsUIShowingEventArgs *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveAsUIShowingEventArgs_put_SuppressDefaultDialog, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_get_SuppressDefaultDialog(ICoreWebView2SaveAsUIShowingEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveAsUIShowingEventArgs_get_SuppressDefaultDialog, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_GetDeferral(ICoreWebView2SaveAsUIShowingEventArgs *iface, ICoreWebView2Deferral **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveAsUIShowingEventArgs_GetDeferral, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2Deferral *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_put_SaveAsFilePath(ICoreWebView2SaveAsUIShowingEventArgs *iface, LPCWSTR value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveAsUIShowingEventArgs_put_SaveAsFilePath, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_get_SaveAsFilePath(ICoreWebView2SaveAsUIShowingEventArgs *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveAsUIShowingEventArgs_get_SaveAsFilePath, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_put_AllowReplace(ICoreWebView2SaveAsUIShowingEventArgs *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveAsUIShowingEventArgs_put_AllowReplace, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_get_AllowReplace(ICoreWebView2SaveAsUIShowingEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveAsUIShowingEventArgs_get_AllowReplace, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_put_Kind(ICoreWebView2SaveAsUIShowingEventArgs *iface, COREWEBVIEW2_SAVE_AS_KIND value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveAsUIShowingEventArgs_put_Kind, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_get_Kind(ICoreWebView2SaveAsUIShowingEventArgs *iface, COREWEBVIEW2_SAVE_AS_KIND *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveAsUIShowingEventArgs_get_Kind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_SAVE_AS_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2SaveAsUIShowingEventArgsVtbl ICoreWebView2SaveAsUIShowingEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_get_ContentMimeType,
+    proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_put_Cancel,
+    proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_get_Cancel,
+    proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_put_SuppressDefaultDialog,
+    proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_get_SuppressDefaultDialog,
+    proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_GetDeferral,
+    proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_put_SaveAsFilePath,
+    proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_get_SaveAsFilePath,
+    proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_put_AllowReplace,
+    proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_get_AllowReplace,
+    proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_put_Kind,
+    proxy_ICoreWebView2SaveAsUIShowingEventArgs_ICoreWebView2SaveAsUIShowingEventArgs_get_Kind,
+};
+
+/* ===== ICoreWebView2AcceleratorKeyPressedEventArgs2 ===== */
+
+static const IID *const ICoreWebView2AcceleratorKeyPressedEventArgs2_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2AcceleratorKeyPressedEventArgs,
+    &IID_ICoreWebView2AcceleratorKeyPressedEventArgs2,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2AcceleratorKeyPressedEventArgs2_ICoreWebView2AcceleratorKeyPressedEventArgs_get_KeyEventKind(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface, COREWEBVIEW2_KEY_EVENT_KIND *keyEventKind)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!keyEventKind) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2AcceleratorKeyPressedEventArgs_get_KeyEventKind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *keyEventKind = (COREWEBVIEW2_KEY_EVENT_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2AcceleratorKeyPressedEventArgs2_ICoreWebView2AcceleratorKeyPressedEventArgs_get_VirtualKey(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface, UINT *virtualKey)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!virtualKey) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2AcceleratorKeyPressedEventArgs_get_VirtualKey, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *virtualKey = (UINT)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2AcceleratorKeyPressedEventArgs2_ICoreWebView2AcceleratorKeyPressedEventArgs_get_KeyEventLParam(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface, INT *lParam)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!lParam) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2AcceleratorKeyPressedEventArgs_get_KeyEventLParam, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *lParam = (INT)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2AcceleratorKeyPressedEventArgs2_ICoreWebView2AcceleratorKeyPressedEventArgs_get_PhysicalKeyStatus(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface, COREWEBVIEW2_PHYSICAL_KEY_STATUS *physicalKeyStatus)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!physicalKeyStatus) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2AcceleratorKeyPressedEventArgs_get_PhysicalKeyStatus, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, physicalKeyStatus, sizeof(COREWEBVIEW2_PHYSICAL_KEY_STATUS));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2AcceleratorKeyPressedEventArgs2_ICoreWebView2AcceleratorKeyPressedEventArgs_get_Handled(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface, BOOL *handled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!handled) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2AcceleratorKeyPressedEventArgs_get_Handled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *handled = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2AcceleratorKeyPressedEventArgs2_ICoreWebView2AcceleratorKeyPressedEventArgs_put_Handled(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface, BOOL handled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)handled);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2AcceleratorKeyPressedEventArgs_put_Handled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2AcceleratorKeyPressedEventArgs2_ICoreWebView2AcceleratorKeyPressedEventArgs2_get_IsBrowserAcceleratorKeyEnabled(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2AcceleratorKeyPressedEventArgs2_get_IsBrowserAcceleratorKeyEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2AcceleratorKeyPressedEventArgs2_ICoreWebView2AcceleratorKeyPressedEventArgs2_put_IsBrowserAcceleratorKeyEnabled(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2AcceleratorKeyPressedEventArgs2_put_IsBrowserAcceleratorKeyEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2AcceleratorKeyPressedEventArgs2Vtbl ICoreWebView2AcceleratorKeyPressedEventArgs2_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2AcceleratorKeyPressedEventArgs2_ICoreWebView2AcceleratorKeyPressedEventArgs_get_KeyEventKind,
+    proxy_ICoreWebView2AcceleratorKeyPressedEventArgs2_ICoreWebView2AcceleratorKeyPressedEventArgs_get_VirtualKey,
+    proxy_ICoreWebView2AcceleratorKeyPressedEventArgs2_ICoreWebView2AcceleratorKeyPressedEventArgs_get_KeyEventLParam,
+    proxy_ICoreWebView2AcceleratorKeyPressedEventArgs2_ICoreWebView2AcceleratorKeyPressedEventArgs_get_PhysicalKeyStatus,
+    proxy_ICoreWebView2AcceleratorKeyPressedEventArgs2_ICoreWebView2AcceleratorKeyPressedEventArgs_get_Handled,
+    proxy_ICoreWebView2AcceleratorKeyPressedEventArgs2_ICoreWebView2AcceleratorKeyPressedEventArgs_put_Handled,
+    proxy_ICoreWebView2AcceleratorKeyPressedEventArgs2_ICoreWebView2AcceleratorKeyPressedEventArgs2_get_IsBrowserAcceleratorKeyEnabled,
+    proxy_ICoreWebView2AcceleratorKeyPressedEventArgs2_ICoreWebView2AcceleratorKeyPressedEventArgs2_put_IsBrowserAcceleratorKeyEnabled,
+};
+
+/* ===== ICoreWebView2BrowserProcessExitedEventArgs ===== */
+
+static const IID *const ICoreWebView2BrowserProcessExitedEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2BrowserProcessExitedEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BrowserProcessExitedEventArgs_ICoreWebView2BrowserProcessExitedEventArgs_get_BrowserProcessExitKind(ICoreWebView2BrowserProcessExitedEventArgs *iface, COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BrowserProcessExitedEventArgs_get_BrowserProcessExitKind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BrowserProcessExitedEventArgs_ICoreWebView2BrowserProcessExitedEventArgs_get_BrowserProcessId(ICoreWebView2BrowserProcessExitedEventArgs *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BrowserProcessExitedEventArgs_get_BrowserProcessId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2BrowserProcessExitedEventArgsVtbl ICoreWebView2BrowserProcessExitedEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2BrowserProcessExitedEventArgs_ICoreWebView2BrowserProcessExitedEventArgs_get_BrowserProcessExitKind,
+    proxy_ICoreWebView2BrowserProcessExitedEventArgs_ICoreWebView2BrowserProcessExitedEventArgs_get_BrowserProcessId,
+};
+
+/* ===== ICoreWebView2CompositionController5 ===== */
+
+static const IID *const ICoreWebView2CompositionController5_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2CompositionController,
+    &IID_ICoreWebView2CompositionController2,
+    &IID_ICoreWebView2CompositionController3,
+    &IID_ICoreWebView2CompositionController4,
+    &IID_ICoreWebView2CompositionController5,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController_get_RootVisualTarget(ICoreWebView2CompositionController5 *iface, IUnknown **target)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!target) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController_get_RootVisualTarget, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *target = (IUnknown *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController_put_RootVisualTarget(ICoreWebView2CompositionController5 *iface, IUnknown *target)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)target);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController_put_RootVisualTarget, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController_SendMouseInput(ICoreWebView2CompositionController5 *iface, COREWEBVIEW2_MOUSE_EVENT_KIND eventKind, COREWEBVIEW2_MOUSE_EVENT_VIRTUAL_KEYS virtualKeys, UINT32 mouseData, POINT point)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)eventKind);
+    wv2_put_u32(&args, (UINT32)virtualKeys);
+    wv2_put_u32(&args, (UINT32)mouseData);
+    wv2_put_bytes(&args, &point, sizeof(POINT));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController_SendMouseInput, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController_SendPointerInput(ICoreWebView2CompositionController5 *iface, COREWEBVIEW2_POINTER_EVENT_KIND eventKind, ICoreWebView2PointerInfo *pointerInfo)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)eventKind);
+    wv2_put_iface(&args, (IUnknown *)pointerInfo);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController_SendPointerInput, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController_get_Cursor(ICoreWebView2CompositionController5 *iface, HCURSOR *cursor)
+{
+    FIXME("iface %p: ICoreWebView2CompositionController_get_Cursor not marshallable (HCURSOR *), stub!\n", iface);
+    return E_NOTIMPL;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController_get_SystemCursorId(ICoreWebView2CompositionController5 *iface, UINT32 *systemCursorId)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!systemCursorId) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController_get_SystemCursorId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *systemCursorId = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController_add_CursorChanged(ICoreWebView2CompositionController5 *iface, ICoreWebView2CursorChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController_add_CursorChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController_remove_CursorChanged(ICoreWebView2CompositionController5 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController_remove_CursorChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController2_get_AutomationProvider(ICoreWebView2CompositionController5 *iface, IUnknown **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController2_get_AutomationProvider, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (IUnknown *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController3_DragEnter(ICoreWebView2CompositionController5 *iface, IDataObject *dataObject, DWORD keyState, POINT point, DWORD *effect)
+{
+    FIXME("iface %p: ICoreWebView2CompositionController3_DragEnter not marshallable (IDataObject *), stub!\n", iface);
+    return E_NOTIMPL;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController3_DragLeave(ICoreWebView2CompositionController5 *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController3_DragLeave, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController3_DragOver(ICoreWebView2CompositionController5 *iface, DWORD keyState, POINT point, DWORD *effect)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!effect) return E_POINTER;
+    wv2_put_u32(&args, (UINT32)keyState);
+    wv2_put_bytes(&args, &point, sizeof(POINT));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController3_DragOver, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *effect = (DWORD)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController3_Drop(ICoreWebView2CompositionController5 *iface, IDataObject *dataObject, DWORD keyState, POINT point, DWORD *effect)
+{
+    FIXME("iface %p: ICoreWebView2CompositionController3_Drop not marshallable (IDataObject *), stub!\n", iface);
+    return E_NOTIMPL;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController4_GetNonClientRegionAtPoint(ICoreWebView2CompositionController5 *iface, POINT point, COREWEBVIEW2_NON_CLIENT_REGION_KIND *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_bytes(&args, &point, sizeof(POINT));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController4_GetNonClientRegionAtPoint, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_NON_CLIENT_REGION_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController4_QueryNonClientRegion(ICoreWebView2CompositionController5 *iface, COREWEBVIEW2_NON_CLIENT_REGION_KIND kind, ICoreWebView2RegionRectCollectionView **rects)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!rects) return E_POINTER;
+    wv2_put_u32(&args, (UINT32)kind);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController4_QueryNonClientRegion, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *rects = (ICoreWebView2RegionRectCollectionView *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController4_add_NonClientRegionChanged(ICoreWebView2CompositionController5 *iface, ICoreWebView2NonClientRegionChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController4_add_NonClientRegionChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController4_remove_NonClientRegionChanged(ICoreWebView2CompositionController5 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController4_remove_NonClientRegionChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController5_add_DragStarting(ICoreWebView2CompositionController5 *iface, ICoreWebView2DragStartingEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController5_add_DragStarting, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController5_remove_DragStarting(ICoreWebView2CompositionController5 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController5_remove_DragStarting, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2CompositionController5Vtbl ICoreWebView2CompositionController5_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController_get_RootVisualTarget,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController_put_RootVisualTarget,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController_SendMouseInput,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController_SendPointerInput,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController_get_Cursor,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController_get_SystemCursorId,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController_add_CursorChanged,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController_remove_CursorChanged,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController2_get_AutomationProvider,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController3_DragEnter,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController3_DragLeave,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController3_DragOver,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController3_Drop,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController4_GetNonClientRegionAtPoint,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController4_QueryNonClientRegion,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController4_add_NonClientRegionChanged,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController4_remove_NonClientRegionChanged,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController5_add_DragStarting,
+    proxy_ICoreWebView2CompositionController5_ICoreWebView2CompositionController5_remove_DragStarting,
+};
+
+/* ===== ICoreWebView2ContentLoadingEventArgs ===== */
+
+static const IID *const ICoreWebView2ContentLoadingEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ContentLoadingEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContentLoadingEventArgs_ICoreWebView2ContentLoadingEventArgs_get_IsErrorPage(ICoreWebView2ContentLoadingEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContentLoadingEventArgs_get_IsErrorPage, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContentLoadingEventArgs_ICoreWebView2ContentLoadingEventArgs_get_NavigationId(ICoreWebView2ContentLoadingEventArgs *iface, UINT64 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContentLoadingEventArgs_get_NavigationId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT64)wv2_get_u64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ContentLoadingEventArgsVtbl ICoreWebView2ContentLoadingEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ContentLoadingEventArgs_ICoreWebView2ContentLoadingEventArgs_get_IsErrorPage,
+    proxy_ICoreWebView2ContentLoadingEventArgs_ICoreWebView2ContentLoadingEventArgs_get_NavigationId,
+};
+
+/* ===== ICoreWebView2ContextMenuItemCollection ===== */
+
+static const IID *const ICoreWebView2ContextMenuItemCollection_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ContextMenuItemCollection,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItemCollection_ICoreWebView2ContextMenuItemCollection_get_Count(ICoreWebView2ContextMenuItemCollection *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItemCollection_get_Count, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItemCollection_ICoreWebView2ContextMenuItemCollection_GetValueAtIndex(ICoreWebView2ContextMenuItemCollection *iface, UINT32 index, ICoreWebView2ContextMenuItem **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_u32(&args, (UINT32)index);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItemCollection_GetValueAtIndex, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ContextMenuItem *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItemCollection_ICoreWebView2ContextMenuItemCollection_RemoveValueAtIndex(ICoreWebView2ContextMenuItemCollection *iface, UINT32 index)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)index);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItemCollection_RemoveValueAtIndex, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItemCollection_ICoreWebView2ContextMenuItemCollection_InsertValueAtIndex(ICoreWebView2ContextMenuItemCollection *iface, UINT32 index, ICoreWebView2ContextMenuItem *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)index);
+    wv2_put_iface(&args, (IUnknown *)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItemCollection_InsertValueAtIndex, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ContextMenuItemCollectionVtbl ICoreWebView2ContextMenuItemCollection_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ContextMenuItemCollection_ICoreWebView2ContextMenuItemCollection_get_Count,
+    proxy_ICoreWebView2ContextMenuItemCollection_ICoreWebView2ContextMenuItemCollection_GetValueAtIndex,
+    proxy_ICoreWebView2ContextMenuItemCollection_ICoreWebView2ContextMenuItemCollection_RemoveValueAtIndex,
+    proxy_ICoreWebView2ContextMenuItemCollection_ICoreWebView2ContextMenuItemCollection_InsertValueAtIndex,
+};
+
+/* ===== ICoreWebView2Controller4 ===== */
+
+static const IID *const ICoreWebView2Controller4_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2Controller,
+    &IID_ICoreWebView2Controller2,
+    &IID_ICoreWebView2Controller3,
+    &IID_ICoreWebView2Controller4,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_get_IsVisible(ICoreWebView2Controller4 *iface, BOOL *isVisible)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!isVisible) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_get_IsVisible, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *isVisible = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_put_IsVisible(ICoreWebView2Controller4 *iface, BOOL isVisible)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)isVisible);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_put_IsVisible, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_get_Bounds(ICoreWebView2Controller4 *iface, RECT *bounds)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!bounds) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_get_Bounds, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, bounds, sizeof(RECT));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_put_Bounds(ICoreWebView2Controller4 *iface, RECT bounds)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &bounds, sizeof(RECT));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_put_Bounds, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_get_ZoomFactor(ICoreWebView2Controller4 *iface, double *zoomFactor)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!zoomFactor) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_get_ZoomFactor, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *zoomFactor = wv2_get_f64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_put_ZoomFactor(ICoreWebView2Controller4 *iface, double zoomFactor)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_f64(&args, zoomFactor);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_put_ZoomFactor, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_add_ZoomFactorChanged(ICoreWebView2Controller4 *iface, ICoreWebView2ZoomFactorChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_add_ZoomFactorChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_remove_ZoomFactorChanged(ICoreWebView2Controller4 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_remove_ZoomFactorChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_SetBoundsAndZoomFactor(ICoreWebView2Controller4 *iface, RECT bounds, double zoomFactor)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &bounds, sizeof(RECT));
+    wv2_put_f64(&args, zoomFactor);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_SetBoundsAndZoomFactor, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_MoveFocus(ICoreWebView2Controller4 *iface, COREWEBVIEW2_MOVE_FOCUS_REASON reason)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)reason);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_MoveFocus, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_add_MoveFocusRequested(ICoreWebView2Controller4 *iface, ICoreWebView2MoveFocusRequestedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_add_MoveFocusRequested, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_remove_MoveFocusRequested(ICoreWebView2Controller4 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_remove_MoveFocusRequested, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_add_GotFocus(ICoreWebView2Controller4 *iface, ICoreWebView2FocusChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_add_GotFocus, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_remove_GotFocus(ICoreWebView2Controller4 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_remove_GotFocus, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_add_LostFocus(ICoreWebView2Controller4 *iface, ICoreWebView2FocusChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_add_LostFocus, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_remove_LostFocus(ICoreWebView2Controller4 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_remove_LostFocus, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_add_AcceleratorKeyPressed(ICoreWebView2Controller4 *iface, ICoreWebView2AcceleratorKeyPressedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_add_AcceleratorKeyPressed, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_remove_AcceleratorKeyPressed(ICoreWebView2Controller4 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_remove_AcceleratorKeyPressed, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_get_ParentWindow(ICoreWebView2Controller4 *iface, HWND *parentWindow)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!parentWindow) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_get_ParentWindow, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *parentWindow = (HWND)(ULONG_PTR)wv2_get_u64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_put_ParentWindow(ICoreWebView2Controller4 *iface, HWND parentWindow)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u64(&args, (UINT64)(ULONG_PTR)parentWindow);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_put_ParentWindow, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_NotifyParentWindowPositionChanged(ICoreWebView2Controller4 *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_NotifyParentWindowPositionChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_Close(ICoreWebView2Controller4 *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_Close, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller_get_CoreWebView2(ICoreWebView2Controller4 *iface, ICoreWebView2 **coreWebView2)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!coreWebView2) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_get_CoreWebView2, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *coreWebView2 = (ICoreWebView2 *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller2_get_DefaultBackgroundColor(ICoreWebView2Controller4 *iface, COREWEBVIEW2_COLOR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller2_get_DefaultBackgroundColor, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, value, sizeof(COREWEBVIEW2_COLOR));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller2_put_DefaultBackgroundColor(ICoreWebView2Controller4 *iface, COREWEBVIEW2_COLOR value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &value, sizeof(COREWEBVIEW2_COLOR));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller2_put_DefaultBackgroundColor, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller3_get_RasterizationScale(ICoreWebView2Controller4 *iface, double *scale)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!scale) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller3_get_RasterizationScale, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *scale = wv2_get_f64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller3_put_RasterizationScale(ICoreWebView2Controller4 *iface, double scale)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_f64(&args, scale);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller3_put_RasterizationScale, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller3_get_ShouldDetectMonitorScaleChanges(ICoreWebView2Controller4 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller3_get_ShouldDetectMonitorScaleChanges, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller3_put_ShouldDetectMonitorScaleChanges(ICoreWebView2Controller4 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller3_put_ShouldDetectMonitorScaleChanges, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller3_add_RasterizationScaleChanged(ICoreWebView2Controller4 *iface, ICoreWebView2RasterizationScaleChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller3_add_RasterizationScaleChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller3_remove_RasterizationScaleChanged(ICoreWebView2Controller4 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller3_remove_RasterizationScaleChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller3_get_BoundsMode(ICoreWebView2Controller4 *iface, COREWEBVIEW2_BOUNDS_MODE *boundsMode)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!boundsMode) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller3_get_BoundsMode, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *boundsMode = (COREWEBVIEW2_BOUNDS_MODE)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller3_put_BoundsMode(ICoreWebView2Controller4 *iface, COREWEBVIEW2_BOUNDS_MODE boundsMode)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)boundsMode);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller3_put_BoundsMode, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller4_get_AllowExternalDrop(ICoreWebView2Controller4 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller4_get_AllowExternalDrop, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Controller4_put_AllowExternalDrop(ICoreWebView2Controller4 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller4_put_AllowExternalDrop, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2Controller4Vtbl ICoreWebView2Controller4_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_get_IsVisible,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_put_IsVisible,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_get_Bounds,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_put_Bounds,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_get_ZoomFactor,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_put_ZoomFactor,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_add_ZoomFactorChanged,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_remove_ZoomFactorChanged,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_SetBoundsAndZoomFactor,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_MoveFocus,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_add_MoveFocusRequested,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_remove_MoveFocusRequested,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_add_GotFocus,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_remove_GotFocus,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_add_LostFocus,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_remove_LostFocus,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_add_AcceleratorKeyPressed,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_remove_AcceleratorKeyPressed,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_get_ParentWindow,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_put_ParentWindow,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_NotifyParentWindowPositionChanged,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_Close,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller_get_CoreWebView2,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller2_get_DefaultBackgroundColor,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller2_put_DefaultBackgroundColor,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller3_get_RasterizationScale,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller3_put_RasterizationScale,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller3_get_ShouldDetectMonitorScaleChanges,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller3_put_ShouldDetectMonitorScaleChanges,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller3_add_RasterizationScaleChanged,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller3_remove_RasterizationScaleChanged,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller3_get_BoundsMode,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller3_put_BoundsMode,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller4_get_AllowExternalDrop,
+    proxy_ICoreWebView2Controller4_ICoreWebView2Controller4_put_AllowExternalDrop,
+};
+
+/* ===== ICoreWebView2ControllerOptions4 ===== */
+
+static const IID *const ICoreWebView2ControllerOptions4_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ControllerOptions,
+    &IID_ICoreWebView2ControllerOptions2,
+    &IID_ICoreWebView2ControllerOptions3,
+    &IID_ICoreWebView2ControllerOptions4,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions_get_ProfileName(ICoreWebView2ControllerOptions4 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ControllerOptions_get_ProfileName, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions_put_ProfileName(ICoreWebView2ControllerOptions4 *iface, LPCWSTR value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ControllerOptions_put_ProfileName, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions_get_IsInPrivateModeEnabled(ICoreWebView2ControllerOptions4 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ControllerOptions_get_IsInPrivateModeEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions_put_IsInPrivateModeEnabled(ICoreWebView2ControllerOptions4 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ControllerOptions_put_IsInPrivateModeEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions2_get_ScriptLocale(ICoreWebView2ControllerOptions4 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ControllerOptions2_get_ScriptLocale, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions2_put_ScriptLocale(ICoreWebView2ControllerOptions4 *iface, LPCWSTR value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ControllerOptions2_put_ScriptLocale, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions3_get_DefaultBackgroundColor(ICoreWebView2ControllerOptions4 *iface, COREWEBVIEW2_COLOR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ControllerOptions3_get_DefaultBackgroundColor, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, value, sizeof(COREWEBVIEW2_COLOR));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions3_put_DefaultBackgroundColor(ICoreWebView2ControllerOptions4 *iface, COREWEBVIEW2_COLOR value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &value, sizeof(COREWEBVIEW2_COLOR));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ControllerOptions3_put_DefaultBackgroundColor, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions4_get_AllowHostInputProcessing(ICoreWebView2ControllerOptions4 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ControllerOptions4_get_AllowHostInputProcessing, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions4_put_AllowHostInputProcessing(ICoreWebView2ControllerOptions4 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ControllerOptions4_put_AllowHostInputProcessing, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ControllerOptions4Vtbl ICoreWebView2ControllerOptions4_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions_get_ProfileName,
+    proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions_put_ProfileName,
+    proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions_get_IsInPrivateModeEnabled,
+    proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions_put_IsInPrivateModeEnabled,
+    proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions2_get_ScriptLocale,
+    proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions2_put_ScriptLocale,
+    proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions3_get_DefaultBackgroundColor,
+    proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions3_put_DefaultBackgroundColor,
+    proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions4_get_AllowHostInputProcessing,
+    proxy_ICoreWebView2ControllerOptions4_ICoreWebView2ControllerOptions4_put_AllowHostInputProcessing,
+};
+
+/* ===== ICoreWebView2CrashReport ===== */
+
+static const IID *const ICoreWebView2CrashReport_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2CrashReport,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CrashReport_ICoreWebView2CrashReport_get_BucketId(ICoreWebView2CrashReport *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CrashReport_get_BucketId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CrashReport_ICoreWebView2CrashReport_get_CrashReportId(ICoreWebView2CrashReport *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CrashReport_get_CrashReportId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CrashReport_ICoreWebView2CrashReport_get_ExceptionCode(ICoreWebView2CrashReport *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CrashReport_get_ExceptionCode, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CrashReport_ICoreWebView2CrashReport_get_FaultOffset(ICoreWebView2CrashReport *iface, UINT64 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CrashReport_get_FaultOffset, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT64)wv2_get_u64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CrashReport_ICoreWebView2CrashReport_get_FaultingModuleName(ICoreWebView2CrashReport *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CrashReport_get_FaultingModuleName, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CrashReport_ICoreWebView2CrashReport_get_FaultingModuleVersion(ICoreWebView2CrashReport *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CrashReport_get_FaultingModuleVersion, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CrashReport_ICoreWebView2CrashReport_get_ReportTime(ICoreWebView2CrashReport *iface, UINT64 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CrashReport_get_ReportTime, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT64)wv2_get_u64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2CrashReportVtbl ICoreWebView2CrashReport_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2CrashReport_ICoreWebView2CrashReport_get_BucketId,
+    proxy_ICoreWebView2CrashReport_ICoreWebView2CrashReport_get_CrashReportId,
+    proxy_ICoreWebView2CrashReport_ICoreWebView2CrashReport_get_ExceptionCode,
+    proxy_ICoreWebView2CrashReport_ICoreWebView2CrashReport_get_FaultOffset,
+    proxy_ICoreWebView2CrashReport_ICoreWebView2CrashReport_get_FaultingModuleName,
+    proxy_ICoreWebView2CrashReport_ICoreWebView2CrashReport_get_FaultingModuleVersion,
+    proxy_ICoreWebView2CrashReport_ICoreWebView2CrashReport_get_ReportTime,
+};
+
+/* ===== ICoreWebView2DOMContentLoadedEventArgs ===== */
+
+static const IID *const ICoreWebView2DOMContentLoadedEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2DOMContentLoadedEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DOMContentLoadedEventArgs_ICoreWebView2DOMContentLoadedEventArgs_get_NavigationId(ICoreWebView2DOMContentLoadedEventArgs *iface, UINT64 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DOMContentLoadedEventArgs_get_NavigationId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT64)wv2_get_u64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2DOMContentLoadedEventArgsVtbl ICoreWebView2DOMContentLoadedEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2DOMContentLoadedEventArgs_ICoreWebView2DOMContentLoadedEventArgs_get_NavigationId,
+};
+
+/* ===== ICoreWebView2DedicatedWorker ===== */
+
+static const IID *const ICoreWebView2DedicatedWorker_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2DedicatedWorker,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_get_ScriptUri(ICoreWebView2DedicatedWorker *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DedicatedWorker_get_ScriptUri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_add_DedicatedWorkerCreated(ICoreWebView2DedicatedWorker *iface, ICoreWebView2DedicatedWorkerDedicatedWorkerCreatedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DedicatedWorker_add_DedicatedWorkerCreated, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_remove_DedicatedWorkerCreated(ICoreWebView2DedicatedWorker *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DedicatedWorker_remove_DedicatedWorkerCreated, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_add_Destroying(ICoreWebView2DedicatedWorker *iface, ICoreWebView2DedicatedWorkerDestroyingEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DedicatedWorker_add_Destroying, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_remove_Destroying(ICoreWebView2DedicatedWorker *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DedicatedWorker_remove_Destroying, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_add_WebMessageReceived(ICoreWebView2DedicatedWorker *iface, ICoreWebView2DedicatedWorkerWebMessageReceivedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DedicatedWorker_add_WebMessageReceived, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_remove_WebMessageReceived(ICoreWebView2DedicatedWorker *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DedicatedWorker_remove_WebMessageReceived, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_PostWebMessageAsJson(ICoreWebView2DedicatedWorker *iface, LPCWSTR webMessageAsJson)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, webMessageAsJson);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DedicatedWorker_PostWebMessageAsJson, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_PostWebMessageAsString(ICoreWebView2DedicatedWorker *iface, LPCWSTR webMessageAsString)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, webMessageAsString);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DedicatedWorker_PostWebMessageAsString, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2DedicatedWorkerVtbl ICoreWebView2DedicatedWorker_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_get_ScriptUri,
+    proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_add_DedicatedWorkerCreated,
+    proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_remove_DedicatedWorkerCreated,
+    proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_add_Destroying,
+    proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_remove_Destroying,
+    proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_add_WebMessageReceived,
+    proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_remove_WebMessageReceived,
+    proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_PostWebMessageAsJson,
+    proxy_ICoreWebView2DedicatedWorker_ICoreWebView2DedicatedWorker_PostWebMessageAsString,
+};
+
+/* ===== ICoreWebView2DedicatedWorkerCreatedEventArgs ===== */
+
+static const IID *const ICoreWebView2DedicatedWorkerCreatedEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2DedicatedWorkerCreatedEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DedicatedWorkerCreatedEventArgs_ICoreWebView2DedicatedWorkerCreatedEventArgs_get_OriginalSourceFrameInfo(ICoreWebView2DedicatedWorkerCreatedEventArgs *iface, ICoreWebView2FrameInfo **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DedicatedWorkerCreatedEventArgs_get_OriginalSourceFrameInfo, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2FrameInfo *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DedicatedWorkerCreatedEventArgs_ICoreWebView2DedicatedWorkerCreatedEventArgs_get_Worker(ICoreWebView2DedicatedWorkerCreatedEventArgs *iface, ICoreWebView2DedicatedWorker **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DedicatedWorkerCreatedEventArgs_get_Worker, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2DedicatedWorker *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2DedicatedWorkerCreatedEventArgsVtbl ICoreWebView2DedicatedWorkerCreatedEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2DedicatedWorkerCreatedEventArgs_ICoreWebView2DedicatedWorkerCreatedEventArgs_get_OriginalSourceFrameInfo,
+    proxy_ICoreWebView2DedicatedWorkerCreatedEventArgs_ICoreWebView2DedicatedWorkerCreatedEventArgs_get_Worker,
+};
+
+/* ===== ICoreWebView2Deferral ===== */
+
+static const IID *const ICoreWebView2Deferral_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2Deferral,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Deferral_ICoreWebView2Deferral_Complete(ICoreWebView2Deferral *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Deferral_Complete, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2DeferralVtbl ICoreWebView2Deferral_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2Deferral_ICoreWebView2Deferral_Complete,
+};
+
+/* ===== ICoreWebView2DevToolsProtocolEventReceivedEventArgs2 ===== */
+
+static const IID *const ICoreWebView2DevToolsProtocolEventReceivedEventArgs2_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2DevToolsProtocolEventReceivedEventArgs,
+    &IID_ICoreWebView2DevToolsProtocolEventReceivedEventArgs2,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DevToolsProtocolEventReceivedEventArgs2_ICoreWebView2DevToolsProtocolEventReceivedEventArgs_get_ParameterObjectAsJson(ICoreWebView2DevToolsProtocolEventReceivedEventArgs2 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DevToolsProtocolEventReceivedEventArgs_get_ParameterObjectAsJson, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DevToolsProtocolEventReceivedEventArgs2_ICoreWebView2DevToolsProtocolEventReceivedEventArgs2_get_SessionId(ICoreWebView2DevToolsProtocolEventReceivedEventArgs2 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DevToolsProtocolEventReceivedEventArgs2_get_SessionId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2DevToolsProtocolEventReceivedEventArgs2Vtbl ICoreWebView2DevToolsProtocolEventReceivedEventArgs2_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2DevToolsProtocolEventReceivedEventArgs2_ICoreWebView2DevToolsProtocolEventReceivedEventArgs_get_ParameterObjectAsJson,
+    proxy_ICoreWebView2DevToolsProtocolEventReceivedEventArgs2_ICoreWebView2DevToolsProtocolEventReceivedEventArgs2_get_SessionId,
+};
+
+/* ===== ICoreWebView2DevToolsProtocolEventReceiver ===== */
+
+static const IID *const ICoreWebView2DevToolsProtocolEventReceiver_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2DevToolsProtocolEventReceiver,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DevToolsProtocolEventReceiver_ICoreWebView2DevToolsProtocolEventReceiver_add_DevToolsProtocolEventReceived(ICoreWebView2DevToolsProtocolEventReceiver *iface, ICoreWebView2DevToolsProtocolEventReceivedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DevToolsProtocolEventReceiver_add_DevToolsProtocolEventReceived, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DevToolsProtocolEventReceiver_ICoreWebView2DevToolsProtocolEventReceiver_remove_DevToolsProtocolEventReceived(ICoreWebView2DevToolsProtocolEventReceiver *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DevToolsProtocolEventReceiver_remove_DevToolsProtocolEventReceived, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2DevToolsProtocolEventReceiverVtbl ICoreWebView2DevToolsProtocolEventReceiver_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2DevToolsProtocolEventReceiver_ICoreWebView2DevToolsProtocolEventReceiver_add_DevToolsProtocolEventReceived,
+    proxy_ICoreWebView2DevToolsProtocolEventReceiver_ICoreWebView2DevToolsProtocolEventReceiver_remove_DevToolsProtocolEventReceived,
+};
+
+/* ===== ICoreWebView2DragStartingEventArgs ===== */
+
+static const IID *const ICoreWebView2DragStartingEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2DragStartingEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DragStartingEventArgs_ICoreWebView2DragStartingEventArgs_get_AllowedDropEffects(ICoreWebView2DragStartingEventArgs *iface, DWORD *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DragStartingEventArgs_get_AllowedDropEffects, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (DWORD)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DragStartingEventArgs_ICoreWebView2DragStartingEventArgs_get_Data(ICoreWebView2DragStartingEventArgs *iface, IDataObject **value)
+{
+    FIXME("iface %p: ICoreWebView2DragStartingEventArgs_get_Data not marshallable (IDataObject **), stub!\n", iface);
+    return E_NOTIMPL;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DragStartingEventArgs_ICoreWebView2DragStartingEventArgs_get_Handled(ICoreWebView2DragStartingEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DragStartingEventArgs_get_Handled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DragStartingEventArgs_ICoreWebView2DragStartingEventArgs_put_Handled(ICoreWebView2DragStartingEventArgs *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DragStartingEventArgs_put_Handled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DragStartingEventArgs_ICoreWebView2DragStartingEventArgs_get_Position(ICoreWebView2DragStartingEventArgs *iface, POINT *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DragStartingEventArgs_get_Position, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, value, sizeof(POINT));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DragStartingEventArgs_ICoreWebView2DragStartingEventArgs_GetDeferral(ICoreWebView2DragStartingEventArgs *iface, ICoreWebView2Deferral **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DragStartingEventArgs_GetDeferral, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2Deferral *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2DragStartingEventArgsVtbl ICoreWebView2DragStartingEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2DragStartingEventArgs_ICoreWebView2DragStartingEventArgs_get_AllowedDropEffects,
+    proxy_ICoreWebView2DragStartingEventArgs_ICoreWebView2DragStartingEventArgs_get_Data,
+    proxy_ICoreWebView2DragStartingEventArgs_ICoreWebView2DragStartingEventArgs_get_Handled,
+    proxy_ICoreWebView2DragStartingEventArgs_ICoreWebView2DragStartingEventArgs_put_Handled,
+    proxy_ICoreWebView2DragStartingEventArgs_ICoreWebView2DragStartingEventArgs_get_Position,
+    proxy_ICoreWebView2DragStartingEventArgs_ICoreWebView2DragStartingEventArgs_GetDeferral,
+};
+
+/* ===== ICoreWebView2ProcessExtendedInfoCollection ===== */
+
+static const IID *const ICoreWebView2ProcessExtendedInfoCollection_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ProcessExtendedInfoCollection,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ProcessExtendedInfoCollection_ICoreWebView2ProcessExtendedInfoCollection_get_Count(ICoreWebView2ProcessExtendedInfoCollection *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ProcessExtendedInfoCollection_get_Count, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ProcessExtendedInfoCollection_ICoreWebView2ProcessExtendedInfoCollection_GetValueAtIndex(ICoreWebView2ProcessExtendedInfoCollection *iface, UINT32 index, ICoreWebView2ProcessExtendedInfo **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_u32(&args, (UINT32)index);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ProcessExtendedInfoCollection_GetValueAtIndex, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ProcessExtendedInfo *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ProcessExtendedInfoCollectionVtbl ICoreWebView2ProcessExtendedInfoCollection_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ProcessExtendedInfoCollection_ICoreWebView2ProcessExtendedInfoCollection_get_Count,
+    proxy_ICoreWebView2ProcessExtendedInfoCollection_ICoreWebView2ProcessExtendedInfoCollection_GetValueAtIndex,
+};
+
+/* ===== ICoreWebView2Environment15 ===== */
+
+static const IID *const ICoreWebView2Environment15_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2Environment,
+    &IID_ICoreWebView2Environment2,
+    &IID_ICoreWebView2Environment3,
+    &IID_ICoreWebView2Environment4,
+    &IID_ICoreWebView2Environment5,
+    &IID_ICoreWebView2Environment6,
+    &IID_ICoreWebView2Environment7,
+    &IID_ICoreWebView2Environment8,
+    &IID_ICoreWebView2Environment9,
+    &IID_ICoreWebView2Environment10,
+    &IID_ICoreWebView2Environment11,
+    &IID_ICoreWebView2Environment12,
+    &IID_ICoreWebView2Environment13,
+    &IID_ICoreWebView2Environment14,
+    &IID_ICoreWebView2Environment15,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment_CreateCoreWebView2Controller(ICoreWebView2Environment15 *iface, HWND parentWindow, ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u64(&args, (UINT64)(ULONG_PTR)parentWindow);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment_CreateCoreWebView2Controller, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment_CreateWebResourceResponse(ICoreWebView2Environment15 *iface, IStream *content, int statusCode, LPCWSTR reasonPhrase, LPCWSTR headers, ICoreWebView2WebResourceResponse **response)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!response) return E_POINTER;
+    wv2_put_stream(&args, content);
+    wv2_put_u32(&args, (UINT32)statusCode);
+    wv2_put_str(&args, reasonPhrase);
+    wv2_put_str(&args, headers);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment_CreateWebResourceResponse, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *response = (ICoreWebView2WebResourceResponse *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment_get_BrowserVersionString(ICoreWebView2Environment15 *iface, LPWSTR *versionInfo)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!versionInfo) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment_get_BrowserVersionString, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *versionInfo = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment_add_NewBrowserVersionAvailable(ICoreWebView2Environment15 *iface, ICoreWebView2NewBrowserVersionAvailableEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment_add_NewBrowserVersionAvailable, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment_remove_NewBrowserVersionAvailable(ICoreWebView2Environment15 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment_remove_NewBrowserVersionAvailable, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment2_CreateWebResourceRequest(ICoreWebView2Environment15 *iface, LPCWSTR uri, LPCWSTR Method, IStream *postData, LPCWSTR Headers, ICoreWebView2WebResourceRequest **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_str(&args, uri);
+    wv2_put_str(&args, Method);
+    wv2_put_stream(&args, postData);
+    wv2_put_str(&args, Headers);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment2_CreateWebResourceRequest, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2WebResourceRequest *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment3_CreateCoreWebView2CompositionController(ICoreWebView2Environment15 *iface, HWND ParentWindow, ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u64(&args, (UINT64)(ULONG_PTR)ParentWindow);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment3_CreateCoreWebView2CompositionController, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment3_CreateCoreWebView2PointerInfo(ICoreWebView2Environment15 *iface, ICoreWebView2PointerInfo **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment3_CreateCoreWebView2PointerInfo, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2PointerInfo *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment4_GetAutomationProviderForWindow(ICoreWebView2Environment15 *iface, HWND hwnd, IUnknown **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_u64(&args, (UINT64)(ULONG_PTR)hwnd);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment4_GetAutomationProviderForWindow, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (IUnknown *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment5_add_BrowserProcessExited(ICoreWebView2Environment15 *iface, ICoreWebView2BrowserProcessExitedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment5_add_BrowserProcessExited, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment5_remove_BrowserProcessExited(ICoreWebView2Environment15 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment5_remove_BrowserProcessExited, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment6_CreatePrintSettings(ICoreWebView2Environment15 *iface, ICoreWebView2PrintSettings **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment6_CreatePrintSettings, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2PrintSettings *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment7_get_UserDataFolder(ICoreWebView2Environment15 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment7_get_UserDataFolder, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment8_add_ProcessInfosChanged(ICoreWebView2Environment15 *iface, ICoreWebView2ProcessInfosChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment8_add_ProcessInfosChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment8_remove_ProcessInfosChanged(ICoreWebView2Environment15 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment8_remove_ProcessInfosChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment8_GetProcessInfos(ICoreWebView2Environment15 *iface, ICoreWebView2ProcessInfoCollection **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment8_GetProcessInfos, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ProcessInfoCollection *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment9_CreateContextMenuItem(ICoreWebView2Environment15 *iface, LPCWSTR Label, IStream *iconStream, COREWEBVIEW2_CONTEXT_MENU_ITEM_KIND Kind, ICoreWebView2ContextMenuItem **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_str(&args, Label);
+    wv2_put_stream(&args, iconStream);
+    wv2_put_u32(&args, (UINT32)Kind);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment9_CreateContextMenuItem, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ContextMenuItem *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment10_CreateCoreWebView2ControllerOptions(ICoreWebView2Environment15 *iface, ICoreWebView2ControllerOptions **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment10_CreateCoreWebView2ControllerOptions, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ControllerOptions *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment10_CreateCoreWebView2ControllerWithOptions(ICoreWebView2Environment15 *iface, HWND ParentWindow, ICoreWebView2ControllerOptions *options, ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u64(&args, (UINT64)(ULONG_PTR)ParentWindow);
+    wv2_put_iface(&args, (IUnknown *)options);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment10_CreateCoreWebView2ControllerWithOptions, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment10_CreateCoreWebView2CompositionControllerWithOptions(ICoreWebView2Environment15 *iface, HWND ParentWindow, ICoreWebView2ControllerOptions *options, ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u64(&args, (UINT64)(ULONG_PTR)ParentWindow);
+    wv2_put_iface(&args, (IUnknown *)options);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment10_CreateCoreWebView2CompositionControllerWithOptions, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment11_get_FailureReportFolderPath(ICoreWebView2Environment15 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment11_get_FailureReportFolderPath, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment12_CreateSharedBuffer(ICoreWebView2Environment15 *iface, UINT64 Size, ICoreWebView2SharedBuffer **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_u64(&args, (UINT64)Size);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment12_CreateSharedBuffer, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2SharedBuffer *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment13_GetProcessExtendedInfos(ICoreWebView2Environment15 *iface, ICoreWebView2GetProcessExtendedInfosCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment13_GetProcessExtendedInfos, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment14_CreateWebFileSystemFileHandle(ICoreWebView2Environment15 *iface, LPCWSTR path, COREWEBVIEW2_FILE_SYSTEM_HANDLE_PERMISSION permission, ICoreWebView2FileSystemHandle **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_str(&args, path);
+    wv2_put_u32(&args, (UINT32)permission);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment14_CreateWebFileSystemFileHandle, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2FileSystemHandle *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment14_CreateWebFileSystemDirectoryHandle(ICoreWebView2Environment15 *iface, LPCWSTR path, COREWEBVIEW2_FILE_SYSTEM_HANDLE_PERMISSION permission, ICoreWebView2FileSystemHandle **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_str(&args, path);
+    wv2_put_u32(&args, (UINT32)permission);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment14_CreateWebFileSystemDirectoryHandle, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2FileSystemHandle *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment14_CreateObjectCollection(ICoreWebView2Environment15 *iface, UINT32 length, IUnknown **items, ICoreWebView2ObjectCollection **objectCollection)
+{
+    FIXME("iface %p: ICoreWebView2Environment14_CreateObjectCollection not marshallable (IUnknown **), stub!\n", iface);
+    return E_NOTIMPL;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2Environment15_CreateFindOptions(ICoreWebView2Environment15 *iface, ICoreWebView2FindOptions **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment15_CreateFindOptions, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2FindOptions *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2Environment15Vtbl ICoreWebView2Environment15_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment_CreateCoreWebView2Controller,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment_CreateWebResourceResponse,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment_get_BrowserVersionString,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment_add_NewBrowserVersionAvailable,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment_remove_NewBrowserVersionAvailable,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment2_CreateWebResourceRequest,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment3_CreateCoreWebView2CompositionController,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment3_CreateCoreWebView2PointerInfo,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment4_GetAutomationProviderForWindow,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment5_add_BrowserProcessExited,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment5_remove_BrowserProcessExited,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment6_CreatePrintSettings,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment7_get_UserDataFolder,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment8_add_ProcessInfosChanged,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment8_remove_ProcessInfosChanged,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment8_GetProcessInfos,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment9_CreateContextMenuItem,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment10_CreateCoreWebView2ControllerOptions,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment10_CreateCoreWebView2ControllerWithOptions,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment10_CreateCoreWebView2CompositionControllerWithOptions,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment11_get_FailureReportFolderPath,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment12_CreateSharedBuffer,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment13_GetProcessExtendedInfos,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment14_CreateWebFileSystemFileHandle,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment14_CreateWebFileSystemDirectoryHandle,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment14_CreateObjectCollection,
+    proxy_ICoreWebView2Environment15_ICoreWebView2Environment15_CreateFindOptions,
+};
+
+/* ===== ICoreWebView2ProcessInfoCollection ===== */
+
+static const IID *const ICoreWebView2ProcessInfoCollection_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ProcessInfoCollection,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ProcessInfoCollection_ICoreWebView2ProcessInfoCollection_get_Count(ICoreWebView2ProcessInfoCollection *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ProcessInfoCollection_get_Count, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ProcessInfoCollection_ICoreWebView2ProcessInfoCollection_GetValueAtIndex(ICoreWebView2ProcessInfoCollection *iface, UINT32 index, ICoreWebView2ProcessInfo **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_u32(&args, (UINT32)index);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ProcessInfoCollection_GetValueAtIndex, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ProcessInfo *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ProcessInfoCollectionVtbl ICoreWebView2ProcessInfoCollection_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ProcessInfoCollection_ICoreWebView2ProcessInfoCollection_get_Count,
+    proxy_ICoreWebView2ProcessInfoCollection_ICoreWebView2ProcessInfoCollection_GetValueAtIndex,
+};
+
+/* ===== ICoreWebView2File ===== */
+
+static const IID *const ICoreWebView2File_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2File,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2File_ICoreWebView2File_get_Path(ICoreWebView2File *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2File_get_Path, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2FileVtbl ICoreWebView2File_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2File_ICoreWebView2File_get_Path,
+};
+
+/* ===== ICoreWebView2FileSystemHandle ===== */
+
+static const IID *const ICoreWebView2FileSystemHandle_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2FileSystemHandle,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FileSystemHandle_ICoreWebView2FileSystemHandle_get_Kind(ICoreWebView2FileSystemHandle *iface, COREWEBVIEW2_FILE_SYSTEM_HANDLE_KIND *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FileSystemHandle_get_Kind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_FILE_SYSTEM_HANDLE_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FileSystemHandle_ICoreWebView2FileSystemHandle_get_Path(ICoreWebView2FileSystemHandle *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FileSystemHandle_get_Path, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FileSystemHandle_ICoreWebView2FileSystemHandle_get_Permission(ICoreWebView2FileSystemHandle *iface, COREWEBVIEW2_FILE_SYSTEM_HANDLE_PERMISSION *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FileSystemHandle_get_Permission, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_FILE_SYSTEM_HANDLE_PERMISSION)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2FileSystemHandleVtbl ICoreWebView2FileSystemHandle_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2FileSystemHandle_ICoreWebView2FileSystemHandle_get_Kind,
+    proxy_ICoreWebView2FileSystemHandle_ICoreWebView2FileSystemHandle_get_Path,
+    proxy_ICoreWebView2FileSystemHandle_ICoreWebView2FileSystemHandle_get_Permission,
+};
+
+/* ===== ICoreWebView2Find ===== */
+
+static const IID *const ICoreWebView2Find_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2Find,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Find_ICoreWebView2Find_get_ActiveMatchIndex(ICoreWebView2Find *iface, INT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Find_get_ActiveMatchIndex, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (INT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Find_ICoreWebView2Find_get_MatchCount(ICoreWebView2Find *iface, INT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Find_get_MatchCount, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (INT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Find_ICoreWebView2Find_add_ActiveMatchIndexChanged(ICoreWebView2Find *iface, ICoreWebView2FindActiveMatchIndexChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Find_add_ActiveMatchIndexChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Find_ICoreWebView2Find_remove_ActiveMatchIndexChanged(ICoreWebView2Find *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Find_remove_ActiveMatchIndexChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Find_ICoreWebView2Find_add_MatchCountChanged(ICoreWebView2Find *iface, ICoreWebView2FindMatchCountChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Find_add_MatchCountChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Find_ICoreWebView2Find_remove_MatchCountChanged(ICoreWebView2Find *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Find_remove_MatchCountChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Find_ICoreWebView2Find_Start(ICoreWebView2Find *iface, ICoreWebView2FindOptions *options, ICoreWebView2FindStartCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)options);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Find_Start, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Find_ICoreWebView2Find_FindNext(ICoreWebView2Find *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Find_FindNext, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Find_ICoreWebView2Find_FindPrevious(ICoreWebView2Find *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Find_FindPrevious, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Find_ICoreWebView2Find_Stop(ICoreWebView2Find *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Find_Stop, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2FindVtbl ICoreWebView2Find_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2Find_ICoreWebView2Find_get_ActiveMatchIndex,
+    proxy_ICoreWebView2Find_ICoreWebView2Find_get_MatchCount,
+    proxy_ICoreWebView2Find_ICoreWebView2Find_add_ActiveMatchIndexChanged,
+    proxy_ICoreWebView2Find_ICoreWebView2Find_remove_ActiveMatchIndexChanged,
+    proxy_ICoreWebView2Find_ICoreWebView2Find_add_MatchCountChanged,
+    proxy_ICoreWebView2Find_ICoreWebView2Find_remove_MatchCountChanged,
+    proxy_ICoreWebView2Find_ICoreWebView2Find_Start,
+    proxy_ICoreWebView2Find_ICoreWebView2Find_FindNext,
+    proxy_ICoreWebView2Find_ICoreWebView2Find_FindPrevious,
+    proxy_ICoreWebView2Find_ICoreWebView2Find_Stop,
+};
+
+/* ===== ICoreWebView2FindOptions ===== */
+
+static const IID *const ICoreWebView2FindOptions_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2FindOptions,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_get_FindTerm(ICoreWebView2FindOptions *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FindOptions_get_FindTerm, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_put_FindTerm(ICoreWebView2FindOptions *iface, LPCWSTR value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FindOptions_put_FindTerm, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_get_IsCaseSensitive(ICoreWebView2FindOptions *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FindOptions_get_IsCaseSensitive, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_put_IsCaseSensitive(ICoreWebView2FindOptions *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FindOptions_put_IsCaseSensitive, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_get_ShouldHighlightAllMatches(ICoreWebView2FindOptions *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FindOptions_get_ShouldHighlightAllMatches, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_put_ShouldHighlightAllMatches(ICoreWebView2FindOptions *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FindOptions_put_ShouldHighlightAllMatches, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_get_ShouldMatchWord(ICoreWebView2FindOptions *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FindOptions_get_ShouldMatchWord, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_put_ShouldMatchWord(ICoreWebView2FindOptions *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FindOptions_put_ShouldMatchWord, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_get_SuppressDefaultFindDialog(ICoreWebView2FindOptions *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FindOptions_get_SuppressDefaultFindDialog, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_put_SuppressDefaultFindDialog(ICoreWebView2FindOptions *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FindOptions_put_SuppressDefaultFindDialog, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2FindOptionsVtbl ICoreWebView2FindOptions_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_get_FindTerm,
+    proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_put_FindTerm,
+    proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_get_IsCaseSensitive,
+    proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_put_IsCaseSensitive,
+    proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_get_ShouldHighlightAllMatches,
+    proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_put_ShouldHighlightAllMatches,
+    proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_get_ShouldMatchWord,
+    proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_put_ShouldMatchWord,
+    proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_get_SuppressDefaultFindDialog,
+    proxy_ICoreWebView2FindOptions_ICoreWebView2FindOptions_put_SuppressDefaultFindDialog,
+};
+
+/* ===== ICoreWebView2Frame8 ===== */
+
+static const IID *const ICoreWebView2Frame8_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2Frame,
+    &IID_ICoreWebView2Frame2,
+    &IID_ICoreWebView2Frame3,
+    &IID_ICoreWebView2Frame4,
+    &IID_ICoreWebView2Frame5,
+    &IID_ICoreWebView2Frame6,
+    &IID_ICoreWebView2Frame7,
+    &IID_ICoreWebView2Frame8,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame_get_Name(ICoreWebView2Frame8 *iface, LPWSTR *name)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!name) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame_get_Name, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *name = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame_add_NameChanged(ICoreWebView2Frame8 *iface, ICoreWebView2FrameNameChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame_add_NameChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame_remove_NameChanged(ICoreWebView2Frame8 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame_remove_NameChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame_AddHostObjectToScriptWithOrigins(ICoreWebView2Frame8 *iface, LPCWSTR name, VARIANT *object, UINT32 originsCount, LPCWSTR *origins)
+{
+    FIXME("iface %p: ICoreWebView2Frame_AddHostObjectToScriptWithOrigins not marshallable (VARIANT *, LPCWSTR *), stub!\n", iface);
+    return E_NOTIMPL;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame_RemoveHostObjectFromScript(ICoreWebView2Frame8 *iface, LPCWSTR name)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, name);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame_RemoveHostObjectFromScript, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame_add_Destroyed(ICoreWebView2Frame8 *iface, ICoreWebView2FrameDestroyedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame_add_Destroyed, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame_remove_Destroyed(ICoreWebView2Frame8 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame_remove_Destroyed, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame_IsDestroyed(ICoreWebView2Frame8 *iface, BOOL *destroyed)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!destroyed) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame_IsDestroyed, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *destroyed = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_add_NavigationStarting(ICoreWebView2Frame8 *iface, ICoreWebView2FrameNavigationStartingEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_add_NavigationStarting, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_remove_NavigationStarting(ICoreWebView2Frame8 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_remove_NavigationStarting, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_add_ContentLoading(ICoreWebView2Frame8 *iface, ICoreWebView2FrameContentLoadingEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_add_ContentLoading, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_remove_ContentLoading(ICoreWebView2Frame8 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_remove_ContentLoading, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_add_NavigationCompleted(ICoreWebView2Frame8 *iface, ICoreWebView2FrameNavigationCompletedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_add_NavigationCompleted, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_remove_NavigationCompleted(ICoreWebView2Frame8 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_remove_NavigationCompleted, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_add_DOMContentLoaded(ICoreWebView2Frame8 *iface, ICoreWebView2FrameDOMContentLoadedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_add_DOMContentLoaded, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_remove_DOMContentLoaded(ICoreWebView2Frame8 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_remove_DOMContentLoaded, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_ExecuteScript(ICoreWebView2Frame8 *iface, LPCWSTR javaScript, ICoreWebView2ExecuteScriptCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, javaScript);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_ExecuteScript, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_PostWebMessageAsJson(ICoreWebView2Frame8 *iface, LPCWSTR webMessageAsJson)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, webMessageAsJson);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_PostWebMessageAsJson, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_PostWebMessageAsString(ICoreWebView2Frame8 *iface, LPCWSTR webMessageAsString)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, webMessageAsString);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_PostWebMessageAsString, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_add_WebMessageReceived(ICoreWebView2Frame8 *iface, ICoreWebView2FrameWebMessageReceivedEventHandler *handler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_add_WebMessageReceived, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_remove_WebMessageReceived(ICoreWebView2Frame8 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_remove_WebMessageReceived, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame3_add_PermissionRequested(ICoreWebView2Frame8 *iface, ICoreWebView2FramePermissionRequestedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame3_add_PermissionRequested, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame3_remove_PermissionRequested(ICoreWebView2Frame8 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame3_remove_PermissionRequested, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame4_PostSharedBufferToScript(ICoreWebView2Frame8 *iface, ICoreWebView2SharedBuffer *sharedBuffer, COREWEBVIEW2_SHARED_BUFFER_ACCESS access, LPCWSTR additionalDataAsJson)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)sharedBuffer);
+    wv2_put_u32(&args, (UINT32)access);
+    wv2_put_str(&args, additionalDataAsJson);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame4_PostSharedBufferToScript, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame5_get_FrameId(ICoreWebView2Frame8 *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame5_get_FrameId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame6_add_ScreenCaptureStarting(ICoreWebView2Frame8 *iface, ICoreWebView2FrameScreenCaptureStartingEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame6_add_ScreenCaptureStarting, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame6_remove_ScreenCaptureStarting(ICoreWebView2Frame8 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame6_remove_ScreenCaptureStarting, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame7_add_FrameCreated(ICoreWebView2Frame8 *iface, ICoreWebView2FrameChildFrameCreatedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame7_add_FrameCreated, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame7_remove_FrameCreated(ICoreWebView2Frame8 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame7_remove_FrameCreated, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame8_add_DedicatedWorkerCreated(ICoreWebView2Frame8 *iface, ICoreWebView2FrameDedicatedWorkerCreatedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame8_add_DedicatedWorkerCreated, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame8_remove_DedicatedWorkerCreated(ICoreWebView2Frame8 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame8_remove_DedicatedWorkerCreated, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2Frame8Vtbl ICoreWebView2Frame8_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame_get_Name,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame_add_NameChanged,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame_remove_NameChanged,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame_AddHostObjectToScriptWithOrigins,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame_RemoveHostObjectFromScript,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame_add_Destroyed,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame_remove_Destroyed,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame_IsDestroyed,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_add_NavigationStarting,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_remove_NavigationStarting,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_add_ContentLoading,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_remove_ContentLoading,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_add_NavigationCompleted,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_remove_NavigationCompleted,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_add_DOMContentLoaded,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_remove_DOMContentLoaded,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_ExecuteScript,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_PostWebMessageAsJson,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_PostWebMessageAsString,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_add_WebMessageReceived,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_remove_WebMessageReceived,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame3_add_PermissionRequested,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame3_remove_PermissionRequested,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame4_PostSharedBufferToScript,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame5_get_FrameId,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame6_add_ScreenCaptureStarting,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame6_remove_ScreenCaptureStarting,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame7_add_FrameCreated,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame7_remove_FrameCreated,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame8_add_DedicatedWorkerCreated,
+    proxy_ICoreWebView2Frame8_ICoreWebView2Frame8_remove_DedicatedWorkerCreated,
+};
+
+/* ===== ICoreWebView2FrameCreatedEventArgs ===== */
+
+static const IID *const ICoreWebView2FrameCreatedEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2FrameCreatedEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FrameCreatedEventArgs_ICoreWebView2FrameCreatedEventArgs_get_Frame(ICoreWebView2FrameCreatedEventArgs *iface, ICoreWebView2Frame **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FrameCreatedEventArgs_get_Frame, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2Frame *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2FrameCreatedEventArgsVtbl ICoreWebView2FrameCreatedEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2FrameCreatedEventArgs_ICoreWebView2FrameCreatedEventArgs_get_Frame,
+};
+
+/* ===== ICoreWebView2FrameInfoCollection ===== */
+
+static const IID *const ICoreWebView2FrameInfoCollection_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2FrameInfoCollection,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FrameInfoCollection_ICoreWebView2FrameInfoCollection_GetIterator(ICoreWebView2FrameInfoCollection *iface, ICoreWebView2FrameInfoCollectionIterator **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FrameInfoCollection_GetIterator, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2FrameInfoCollectionIterator *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2FrameInfoCollectionVtbl ICoreWebView2FrameInfoCollection_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2FrameInfoCollection_ICoreWebView2FrameInfoCollection_GetIterator,
+};
+
+/* ===== ICoreWebView2FrameInfoCollectionIterator ===== */
+
+static const IID *const ICoreWebView2FrameInfoCollectionIterator_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2FrameInfoCollectionIterator,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FrameInfoCollectionIterator_ICoreWebView2FrameInfoCollectionIterator_get_HasCurrent(ICoreWebView2FrameInfoCollectionIterator *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FrameInfoCollectionIterator_get_HasCurrent, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FrameInfoCollectionIterator_ICoreWebView2FrameInfoCollectionIterator_GetCurrent(ICoreWebView2FrameInfoCollectionIterator *iface, ICoreWebView2FrameInfo **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FrameInfoCollectionIterator_GetCurrent, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2FrameInfo *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2FrameInfoCollectionIterator_ICoreWebView2FrameInfoCollectionIterator_MoveNext(ICoreWebView2FrameInfoCollectionIterator *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2FrameInfoCollectionIterator_MoveNext, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2FrameInfoCollectionIteratorVtbl ICoreWebView2FrameInfoCollectionIterator_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2FrameInfoCollectionIterator_ICoreWebView2FrameInfoCollectionIterator_get_HasCurrent,
+    proxy_ICoreWebView2FrameInfoCollectionIterator_ICoreWebView2FrameInfoCollectionIterator_GetCurrent,
+    proxy_ICoreWebView2FrameInfoCollectionIterator_ICoreWebView2FrameInfoCollectionIterator_MoveNext,
+};
+
+/* ===== ICoreWebView2HttpRequestHeaders ===== */
+
+static const IID *const ICoreWebView2HttpRequestHeaders_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2HttpRequestHeaders,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2HttpRequestHeaders_ICoreWebView2HttpRequestHeaders_GetHeader(ICoreWebView2HttpRequestHeaders *iface, LPCWSTR name, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_str(&args, name);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2HttpRequestHeaders_GetHeader, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2HttpRequestHeaders_ICoreWebView2HttpRequestHeaders_GetHeaders(ICoreWebView2HttpRequestHeaders *iface, LPCWSTR name, ICoreWebView2HttpHeadersCollectionIterator **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_str(&args, name);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2HttpRequestHeaders_GetHeaders, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2HttpHeadersCollectionIterator *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2HttpRequestHeaders_ICoreWebView2HttpRequestHeaders_Contains(ICoreWebView2HttpRequestHeaders *iface, LPCWSTR name, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_str(&args, name);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2HttpRequestHeaders_Contains, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2HttpRequestHeaders_ICoreWebView2HttpRequestHeaders_SetHeader(ICoreWebView2HttpRequestHeaders *iface, LPCWSTR name, LPCWSTR value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, name);
+    wv2_put_str(&args, value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2HttpRequestHeaders_SetHeader, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2HttpRequestHeaders_ICoreWebView2HttpRequestHeaders_RemoveHeader(ICoreWebView2HttpRequestHeaders *iface, LPCWSTR name)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, name);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2HttpRequestHeaders_RemoveHeader, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2HttpRequestHeaders_ICoreWebView2HttpRequestHeaders_GetIterator(ICoreWebView2HttpRequestHeaders *iface, ICoreWebView2HttpHeadersCollectionIterator **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2HttpRequestHeaders_GetIterator, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2HttpHeadersCollectionIterator *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2HttpRequestHeadersVtbl ICoreWebView2HttpRequestHeaders_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2HttpRequestHeaders_ICoreWebView2HttpRequestHeaders_GetHeader,
+    proxy_ICoreWebView2HttpRequestHeaders_ICoreWebView2HttpRequestHeaders_GetHeaders,
+    proxy_ICoreWebView2HttpRequestHeaders_ICoreWebView2HttpRequestHeaders_Contains,
+    proxy_ICoreWebView2HttpRequestHeaders_ICoreWebView2HttpRequestHeaders_SetHeader,
+    proxy_ICoreWebView2HttpRequestHeaders_ICoreWebView2HttpRequestHeaders_RemoveHeader,
+    proxy_ICoreWebView2HttpRequestHeaders_ICoreWebView2HttpRequestHeaders_GetIterator,
+};
+
+/* ===== ICoreWebView2HttpResponseHeaders ===== */
+
+static const IID *const ICoreWebView2HttpResponseHeaders_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2HttpResponseHeaders,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2HttpResponseHeaders_ICoreWebView2HttpResponseHeaders_AppendHeader(ICoreWebView2HttpResponseHeaders *iface, LPCWSTR name, LPCWSTR value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, name);
+    wv2_put_str(&args, value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2HttpResponseHeaders_AppendHeader, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2HttpResponseHeaders_ICoreWebView2HttpResponseHeaders_Contains(ICoreWebView2HttpResponseHeaders *iface, LPCWSTR name, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_str(&args, name);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2HttpResponseHeaders_Contains, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2HttpResponseHeaders_ICoreWebView2HttpResponseHeaders_GetHeader(ICoreWebView2HttpResponseHeaders *iface, LPCWSTR name, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_str(&args, name);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2HttpResponseHeaders_GetHeader, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2HttpResponseHeaders_ICoreWebView2HttpResponseHeaders_GetHeaders(ICoreWebView2HttpResponseHeaders *iface, LPCWSTR name, ICoreWebView2HttpHeadersCollectionIterator **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_str(&args, name);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2HttpResponseHeaders_GetHeaders, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2HttpHeadersCollectionIterator *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2HttpResponseHeaders_ICoreWebView2HttpResponseHeaders_GetIterator(ICoreWebView2HttpResponseHeaders *iface, ICoreWebView2HttpHeadersCollectionIterator **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2HttpResponseHeaders_GetIterator, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2HttpHeadersCollectionIterator *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2HttpResponseHeadersVtbl ICoreWebView2HttpResponseHeaders_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2HttpResponseHeaders_ICoreWebView2HttpResponseHeaders_AppendHeader,
+    proxy_ICoreWebView2HttpResponseHeaders_ICoreWebView2HttpResponseHeaders_Contains,
+    proxy_ICoreWebView2HttpResponseHeaders_ICoreWebView2HttpResponseHeaders_GetHeader,
+    proxy_ICoreWebView2HttpResponseHeaders_ICoreWebView2HttpResponseHeaders_GetHeaders,
+    proxy_ICoreWebView2HttpResponseHeaders_ICoreWebView2HttpResponseHeaders_GetIterator,
+};
+
+/* ===== ICoreWebView2NavigationCompletedEventArgs2 ===== */
+
+static const IID *const ICoreWebView2NavigationCompletedEventArgs2_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2NavigationCompletedEventArgs,
+    &IID_ICoreWebView2NavigationCompletedEventArgs2,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NavigationCompletedEventArgs2_ICoreWebView2NavigationCompletedEventArgs_get_IsSuccess(ICoreWebView2NavigationCompletedEventArgs2 *iface, BOOL *isSuccess)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!isSuccess) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NavigationCompletedEventArgs_get_IsSuccess, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *isSuccess = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NavigationCompletedEventArgs2_ICoreWebView2NavigationCompletedEventArgs_get_WebErrorStatus(ICoreWebView2NavigationCompletedEventArgs2 *iface, COREWEBVIEW2_WEB_ERROR_STATUS *webErrorStatus)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!webErrorStatus) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NavigationCompletedEventArgs_get_WebErrorStatus, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *webErrorStatus = (COREWEBVIEW2_WEB_ERROR_STATUS)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NavigationCompletedEventArgs2_ICoreWebView2NavigationCompletedEventArgs_get_NavigationId(ICoreWebView2NavigationCompletedEventArgs2 *iface, UINT64 *navigationId)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!navigationId) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NavigationCompletedEventArgs_get_NavigationId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *navigationId = (UINT64)wv2_get_u64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NavigationCompletedEventArgs2_ICoreWebView2NavigationCompletedEventArgs2_get_HttpStatusCode(ICoreWebView2NavigationCompletedEventArgs2 *iface, int *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NavigationCompletedEventArgs2_get_HttpStatusCode, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (int)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2NavigationCompletedEventArgs2Vtbl ICoreWebView2NavigationCompletedEventArgs2_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2NavigationCompletedEventArgs2_ICoreWebView2NavigationCompletedEventArgs_get_IsSuccess,
+    proxy_ICoreWebView2NavigationCompletedEventArgs2_ICoreWebView2NavigationCompletedEventArgs_get_WebErrorStatus,
+    proxy_ICoreWebView2NavigationCompletedEventArgs2_ICoreWebView2NavigationCompletedEventArgs_get_NavigationId,
+    proxy_ICoreWebView2NavigationCompletedEventArgs2_ICoreWebView2NavigationCompletedEventArgs2_get_HttpStatusCode,
+};
+
+/* ===== ICoreWebView2NavigationStartingEventArgs3 ===== */
+
+static const IID *const ICoreWebView2NavigationStartingEventArgs3_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2NavigationStartingEventArgs,
+    &IID_ICoreWebView2NavigationStartingEventArgs2,
+    &IID_ICoreWebView2NavigationStartingEventArgs3,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs_get_Uri(ICoreWebView2NavigationStartingEventArgs3 *iface, LPWSTR *uri)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!uri) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NavigationStartingEventArgs_get_Uri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *uri = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs_get_IsUserInitiated(ICoreWebView2NavigationStartingEventArgs3 *iface, BOOL *isUserInitiated)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!isUserInitiated) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NavigationStartingEventArgs_get_IsUserInitiated, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *isUserInitiated = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs_get_IsRedirected(ICoreWebView2NavigationStartingEventArgs3 *iface, BOOL *isRedirected)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!isRedirected) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NavigationStartingEventArgs_get_IsRedirected, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *isRedirected = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs_get_RequestHeaders(ICoreWebView2NavigationStartingEventArgs3 *iface, ICoreWebView2HttpRequestHeaders **requestHeaders)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!requestHeaders) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NavigationStartingEventArgs_get_RequestHeaders, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *requestHeaders = (ICoreWebView2HttpRequestHeaders *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs_get_Cancel(ICoreWebView2NavigationStartingEventArgs3 *iface, BOOL *cancel)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!cancel) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NavigationStartingEventArgs_get_Cancel, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *cancel = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs_put_Cancel(ICoreWebView2NavigationStartingEventArgs3 *iface, BOOL cancel)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)cancel);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NavigationStartingEventArgs_put_Cancel, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs_get_NavigationId(ICoreWebView2NavigationStartingEventArgs3 *iface, UINT64 *navigationId)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!navigationId) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NavigationStartingEventArgs_get_NavigationId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *navigationId = (UINT64)wv2_get_u64(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs2_get_AdditionalAllowedFrameAncestors(ICoreWebView2NavigationStartingEventArgs3 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NavigationStartingEventArgs2_get_AdditionalAllowedFrameAncestors, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs2_put_AdditionalAllowedFrameAncestors(ICoreWebView2NavigationStartingEventArgs3 *iface, LPCWSTR value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NavigationStartingEventArgs2_put_AdditionalAllowedFrameAncestors, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs3_get_NavigationKind(ICoreWebView2NavigationStartingEventArgs3 *iface, COREWEBVIEW2_NAVIGATION_KIND *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NavigationStartingEventArgs3_get_NavigationKind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_NAVIGATION_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2NavigationStartingEventArgs3Vtbl ICoreWebView2NavigationStartingEventArgs3_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs_get_Uri,
+    proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs_get_IsUserInitiated,
+    proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs_get_IsRedirected,
+    proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs_get_RequestHeaders,
+    proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs_get_Cancel,
+    proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs_put_Cancel,
+    proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs_get_NavigationId,
+    proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs2_get_AdditionalAllowedFrameAncestors,
+    proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs2_put_AdditionalAllowedFrameAncestors,
+    proxy_ICoreWebView2NavigationStartingEventArgs3_ICoreWebView2NavigationStartingEventArgs3_get_NavigationKind,
+};
+
+/* ===== ICoreWebView2NewWindowRequestedEventArgs3 ===== */
+
+static const IID *const ICoreWebView2NewWindowRequestedEventArgs3_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2NewWindowRequestedEventArgs,
+    &IID_ICoreWebView2NewWindowRequestedEventArgs2,
+    &IID_ICoreWebView2NewWindowRequestedEventArgs3,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs_get_Uri(ICoreWebView2NewWindowRequestedEventArgs3 *iface, LPWSTR *uri)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!uri) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NewWindowRequestedEventArgs_get_Uri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *uri = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs_put_NewWindow(ICoreWebView2NewWindowRequestedEventArgs3 *iface, ICoreWebView2 *newWindow)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)newWindow);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NewWindowRequestedEventArgs_put_NewWindow, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs_get_NewWindow(ICoreWebView2NewWindowRequestedEventArgs3 *iface, ICoreWebView2 **newWindow)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!newWindow) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NewWindowRequestedEventArgs_get_NewWindow, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *newWindow = (ICoreWebView2 *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs_put_Handled(ICoreWebView2NewWindowRequestedEventArgs3 *iface, BOOL handled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)handled);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NewWindowRequestedEventArgs_put_Handled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs_get_Handled(ICoreWebView2NewWindowRequestedEventArgs3 *iface, BOOL *handled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!handled) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NewWindowRequestedEventArgs_get_Handled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *handled = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs_get_IsUserInitiated(ICoreWebView2NewWindowRequestedEventArgs3 *iface, BOOL *isUserInitiated)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!isUserInitiated) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NewWindowRequestedEventArgs_get_IsUserInitiated, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *isUserInitiated = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs_GetDeferral(ICoreWebView2NewWindowRequestedEventArgs3 *iface, ICoreWebView2Deferral **deferral)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!deferral) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NewWindowRequestedEventArgs_GetDeferral, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *deferral = (ICoreWebView2Deferral *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs_get_WindowFeatures(ICoreWebView2NewWindowRequestedEventArgs3 *iface, ICoreWebView2WindowFeatures **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NewWindowRequestedEventArgs_get_WindowFeatures, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2WindowFeatures *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs2_get_Name(ICoreWebView2NewWindowRequestedEventArgs3 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NewWindowRequestedEventArgs2_get_Name, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs3_get_OriginalSourceFrameInfo(ICoreWebView2NewWindowRequestedEventArgs3 *iface, ICoreWebView2FrameInfo **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NewWindowRequestedEventArgs3_get_OriginalSourceFrameInfo, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2FrameInfo *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2NewWindowRequestedEventArgs3Vtbl ICoreWebView2NewWindowRequestedEventArgs3_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs_get_Uri,
+    proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs_put_NewWindow,
+    proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs_get_NewWindow,
+    proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs_put_Handled,
+    proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs_get_Handled,
+    proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs_get_IsUserInitiated,
+    proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs_GetDeferral,
+    proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs_get_WindowFeatures,
+    proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs2_get_Name,
+    proxy_ICoreWebView2NewWindowRequestedEventArgs3_ICoreWebView2NewWindowRequestedEventArgs3_get_OriginalSourceFrameInfo,
+};
+
+/* ===== ICoreWebView2NonClientRegionChangedEventArgs ===== */
+
+static const IID *const ICoreWebView2NonClientRegionChangedEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2NonClientRegionChangedEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2NonClientRegionChangedEventArgs_ICoreWebView2NonClientRegionChangedEventArgs_get_RegionKind(ICoreWebView2NonClientRegionChangedEventArgs *iface, COREWEBVIEW2_NON_CLIENT_REGION_KIND *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2NonClientRegionChangedEventArgs_get_RegionKind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_NON_CLIENT_REGION_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2NonClientRegionChangedEventArgsVtbl ICoreWebView2NonClientRegionChangedEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2NonClientRegionChangedEventArgs_ICoreWebView2NonClientRegionChangedEventArgs_get_RegionKind,
+};
+
+/* ===== ICoreWebView2PermissionRequestedEventArgs3 ===== */
+
+static const IID *const ICoreWebView2PermissionRequestedEventArgs3_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2PermissionRequestedEventArgs,
+    &IID_ICoreWebView2PermissionRequestedEventArgs2,
+    &IID_ICoreWebView2PermissionRequestedEventArgs3,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs_get_Uri(ICoreWebView2PermissionRequestedEventArgs3 *iface, LPWSTR *uri)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!uri) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PermissionRequestedEventArgs_get_Uri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *uri = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs_get_PermissionKind(ICoreWebView2PermissionRequestedEventArgs3 *iface, COREWEBVIEW2_PERMISSION_KIND *permissionKind)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!permissionKind) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PermissionRequestedEventArgs_get_PermissionKind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *permissionKind = (COREWEBVIEW2_PERMISSION_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs_get_IsUserInitiated(ICoreWebView2PermissionRequestedEventArgs3 *iface, BOOL *isUserInitiated)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!isUserInitiated) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PermissionRequestedEventArgs_get_IsUserInitiated, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *isUserInitiated = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs_get_State(ICoreWebView2PermissionRequestedEventArgs3 *iface, COREWEBVIEW2_PERMISSION_STATE *state)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!state) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PermissionRequestedEventArgs_get_State, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *state = (COREWEBVIEW2_PERMISSION_STATE)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs_put_State(ICoreWebView2PermissionRequestedEventArgs3 *iface, COREWEBVIEW2_PERMISSION_STATE state)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)state);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PermissionRequestedEventArgs_put_State, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs_GetDeferral(ICoreWebView2PermissionRequestedEventArgs3 *iface, ICoreWebView2Deferral **deferral)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!deferral) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PermissionRequestedEventArgs_GetDeferral, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *deferral = (ICoreWebView2Deferral *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs2_get_Handled(ICoreWebView2PermissionRequestedEventArgs3 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PermissionRequestedEventArgs2_get_Handled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs2_put_Handled(ICoreWebView2PermissionRequestedEventArgs3 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PermissionRequestedEventArgs2_put_Handled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs3_get_SavesInProfile(ICoreWebView2PermissionRequestedEventArgs3 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PermissionRequestedEventArgs3_get_SavesInProfile, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs3_put_SavesInProfile(ICoreWebView2PermissionRequestedEventArgs3 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PermissionRequestedEventArgs3_put_SavesInProfile, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2PermissionRequestedEventArgs3Vtbl ICoreWebView2PermissionRequestedEventArgs3_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs_get_Uri,
+    proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs_get_PermissionKind,
+    proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs_get_IsUserInitiated,
+    proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs_get_State,
+    proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs_put_State,
+    proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs_GetDeferral,
+    proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs2_get_Handled,
+    proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs2_put_Handled,
+    proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs3_get_SavesInProfile,
+    proxy_ICoreWebView2PermissionRequestedEventArgs3_ICoreWebView2PermissionRequestedEventArgs3_put_SavesInProfile,
+};
+
+/* ===== ICoreWebView2PermissionSetting ===== */
+
+static const IID *const ICoreWebView2PermissionSetting_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2PermissionSetting,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PermissionSetting_ICoreWebView2PermissionSetting_get_PermissionKind(ICoreWebView2PermissionSetting *iface, COREWEBVIEW2_PERMISSION_KIND *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PermissionSetting_get_PermissionKind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_PERMISSION_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PermissionSetting_ICoreWebView2PermissionSetting_get_PermissionOrigin(ICoreWebView2PermissionSetting *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PermissionSetting_get_PermissionOrigin, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2PermissionSetting_ICoreWebView2PermissionSetting_get_PermissionState(ICoreWebView2PermissionSetting *iface, COREWEBVIEW2_PERMISSION_STATE *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2PermissionSetting_get_PermissionState, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_PERMISSION_STATE)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2PermissionSettingVtbl ICoreWebView2PermissionSetting_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2PermissionSetting_ICoreWebView2PermissionSetting_get_PermissionKind,
+    proxy_ICoreWebView2PermissionSetting_ICoreWebView2PermissionSetting_get_PermissionOrigin,
+    proxy_ICoreWebView2PermissionSetting_ICoreWebView2PermissionSetting_get_PermissionState,
+};
+
+/* ===== ICoreWebView2ProcessFailedEventArgs4 ===== */
+
+static const IID *const ICoreWebView2ProcessFailedEventArgs4_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ProcessFailedEventArgs,
+    &IID_ICoreWebView2ProcessFailedEventArgs2,
+    &IID_ICoreWebView2ProcessFailedEventArgs3,
+    &IID_ICoreWebView2ProcessFailedEventArgs4,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ProcessFailedEventArgs4_ICoreWebView2ProcessFailedEventArgs_get_ProcessFailedKind(ICoreWebView2ProcessFailedEventArgs4 *iface, COREWEBVIEW2_PROCESS_FAILED_KIND *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ProcessFailedEventArgs_get_ProcessFailedKind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_PROCESS_FAILED_KIND)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ProcessFailedEventArgs4_ICoreWebView2ProcessFailedEventArgs2_get_Reason(ICoreWebView2ProcessFailedEventArgs4 *iface, COREWEBVIEW2_PROCESS_FAILED_REASON *reason)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!reason) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ProcessFailedEventArgs2_get_Reason, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *reason = (COREWEBVIEW2_PROCESS_FAILED_REASON)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ProcessFailedEventArgs4_ICoreWebView2ProcessFailedEventArgs2_get_ExitCode(ICoreWebView2ProcessFailedEventArgs4 *iface, int *exitCode)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!exitCode) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ProcessFailedEventArgs2_get_ExitCode, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *exitCode = (int)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ProcessFailedEventArgs4_ICoreWebView2ProcessFailedEventArgs2_get_ProcessDescription(ICoreWebView2ProcessFailedEventArgs4 *iface, LPWSTR *processDescription)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!processDescription) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ProcessFailedEventArgs2_get_ProcessDescription, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *processDescription = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ProcessFailedEventArgs4_ICoreWebView2ProcessFailedEventArgs2_get_FrameInfosForFailedProcess(ICoreWebView2ProcessFailedEventArgs4 *iface, ICoreWebView2FrameInfoCollection **frames)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!frames) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ProcessFailedEventArgs2_get_FrameInfosForFailedProcess, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *frames = (ICoreWebView2FrameInfoCollection *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ProcessFailedEventArgs4_ICoreWebView2ProcessFailedEventArgs3_get_FailureSourceModulePath(ICoreWebView2ProcessFailedEventArgs4 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ProcessFailedEventArgs3_get_FailureSourceModulePath, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ProcessFailedEventArgs4_ICoreWebView2ProcessFailedEventArgs4_get_CrashReport(ICoreWebView2ProcessFailedEventArgs4 *iface, ICoreWebView2CrashReport **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ProcessFailedEventArgs4_get_CrashReport, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2CrashReport *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ProcessFailedEventArgs4Vtbl ICoreWebView2ProcessFailedEventArgs4_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ProcessFailedEventArgs4_ICoreWebView2ProcessFailedEventArgs_get_ProcessFailedKind,
+    proxy_ICoreWebView2ProcessFailedEventArgs4_ICoreWebView2ProcessFailedEventArgs2_get_Reason,
+    proxy_ICoreWebView2ProcessFailedEventArgs4_ICoreWebView2ProcessFailedEventArgs2_get_ExitCode,
+    proxy_ICoreWebView2ProcessFailedEventArgs4_ICoreWebView2ProcessFailedEventArgs2_get_ProcessDescription,
+    proxy_ICoreWebView2ProcessFailedEventArgs4_ICoreWebView2ProcessFailedEventArgs2_get_FrameInfosForFailedProcess,
+    proxy_ICoreWebView2ProcessFailedEventArgs4_ICoreWebView2ProcessFailedEventArgs3_get_FailureSourceModulePath,
+    proxy_ICoreWebView2ProcessFailedEventArgs4_ICoreWebView2ProcessFailedEventArgs4_get_CrashReport,
+};
+
+/* ===== ICoreWebView2Profile9 ===== */
+
+static const IID *const ICoreWebView2Profile9_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2Profile,
+    &IID_ICoreWebView2Profile2,
+    &IID_ICoreWebView2Profile3,
+    &IID_ICoreWebView2Profile4,
+    &IID_ICoreWebView2Profile5,
+    &IID_ICoreWebView2Profile6,
+    &IID_ICoreWebView2Profile7,
+    &IID_ICoreWebView2Profile8,
+    &IID_ICoreWebView2Profile9,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile_get_ProfileName(ICoreWebView2Profile9 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile_get_ProfileName, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile_get_IsInPrivateModeEnabled(ICoreWebView2Profile9 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile_get_IsInPrivateModeEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile_get_ProfilePath(ICoreWebView2Profile9 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile_get_ProfilePath, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile_get_DefaultDownloadFolderPath(ICoreWebView2Profile9 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile_get_DefaultDownloadFolderPath, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile_put_DefaultDownloadFolderPath(ICoreWebView2Profile9 *iface, LPCWSTR value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile_put_DefaultDownloadFolderPath, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile_get_PreferredColorScheme(ICoreWebView2Profile9 *iface, COREWEBVIEW2_PREFERRED_COLOR_SCHEME *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile_get_PreferredColorScheme, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_PREFERRED_COLOR_SCHEME)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile_put_PreferredColorScheme(ICoreWebView2Profile9 *iface, COREWEBVIEW2_PREFERRED_COLOR_SCHEME value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile_put_PreferredColorScheme, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile2_ClearBrowsingData(ICoreWebView2Profile9 *iface, COREWEBVIEW2_BROWSING_DATA_KINDS dataKinds, ICoreWebView2ClearBrowsingDataCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)dataKinds);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile2_ClearBrowsingData, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile2_ClearBrowsingDataInTimeRange(ICoreWebView2Profile9 *iface, COREWEBVIEW2_BROWSING_DATA_KINDS dataKinds, double startTime, double endTime, ICoreWebView2ClearBrowsingDataCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)dataKinds);
+    wv2_put_f64(&args, startTime);
+    wv2_put_f64(&args, endTime);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile2_ClearBrowsingDataInTimeRange, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile2_ClearBrowsingDataAll(ICoreWebView2Profile9 *iface, ICoreWebView2ClearBrowsingDataCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile2_ClearBrowsingDataAll, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile3_get_PreferredTrackingPreventionLevel(ICoreWebView2Profile9 *iface, COREWEBVIEW2_TRACKING_PREVENTION_LEVEL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile3_get_PreferredTrackingPreventionLevel, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_TRACKING_PREVENTION_LEVEL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile3_put_PreferredTrackingPreventionLevel(ICoreWebView2Profile9 *iface, COREWEBVIEW2_TRACKING_PREVENTION_LEVEL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile3_put_PreferredTrackingPreventionLevel, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile4_SetPermissionState(ICoreWebView2Profile9 *iface, COREWEBVIEW2_PERMISSION_KIND PermissionKind, LPCWSTR origin, COREWEBVIEW2_PERMISSION_STATE State, ICoreWebView2SetPermissionStateCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)PermissionKind);
+    wv2_put_str(&args, origin);
+    wv2_put_u32(&args, (UINT32)State);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile4_SetPermissionState, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile4_GetNonDefaultPermissionSettings(ICoreWebView2Profile9 *iface, ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile4_GetNonDefaultPermissionSettings, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile5_get_CookieManager(ICoreWebView2Profile9 *iface, ICoreWebView2CookieManager **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile5_get_CookieManager, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2CookieManager *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile6_get_IsPasswordAutosaveEnabled(ICoreWebView2Profile9 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile6_get_IsPasswordAutosaveEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile6_put_IsPasswordAutosaveEnabled(ICoreWebView2Profile9 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile6_put_IsPasswordAutosaveEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile6_get_IsGeneralAutofillEnabled(ICoreWebView2Profile9 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile6_get_IsGeneralAutofillEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile6_put_IsGeneralAutofillEnabled(ICoreWebView2Profile9 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile6_put_IsGeneralAutofillEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile7_AddBrowserExtension(ICoreWebView2Profile9 *iface, LPCWSTR extensionFolderPath, ICoreWebView2ProfileAddBrowserExtensionCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, extensionFolderPath);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile7_AddBrowserExtension, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile7_GetBrowserExtensions(ICoreWebView2Profile9 *iface, ICoreWebView2ProfileGetBrowserExtensionsCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile7_GetBrowserExtensions, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile8_Delete(ICoreWebView2Profile9 *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile8_Delete, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile8_add_Deleted(ICoreWebView2Profile9 *iface, ICoreWebView2ProfileDeletedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile8_add_Deleted, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile8_remove_Deleted(ICoreWebView2Profile9 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile8_remove_Deleted, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile9_get_AreWebViewScriptApisEnabledForServiceWorkers(ICoreWebView2Profile9 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile9_get_AreWebViewScriptApisEnabledForServiceWorkers, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile9_put_AreWebViewScriptApisEnabledForServiceWorkers(ICoreWebView2Profile9 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile9_put_AreWebViewScriptApisEnabledForServiceWorkers, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile9_get_ServiceWorkerManager(ICoreWebView2Profile9 *iface, ICoreWebView2ServiceWorkerManager **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile9_get_ServiceWorkerManager, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ServiceWorkerManager *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profile9_get_SharedWorkerManager(ICoreWebView2Profile9 *iface, ICoreWebView2SharedWorkerManager **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile9_get_SharedWorkerManager, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2SharedWorkerManager *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2Profile9Vtbl ICoreWebView2Profile9_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile_get_ProfileName,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile_get_IsInPrivateModeEnabled,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile_get_ProfilePath,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile_get_DefaultDownloadFolderPath,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile_put_DefaultDownloadFolderPath,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile_get_PreferredColorScheme,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile_put_PreferredColorScheme,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile2_ClearBrowsingData,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile2_ClearBrowsingDataInTimeRange,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile2_ClearBrowsingDataAll,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile3_get_PreferredTrackingPreventionLevel,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile3_put_PreferredTrackingPreventionLevel,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile4_SetPermissionState,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile4_GetNonDefaultPermissionSettings,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile5_get_CookieManager,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile6_get_IsPasswordAutosaveEnabled,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile6_put_IsPasswordAutosaveEnabled,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile6_get_IsGeneralAutofillEnabled,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile6_put_IsGeneralAutofillEnabled,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile7_AddBrowserExtension,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile7_GetBrowserExtensions,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile8_Delete,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile8_add_Deleted,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile8_remove_Deleted,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile9_get_AreWebViewScriptApisEnabledForServiceWorkers,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile9_put_AreWebViewScriptApisEnabledForServiceWorkers,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile9_get_ServiceWorkerManager,
+    proxy_ICoreWebView2Profile9_ICoreWebView2Profile9_get_SharedWorkerManager,
+};
+
+/* ===== ICoreWebView2BrowserExtensionList ===== */
+
+static const IID *const ICoreWebView2BrowserExtensionList_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2BrowserExtensionList,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BrowserExtensionList_ICoreWebView2BrowserExtensionList_get_Count(ICoreWebView2BrowserExtensionList *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BrowserExtensionList_get_Count, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2BrowserExtensionList_ICoreWebView2BrowserExtensionList_GetValueAtIndex(ICoreWebView2BrowserExtensionList *iface, UINT32 index, ICoreWebView2BrowserExtension **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_u32(&args, (UINT32)index);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2BrowserExtensionList_GetValueAtIndex, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2BrowserExtension *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2BrowserExtensionListVtbl ICoreWebView2BrowserExtensionList_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2BrowserExtensionList_ICoreWebView2BrowserExtensionList_get_Count,
+    proxy_ICoreWebView2BrowserExtensionList_ICoreWebView2BrowserExtensionList_GetValueAtIndex,
+};
+
+/* ===== ICoreWebView2SaveFileSecurityCheckStartingEventArgs ===== */
+
+static const IID *const ICoreWebView2SaveFileSecurityCheckStartingEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2SaveFileSecurityCheckStartingEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_CancelSave(ICoreWebView2SaveFileSecurityCheckStartingEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_CancelSave, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_put_CancelSave(ICoreWebView2SaveFileSecurityCheckStartingEventArgs *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_put_CancelSave, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_DocumentOriginUri(ICoreWebView2SaveFileSecurityCheckStartingEventArgs *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_DocumentOriginUri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_FileExtension(ICoreWebView2SaveFileSecurityCheckStartingEventArgs *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_FileExtension, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_FilePath(ICoreWebView2SaveFileSecurityCheckStartingEventArgs *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_FilePath, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_SuppressDefaultPolicy(ICoreWebView2SaveFileSecurityCheckStartingEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_SuppressDefaultPolicy, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_put_SuppressDefaultPolicy(ICoreWebView2SaveFileSecurityCheckStartingEventArgs *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_put_SuppressDefaultPolicy, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_GetDeferral(ICoreWebView2SaveFileSecurityCheckStartingEventArgs *iface, ICoreWebView2Deferral **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_GetDeferral, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2Deferral *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2SaveFileSecurityCheckStartingEventArgsVtbl ICoreWebView2SaveFileSecurityCheckStartingEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_CancelSave,
+    proxy_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_put_CancelSave,
+    proxy_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_DocumentOriginUri,
+    proxy_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_FileExtension,
+    proxy_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_FilePath,
+    proxy_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_SuppressDefaultPolicy,
+    proxy_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_put_SuppressDefaultPolicy,
+    proxy_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_GetDeferral,
+};
+
+/* ===== ICoreWebView2ScreenCaptureStartingEventArgs ===== */
+
+static const IID *const ICoreWebView2ScreenCaptureStartingEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ScreenCaptureStartingEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScreenCaptureStartingEventArgs_ICoreWebView2ScreenCaptureStartingEventArgs_get_Cancel(ICoreWebView2ScreenCaptureStartingEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScreenCaptureStartingEventArgs_get_Cancel, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScreenCaptureStartingEventArgs_ICoreWebView2ScreenCaptureStartingEventArgs_put_Cancel(ICoreWebView2ScreenCaptureStartingEventArgs *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScreenCaptureStartingEventArgs_put_Cancel, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScreenCaptureStartingEventArgs_ICoreWebView2ScreenCaptureStartingEventArgs_get_Handled(ICoreWebView2ScreenCaptureStartingEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScreenCaptureStartingEventArgs_get_Handled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScreenCaptureStartingEventArgs_ICoreWebView2ScreenCaptureStartingEventArgs_put_Handled(ICoreWebView2ScreenCaptureStartingEventArgs *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScreenCaptureStartingEventArgs_put_Handled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScreenCaptureStartingEventArgs_ICoreWebView2ScreenCaptureStartingEventArgs_get_OriginalSourceFrameInfo(ICoreWebView2ScreenCaptureStartingEventArgs *iface, ICoreWebView2FrameInfo **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScreenCaptureStartingEventArgs_get_OriginalSourceFrameInfo, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2FrameInfo *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ScreenCaptureStartingEventArgs_ICoreWebView2ScreenCaptureStartingEventArgs_GetDeferral(ICoreWebView2ScreenCaptureStartingEventArgs *iface, ICoreWebView2Deferral **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ScreenCaptureStartingEventArgs_GetDeferral, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2Deferral *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ScreenCaptureStartingEventArgsVtbl ICoreWebView2ScreenCaptureStartingEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ScreenCaptureStartingEventArgs_ICoreWebView2ScreenCaptureStartingEventArgs_get_Cancel,
+    proxy_ICoreWebView2ScreenCaptureStartingEventArgs_ICoreWebView2ScreenCaptureStartingEventArgs_put_Cancel,
+    proxy_ICoreWebView2ScreenCaptureStartingEventArgs_ICoreWebView2ScreenCaptureStartingEventArgs_get_Handled,
+    proxy_ICoreWebView2ScreenCaptureStartingEventArgs_ICoreWebView2ScreenCaptureStartingEventArgs_put_Handled,
+    proxy_ICoreWebView2ScreenCaptureStartingEventArgs_ICoreWebView2ScreenCaptureStartingEventArgs_get_OriginalSourceFrameInfo,
+    proxy_ICoreWebView2ScreenCaptureStartingEventArgs_ICoreWebView2ScreenCaptureStartingEventArgs_GetDeferral,
+};
+
+/* ===== ICoreWebView2ServiceWorker ===== */
+
+static const IID *const ICoreWebView2ServiceWorker_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ServiceWorker,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorker_ICoreWebView2ServiceWorker_get_ScriptUri(ICoreWebView2ServiceWorker *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorker_get_ScriptUri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorker_ICoreWebView2ServiceWorker_add_Destroying(ICoreWebView2ServiceWorker *iface, ICoreWebView2ServiceWorkerDestroyingEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorker_add_Destroying, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorker_ICoreWebView2ServiceWorker_remove_Destroying(ICoreWebView2ServiceWorker *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorker_remove_Destroying, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorker_ICoreWebView2ServiceWorker_add_WebMessageReceived(ICoreWebView2ServiceWorker *iface, ICoreWebView2ServiceWorkerWebMessageReceivedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorker_add_WebMessageReceived, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorker_ICoreWebView2ServiceWorker_remove_WebMessageReceived(ICoreWebView2ServiceWorker *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorker_remove_WebMessageReceived, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorker_ICoreWebView2ServiceWorker_PostWebMessageAsJson(ICoreWebView2ServiceWorker *iface, LPCWSTR webMessageAsJson)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, webMessageAsJson);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorker_PostWebMessageAsJson, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorker_ICoreWebView2ServiceWorker_PostWebMessageAsString(ICoreWebView2ServiceWorker *iface, LPCWSTR webMessageAsString)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, webMessageAsString);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorker_PostWebMessageAsString, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ServiceWorkerVtbl ICoreWebView2ServiceWorker_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ServiceWorker_ICoreWebView2ServiceWorker_get_ScriptUri,
+    proxy_ICoreWebView2ServiceWorker_ICoreWebView2ServiceWorker_add_Destroying,
+    proxy_ICoreWebView2ServiceWorker_ICoreWebView2ServiceWorker_remove_Destroying,
+    proxy_ICoreWebView2ServiceWorker_ICoreWebView2ServiceWorker_add_WebMessageReceived,
+    proxy_ICoreWebView2ServiceWorker_ICoreWebView2ServiceWorker_remove_WebMessageReceived,
+    proxy_ICoreWebView2ServiceWorker_ICoreWebView2ServiceWorker_PostWebMessageAsJson,
+    proxy_ICoreWebView2ServiceWorker_ICoreWebView2ServiceWorker_PostWebMessageAsString,
+};
+
+/* ===== ICoreWebView2ServiceWorkerActivatedEventArgs ===== */
+
+static const IID *const ICoreWebView2ServiceWorkerActivatedEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ServiceWorkerActivatedEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerActivatedEventArgs_ICoreWebView2ServiceWorkerActivatedEventArgs_get_ActiveServiceWorker(ICoreWebView2ServiceWorkerActivatedEventArgs *iface, ICoreWebView2ServiceWorker **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerActivatedEventArgs_get_ActiveServiceWorker, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ServiceWorker *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ServiceWorkerActivatedEventArgsVtbl ICoreWebView2ServiceWorkerActivatedEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ServiceWorkerActivatedEventArgs_ICoreWebView2ServiceWorkerActivatedEventArgs_get_ActiveServiceWorker,
+};
+
+/* ===== ICoreWebView2ServiceWorkerRegistrationCollectionView ===== */
+
+static const IID *const ICoreWebView2ServiceWorkerRegistrationCollectionView_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ServiceWorkerRegistrationCollectionView,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerRegistrationCollectionView_ICoreWebView2ServiceWorkerRegistrationCollectionView_get_Count(ICoreWebView2ServiceWorkerRegistrationCollectionView *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerRegistrationCollectionView_get_Count, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerRegistrationCollectionView_ICoreWebView2ServiceWorkerRegistrationCollectionView_GetValueAtIndex(ICoreWebView2ServiceWorkerRegistrationCollectionView *iface, UINT32 index, ICoreWebView2ServiceWorkerRegistration **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_u32(&args, (UINT32)index);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerRegistrationCollectionView_GetValueAtIndex, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ServiceWorkerRegistration *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ServiceWorkerRegistrationCollectionViewVtbl ICoreWebView2ServiceWorkerRegistrationCollectionView_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ServiceWorkerRegistrationCollectionView_ICoreWebView2ServiceWorkerRegistrationCollectionView_get_Count,
+    proxy_ICoreWebView2ServiceWorkerRegistrationCollectionView_ICoreWebView2ServiceWorkerRegistrationCollectionView_GetValueAtIndex,
+};
+
+/* ===== ICoreWebView2ServiceWorkerManager ===== */
+
+static const IID *const ICoreWebView2ServiceWorkerManager_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ServiceWorkerManager,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerManager_ICoreWebView2ServiceWorkerManager_add_ServiceWorkerRegistered(ICoreWebView2ServiceWorkerManager *iface, ICoreWebView2ServiceWorkerRegisteredEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerManager_add_ServiceWorkerRegistered, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerManager_ICoreWebView2ServiceWorkerManager_remove_ServiceWorkerRegistered(ICoreWebView2ServiceWorkerManager *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerManager_remove_ServiceWorkerRegistered, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerManager_ICoreWebView2ServiceWorkerManager_GetServiceWorkerRegistrations(ICoreWebView2ServiceWorkerManager *iface, ICoreWebView2GetServiceWorkerRegistrationsCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerManager_GetServiceWorkerRegistrations, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerManager_ICoreWebView2ServiceWorkerManager_GetServiceWorkerRegistrationsForScope(ICoreWebView2ServiceWorkerManager *iface, LPCWSTR scopeUri, ICoreWebView2GetServiceWorkerRegistrationsCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, scopeUri);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerManager_GetServiceWorkerRegistrationsForScope, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ServiceWorkerManagerVtbl ICoreWebView2ServiceWorkerManager_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ServiceWorkerManager_ICoreWebView2ServiceWorkerManager_add_ServiceWorkerRegistered,
+    proxy_ICoreWebView2ServiceWorkerManager_ICoreWebView2ServiceWorkerManager_remove_ServiceWorkerRegistered,
+    proxy_ICoreWebView2ServiceWorkerManager_ICoreWebView2ServiceWorkerManager_GetServiceWorkerRegistrations,
+    proxy_ICoreWebView2ServiceWorkerManager_ICoreWebView2ServiceWorkerManager_GetServiceWorkerRegistrationsForScope,
+};
+
+/* ===== ICoreWebView2ServiceWorkerRegisteredEventArgs ===== */
+
+static const IID *const ICoreWebView2ServiceWorkerRegisteredEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ServiceWorkerRegisteredEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerRegisteredEventArgs_ICoreWebView2ServiceWorkerRegisteredEventArgs_get_ServiceWorkerRegistration(ICoreWebView2ServiceWorkerRegisteredEventArgs *iface, ICoreWebView2ServiceWorkerRegistration **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerRegisteredEventArgs_get_ServiceWorkerRegistration, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ServiceWorkerRegistration *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ServiceWorkerRegisteredEventArgsVtbl ICoreWebView2ServiceWorkerRegisteredEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ServiceWorkerRegisteredEventArgs_ICoreWebView2ServiceWorkerRegisteredEventArgs_get_ServiceWorkerRegistration,
+};
+
+/* ===== ICoreWebView2ServiceWorkerRegistration ===== */
+
+static const IID *const ICoreWebView2ServiceWorkerRegistration_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2ServiceWorkerRegistration,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerRegistration_ICoreWebView2ServiceWorkerRegistration_get_ActiveServiceWorker(ICoreWebView2ServiceWorkerRegistration *iface, ICoreWebView2ServiceWorker **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerRegistration_get_ActiveServiceWorker, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ServiceWorker *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerRegistration_ICoreWebView2ServiceWorkerRegistration_get_Origin(ICoreWebView2ServiceWorkerRegistration *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerRegistration_get_Origin, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerRegistration_ICoreWebView2ServiceWorkerRegistration_get_ScopeUri(ICoreWebView2ServiceWorkerRegistration *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerRegistration_get_ScopeUri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerRegistration_ICoreWebView2ServiceWorkerRegistration_get_TopLevelOrigin(ICoreWebView2ServiceWorkerRegistration *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerRegistration_get_TopLevelOrigin, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerRegistration_ICoreWebView2ServiceWorkerRegistration_add_ServiceWorkerActivated(ICoreWebView2ServiceWorkerRegistration *iface, ICoreWebView2ServiceWorkerActivatedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerRegistration_add_ServiceWorkerActivated, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerRegistration_ICoreWebView2ServiceWorkerRegistration_remove_ServiceWorkerActivated(ICoreWebView2ServiceWorkerRegistration *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerRegistration_remove_ServiceWorkerActivated, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerRegistration_ICoreWebView2ServiceWorkerRegistration_add_Unregistering(ICoreWebView2ServiceWorkerRegistration *iface, ICoreWebView2ServiceWorkerRegistrationUnregisteringEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerRegistration_add_Unregistering, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerRegistration_ICoreWebView2ServiceWorkerRegistration_remove_Unregistering(ICoreWebView2ServiceWorkerRegistration *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerRegistration_remove_Unregistering, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2ServiceWorkerRegistrationVtbl ICoreWebView2ServiceWorkerRegistration_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2ServiceWorkerRegistration_ICoreWebView2ServiceWorkerRegistration_get_ActiveServiceWorker,
+    proxy_ICoreWebView2ServiceWorkerRegistration_ICoreWebView2ServiceWorkerRegistration_get_Origin,
+    proxy_ICoreWebView2ServiceWorkerRegistration_ICoreWebView2ServiceWorkerRegistration_get_ScopeUri,
+    proxy_ICoreWebView2ServiceWorkerRegistration_ICoreWebView2ServiceWorkerRegistration_get_TopLevelOrigin,
+    proxy_ICoreWebView2ServiceWorkerRegistration_ICoreWebView2ServiceWorkerRegistration_add_ServiceWorkerActivated,
+    proxy_ICoreWebView2ServiceWorkerRegistration_ICoreWebView2ServiceWorkerRegistration_remove_ServiceWorkerActivated,
+    proxy_ICoreWebView2ServiceWorkerRegistration_ICoreWebView2ServiceWorkerRegistration_add_Unregistering,
+    proxy_ICoreWebView2ServiceWorkerRegistration_ICoreWebView2ServiceWorkerRegistration_remove_Unregistering,
+};
+
+/* ===== ICoreWebView2Settings9 ===== */
+
+static const IID *const ICoreWebView2Settings9_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2Settings,
+    &IID_ICoreWebView2Settings2,
+    &IID_ICoreWebView2Settings3,
+    &IID_ICoreWebView2Settings4,
+    &IID_ICoreWebView2Settings5,
+    &IID_ICoreWebView2Settings6,
+    &IID_ICoreWebView2Settings7,
+    &IID_ICoreWebView2Settings8,
+    &IID_ICoreWebView2Settings9,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_IsScriptEnabled(ICoreWebView2Settings9 *iface, BOOL *isScriptEnabled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!isScriptEnabled) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_get_IsScriptEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *isScriptEnabled = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_IsScriptEnabled(ICoreWebView2Settings9 *iface, BOOL isScriptEnabled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)isScriptEnabled);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_put_IsScriptEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_IsWebMessageEnabled(ICoreWebView2Settings9 *iface, BOOL *isWebMessageEnabled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!isWebMessageEnabled) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_get_IsWebMessageEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *isWebMessageEnabled = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_IsWebMessageEnabled(ICoreWebView2Settings9 *iface, BOOL isWebMessageEnabled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)isWebMessageEnabled);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_put_IsWebMessageEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_AreDefaultScriptDialogsEnabled(ICoreWebView2Settings9 *iface, BOOL *areDefaultScriptDialogsEnabled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!areDefaultScriptDialogsEnabled) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_get_AreDefaultScriptDialogsEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *areDefaultScriptDialogsEnabled = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_AreDefaultScriptDialogsEnabled(ICoreWebView2Settings9 *iface, BOOL areDefaultScriptDialogsEnabled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)areDefaultScriptDialogsEnabled);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_put_AreDefaultScriptDialogsEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_IsStatusBarEnabled(ICoreWebView2Settings9 *iface, BOOL *isStatusBarEnabled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!isStatusBarEnabled) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_get_IsStatusBarEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *isStatusBarEnabled = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_IsStatusBarEnabled(ICoreWebView2Settings9 *iface, BOOL isStatusBarEnabled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)isStatusBarEnabled);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_put_IsStatusBarEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_AreDevToolsEnabled(ICoreWebView2Settings9 *iface, BOOL *areDevToolsEnabled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!areDevToolsEnabled) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_get_AreDevToolsEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *areDevToolsEnabled = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_AreDevToolsEnabled(ICoreWebView2Settings9 *iface, BOOL areDevToolsEnabled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)areDevToolsEnabled);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_put_AreDevToolsEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_AreDefaultContextMenusEnabled(ICoreWebView2Settings9 *iface, BOOL *enabled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!enabled) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_get_AreDefaultContextMenusEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *enabled = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_AreDefaultContextMenusEnabled(ICoreWebView2Settings9 *iface, BOOL enabled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)enabled);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_put_AreDefaultContextMenusEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_AreHostObjectsAllowed(ICoreWebView2Settings9 *iface, BOOL *allowed)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!allowed) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_get_AreHostObjectsAllowed, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *allowed = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_AreHostObjectsAllowed(ICoreWebView2Settings9 *iface, BOOL allowed)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)allowed);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_put_AreHostObjectsAllowed, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_IsZoomControlEnabled(ICoreWebView2Settings9 *iface, BOOL *enabled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!enabled) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_get_IsZoomControlEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *enabled = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_IsZoomControlEnabled(ICoreWebView2Settings9 *iface, BOOL enabled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)enabled);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_put_IsZoomControlEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_IsBuiltInErrorPageEnabled(ICoreWebView2Settings9 *iface, BOOL *enabled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!enabled) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_get_IsBuiltInErrorPageEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *enabled = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_IsBuiltInErrorPageEnabled(ICoreWebView2Settings9 *iface, BOOL enabled)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)enabled);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings_put_IsBuiltInErrorPageEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings2_get_UserAgent(ICoreWebView2Settings9 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings2_get_UserAgent, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings2_put_UserAgent(ICoreWebView2Settings9 *iface, LPCWSTR value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings2_put_UserAgent, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings3_get_AreBrowserAcceleratorKeysEnabled(ICoreWebView2Settings9 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings3_get_AreBrowserAcceleratorKeysEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings3_put_AreBrowserAcceleratorKeysEnabled(ICoreWebView2Settings9 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings3_put_AreBrowserAcceleratorKeysEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings4_get_IsPasswordAutosaveEnabled(ICoreWebView2Settings9 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings4_get_IsPasswordAutosaveEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings4_put_IsPasswordAutosaveEnabled(ICoreWebView2Settings9 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings4_put_IsPasswordAutosaveEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings4_get_IsGeneralAutofillEnabled(ICoreWebView2Settings9 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings4_get_IsGeneralAutofillEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings4_put_IsGeneralAutofillEnabled(ICoreWebView2Settings9 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings4_put_IsGeneralAutofillEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings5_get_IsPinchZoomEnabled(ICoreWebView2Settings9 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings5_get_IsPinchZoomEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings5_put_IsPinchZoomEnabled(ICoreWebView2Settings9 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings5_put_IsPinchZoomEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings6_get_IsSwipeNavigationEnabled(ICoreWebView2Settings9 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings6_get_IsSwipeNavigationEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings6_put_IsSwipeNavigationEnabled(ICoreWebView2Settings9 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings6_put_IsSwipeNavigationEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings7_get_HiddenPdfToolbarItems(ICoreWebView2Settings9 *iface, COREWEBVIEW2_PDF_TOOLBAR_ITEMS *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings7_get_HiddenPdfToolbarItems, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_PDF_TOOLBAR_ITEMS)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings7_put_HiddenPdfToolbarItems(ICoreWebView2Settings9 *iface, COREWEBVIEW2_PDF_TOOLBAR_ITEMS value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings7_put_HiddenPdfToolbarItems, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings8_get_IsReputationCheckingRequired(ICoreWebView2Settings9 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings8_get_IsReputationCheckingRequired, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings8_put_IsReputationCheckingRequired(ICoreWebView2Settings9 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings8_put_IsReputationCheckingRequired, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings9_get_IsNonClientRegionSupportEnabled(ICoreWebView2Settings9 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings9_get_IsNonClientRegionSupportEnabled, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Settings9_ICoreWebView2Settings9_put_IsNonClientRegionSupportEnabled(ICoreWebView2Settings9 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Settings9_put_IsNonClientRegionSupportEnabled, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2Settings9Vtbl ICoreWebView2Settings9_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_IsScriptEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_IsScriptEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_IsWebMessageEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_IsWebMessageEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_AreDefaultScriptDialogsEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_AreDefaultScriptDialogsEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_IsStatusBarEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_IsStatusBarEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_AreDevToolsEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_AreDevToolsEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_AreDefaultContextMenusEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_AreDefaultContextMenusEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_AreHostObjectsAllowed,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_AreHostObjectsAllowed,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_IsZoomControlEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_IsZoomControlEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_get_IsBuiltInErrorPageEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings_put_IsBuiltInErrorPageEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings2_get_UserAgent,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings2_put_UserAgent,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings3_get_AreBrowserAcceleratorKeysEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings3_put_AreBrowserAcceleratorKeysEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings4_get_IsPasswordAutosaveEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings4_put_IsPasswordAutosaveEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings4_get_IsGeneralAutofillEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings4_put_IsGeneralAutofillEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings5_get_IsPinchZoomEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings5_put_IsPinchZoomEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings6_get_IsSwipeNavigationEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings6_put_IsSwipeNavigationEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings7_get_HiddenPdfToolbarItems,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings7_put_HiddenPdfToolbarItems,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings8_get_IsReputationCheckingRequired,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings8_put_IsReputationCheckingRequired,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings9_get_IsNonClientRegionSupportEnabled,
+    proxy_ICoreWebView2Settings9_ICoreWebView2Settings9_put_IsNonClientRegionSupportEnabled,
+};
+
+/* ===== ICoreWebView2SharedWorker ===== */
+
+static const IID *const ICoreWebView2SharedWorker_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2SharedWorker,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedWorker_ICoreWebView2SharedWorker_get_Origin(ICoreWebView2SharedWorker *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SharedWorker_get_Origin, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedWorker_ICoreWebView2SharedWorker_get_ScriptUri(ICoreWebView2SharedWorker *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SharedWorker_get_ScriptUri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedWorker_ICoreWebView2SharedWorker_get_TopLevelOrigin(ICoreWebView2SharedWorker *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SharedWorker_get_TopLevelOrigin, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedWorker_ICoreWebView2SharedWorker_add_Destroying(ICoreWebView2SharedWorker *iface, ICoreWebView2SharedWorkerDestroyingEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SharedWorker_add_Destroying, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedWorker_ICoreWebView2SharedWorker_remove_Destroying(ICoreWebView2SharedWorker *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SharedWorker_remove_Destroying, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2SharedWorkerVtbl ICoreWebView2SharedWorker_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2SharedWorker_ICoreWebView2SharedWorker_get_Origin,
+    proxy_ICoreWebView2SharedWorker_ICoreWebView2SharedWorker_get_ScriptUri,
+    proxy_ICoreWebView2SharedWorker_ICoreWebView2SharedWorker_get_TopLevelOrigin,
+    proxy_ICoreWebView2SharedWorker_ICoreWebView2SharedWorker_add_Destroying,
+    proxy_ICoreWebView2SharedWorker_ICoreWebView2SharedWorker_remove_Destroying,
+};
+
+/* ===== ICoreWebView2SharedWorkerCreatedEventArgs ===== */
+
+static const IID *const ICoreWebView2SharedWorkerCreatedEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2SharedWorkerCreatedEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedWorkerCreatedEventArgs_ICoreWebView2SharedWorkerCreatedEventArgs_get_Worker(ICoreWebView2SharedWorkerCreatedEventArgs *iface, ICoreWebView2SharedWorker **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SharedWorkerCreatedEventArgs_get_Worker, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2SharedWorker *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2SharedWorkerCreatedEventArgsVtbl ICoreWebView2SharedWorkerCreatedEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2SharedWorkerCreatedEventArgs_ICoreWebView2SharedWorkerCreatedEventArgs_get_Worker,
+};
+
+/* ===== ICoreWebView2SharedWorkerCollectionView ===== */
+
+static const IID *const ICoreWebView2SharedWorkerCollectionView_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2SharedWorkerCollectionView,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedWorkerCollectionView_ICoreWebView2SharedWorkerCollectionView_get_Count(ICoreWebView2SharedWorkerCollectionView *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SharedWorkerCollectionView_get_Count, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedWorkerCollectionView_ICoreWebView2SharedWorkerCollectionView_GetValueAtIndex(ICoreWebView2SharedWorkerCollectionView *iface, UINT32 index, ICoreWebView2SharedWorker **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    wv2_put_u32(&args, (UINT32)index);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SharedWorkerCollectionView_GetValueAtIndex, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2SharedWorker *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2SharedWorkerCollectionViewVtbl ICoreWebView2SharedWorkerCollectionView_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2SharedWorkerCollectionView_ICoreWebView2SharedWorkerCollectionView_get_Count,
+    proxy_ICoreWebView2SharedWorkerCollectionView_ICoreWebView2SharedWorkerCollectionView_GetValueAtIndex,
+};
+
+/* ===== ICoreWebView2SharedWorkerManager ===== */
+
+static const IID *const ICoreWebView2SharedWorkerManager_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2SharedWorkerManager,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedWorkerManager_ICoreWebView2SharedWorkerManager_add_SharedWorkerCreated(ICoreWebView2SharedWorkerManager *iface, ICoreWebView2SharedWorkerCreatedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SharedWorkerManager_add_SharedWorkerCreated, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedWorkerManager_ICoreWebView2SharedWorkerManager_remove_SharedWorkerCreated(ICoreWebView2SharedWorkerManager *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SharedWorkerManager_remove_SharedWorkerCreated, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedWorkerManager_ICoreWebView2SharedWorkerManager_GetSharedWorkers(ICoreWebView2SharedWorkerManager *iface, ICoreWebView2GetSharedWorkersCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SharedWorkerManager_GetSharedWorkers, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2SharedWorkerManagerVtbl ICoreWebView2SharedWorkerManager_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2SharedWorkerManager_ICoreWebView2SharedWorkerManager_add_SharedWorkerCreated,
+    proxy_ICoreWebView2SharedWorkerManager_ICoreWebView2SharedWorkerManager_remove_SharedWorkerCreated,
+    proxy_ICoreWebView2SharedWorkerManager_ICoreWebView2SharedWorkerManager_GetSharedWorkers,
+};
+
+/* ===== ICoreWebView2SourceChangedEventArgs ===== */
+
+static const IID *const ICoreWebView2SourceChangedEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2SourceChangedEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SourceChangedEventArgs_ICoreWebView2SourceChangedEventArgs_get_IsNewDocument(ICoreWebView2SourceChangedEventArgs *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SourceChangedEventArgs_get_IsNewDocument, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2SourceChangedEventArgsVtbl ICoreWebView2SourceChangedEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2SourceChangedEventArgs_ICoreWebView2SourceChangedEventArgs_get_IsNewDocument,
+};
+
+/* ===== ICoreWebView2WebMessageReceivedEventArgs2 ===== */
+
+static const IID *const ICoreWebView2WebMessageReceivedEventArgs2_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2WebMessageReceivedEventArgs,
+    &IID_ICoreWebView2WebMessageReceivedEventArgs2,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebMessageReceivedEventArgs2_ICoreWebView2WebMessageReceivedEventArgs_get_Source(ICoreWebView2WebMessageReceivedEventArgs2 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebMessageReceivedEventArgs_get_Source, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebMessageReceivedEventArgs2_ICoreWebView2WebMessageReceivedEventArgs_get_WebMessageAsJson(ICoreWebView2WebMessageReceivedEventArgs2 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebMessageReceivedEventArgs_get_WebMessageAsJson, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebMessageReceivedEventArgs2_ICoreWebView2WebMessageReceivedEventArgs_TryGetWebMessageAsString(ICoreWebView2WebMessageReceivedEventArgs2 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebMessageReceivedEventArgs_TryGetWebMessageAsString, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebMessageReceivedEventArgs2_ICoreWebView2WebMessageReceivedEventArgs2_get_AdditionalObjects(ICoreWebView2WebMessageReceivedEventArgs2 *iface, ICoreWebView2ObjectCollectionView **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebMessageReceivedEventArgs2_get_AdditionalObjects, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2ObjectCollectionView *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2WebMessageReceivedEventArgs2Vtbl ICoreWebView2WebMessageReceivedEventArgs2_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2WebMessageReceivedEventArgs2_ICoreWebView2WebMessageReceivedEventArgs_get_Source,
+    proxy_ICoreWebView2WebMessageReceivedEventArgs2_ICoreWebView2WebMessageReceivedEventArgs_get_WebMessageAsJson,
+    proxy_ICoreWebView2WebMessageReceivedEventArgs2_ICoreWebView2WebMessageReceivedEventArgs_TryGetWebMessageAsString,
+    proxy_ICoreWebView2WebMessageReceivedEventArgs2_ICoreWebView2WebMessageReceivedEventArgs2_get_AdditionalObjects,
+};
+
+/* ===== ICoreWebView2WebResourceRequestedEventArgs2 ===== */
+
+static const IID *const ICoreWebView2WebResourceRequestedEventArgs2_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2WebResourceRequestedEventArgs,
+    &IID_ICoreWebView2WebResourceRequestedEventArgs2,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceRequestedEventArgs2_ICoreWebView2WebResourceRequestedEventArgs_get_Request(ICoreWebView2WebResourceRequestedEventArgs2 *iface, ICoreWebView2WebResourceRequest **request)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!request) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceRequestedEventArgs_get_Request, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *request = (ICoreWebView2WebResourceRequest *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceRequestedEventArgs2_ICoreWebView2WebResourceRequestedEventArgs_get_Response(ICoreWebView2WebResourceRequestedEventArgs2 *iface, ICoreWebView2WebResourceResponse **response)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!response) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceRequestedEventArgs_get_Response, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *response = (ICoreWebView2WebResourceResponse *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceRequestedEventArgs2_ICoreWebView2WebResourceRequestedEventArgs_put_Response(ICoreWebView2WebResourceRequestedEventArgs2 *iface, ICoreWebView2WebResourceResponse *response)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)response);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceRequestedEventArgs_put_Response, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceRequestedEventArgs2_ICoreWebView2WebResourceRequestedEventArgs_GetDeferral(ICoreWebView2WebResourceRequestedEventArgs2 *iface, ICoreWebView2Deferral **deferral)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!deferral) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceRequestedEventArgs_GetDeferral, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *deferral = (ICoreWebView2Deferral *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceRequestedEventArgs2_ICoreWebView2WebResourceRequestedEventArgs_get_ResourceContext(ICoreWebView2WebResourceRequestedEventArgs2 *iface, COREWEBVIEW2_WEB_RESOURCE_CONTEXT *context)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!context) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceRequestedEventArgs_get_ResourceContext, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *context = (COREWEBVIEW2_WEB_RESOURCE_CONTEXT)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceRequestedEventArgs2_ICoreWebView2WebResourceRequestedEventArgs2_get_RequestedSourceKind(ICoreWebView2WebResourceRequestedEventArgs2 *iface, COREWEBVIEW2_WEB_RESOURCE_REQUEST_SOURCE_KINDS *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceRequestedEventArgs2_get_RequestedSourceKind, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_WEB_RESOURCE_REQUEST_SOURCE_KINDS)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2WebResourceRequestedEventArgs2Vtbl ICoreWebView2WebResourceRequestedEventArgs2_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2WebResourceRequestedEventArgs2_ICoreWebView2WebResourceRequestedEventArgs_get_Request,
+    proxy_ICoreWebView2WebResourceRequestedEventArgs2_ICoreWebView2WebResourceRequestedEventArgs_get_Response,
+    proxy_ICoreWebView2WebResourceRequestedEventArgs2_ICoreWebView2WebResourceRequestedEventArgs_put_Response,
+    proxy_ICoreWebView2WebResourceRequestedEventArgs2_ICoreWebView2WebResourceRequestedEventArgs_GetDeferral,
+    proxy_ICoreWebView2WebResourceRequestedEventArgs2_ICoreWebView2WebResourceRequestedEventArgs_get_ResourceContext,
+    proxy_ICoreWebView2WebResourceRequestedEventArgs2_ICoreWebView2WebResourceRequestedEventArgs2_get_RequestedSourceKind,
+};
+
+/* ===== ICoreWebView2WebResourceResponseReceivedEventArgs ===== */
+
+static const IID *const ICoreWebView2WebResourceResponseReceivedEventArgs_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2WebResourceResponseReceivedEventArgs,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceResponseReceivedEventArgs_ICoreWebView2WebResourceResponseReceivedEventArgs_get_Request(ICoreWebView2WebResourceResponseReceivedEventArgs *iface, ICoreWebView2WebResourceRequest **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceResponseReceivedEventArgs_get_Request, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2WebResourceRequest *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2WebResourceResponseReceivedEventArgs_ICoreWebView2WebResourceResponseReceivedEventArgs_get_Response(ICoreWebView2WebResourceResponseReceivedEventArgs *iface, ICoreWebView2WebResourceResponseView **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2WebResourceResponseReceivedEventArgs_get_Response, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2WebResourceResponseView *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2WebResourceResponseReceivedEventArgsVtbl ICoreWebView2WebResourceResponseReceivedEventArgs_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2WebResourceResponseReceivedEventArgs_ICoreWebView2WebResourceResponseReceivedEventArgs_get_Request,
+    proxy_ICoreWebView2WebResourceResponseReceivedEventArgs_ICoreWebView2WebResourceResponseReceivedEventArgs_get_Response,
+};
+
+/* ===== ICoreWebView2_29 ===== */
+
+static const IID *const ICoreWebView2_29_proxy_iids[] =
+{
+    &IID_IUnknown,
+    &IID_ICoreWebView2,
+    &IID_ICoreWebView2_2,
+    &IID_ICoreWebView2_3,
+    &IID_ICoreWebView2_4,
+    &IID_ICoreWebView2_5,
+    &IID_ICoreWebView2_6,
+    &IID_ICoreWebView2_7,
+    &IID_ICoreWebView2_8,
+    &IID_ICoreWebView2_9,
+    &IID_ICoreWebView2_10,
+    &IID_ICoreWebView2_11,
+    &IID_ICoreWebView2_12,
+    &IID_ICoreWebView2_13,
+    &IID_ICoreWebView2_14,
+    &IID_ICoreWebView2_15,
+    &IID_ICoreWebView2_16,
+    &IID_ICoreWebView2_17,
+    &IID_ICoreWebView2_18,
+    &IID_ICoreWebView2_19,
+    &IID_ICoreWebView2_20,
+    &IID_ICoreWebView2_21,
+    &IID_ICoreWebView2_22,
+    &IID_ICoreWebView2_23,
+    &IID_ICoreWebView2_24,
+    &IID_ICoreWebView2_25,
+    &IID_ICoreWebView2_26,
+    &IID_ICoreWebView2_27,
+    &IID_ICoreWebView2_28,
+    &IID_ICoreWebView2_29,
+    NULL
+};
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_get_Settings(ICoreWebView2_29 *iface, ICoreWebView2Settings **settings)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!settings) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_get_Settings, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *settings = (ICoreWebView2Settings *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_get_Source(ICoreWebView2_29 *iface, LPWSTR *uri)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!uri) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_get_Source, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *uri = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_Navigate(ICoreWebView2_29 *iface, LPCWSTR uri)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, uri);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_Navigate, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_NavigateToString(ICoreWebView2_29 *iface, LPCWSTR htmlContent)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, htmlContent);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_NavigateToString, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_NavigationStarting(ICoreWebView2_29 *iface, ICoreWebView2NavigationStartingEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_NavigationStarting, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_remove_NavigationStarting(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_remove_NavigationStarting, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_ContentLoading(ICoreWebView2_29 *iface, ICoreWebView2ContentLoadingEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_ContentLoading, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_remove_ContentLoading(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_remove_ContentLoading, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_SourceChanged(ICoreWebView2_29 *iface, ICoreWebView2SourceChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_SourceChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_remove_SourceChanged(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_remove_SourceChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_HistoryChanged(ICoreWebView2_29 *iface, ICoreWebView2HistoryChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_HistoryChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_remove_HistoryChanged(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_remove_HistoryChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_NavigationCompleted(ICoreWebView2_29 *iface, ICoreWebView2NavigationCompletedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_NavigationCompleted, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_remove_NavigationCompleted(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_remove_NavigationCompleted, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_FrameNavigationStarting(ICoreWebView2_29 *iface, ICoreWebView2NavigationStartingEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_FrameNavigationStarting, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_remove_FrameNavigationStarting(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_remove_FrameNavigationStarting, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_FrameNavigationCompleted(ICoreWebView2_29 *iface, ICoreWebView2NavigationCompletedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_FrameNavigationCompleted, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_remove_FrameNavigationCompleted(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_remove_FrameNavigationCompleted, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_ScriptDialogOpening(ICoreWebView2_29 *iface, ICoreWebView2ScriptDialogOpeningEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_ScriptDialogOpening, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_remove_ScriptDialogOpening(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_remove_ScriptDialogOpening, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_PermissionRequested(ICoreWebView2_29 *iface, ICoreWebView2PermissionRequestedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_PermissionRequested, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_remove_PermissionRequested(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_remove_PermissionRequested, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_ProcessFailed(ICoreWebView2_29 *iface, ICoreWebView2ProcessFailedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_ProcessFailed, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_remove_ProcessFailed(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_remove_ProcessFailed, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_AddScriptToExecuteOnDocumentCreated(ICoreWebView2_29 *iface, LPCWSTR javaScript, ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, javaScript);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_AddScriptToExecuteOnDocumentCreated, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_RemoveScriptToExecuteOnDocumentCreated(ICoreWebView2_29 *iface, LPCWSTR id)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, id);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_RemoveScriptToExecuteOnDocumentCreated, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_ExecuteScript(ICoreWebView2_29 *iface, LPCWSTR javaScript, ICoreWebView2ExecuteScriptCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, javaScript);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_ExecuteScript, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_CapturePreview(ICoreWebView2_29 *iface, COREWEBVIEW2_CAPTURE_PREVIEW_IMAGE_FORMAT imageFormat, IStream *imageStream, ICoreWebView2CapturePreviewCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)imageFormat);
+    wv2_put_stream(&args, imageStream);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_CapturePreview, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_Reload(ICoreWebView2_29 *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_Reload, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_PostWebMessageAsJson(ICoreWebView2_29 *iface, LPCWSTR webMessageAsJson)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, webMessageAsJson);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_PostWebMessageAsJson, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_PostWebMessageAsString(ICoreWebView2_29 *iface, LPCWSTR webMessageAsString)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, webMessageAsString);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_PostWebMessageAsString, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_WebMessageReceived(ICoreWebView2_29 *iface, ICoreWebView2WebMessageReceivedEventHandler *handler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_WebMessageReceived, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_remove_WebMessageReceived(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_remove_WebMessageReceived, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_CallDevToolsProtocolMethod(ICoreWebView2_29 *iface, LPCWSTR methodName, LPCWSTR parametersAsJson, ICoreWebView2CallDevToolsProtocolMethodCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, methodName);
+    wv2_put_str(&args, parametersAsJson);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_CallDevToolsProtocolMethod, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_get_BrowserProcessId(ICoreWebView2_29 *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_get_BrowserProcessId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_get_CanGoBack(ICoreWebView2_29 *iface, BOOL *canGoBack)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!canGoBack) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_get_CanGoBack, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *canGoBack = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_get_CanGoForward(ICoreWebView2_29 *iface, BOOL *canGoForward)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!canGoForward) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_get_CanGoForward, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *canGoForward = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_GoBack(ICoreWebView2_29 *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_GoBack, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_GoForward(ICoreWebView2_29 *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_GoForward, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_GetDevToolsProtocolEventReceiver(ICoreWebView2_29 *iface, LPCWSTR eventName, ICoreWebView2DevToolsProtocolEventReceiver **receiver)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!receiver) return E_POINTER;
+    wv2_put_str(&args, eventName);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_GetDevToolsProtocolEventReceiver, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *receiver = (ICoreWebView2DevToolsProtocolEventReceiver *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_Stop(ICoreWebView2_29 *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_Stop, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_NewWindowRequested(ICoreWebView2_29 *iface, ICoreWebView2NewWindowRequestedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_NewWindowRequested, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_remove_NewWindowRequested(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_remove_NewWindowRequested, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_DocumentTitleChanged(ICoreWebView2_29 *iface, ICoreWebView2DocumentTitleChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_DocumentTitleChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_remove_DocumentTitleChanged(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_remove_DocumentTitleChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_get_DocumentTitle(ICoreWebView2_29 *iface, LPWSTR *title)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!title) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_get_DocumentTitle, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *title = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_AddHostObjectToScript(ICoreWebView2_29 *iface, LPCWSTR name, VARIANT *object)
+{
+    FIXME("iface %p: ICoreWebView2_AddHostObjectToScript not marshallable (VARIANT *), stub!\n", iface);
+    return E_NOTIMPL;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_RemoveHostObjectFromScript(ICoreWebView2_29 *iface, LPCWSTR name)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, name);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_RemoveHostObjectFromScript, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_OpenDevToolsWindow(ICoreWebView2_29 *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_OpenDevToolsWindow, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_ContainsFullScreenElementChanged(ICoreWebView2_29 *iface, ICoreWebView2ContainsFullScreenElementChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_ContainsFullScreenElementChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_remove_ContainsFullScreenElementChanged(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_remove_ContainsFullScreenElementChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_get_ContainsFullScreenElement(ICoreWebView2_29 *iface, BOOL *containsFullScreenElement)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!containsFullScreenElement) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_get_ContainsFullScreenElement, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *containsFullScreenElement = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_WebResourceRequested(ICoreWebView2_29 *iface, ICoreWebView2WebResourceRequestedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_WebResourceRequested, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_remove_WebResourceRequested(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_remove_WebResourceRequested, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_AddWebResourceRequestedFilter(ICoreWebView2_29 *iface, const LPCWSTR uri, const COREWEBVIEW2_WEB_RESOURCE_CONTEXT resourceContext)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, uri);
+    wv2_put_u32(&args, (UINT32)resourceContext);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_AddWebResourceRequestedFilter, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_RemoveWebResourceRequestedFilter(ICoreWebView2_29 *iface, const LPCWSTR uri, const COREWEBVIEW2_WEB_RESOURCE_CONTEXT resourceContext)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, uri);
+    wv2_put_u32(&args, (UINT32)resourceContext);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_RemoveWebResourceRequestedFilter, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_WindowCloseRequested(ICoreWebView2_29 *iface, ICoreWebView2WindowCloseRequestedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_WindowCloseRequested, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_remove_WindowCloseRequested(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_remove_WindowCloseRequested, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_2_add_WebResourceResponseReceived(ICoreWebView2_29 *iface, ICoreWebView2WebResourceResponseReceivedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_2_add_WebResourceResponseReceived, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_2_remove_WebResourceResponseReceived(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_2_remove_WebResourceResponseReceived, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_2_NavigateWithWebResourceRequest(ICoreWebView2_29 *iface, ICoreWebView2WebResourceRequest *request)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)request);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_2_NavigateWithWebResourceRequest, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_2_add_DOMContentLoaded(ICoreWebView2_29 *iface, ICoreWebView2DOMContentLoadedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_2_add_DOMContentLoaded, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_2_remove_DOMContentLoaded(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_2_remove_DOMContentLoaded, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_2_get_CookieManager(ICoreWebView2_29 *iface, ICoreWebView2CookieManager **cookieManager)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!cookieManager) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_2_get_CookieManager, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *cookieManager = (ICoreWebView2CookieManager *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_2_get_Environment(ICoreWebView2_29 *iface, ICoreWebView2Environment **environment)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!environment) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_2_get_Environment, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *environment = (ICoreWebView2Environment *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_3_TrySuspend(ICoreWebView2_29 *iface, ICoreWebView2TrySuspendCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_3_TrySuspend, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_3_Resume(ICoreWebView2_29 *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_3_Resume, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_3_get_IsSuspended(ICoreWebView2_29 *iface, BOOL *isSuspended)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!isSuspended) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_3_get_IsSuspended, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *isSuspended = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_3_SetVirtualHostNameToFolderMapping(ICoreWebView2_29 *iface, LPCWSTR hostName, LPCWSTR folderPath, COREWEBVIEW2_HOST_RESOURCE_ACCESS_KIND accessKind)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, hostName);
+    wv2_put_str(&args, folderPath);
+    wv2_put_u32(&args, (UINT32)accessKind);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_3_SetVirtualHostNameToFolderMapping, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_3_ClearVirtualHostNameToFolderMapping(ICoreWebView2_29 *iface, LPCWSTR hostName)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, hostName);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_3_ClearVirtualHostNameToFolderMapping, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_4_add_FrameCreated(ICoreWebView2_29 *iface, ICoreWebView2FrameCreatedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_4_add_FrameCreated, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_4_remove_FrameCreated(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_4_remove_FrameCreated, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_4_add_DownloadStarting(ICoreWebView2_29 *iface, ICoreWebView2DownloadStartingEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_4_add_DownloadStarting, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_4_remove_DownloadStarting(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_4_remove_DownloadStarting, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_5_add_ClientCertificateRequested(ICoreWebView2_29 *iface, ICoreWebView2ClientCertificateRequestedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_5_add_ClientCertificateRequested, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_5_remove_ClientCertificateRequested(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_5_remove_ClientCertificateRequested, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_6_OpenTaskManagerWindow(ICoreWebView2_29 *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_6_OpenTaskManagerWindow, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_7_PrintToPdf(ICoreWebView2_29 *iface, LPCWSTR ResultFilePath, ICoreWebView2PrintSettings *printSettings, ICoreWebView2PrintToPdfCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, ResultFilePath);
+    wv2_put_iface(&args, (IUnknown *)printSettings);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_7_PrintToPdf, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_8_add_IsMutedChanged(ICoreWebView2_29 *iface, ICoreWebView2IsMutedChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_8_add_IsMutedChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_8_remove_IsMutedChanged(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_8_remove_IsMutedChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_8_get_IsMuted(ICoreWebView2_29 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_8_get_IsMuted, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_8_put_IsMuted(ICoreWebView2_29 *iface, BOOL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_8_put_IsMuted, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_8_add_IsDocumentPlayingAudioChanged(ICoreWebView2_29 *iface, ICoreWebView2IsDocumentPlayingAudioChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_8_add_IsDocumentPlayingAudioChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_8_remove_IsDocumentPlayingAudioChanged(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_8_remove_IsDocumentPlayingAudioChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_8_get_IsDocumentPlayingAudio(ICoreWebView2_29 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_8_get_IsDocumentPlayingAudio, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_9_add_IsDefaultDownloadDialogOpenChanged(ICoreWebView2_29 *iface, ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler *handler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_9_add_IsDefaultDownloadDialogOpenChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_9_remove_IsDefaultDownloadDialogOpenChanged(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_9_remove_IsDefaultDownloadDialogOpenChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_9_get_IsDefaultDownloadDialogOpen(ICoreWebView2_29 *iface, BOOL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_9_get_IsDefaultDownloadDialogOpen, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (BOOL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_9_OpenDefaultDownloadDialog(ICoreWebView2_29 *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_9_OpenDefaultDownloadDialog, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_9_CloseDefaultDownloadDialog(ICoreWebView2_29 *iface)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_9_CloseDefaultDownloadDialog, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_9_get_DefaultDownloadDialogCornerAlignment(ICoreWebView2_29 *iface, COREWEBVIEW2_DEFAULT_DOWNLOAD_DIALOG_CORNER_ALIGNMENT *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_9_get_DefaultDownloadDialogCornerAlignment, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_DEFAULT_DOWNLOAD_DIALOG_CORNER_ALIGNMENT)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_9_put_DefaultDownloadDialogCornerAlignment(ICoreWebView2_29 *iface, COREWEBVIEW2_DEFAULT_DOWNLOAD_DIALOG_CORNER_ALIGNMENT value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_9_put_DefaultDownloadDialogCornerAlignment, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_9_get_DefaultDownloadDialogMargin(ICoreWebView2_29 *iface, POINT *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_9_get_DefaultDownloadDialogMargin, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, value, sizeof(POINT));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_9_put_DefaultDownloadDialogMargin(ICoreWebView2_29 *iface, POINT value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &value, sizeof(POINT));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_9_put_DefaultDownloadDialogMargin, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_10_add_BasicAuthenticationRequested(ICoreWebView2_29 *iface, ICoreWebView2BasicAuthenticationRequestedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_10_add_BasicAuthenticationRequested, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_10_remove_BasicAuthenticationRequested(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_10_remove_BasicAuthenticationRequested, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_11_CallDevToolsProtocolMethodForSession(ICoreWebView2_29 *iface, LPCWSTR sessionId, LPCWSTR methodName, LPCWSTR parametersAsJson, ICoreWebView2CallDevToolsProtocolMethodCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, sessionId);
+    wv2_put_str(&args, methodName);
+    wv2_put_str(&args, parametersAsJson);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_11_CallDevToolsProtocolMethodForSession, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_11_add_ContextMenuRequested(ICoreWebView2_29 *iface, ICoreWebView2ContextMenuRequestedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_11_add_ContextMenuRequested, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_11_remove_ContextMenuRequested(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_11_remove_ContextMenuRequested, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_12_add_StatusBarTextChanged(ICoreWebView2_29 *iface, ICoreWebView2StatusBarTextChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_12_add_StatusBarTextChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_12_remove_StatusBarTextChanged(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_12_remove_StatusBarTextChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_12_get_StatusBarText(ICoreWebView2_29 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_12_get_StatusBarText, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_13_get_Profile(ICoreWebView2_29 *iface, ICoreWebView2Profile **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_13_get_Profile, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2Profile *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_14_add_ServerCertificateErrorDetected(ICoreWebView2_29 *iface, ICoreWebView2ServerCertificateErrorDetectedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_14_add_ServerCertificateErrorDetected, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_14_remove_ServerCertificateErrorDetected(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_14_remove_ServerCertificateErrorDetected, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_14_ClearServerCertificateErrorActions(ICoreWebView2_29 *iface, ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_14_ClearServerCertificateErrorActions, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_15_add_FaviconChanged(ICoreWebView2_29 *iface, ICoreWebView2FaviconChangedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_15_add_FaviconChanged, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_15_remove_FaviconChanged(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_15_remove_FaviconChanged, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_15_get_FaviconUri(ICoreWebView2_29 *iface, LPWSTR *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_15_get_FaviconUri, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = wv2_get_str_co(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_15_GetFavicon(ICoreWebView2_29 *iface, COREWEBVIEW2_FAVICON_IMAGE_FORMAT format, ICoreWebView2GetFaviconCompletedHandler *completedHandler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)format);
+    wv2_put_iface(&args, (IUnknown *)completedHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_15_GetFavicon, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_16_Print(ICoreWebView2_29 *iface, ICoreWebView2PrintSettings *printSettings, ICoreWebView2PrintCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)printSettings);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_16_Print, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_16_ShowPrintUI(ICoreWebView2_29 *iface, COREWEBVIEW2_PRINT_DIALOG_KIND printDialogKind)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)printDialogKind);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_16_ShowPrintUI, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_16_PrintToPdfStream(ICoreWebView2_29 *iface, ICoreWebView2PrintSettings *printSettings, ICoreWebView2PrintToPdfStreamCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)printSettings);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_16_PrintToPdfStream, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_17_PostSharedBufferToScript(ICoreWebView2_29 *iface, ICoreWebView2SharedBuffer *sharedBuffer, COREWEBVIEW2_SHARED_BUFFER_ACCESS access, LPCWSTR additionalDataAsJson)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)sharedBuffer);
+    wv2_put_u32(&args, (UINT32)access);
+    wv2_put_str(&args, additionalDataAsJson);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_17_PostSharedBufferToScript, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_18_add_LaunchingExternalUriScheme(ICoreWebView2_29 *iface, ICoreWebView2LaunchingExternalUriSchemeEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_18_add_LaunchingExternalUriScheme, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_18_remove_LaunchingExternalUriScheme(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_18_remove_LaunchingExternalUriScheme, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_19_get_MemoryUsageTargetLevel(ICoreWebView2_29 *iface, COREWEBVIEW2_MEMORY_USAGE_TARGET_LEVEL *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_19_get_MemoryUsageTargetLevel, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (COREWEBVIEW2_MEMORY_USAGE_TARGET_LEVEL)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_19_put_MemoryUsageTargetLevel(ICoreWebView2_29 *iface, COREWEBVIEW2_MEMORY_USAGE_TARGET_LEVEL value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_u32(&args, (UINT32)value);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_19_put_MemoryUsageTargetLevel, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_20_get_FrameId(ICoreWebView2_29 *iface, UINT32 *value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_20_get_FrameId, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (UINT32)wv2_get_u32(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_21_ExecuteScriptWithResult(ICoreWebView2_29 *iface, LPCWSTR javaScript, ICoreWebView2ExecuteScriptWithResultCompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, javaScript);
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_21_ExecuteScriptWithResult, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_22_AddWebResourceRequestedFilterWithRequestSourceKinds(ICoreWebView2_29 *iface, LPCWSTR uri, COREWEBVIEW2_WEB_RESOURCE_CONTEXT ResourceContext, COREWEBVIEW2_WEB_RESOURCE_REQUEST_SOURCE_KINDS requestSourceKinds)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, uri);
+    wv2_put_u32(&args, (UINT32)ResourceContext);
+    wv2_put_u32(&args, (UINT32)requestSourceKinds);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_22_AddWebResourceRequestedFilterWithRequestSourceKinds, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_22_RemoveWebResourceRequestedFilterWithRequestSourceKinds(ICoreWebView2_29 *iface, LPCWSTR uri, COREWEBVIEW2_WEB_RESOURCE_CONTEXT ResourceContext, COREWEBVIEW2_WEB_RESOURCE_REQUEST_SOURCE_KINDS requestSourceKinds)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, uri);
+    wv2_put_u32(&args, (UINT32)ResourceContext);
+    wv2_put_u32(&args, (UINT32)requestSourceKinds);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_22_RemoveWebResourceRequestedFilterWithRequestSourceKinds, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_23_PostWebMessageAsJsonWithAdditionalObjects(ICoreWebView2_29 *iface, LPCWSTR webMessageAsJson, ICoreWebView2ObjectCollectionView *additionalObjects)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_str(&args, webMessageAsJson);
+    wv2_put_iface(&args, (IUnknown *)additionalObjects);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_23_PostWebMessageAsJsonWithAdditionalObjects, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_24_add_NotificationReceived(ICoreWebView2_29 *iface, ICoreWebView2NotificationReceivedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_24_add_NotificationReceived, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_24_remove_NotificationReceived(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_24_remove_NotificationReceived, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_25_add_SaveAsUIShowing(ICoreWebView2_29 *iface, ICoreWebView2SaveAsUIShowingEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_25_add_SaveAsUIShowing, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_25_remove_SaveAsUIShowing(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_25_remove_SaveAsUIShowing, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_25_ShowSaveAsUI(ICoreWebView2_29 *iface, ICoreWebView2ShowSaveAsUICompletedHandler *handler)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_iface(&args, (IUnknown *)handler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_25_ShowSaveAsUI, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_26_add_SaveFileSecurityCheckStarting(ICoreWebView2_29 *iface, ICoreWebView2SaveFileSecurityCheckStartingEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_26_add_SaveFileSecurityCheckStarting, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_26_remove_SaveFileSecurityCheckStarting(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_26_remove_SaveFileSecurityCheckStarting, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_27_add_ScreenCaptureStarting(ICoreWebView2_29 *iface, ICoreWebView2ScreenCaptureStartingEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_27_add_ScreenCaptureStarting, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_27_remove_ScreenCaptureStarting(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_27_remove_ScreenCaptureStarting, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_28_get_Find(ICoreWebView2_29 *iface, ICoreWebView2Find **value)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!value) return E_POINTER;
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_28_get_Find, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        *value = (ICoreWebView2Find *)wv2_get_iface(&ret);
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_29_add_DedicatedWorkerCreated(ICoreWebView2_29 *iface, ICoreWebView2DedicatedWorkerCreatedEventHandler *eventHandler, EventRegistrationToken *token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    if (!token) return E_POINTER;
+    wv2_put_iface(&args, (IUnknown *)eventHandler);
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_29_add_DedicatedWorkerCreated, &args, &ret);
+    if (SUCCEEDED(hr))
+    {
+        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+    }
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_29_remove_DedicatedWorkerCreated(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct wv2_buffer args = {0};
+    struct wv2_reader ret = {0};
+    HRESULT hr;
+
+    wv2_put_bytes(&args, &token, sizeof(EventRegistrationToken));
+    hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_29_remove_DedicatedWorkerCreated, &args, &ret);
+    wv2_reader_free(&ret);
+    return hr;
+}
+
+static const ICoreWebView2_29Vtbl ICoreWebView2_29_proxy_vtbl =
+{
+    (void *)proxy_QueryInterface,
+    (void *)proxy_AddRef,
+    (void *)proxy_Release,
+    proxy_ICoreWebView2_29_ICoreWebView2_get_Settings,
+    proxy_ICoreWebView2_29_ICoreWebView2_get_Source,
+    proxy_ICoreWebView2_29_ICoreWebView2_Navigate,
+    proxy_ICoreWebView2_29_ICoreWebView2_NavigateToString,
+    proxy_ICoreWebView2_29_ICoreWebView2_add_NavigationStarting,
+    proxy_ICoreWebView2_29_ICoreWebView2_remove_NavigationStarting,
+    proxy_ICoreWebView2_29_ICoreWebView2_add_ContentLoading,
+    proxy_ICoreWebView2_29_ICoreWebView2_remove_ContentLoading,
+    proxy_ICoreWebView2_29_ICoreWebView2_add_SourceChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_remove_SourceChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_add_HistoryChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_remove_HistoryChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_add_NavigationCompleted,
+    proxy_ICoreWebView2_29_ICoreWebView2_remove_NavigationCompleted,
+    proxy_ICoreWebView2_29_ICoreWebView2_add_FrameNavigationStarting,
+    proxy_ICoreWebView2_29_ICoreWebView2_remove_FrameNavigationStarting,
+    proxy_ICoreWebView2_29_ICoreWebView2_add_FrameNavigationCompleted,
+    proxy_ICoreWebView2_29_ICoreWebView2_remove_FrameNavigationCompleted,
+    proxy_ICoreWebView2_29_ICoreWebView2_add_ScriptDialogOpening,
+    proxy_ICoreWebView2_29_ICoreWebView2_remove_ScriptDialogOpening,
+    proxy_ICoreWebView2_29_ICoreWebView2_add_PermissionRequested,
+    proxy_ICoreWebView2_29_ICoreWebView2_remove_PermissionRequested,
+    proxy_ICoreWebView2_29_ICoreWebView2_add_ProcessFailed,
+    proxy_ICoreWebView2_29_ICoreWebView2_remove_ProcessFailed,
+    proxy_ICoreWebView2_29_ICoreWebView2_AddScriptToExecuteOnDocumentCreated,
+    proxy_ICoreWebView2_29_ICoreWebView2_RemoveScriptToExecuteOnDocumentCreated,
+    proxy_ICoreWebView2_29_ICoreWebView2_ExecuteScript,
+    proxy_ICoreWebView2_29_ICoreWebView2_CapturePreview,
+    proxy_ICoreWebView2_29_ICoreWebView2_Reload,
+    proxy_ICoreWebView2_29_ICoreWebView2_PostWebMessageAsJson,
+    proxy_ICoreWebView2_29_ICoreWebView2_PostWebMessageAsString,
+    proxy_ICoreWebView2_29_ICoreWebView2_add_WebMessageReceived,
+    proxy_ICoreWebView2_29_ICoreWebView2_remove_WebMessageReceived,
+    proxy_ICoreWebView2_29_ICoreWebView2_CallDevToolsProtocolMethod,
+    proxy_ICoreWebView2_29_ICoreWebView2_get_BrowserProcessId,
+    proxy_ICoreWebView2_29_ICoreWebView2_get_CanGoBack,
+    proxy_ICoreWebView2_29_ICoreWebView2_get_CanGoForward,
+    proxy_ICoreWebView2_29_ICoreWebView2_GoBack,
+    proxy_ICoreWebView2_29_ICoreWebView2_GoForward,
+    proxy_ICoreWebView2_29_ICoreWebView2_GetDevToolsProtocolEventReceiver,
+    proxy_ICoreWebView2_29_ICoreWebView2_Stop,
+    proxy_ICoreWebView2_29_ICoreWebView2_add_NewWindowRequested,
+    proxy_ICoreWebView2_29_ICoreWebView2_remove_NewWindowRequested,
+    proxy_ICoreWebView2_29_ICoreWebView2_add_DocumentTitleChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_remove_DocumentTitleChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_get_DocumentTitle,
+    proxy_ICoreWebView2_29_ICoreWebView2_AddHostObjectToScript,
+    proxy_ICoreWebView2_29_ICoreWebView2_RemoveHostObjectFromScript,
+    proxy_ICoreWebView2_29_ICoreWebView2_OpenDevToolsWindow,
+    proxy_ICoreWebView2_29_ICoreWebView2_add_ContainsFullScreenElementChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_remove_ContainsFullScreenElementChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_get_ContainsFullScreenElement,
+    proxy_ICoreWebView2_29_ICoreWebView2_add_WebResourceRequested,
+    proxy_ICoreWebView2_29_ICoreWebView2_remove_WebResourceRequested,
+    proxy_ICoreWebView2_29_ICoreWebView2_AddWebResourceRequestedFilter,
+    proxy_ICoreWebView2_29_ICoreWebView2_RemoveWebResourceRequestedFilter,
+    proxy_ICoreWebView2_29_ICoreWebView2_add_WindowCloseRequested,
+    proxy_ICoreWebView2_29_ICoreWebView2_remove_WindowCloseRequested,
+    proxy_ICoreWebView2_29_ICoreWebView2_2_add_WebResourceResponseReceived,
+    proxy_ICoreWebView2_29_ICoreWebView2_2_remove_WebResourceResponseReceived,
+    proxy_ICoreWebView2_29_ICoreWebView2_2_NavigateWithWebResourceRequest,
+    proxy_ICoreWebView2_29_ICoreWebView2_2_add_DOMContentLoaded,
+    proxy_ICoreWebView2_29_ICoreWebView2_2_remove_DOMContentLoaded,
+    proxy_ICoreWebView2_29_ICoreWebView2_2_get_CookieManager,
+    proxy_ICoreWebView2_29_ICoreWebView2_2_get_Environment,
+    proxy_ICoreWebView2_29_ICoreWebView2_3_TrySuspend,
+    proxy_ICoreWebView2_29_ICoreWebView2_3_Resume,
+    proxy_ICoreWebView2_29_ICoreWebView2_3_get_IsSuspended,
+    proxy_ICoreWebView2_29_ICoreWebView2_3_SetVirtualHostNameToFolderMapping,
+    proxy_ICoreWebView2_29_ICoreWebView2_3_ClearVirtualHostNameToFolderMapping,
+    proxy_ICoreWebView2_29_ICoreWebView2_4_add_FrameCreated,
+    proxy_ICoreWebView2_29_ICoreWebView2_4_remove_FrameCreated,
+    proxy_ICoreWebView2_29_ICoreWebView2_4_add_DownloadStarting,
+    proxy_ICoreWebView2_29_ICoreWebView2_4_remove_DownloadStarting,
+    proxy_ICoreWebView2_29_ICoreWebView2_5_add_ClientCertificateRequested,
+    proxy_ICoreWebView2_29_ICoreWebView2_5_remove_ClientCertificateRequested,
+    proxy_ICoreWebView2_29_ICoreWebView2_6_OpenTaskManagerWindow,
+    proxy_ICoreWebView2_29_ICoreWebView2_7_PrintToPdf,
+    proxy_ICoreWebView2_29_ICoreWebView2_8_add_IsMutedChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_8_remove_IsMutedChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_8_get_IsMuted,
+    proxy_ICoreWebView2_29_ICoreWebView2_8_put_IsMuted,
+    proxy_ICoreWebView2_29_ICoreWebView2_8_add_IsDocumentPlayingAudioChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_8_remove_IsDocumentPlayingAudioChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_8_get_IsDocumentPlayingAudio,
+    proxy_ICoreWebView2_29_ICoreWebView2_9_add_IsDefaultDownloadDialogOpenChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_9_remove_IsDefaultDownloadDialogOpenChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_9_get_IsDefaultDownloadDialogOpen,
+    proxy_ICoreWebView2_29_ICoreWebView2_9_OpenDefaultDownloadDialog,
+    proxy_ICoreWebView2_29_ICoreWebView2_9_CloseDefaultDownloadDialog,
+    proxy_ICoreWebView2_29_ICoreWebView2_9_get_DefaultDownloadDialogCornerAlignment,
+    proxy_ICoreWebView2_29_ICoreWebView2_9_put_DefaultDownloadDialogCornerAlignment,
+    proxy_ICoreWebView2_29_ICoreWebView2_9_get_DefaultDownloadDialogMargin,
+    proxy_ICoreWebView2_29_ICoreWebView2_9_put_DefaultDownloadDialogMargin,
+    proxy_ICoreWebView2_29_ICoreWebView2_10_add_BasicAuthenticationRequested,
+    proxy_ICoreWebView2_29_ICoreWebView2_10_remove_BasicAuthenticationRequested,
+    proxy_ICoreWebView2_29_ICoreWebView2_11_CallDevToolsProtocolMethodForSession,
+    proxy_ICoreWebView2_29_ICoreWebView2_11_add_ContextMenuRequested,
+    proxy_ICoreWebView2_29_ICoreWebView2_11_remove_ContextMenuRequested,
+    proxy_ICoreWebView2_29_ICoreWebView2_12_add_StatusBarTextChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_12_remove_StatusBarTextChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_12_get_StatusBarText,
+    proxy_ICoreWebView2_29_ICoreWebView2_13_get_Profile,
+    proxy_ICoreWebView2_29_ICoreWebView2_14_add_ServerCertificateErrorDetected,
+    proxy_ICoreWebView2_29_ICoreWebView2_14_remove_ServerCertificateErrorDetected,
+    proxy_ICoreWebView2_29_ICoreWebView2_14_ClearServerCertificateErrorActions,
+    proxy_ICoreWebView2_29_ICoreWebView2_15_add_FaviconChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_15_remove_FaviconChanged,
+    proxy_ICoreWebView2_29_ICoreWebView2_15_get_FaviconUri,
+    proxy_ICoreWebView2_29_ICoreWebView2_15_GetFavicon,
+    proxy_ICoreWebView2_29_ICoreWebView2_16_Print,
+    proxy_ICoreWebView2_29_ICoreWebView2_16_ShowPrintUI,
+    proxy_ICoreWebView2_29_ICoreWebView2_16_PrintToPdfStream,
+    proxy_ICoreWebView2_29_ICoreWebView2_17_PostSharedBufferToScript,
+    proxy_ICoreWebView2_29_ICoreWebView2_18_add_LaunchingExternalUriScheme,
+    proxy_ICoreWebView2_29_ICoreWebView2_18_remove_LaunchingExternalUriScheme,
+    proxy_ICoreWebView2_29_ICoreWebView2_19_get_MemoryUsageTargetLevel,
+    proxy_ICoreWebView2_29_ICoreWebView2_19_put_MemoryUsageTargetLevel,
+    proxy_ICoreWebView2_29_ICoreWebView2_20_get_FrameId,
+    proxy_ICoreWebView2_29_ICoreWebView2_21_ExecuteScriptWithResult,
+    proxy_ICoreWebView2_29_ICoreWebView2_22_AddWebResourceRequestedFilterWithRequestSourceKinds,
+    proxy_ICoreWebView2_29_ICoreWebView2_22_RemoveWebResourceRequestedFilterWithRequestSourceKinds,
+    proxy_ICoreWebView2_29_ICoreWebView2_23_PostWebMessageAsJsonWithAdditionalObjects,
+    proxy_ICoreWebView2_29_ICoreWebView2_24_add_NotificationReceived,
+    proxy_ICoreWebView2_29_ICoreWebView2_24_remove_NotificationReceived,
+    proxy_ICoreWebView2_29_ICoreWebView2_25_add_SaveAsUIShowing,
+    proxy_ICoreWebView2_29_ICoreWebView2_25_remove_SaveAsUIShowing,
+    proxy_ICoreWebView2_29_ICoreWebView2_25_ShowSaveAsUI,
+    proxy_ICoreWebView2_29_ICoreWebView2_26_add_SaveFileSecurityCheckStarting,
+    proxy_ICoreWebView2_29_ICoreWebView2_26_remove_SaveFileSecurityCheckStarting,
+    proxy_ICoreWebView2_29_ICoreWebView2_27_add_ScreenCaptureStarting,
+    proxy_ICoreWebView2_29_ICoreWebView2_27_remove_ScreenCaptureStarting,
+    proxy_ICoreWebView2_29_ICoreWebView2_28_get_Find,
+    proxy_ICoreWebView2_29_ICoreWebView2_29_add_DedicatedWorkerCreated,
+    proxy_ICoreWebView2_29_ICoreWebView2_29_remove_DedicatedWorkerCreated,
+};
+
+const void *const proxy_vtbls[WV2_FAMILY_COUNT] =
+{
+    &ICoreWebView2RegionRectCollectionView_proxy_vtbl,
+    &ICoreWebView2StringCollection_proxy_vtbl,
+    &ICoreWebView2ClientCertificateCollection_proxy_vtbl,
+    &ICoreWebView2CookieList_proxy_vtbl,
+    &ICoreWebView2BasicAuthenticationRequestedEventArgs_proxy_vtbl,
+    &ICoreWebView2BasicAuthenticationResponse_proxy_vtbl,
+    &ICoreWebView2BrowserExtension_proxy_vtbl,
+    &ICoreWebView2Certificate_proxy_vtbl,
+    &ICoreWebView2ClientCertificate_proxy_vtbl,
+    &ICoreWebView2ClientCertificateRequestedEventArgs_proxy_vtbl,
+    &ICoreWebView2ContextMenuItem_proxy_vtbl,
+    &ICoreWebView2ContextMenuTarget_proxy_vtbl,
+    &ICoreWebView2ContextMenuRequestedEventArgs_proxy_vtbl,
+    &ICoreWebView2Cookie_proxy_vtbl,
+    &ICoreWebView2CookieManager_proxy_vtbl,
+    &ICoreWebView2DownloadOperation_proxy_vtbl,
+    &ICoreWebView2DownloadStartingEventArgs_proxy_vtbl,
+    &ICoreWebView2ExecuteScriptResult_proxy_vtbl,
+    &ICoreWebView2FrameInfo2_proxy_vtbl,
+    &ICoreWebView2HttpHeadersCollectionIterator_proxy_vtbl,
+    &ICoreWebView2LaunchingExternalUriSchemeEventArgs_proxy_vtbl,
+    &ICoreWebView2MoveFocusRequestedEventArgs_proxy_vtbl,
+    &ICoreWebView2PermissionSettingCollectionView_proxy_vtbl,
+    &ICoreWebView2PointerInfo_proxy_vtbl,
+    &ICoreWebView2PrintSettings2_proxy_vtbl,
+    &ICoreWebView2ProcessExtendedInfo_proxy_vtbl,
+    &ICoreWebView2ProcessInfo_proxy_vtbl,
+    &ICoreWebView2ScriptDialogOpeningEventArgs_proxy_vtbl,
+    &ICoreWebView2ScriptException_proxy_vtbl,
+    &ICoreWebView2ServerCertificateErrorDetectedEventArgs_proxy_vtbl,
+    &ICoreWebView2SharedBuffer_proxy_vtbl,
+    &ICoreWebView2WebResourceRequest_proxy_vtbl,
+    &ICoreWebView2WebResourceResponse_proxy_vtbl,
+    &ICoreWebView2WebResourceResponseView_proxy_vtbl,
+    &ICoreWebView2WindowFeatures_proxy_vtbl,
+    &ICoreWebView2ObjectCollection_proxy_vtbl,
+    &ICoreWebView2Notification_proxy_vtbl,
+    &ICoreWebView2NotificationReceivedEventArgs_proxy_vtbl,
+    &ICoreWebView2SaveAsUIShowingEventArgs_proxy_vtbl,
+    &ICoreWebView2AcceleratorKeyPressedEventArgs2_proxy_vtbl,
+    &ICoreWebView2BrowserProcessExitedEventArgs_proxy_vtbl,
+    &ICoreWebView2CompositionController5_proxy_vtbl,
+    &ICoreWebView2ContentLoadingEventArgs_proxy_vtbl,
+    &ICoreWebView2ContextMenuItemCollection_proxy_vtbl,
+    &ICoreWebView2Controller4_proxy_vtbl,
+    &ICoreWebView2ControllerOptions4_proxy_vtbl,
+    &ICoreWebView2CrashReport_proxy_vtbl,
+    &ICoreWebView2DOMContentLoadedEventArgs_proxy_vtbl,
+    &ICoreWebView2DedicatedWorker_proxy_vtbl,
+    &ICoreWebView2DedicatedWorkerCreatedEventArgs_proxy_vtbl,
+    &ICoreWebView2Deferral_proxy_vtbl,
+    &ICoreWebView2DevToolsProtocolEventReceivedEventArgs2_proxy_vtbl,
+    &ICoreWebView2DevToolsProtocolEventReceiver_proxy_vtbl,
+    &ICoreWebView2DragStartingEventArgs_proxy_vtbl,
+    &ICoreWebView2ProcessExtendedInfoCollection_proxy_vtbl,
+    &ICoreWebView2Environment15_proxy_vtbl,
+    &ICoreWebView2ProcessInfoCollection_proxy_vtbl,
+    &ICoreWebView2File_proxy_vtbl,
+    &ICoreWebView2FileSystemHandle_proxy_vtbl,
+    &ICoreWebView2Find_proxy_vtbl,
+    &ICoreWebView2FindOptions_proxy_vtbl,
+    &ICoreWebView2Frame8_proxy_vtbl,
+    &ICoreWebView2FrameCreatedEventArgs_proxy_vtbl,
+    &ICoreWebView2FrameInfoCollection_proxy_vtbl,
+    &ICoreWebView2FrameInfoCollectionIterator_proxy_vtbl,
+    &ICoreWebView2HttpRequestHeaders_proxy_vtbl,
+    &ICoreWebView2HttpResponseHeaders_proxy_vtbl,
+    &ICoreWebView2NavigationCompletedEventArgs2_proxy_vtbl,
+    &ICoreWebView2NavigationStartingEventArgs3_proxy_vtbl,
+    &ICoreWebView2NewWindowRequestedEventArgs3_proxy_vtbl,
+    &ICoreWebView2NonClientRegionChangedEventArgs_proxy_vtbl,
+    &ICoreWebView2PermissionRequestedEventArgs3_proxy_vtbl,
+    &ICoreWebView2PermissionSetting_proxy_vtbl,
+    &ICoreWebView2ProcessFailedEventArgs4_proxy_vtbl,
+    &ICoreWebView2Profile9_proxy_vtbl,
+    &ICoreWebView2BrowserExtensionList_proxy_vtbl,
+    &ICoreWebView2SaveFileSecurityCheckStartingEventArgs_proxy_vtbl,
+    &ICoreWebView2ScreenCaptureStartingEventArgs_proxy_vtbl,
+    &ICoreWebView2ServiceWorker_proxy_vtbl,
+    &ICoreWebView2ServiceWorkerActivatedEventArgs_proxy_vtbl,
+    &ICoreWebView2ServiceWorkerRegistrationCollectionView_proxy_vtbl,
+    &ICoreWebView2ServiceWorkerManager_proxy_vtbl,
+    &ICoreWebView2ServiceWorkerRegisteredEventArgs_proxy_vtbl,
+    &ICoreWebView2ServiceWorkerRegistration_proxy_vtbl,
+    &ICoreWebView2Settings9_proxy_vtbl,
+    &ICoreWebView2SharedWorker_proxy_vtbl,
+    &ICoreWebView2SharedWorkerCreatedEventArgs_proxy_vtbl,
+    &ICoreWebView2SharedWorkerCollectionView_proxy_vtbl,
+    &ICoreWebView2SharedWorkerManager_proxy_vtbl,
+    &ICoreWebView2SourceChangedEventArgs_proxy_vtbl,
+    &ICoreWebView2WebMessageReceivedEventArgs2_proxy_vtbl,
+    &ICoreWebView2WebResourceRequestedEventArgs2_proxy_vtbl,
+    &ICoreWebView2WebResourceResponseReceivedEventArgs_proxy_vtbl,
+    &ICoreWebView2_29_proxy_vtbl,
+};
+
+const IID *const *const proxy_family_iids[WV2_FAMILY_COUNT] =
+{
+    ICoreWebView2RegionRectCollectionView_proxy_iids,
+    ICoreWebView2StringCollection_proxy_iids,
+    ICoreWebView2ClientCertificateCollection_proxy_iids,
+    ICoreWebView2CookieList_proxy_iids,
+    ICoreWebView2BasicAuthenticationRequestedEventArgs_proxy_iids,
+    ICoreWebView2BasicAuthenticationResponse_proxy_iids,
+    ICoreWebView2BrowserExtension_proxy_iids,
+    ICoreWebView2Certificate_proxy_iids,
+    ICoreWebView2ClientCertificate_proxy_iids,
+    ICoreWebView2ClientCertificateRequestedEventArgs_proxy_iids,
+    ICoreWebView2ContextMenuItem_proxy_iids,
+    ICoreWebView2ContextMenuTarget_proxy_iids,
+    ICoreWebView2ContextMenuRequestedEventArgs_proxy_iids,
+    ICoreWebView2Cookie_proxy_iids,
+    ICoreWebView2CookieManager_proxy_iids,
+    ICoreWebView2DownloadOperation_proxy_iids,
+    ICoreWebView2DownloadStartingEventArgs_proxy_iids,
+    ICoreWebView2ExecuteScriptResult_proxy_iids,
+    ICoreWebView2FrameInfo2_proxy_iids,
+    ICoreWebView2HttpHeadersCollectionIterator_proxy_iids,
+    ICoreWebView2LaunchingExternalUriSchemeEventArgs_proxy_iids,
+    ICoreWebView2MoveFocusRequestedEventArgs_proxy_iids,
+    ICoreWebView2PermissionSettingCollectionView_proxy_iids,
+    ICoreWebView2PointerInfo_proxy_iids,
+    ICoreWebView2PrintSettings2_proxy_iids,
+    ICoreWebView2ProcessExtendedInfo_proxy_iids,
+    ICoreWebView2ProcessInfo_proxy_iids,
+    ICoreWebView2ScriptDialogOpeningEventArgs_proxy_iids,
+    ICoreWebView2ScriptException_proxy_iids,
+    ICoreWebView2ServerCertificateErrorDetectedEventArgs_proxy_iids,
+    ICoreWebView2SharedBuffer_proxy_iids,
+    ICoreWebView2WebResourceRequest_proxy_iids,
+    ICoreWebView2WebResourceResponse_proxy_iids,
+    ICoreWebView2WebResourceResponseView_proxy_iids,
+    ICoreWebView2WindowFeatures_proxy_iids,
+    ICoreWebView2ObjectCollection_proxy_iids,
+    ICoreWebView2Notification_proxy_iids,
+    ICoreWebView2NotificationReceivedEventArgs_proxy_iids,
+    ICoreWebView2SaveAsUIShowingEventArgs_proxy_iids,
+    ICoreWebView2AcceleratorKeyPressedEventArgs2_proxy_iids,
+    ICoreWebView2BrowserProcessExitedEventArgs_proxy_iids,
+    ICoreWebView2CompositionController5_proxy_iids,
+    ICoreWebView2ContentLoadingEventArgs_proxy_iids,
+    ICoreWebView2ContextMenuItemCollection_proxy_iids,
+    ICoreWebView2Controller4_proxy_iids,
+    ICoreWebView2ControllerOptions4_proxy_iids,
+    ICoreWebView2CrashReport_proxy_iids,
+    ICoreWebView2DOMContentLoadedEventArgs_proxy_iids,
+    ICoreWebView2DedicatedWorker_proxy_iids,
+    ICoreWebView2DedicatedWorkerCreatedEventArgs_proxy_iids,
+    ICoreWebView2Deferral_proxy_iids,
+    ICoreWebView2DevToolsProtocolEventReceivedEventArgs2_proxy_iids,
+    ICoreWebView2DevToolsProtocolEventReceiver_proxy_iids,
+    ICoreWebView2DragStartingEventArgs_proxy_iids,
+    ICoreWebView2ProcessExtendedInfoCollection_proxy_iids,
+    ICoreWebView2Environment15_proxy_iids,
+    ICoreWebView2ProcessInfoCollection_proxy_iids,
+    ICoreWebView2File_proxy_iids,
+    ICoreWebView2FileSystemHandle_proxy_iids,
+    ICoreWebView2Find_proxy_iids,
+    ICoreWebView2FindOptions_proxy_iids,
+    ICoreWebView2Frame8_proxy_iids,
+    ICoreWebView2FrameCreatedEventArgs_proxy_iids,
+    ICoreWebView2FrameInfoCollection_proxy_iids,
+    ICoreWebView2FrameInfoCollectionIterator_proxy_iids,
+    ICoreWebView2HttpRequestHeaders_proxy_iids,
+    ICoreWebView2HttpResponseHeaders_proxy_iids,
+    ICoreWebView2NavigationCompletedEventArgs2_proxy_iids,
+    ICoreWebView2NavigationStartingEventArgs3_proxy_iids,
+    ICoreWebView2NewWindowRequestedEventArgs3_proxy_iids,
+    ICoreWebView2NonClientRegionChangedEventArgs_proxy_iids,
+    ICoreWebView2PermissionRequestedEventArgs3_proxy_iids,
+    ICoreWebView2PermissionSetting_proxy_iids,
+    ICoreWebView2ProcessFailedEventArgs4_proxy_iids,
+    ICoreWebView2Profile9_proxy_iids,
+    ICoreWebView2BrowserExtensionList_proxy_iids,
+    ICoreWebView2SaveFileSecurityCheckStartingEventArgs_proxy_iids,
+    ICoreWebView2ScreenCaptureStartingEventArgs_proxy_iids,
+    ICoreWebView2ServiceWorker_proxy_iids,
+    ICoreWebView2ServiceWorkerActivatedEventArgs_proxy_iids,
+    ICoreWebView2ServiceWorkerRegistrationCollectionView_proxy_iids,
+    ICoreWebView2ServiceWorkerManager_proxy_iids,
+    ICoreWebView2ServiceWorkerRegisteredEventArgs_proxy_iids,
+    ICoreWebView2ServiceWorkerRegistration_proxy_iids,
+    ICoreWebView2Settings9_proxy_iids,
+    ICoreWebView2SharedWorker_proxy_iids,
+    ICoreWebView2SharedWorkerCreatedEventArgs_proxy_iids,
+    ICoreWebView2SharedWorkerCollectionView_proxy_iids,
+    ICoreWebView2SharedWorkerManager_proxy_iids,
+    ICoreWebView2SourceChangedEventArgs_proxy_iids,
+    ICoreWebView2WebMessageReceivedEventArgs2_proxy_iids,
+    ICoreWebView2WebResourceRequestedEventArgs2_proxy_iids,
+    ICoreWebView2WebResourceResponseReceivedEventArgs_proxy_iids,
+    ICoreWebView2_29_proxy_iids,
+};
+
+const char *const proxy_family_names[WV2_FAMILY_COUNT] =
+{
+    "ICoreWebView2RegionRectCollectionView",
+    "ICoreWebView2StringCollection",
+    "ICoreWebView2ClientCertificateCollection",
+    "ICoreWebView2CookieList",
+    "ICoreWebView2BasicAuthenticationRequestedEventArgs",
+    "ICoreWebView2BasicAuthenticationResponse",
+    "ICoreWebView2BrowserExtension",
+    "ICoreWebView2Certificate",
+    "ICoreWebView2ClientCertificate",
+    "ICoreWebView2ClientCertificateRequestedEventArgs",
+    "ICoreWebView2ContextMenuItem",
+    "ICoreWebView2ContextMenuTarget",
+    "ICoreWebView2ContextMenuRequestedEventArgs",
+    "ICoreWebView2Cookie",
+    "ICoreWebView2CookieManager",
+    "ICoreWebView2DownloadOperation",
+    "ICoreWebView2DownloadStartingEventArgs",
+    "ICoreWebView2ExecuteScriptResult",
+    "ICoreWebView2FrameInfo2",
+    "ICoreWebView2HttpHeadersCollectionIterator",
+    "ICoreWebView2LaunchingExternalUriSchemeEventArgs",
+    "ICoreWebView2MoveFocusRequestedEventArgs",
+    "ICoreWebView2PermissionSettingCollectionView",
+    "ICoreWebView2PointerInfo",
+    "ICoreWebView2PrintSettings2",
+    "ICoreWebView2ProcessExtendedInfo",
+    "ICoreWebView2ProcessInfo",
+    "ICoreWebView2ScriptDialogOpeningEventArgs",
+    "ICoreWebView2ScriptException",
+    "ICoreWebView2ServerCertificateErrorDetectedEventArgs",
+    "ICoreWebView2SharedBuffer",
+    "ICoreWebView2WebResourceRequest",
+    "ICoreWebView2WebResourceResponse",
+    "ICoreWebView2WebResourceResponseView",
+    "ICoreWebView2WindowFeatures",
+    "ICoreWebView2ObjectCollection",
+    "ICoreWebView2Notification",
+    "ICoreWebView2NotificationReceivedEventArgs",
+    "ICoreWebView2SaveAsUIShowingEventArgs",
+    "ICoreWebView2AcceleratorKeyPressedEventArgs2",
+    "ICoreWebView2BrowserProcessExitedEventArgs",
+    "ICoreWebView2CompositionController5",
+    "ICoreWebView2ContentLoadingEventArgs",
+    "ICoreWebView2ContextMenuItemCollection",
+    "ICoreWebView2Controller4",
+    "ICoreWebView2ControllerOptions4",
+    "ICoreWebView2CrashReport",
+    "ICoreWebView2DOMContentLoadedEventArgs",
+    "ICoreWebView2DedicatedWorker",
+    "ICoreWebView2DedicatedWorkerCreatedEventArgs",
+    "ICoreWebView2Deferral",
+    "ICoreWebView2DevToolsProtocolEventReceivedEventArgs2",
+    "ICoreWebView2DevToolsProtocolEventReceiver",
+    "ICoreWebView2DragStartingEventArgs",
+    "ICoreWebView2ProcessExtendedInfoCollection",
+    "ICoreWebView2Environment15",
+    "ICoreWebView2ProcessInfoCollection",
+    "ICoreWebView2File",
+    "ICoreWebView2FileSystemHandle",
+    "ICoreWebView2Find",
+    "ICoreWebView2FindOptions",
+    "ICoreWebView2Frame8",
+    "ICoreWebView2FrameCreatedEventArgs",
+    "ICoreWebView2FrameInfoCollection",
+    "ICoreWebView2FrameInfoCollectionIterator",
+    "ICoreWebView2HttpRequestHeaders",
+    "ICoreWebView2HttpResponseHeaders",
+    "ICoreWebView2NavigationCompletedEventArgs2",
+    "ICoreWebView2NavigationStartingEventArgs3",
+    "ICoreWebView2NewWindowRequestedEventArgs3",
+    "ICoreWebView2NonClientRegionChangedEventArgs",
+    "ICoreWebView2PermissionRequestedEventArgs3",
+    "ICoreWebView2PermissionSetting",
+    "ICoreWebView2ProcessFailedEventArgs4",
+    "ICoreWebView2Profile9",
+    "ICoreWebView2BrowserExtensionList",
+    "ICoreWebView2SaveFileSecurityCheckStartingEventArgs",
+    "ICoreWebView2ScreenCaptureStartingEventArgs",
+    "ICoreWebView2ServiceWorker",
+    "ICoreWebView2ServiceWorkerActivatedEventArgs",
+    "ICoreWebView2ServiceWorkerRegistrationCollectionView",
+    "ICoreWebView2ServiceWorkerManager",
+    "ICoreWebView2ServiceWorkerRegisteredEventArgs",
+    "ICoreWebView2ServiceWorkerRegistration",
+    "ICoreWebView2Settings9",
+    "ICoreWebView2SharedWorker",
+    "ICoreWebView2SharedWorkerCreatedEventArgs",
+    "ICoreWebView2SharedWorkerCollectionView",
+    "ICoreWebView2SharedWorkerManager",
+    "ICoreWebView2SourceChangedEventArgs",
+    "ICoreWebView2WebMessageReceivedEventArgs2",
+    "ICoreWebView2WebResourceRequestedEventArgs2",
+    "ICoreWebView2WebResourceResponseReceivedEventArgs",
+    "ICoreWebView2_29",
+};
+
+HRESULT proxy_invoke_app(IUnknown *obj, UINT32 method, struct wv2_reader *args, struct wv2_buffer *out)
+{
+    HRESULT hr;
+
+    switch (method)
+    {
+    case METHOD_ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        WCHAR *a_result = wv2_get_str(args);
+        hr = ((ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler *)obj, a_errorCode, a_result);
+        free(a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ExecuteScriptCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        WCHAR *a_result = wv2_get_str(args);
+        hr = ((ICoreWebView2ExecuteScriptCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ExecuteScriptCompletedHandler *)obj, a_errorCode, a_result);
+        free(a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2CapturePreviewCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        hr = ((ICoreWebView2CapturePreviewCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2CapturePreviewCompletedHandler *)obj, a_errorCode);
+        return hr;
+    }
+    case METHOD_ICoreWebView2CallDevToolsProtocolMethodCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        WCHAR *a_result = wv2_get_str(args);
+        hr = ((ICoreWebView2CallDevToolsProtocolMethodCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2CallDevToolsProtocolMethodCompletedHandler *)obj, a_errorCode, a_result);
+        free(a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ContainsFullScreenElementChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2ContainsFullScreenElementChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ContainsFullScreenElementChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ContentLoadingEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2ContentLoadingEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ContentLoadingEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2DocumentTitleChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2DocumentTitleChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2DocumentTitleChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2HistoryChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2HistoryChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2HistoryChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2NavigationCompletedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2NavigationCompletedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2NavigationCompletedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2NavigationStartingEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2NavigationStartingEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2NavigationStartingEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2NewWindowRequestedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2NewWindowRequestedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2NewWindowRequestedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2PermissionRequestedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2PermissionRequestedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2PermissionRequestedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ProcessFailedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2ProcessFailedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ProcessFailedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ScriptDialogOpeningEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2ScriptDialogOpeningEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ScriptDialogOpeningEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2SourceChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2SourceChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2SourceChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2WebMessageReceivedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2WebMessageReceivedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2WebMessageReceivedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2WebResourceRequestedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2WebResourceRequestedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2WebResourceRequestedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2WindowCloseRequestedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2WindowCloseRequestedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2WindowCloseRequestedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2DOMContentLoadedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2DOMContentLoadedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2DOMContentLoadedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2WebResourceResponseReceivedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2WebResourceResponseReceivedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2WebResourceResponseReceivedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2TrySuspendCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        BOOL a_result = (BOOL)wv2_get_u32(args);
+        hr = ((ICoreWebView2TrySuspendCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2TrySuspendCompletedHandler *)obj, a_errorCode, a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2DownloadStartingEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2DownloadStartingEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2DownloadStartingEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2FrameCreatedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2FrameCreatedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2FrameCreatedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2IsDocumentPlayingAudioChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2IsDocumentPlayingAudioChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2IsDocumentPlayingAudioChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2IsMutedChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2IsMutedChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2IsMutedChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ContextMenuRequestedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2ContextMenuRequestedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ContextMenuRequestedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2StatusBarTextChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2StatusBarTextChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2StatusBarTextChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2GetFaviconCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        IStream *a_result = wv2_get_stream(args);
+        hr = ((ICoreWebView2GetFaviconCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2GetFaviconCompletedHandler *)obj, a_errorCode, a_result);
+        if (a_result) IStream_Release(a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2FaviconChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2FaviconChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2FaviconChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2PrintCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        COREWEBVIEW2_PRINT_STATUS a_result = (COREWEBVIEW2_PRINT_STATUS)wv2_get_u32(args);
+        hr = ((ICoreWebView2PrintCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2PrintCompletedHandler *)obj, a_errorCode, a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2PrintToPdfStreamCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        IStream *a_result = wv2_get_stream(args);
+        hr = ((ICoreWebView2PrintToPdfStreamCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2PrintToPdfStreamCompletedHandler *)obj, a_errorCode, a_result);
+        if (a_result) IStream_Release(a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2CursorChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2CursorChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2CursorChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2NonClientRegionChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2NonClientRegionChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2NonClientRegionChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2AcceleratorKeyPressedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2AcceleratorKeyPressedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2AcceleratorKeyPressedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2FocusChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2FocusChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2FocusChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2MoveFocusRequestedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2MoveFocusRequestedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2MoveFocusRequestedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ZoomFactorChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2ZoomFactorChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ZoomFactorChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2RasterizationScaleChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2RasterizationScaleChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2RasterizationScaleChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2CreateCoreWebView2ControllerCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        IUnknown *a_result = wv2_get_iface(args);
+        hr = ((ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *)obj, a_errorCode, (void *)a_result);
+        if (a_result) IUnknown_Release(a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2NewBrowserVersionAvailableEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2NewBrowserVersionAvailableEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2NewBrowserVersionAvailableEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2BrowserExtensionRemoveCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        hr = ((ICoreWebView2BrowserExtensionRemoveCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2BrowserExtensionRemoveCompletedHandler *)obj, a_errorCode);
+        return hr;
+    }
+    case METHOD_ICoreWebView2BrowserExtensionEnableCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        hr = ((ICoreWebView2BrowserExtensionEnableCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2BrowserExtensionEnableCompletedHandler *)obj, a_errorCode);
+        return hr;
+    }
+    case METHOD_ICoreWebView2CustomItemSelectedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2CustomItemSelectedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2CustomItemSelectedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2GetCookiesCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        IUnknown *a_result = wv2_get_iface(args);
+        hr = ((ICoreWebView2GetCookiesCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2GetCookiesCompletedHandler *)obj, a_errorCode, (void *)a_result);
+        if (a_result) IUnknown_Release(a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2BytesReceivedChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2BytesReceivedChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2BytesReceivedChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EstimatedEndTimeChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2EstimatedEndTimeChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2EstimatedEndTimeChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2StateChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2StateChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2StateChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2FrameDestroyedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2FrameDestroyedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2FrameDestroyedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2FrameNameChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2FrameNameChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2FrameNameChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2FrameContentLoadingEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2FrameContentLoadingEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2FrameContentLoadingEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2FrameDOMContentLoadedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2FrameDOMContentLoadedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2FrameDOMContentLoadedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2FrameNavigationCompletedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2FrameNavigationCompletedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2FrameNavigationCompletedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2FrameNavigationStartingEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2FrameNavigationStartingEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2FrameNavigationStartingEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2FrameWebMessageReceivedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2FrameWebMessageReceivedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2FrameWebMessageReceivedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ProfileDeletedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2ProfileDeletedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ProfileDeletedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2WebResourceResponseViewGetContentCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        IStream *a_result = wv2_get_stream(args);
+        hr = ((ICoreWebView2WebResourceResponseViewGetContentCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2WebResourceResponseViewGetContentCompletedHandler *)obj, a_errorCode, a_result);
+        if (a_result) IStream_Release(a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2NotificationCloseRequestedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2NotificationCloseRequestedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2NotificationCloseRequestedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions_get_AdditionalBrowserArguments:
+    {
+        LPWSTR a_value = 0;
+        hr = ((ICoreWebView2EnvironmentOptions *)obj)->lpVtbl->get_AdditionalBrowserArguments((ICoreWebView2EnvironmentOptions *)obj, &a_value);
+        wv2_put_str(out, a_value);
+        CoTaskMemFree(a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions_put_AdditionalBrowserArguments:
+    {
+        WCHAR *a_value = wv2_get_str(args);
+        hr = ((ICoreWebView2EnvironmentOptions *)obj)->lpVtbl->put_AdditionalBrowserArguments((ICoreWebView2EnvironmentOptions *)obj, a_value);
+        free(a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions_get_Language:
+    {
+        LPWSTR a_value = 0;
+        hr = ((ICoreWebView2EnvironmentOptions *)obj)->lpVtbl->get_Language((ICoreWebView2EnvironmentOptions *)obj, &a_value);
+        wv2_put_str(out, a_value);
+        CoTaskMemFree(a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions_put_Language:
+    {
+        WCHAR *a_value = wv2_get_str(args);
+        hr = ((ICoreWebView2EnvironmentOptions *)obj)->lpVtbl->put_Language((ICoreWebView2EnvironmentOptions *)obj, a_value);
+        free(a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions_get_TargetCompatibleBrowserVersion:
+    {
+        LPWSTR a_value = 0;
+        hr = ((ICoreWebView2EnvironmentOptions *)obj)->lpVtbl->get_TargetCompatibleBrowserVersion((ICoreWebView2EnvironmentOptions *)obj, &a_value);
+        wv2_put_str(out, a_value);
+        CoTaskMemFree(a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions_put_TargetCompatibleBrowserVersion:
+    {
+        WCHAR *a_value = wv2_get_str(args);
+        hr = ((ICoreWebView2EnvironmentOptions *)obj)->lpVtbl->put_TargetCompatibleBrowserVersion((ICoreWebView2EnvironmentOptions *)obj, a_value);
+        free(a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions_get_AllowSingleSignOnUsingOSPrimaryAccount:
+    {
+        BOOL a_allow = 0;
+        hr = ((ICoreWebView2EnvironmentOptions *)obj)->lpVtbl->get_AllowSingleSignOnUsingOSPrimaryAccount((ICoreWebView2EnvironmentOptions *)obj, &a_allow);
+        wv2_put_u32(out, (UINT32)a_allow);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions_put_AllowSingleSignOnUsingOSPrimaryAccount:
+    {
+        BOOL a_allow = (BOOL)wv2_get_u32(args);
+        hr = ((ICoreWebView2EnvironmentOptions *)obj)->lpVtbl->put_AllowSingleSignOnUsingOSPrimaryAccount((ICoreWebView2EnvironmentOptions *)obj, a_allow);
+        return hr;
+    }
+    case METHOD_ICoreWebView2CustomSchemeRegistration_get_SchemeName:
+    {
+        LPWSTR a_schemeName = 0;
+        hr = ((ICoreWebView2CustomSchemeRegistration *)obj)->lpVtbl->get_SchemeName((ICoreWebView2CustomSchemeRegistration *)obj, &a_schemeName);
+        wv2_put_str(out, a_schemeName);
+        CoTaskMemFree(a_schemeName);
+        return hr;
+    }
+    case METHOD_ICoreWebView2CustomSchemeRegistration_get_TreatAsSecure:
+    {
+        BOOL a_treatAsSecure = 0;
+        hr = ((ICoreWebView2CustomSchemeRegistration *)obj)->lpVtbl->get_TreatAsSecure((ICoreWebView2CustomSchemeRegistration *)obj, &a_treatAsSecure);
+        wv2_put_u32(out, (UINT32)a_treatAsSecure);
+        return hr;
+    }
+    case METHOD_ICoreWebView2CustomSchemeRegistration_put_TreatAsSecure:
+    {
+        BOOL a_value = (BOOL)wv2_get_u32(args);
+        hr = ((ICoreWebView2CustomSchemeRegistration *)obj)->lpVtbl->put_TreatAsSecure((ICoreWebView2CustomSchemeRegistration *)obj, a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2CustomSchemeRegistration_get_HasAuthorityComponent:
+    {
+        BOOL a_hasAuthorityComponent = 0;
+        hr = ((ICoreWebView2CustomSchemeRegistration *)obj)->lpVtbl->get_HasAuthorityComponent((ICoreWebView2CustomSchemeRegistration *)obj, &a_hasAuthorityComponent);
+        wv2_put_u32(out, (UINT32)a_hasAuthorityComponent);
+        return hr;
+    }
+    case METHOD_ICoreWebView2CustomSchemeRegistration_put_HasAuthorityComponent:
+    {
+        BOOL a_hasAuthorityComponent = (BOOL)wv2_get_u32(args);
+        hr = ((ICoreWebView2CustomSchemeRegistration *)obj)->lpVtbl->put_HasAuthorityComponent((ICoreWebView2CustomSchemeRegistration *)obj, a_hasAuthorityComponent);
+        return hr;
+    }
+    case METHOD_ICoreWebView2DragStartingEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2DragStartingEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2DragStartingEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2DedicatedWorkerDedicatedWorkerCreatedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2DedicatedWorkerDedicatedWorkerCreatedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2DedicatedWorkerDedicatedWorkerCreatedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2DedicatedWorkerDestroyingEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2DedicatedWorkerDestroyingEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2DedicatedWorkerDestroyingEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2DedicatedWorkerWebMessageReceivedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2DedicatedWorkerWebMessageReceivedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2DedicatedWorkerWebMessageReceivedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2DevToolsProtocolEventReceivedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2DevToolsProtocolEventReceivedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2DevToolsProtocolEventReceivedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2GetProcessExtendedInfosCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        IUnknown *a_result = wv2_get_iface(args);
+        hr = ((ICoreWebView2GetProcessExtendedInfosCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2GetProcessExtendedInfosCompletedHandler *)obj, a_errorCode, (void *)a_result);
+        if (a_result) IUnknown_Release(a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        IUnknown *a_result = wv2_get_iface(args);
+        hr = ((ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandler *)obj, a_errorCode, (void *)a_result);
+        if (a_result) IUnknown_Release(a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2BrowserProcessExitedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2BrowserProcessExitedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2BrowserProcessExitedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ProcessInfosChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2ProcessInfosChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ProcessInfosChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions2_get_ExclusiveUserDataFolderAccess:
+    {
+        BOOL a_value = 0;
+        hr = ((ICoreWebView2EnvironmentOptions2 *)obj)->lpVtbl->get_ExclusiveUserDataFolderAccess((ICoreWebView2EnvironmentOptions2 *)obj, &a_value);
+        wv2_put_u32(out, (UINT32)a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions2_put_ExclusiveUserDataFolderAccess:
+    {
+        BOOL a_value = (BOOL)wv2_get_u32(args);
+        hr = ((ICoreWebView2EnvironmentOptions2 *)obj)->lpVtbl->put_ExclusiveUserDataFolderAccess((ICoreWebView2EnvironmentOptions2 *)obj, a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions3_get_IsCustomCrashReportingEnabled:
+    {
+        BOOL a_value = 0;
+        hr = ((ICoreWebView2EnvironmentOptions3 *)obj)->lpVtbl->get_IsCustomCrashReportingEnabled((ICoreWebView2EnvironmentOptions3 *)obj, &a_value);
+        wv2_put_u32(out, (UINT32)a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions3_put_IsCustomCrashReportingEnabled:
+    {
+        BOOL a_value = (BOOL)wv2_get_u32(args);
+        hr = ((ICoreWebView2EnvironmentOptions3 *)obj)->lpVtbl->put_IsCustomCrashReportingEnabled((ICoreWebView2EnvironmentOptions3 *)obj, a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions4_GetCustomSchemeRegistrations:
+    {
+        UINT32 a_count = 0;
+        ICoreWebView2CustomSchemeRegistration ** a_schemeRegistrations = 0;
+        hr = ((ICoreWebView2EnvironmentOptions4 *)obj)->lpVtbl->GetCustomSchemeRegistrations((ICoreWebView2EnvironmentOptions4 *)obj, &a_count, &a_schemeRegistrations);
+        wv2_put_u32(out, (UINT32)a_count);
+        wv2_put_iface(out, (IUnknown *)a_schemeRegistrations);
+        if (a_schemeRegistrations) IUnknown_Release((IUnknown *)a_schemeRegistrations);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions4_SetCustomSchemeRegistrations:
+    {
+        UINT32 a_count = (UINT32)wv2_get_u32(args);
+        IUnknown *a_schemeRegistrations = wv2_get_iface(args);
+        hr = ((ICoreWebView2EnvironmentOptions4 *)obj)->lpVtbl->SetCustomSchemeRegistrations((ICoreWebView2EnvironmentOptions4 *)obj, a_count, (void *)a_schemeRegistrations);
+        if (a_schemeRegistrations) IUnknown_Release(a_schemeRegistrations);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions5_get_EnableTrackingPrevention:
+    {
+        BOOL a_value = 0;
+        hr = ((ICoreWebView2EnvironmentOptions5 *)obj)->lpVtbl->get_EnableTrackingPrevention((ICoreWebView2EnvironmentOptions5 *)obj, &a_value);
+        wv2_put_u32(out, (UINT32)a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions5_put_EnableTrackingPrevention:
+    {
+        BOOL a_value = (BOOL)wv2_get_u32(args);
+        hr = ((ICoreWebView2EnvironmentOptions5 *)obj)->lpVtbl->put_EnableTrackingPrevention((ICoreWebView2EnvironmentOptions5 *)obj, a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions6_get_AreBrowserExtensionsEnabled:
+    {
+        BOOL a_value = 0;
+        hr = ((ICoreWebView2EnvironmentOptions6 *)obj)->lpVtbl->get_AreBrowserExtensionsEnabled((ICoreWebView2EnvironmentOptions6 *)obj, &a_value);
+        wv2_put_u32(out, (UINT32)a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions6_put_AreBrowserExtensionsEnabled:
+    {
+        BOOL a_value = (BOOL)wv2_get_u32(args);
+        hr = ((ICoreWebView2EnvironmentOptions6 *)obj)->lpVtbl->put_AreBrowserExtensionsEnabled((ICoreWebView2EnvironmentOptions6 *)obj, a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions8_get_ScrollBarStyle:
+    {
+        COREWEBVIEW2_SCROLLBAR_STYLE a_value = 0;
+        hr = ((ICoreWebView2EnvironmentOptions8 *)obj)->lpVtbl->get_ScrollBarStyle((ICoreWebView2EnvironmentOptions8 *)obj, &a_value);
+        wv2_put_u32(out, (UINT32)a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions8_put_ScrollBarStyle:
+    {
+        COREWEBVIEW2_SCROLLBAR_STYLE a_value = (COREWEBVIEW2_SCROLLBAR_STYLE)wv2_get_u32(args);
+        hr = ((ICoreWebView2EnvironmentOptions8 *)obj)->lpVtbl->put_ScrollBarStyle((ICoreWebView2EnvironmentOptions8 *)obj, a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions7_get_ChannelSearchKind:
+    {
+        COREWEBVIEW2_CHANNEL_SEARCH_KIND a_value = 0;
+        hr = ((ICoreWebView2EnvironmentOptions7 *)obj)->lpVtbl->get_ChannelSearchKind((ICoreWebView2EnvironmentOptions7 *)obj, &a_value);
+        wv2_put_u32(out, (UINT32)a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions7_put_ChannelSearchKind:
+    {
+        COREWEBVIEW2_CHANNEL_SEARCH_KIND a_value = (COREWEBVIEW2_CHANNEL_SEARCH_KIND)wv2_get_u32(args);
+        hr = ((ICoreWebView2EnvironmentOptions7 *)obj)->lpVtbl->put_ChannelSearchKind((ICoreWebView2EnvironmentOptions7 *)obj, a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions7_get_ReleaseChannels:
+    {
+        COREWEBVIEW2_RELEASE_CHANNELS a_value = 0;
+        hr = ((ICoreWebView2EnvironmentOptions7 *)obj)->lpVtbl->get_ReleaseChannels((ICoreWebView2EnvironmentOptions7 *)obj, &a_value);
+        wv2_put_u32(out, (UINT32)a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2EnvironmentOptions7_put_ReleaseChannels:
+    {
+        COREWEBVIEW2_RELEASE_CHANNELS a_value = (COREWEBVIEW2_RELEASE_CHANNELS)wv2_get_u32(args);
+        hr = ((ICoreWebView2EnvironmentOptions7 *)obj)->lpVtbl->put_ReleaseChannels((ICoreWebView2EnvironmentOptions7 *)obj, a_value);
+        return hr;
+    }
+    case METHOD_ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        IUnknown *a_result = wv2_get_iface(args);
+        hr = ((ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler *)obj, a_errorCode, (void *)a_result);
+        if (a_result) IUnknown_Release(a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2FindStartCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        hr = ((ICoreWebView2FindStartCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2FindStartCompletedHandler *)obj, a_errorCode);
+        return hr;
+    }
+    case METHOD_ICoreWebView2FindActiveMatchIndexChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2FindActiveMatchIndexChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2FindActiveMatchIndexChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2FindMatchCountChangedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2FindMatchCountChangedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2FindMatchCountChangedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2FramePermissionRequestedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2FramePermissionRequestedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2FramePermissionRequestedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2FrameScreenCaptureStartingEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2FrameScreenCaptureStartingEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2FrameScreenCaptureStartingEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2FrameChildFrameCreatedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2FrameChildFrameCreatedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2FrameChildFrameCreatedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2FrameDedicatedWorkerCreatedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2FrameDedicatedWorkerCreatedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2FrameDedicatedWorkerCreatedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ClearBrowsingDataCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        hr = ((ICoreWebView2ClearBrowsingDataCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ClearBrowsingDataCompletedHandler *)obj, a_errorCode);
+        return hr;
+    }
+    case METHOD_ICoreWebView2SetPermissionStateCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        hr = ((ICoreWebView2SetPermissionStateCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2SetPermissionStateCompletedHandler *)obj, a_errorCode);
+        return hr;
+    }
+    case METHOD_ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        IUnknown *a_result = wv2_get_iface(args);
+        hr = ((ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler *)obj, a_errorCode, (void *)a_result);
+        if (a_result) IUnknown_Release(a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ProfileAddBrowserExtensionCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        IUnknown *a_result = wv2_get_iface(args);
+        hr = ((ICoreWebView2ProfileAddBrowserExtensionCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ProfileAddBrowserExtensionCompletedHandler *)obj, a_errorCode, (void *)a_result);
+        if (a_result) IUnknown_Release(a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ProfileGetBrowserExtensionsCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        IUnknown *a_result = wv2_get_iface(args);
+        hr = ((ICoreWebView2ProfileGetBrowserExtensionsCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ProfileGetBrowserExtensionsCompletedHandler *)obj, a_errorCode, (void *)a_result);
+        if (a_result) IUnknown_Release(a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ServiceWorkerDestroyingEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2ServiceWorkerDestroyingEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ServiceWorkerDestroyingEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ServiceWorkerWebMessageReceivedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2ServiceWorkerWebMessageReceivedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ServiceWorkerWebMessageReceivedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2GetServiceWorkerRegistrationsCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        IUnknown *a_result = wv2_get_iface(args);
+        hr = ((ICoreWebView2GetServiceWorkerRegistrationsCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2GetServiceWorkerRegistrationsCompletedHandler *)obj, a_errorCode, (void *)a_result);
+        if (a_result) IUnknown_Release(a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ServiceWorkerRegisteredEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2ServiceWorkerRegisteredEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ServiceWorkerRegisteredEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ServiceWorkerActivatedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2ServiceWorkerActivatedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ServiceWorkerActivatedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ServiceWorkerRegistrationUnregisteringEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2ServiceWorkerRegistrationUnregisteringEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ServiceWorkerRegistrationUnregisteringEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2SharedWorkerDestroyingEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2SharedWorkerDestroyingEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2SharedWorkerDestroyingEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2GetSharedWorkersCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        IUnknown *a_result = wv2_get_iface(args);
+        hr = ((ICoreWebView2GetSharedWorkersCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2GetSharedWorkersCompletedHandler *)obj, a_errorCode, (void *)a_result);
+        if (a_result) IUnknown_Release(a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2SharedWorkerCreatedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2SharedWorkerCreatedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2SharedWorkerCreatedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2BasicAuthenticationRequestedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2BasicAuthenticationRequestedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2BasicAuthenticationRequestedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        hr = ((ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler *)obj, a_errorCode);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ServerCertificateErrorDetectedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2ServerCertificateErrorDetectedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ServerCertificateErrorDetectedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2LaunchingExternalUriSchemeEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2LaunchingExternalUriSchemeEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2LaunchingExternalUriSchemeEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ExecuteScriptWithResultCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        IUnknown *a_result = wv2_get_iface(args);
+        hr = ((ICoreWebView2ExecuteScriptWithResultCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ExecuteScriptWithResultCompletedHandler *)obj, a_errorCode, (void *)a_result);
+        if (a_result) IUnknown_Release(a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ShowSaveAsUICompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        COREWEBVIEW2_SAVE_AS_UI_RESULT a_result = (COREWEBVIEW2_SAVE_AS_UI_RESULT)wv2_get_u32(args);
+        hr = ((ICoreWebView2ShowSaveAsUICompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ShowSaveAsUICompletedHandler *)obj, a_errorCode, a_result);
+        return hr;
+    }
+    case METHOD_ICoreWebView2SaveAsUIShowingEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2SaveAsUIShowingEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2SaveAsUIShowingEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ScreenCaptureStartingEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2ScreenCaptureStartingEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ScreenCaptureStartingEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2SaveFileSecurityCheckStartingEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2SaveFileSecurityCheckStartingEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2SaveFileSecurityCheckStartingEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2NotificationReceivedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2NotificationReceivedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2NotificationReceivedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2DedicatedWorkerCreatedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2DedicatedWorkerCreatedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2DedicatedWorkerCreatedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2ClientCertificateRequestedEventHandler_Invoke:
+    {
+        IUnknown *a_sender = wv2_get_iface(args);
+        IUnknown *a_args = wv2_get_iface(args);
+        hr = ((ICoreWebView2ClientCertificateRequestedEventHandler *)obj)->lpVtbl->Invoke((ICoreWebView2ClientCertificateRequestedEventHandler *)obj, (void *)a_sender, (void *)a_args);
+        if (a_sender) IUnknown_Release(a_sender);
+        if (a_args) IUnknown_Release(a_args);
+        return hr;
+    }
+    case METHOD_ICoreWebView2PrintToPdfCompletedHandler_Invoke:
+    {
+        HRESULT a_errorCode = (HRESULT)wv2_get_u32(args);
+        BOOL a_result = (BOOL)wv2_get_u32(args);
+        hr = ((ICoreWebView2PrintToPdfCompletedHandler *)obj)->lpVtbl->Invoke((ICoreWebView2PrintToPdfCompletedHandler *)obj, a_errorCode, a_result);
+        return hr;
+    }
+    }
+    FIXME("unsupported method %u\n", method);
+    return E_NOTIMPL;
+}

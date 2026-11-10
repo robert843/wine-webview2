@@ -2,7 +2,7 @@
 
 #![allow(dead_code)]
 
-pub const PROTOCOL_VERSION: u32 = 7;
+pub const PROTOCOL_VERSION: u32 = 8;
 pub const FRAME_SLOTS: u32 = 2;
 /// Treści większe niż INLINE_MAX idą w zapieczętowanym memfd (protocol.h: WV2_INLINE_MAX).
 pub const INLINE_MAX: usize = 64 * 1024;
@@ -39,8 +39,17 @@ pub const CMD_OPEN_DEVTOOLS: u32 = 25;
 pub const CMD_SET_BACKGROUND: u32 = 26;
 pub const CMD_SET_USER_AGENT: u32 = 27;
 pub const CMD_SET_SETTINGS: u32 = 28;
+pub const CMD_CALL: u32 = 29;
+pub const CMD_INVOKE_REPLY: u32 = 30;
+pub const CMD_RELEASE: u32 = 31;
 
+pub const SETTING_SCRIPT: u32 = 0x0001;
 pub const SETTING_WEB_MESSAGE: u32 = 0x0002;
+pub const SETTING_SCRIPT_DIALOGS: u32 = 0x0004;
+pub const SETTING_CONTEXT_MENUS: u32 = 0x0008;
+pub const SETTING_DEVTOOLS: u32 = 0x0010;
+pub const SETTING_ZOOM: u32 = 0x0020;
+pub const SETTING_ACCELERATORS: u32 = 0x0040;
 pub const SETTINGS_DEFAULT: u32 = 0x007f;
 
 // helper -> DLL
@@ -60,6 +69,9 @@ pub const EVT_CONTENT_LOADING: u32 = 0x100d;
 pub const EVT_NAVIGATION_COMPLETED: u32 = 0x100e;
 pub const EVT_TITLE_CHANGED: u32 = 0x100f;
 pub const EVT_HISTORY_CHANGED: u32 = 0x1010;
+pub const EVT_REPLY: u32 = 0x1011;
+pub const EVT_INVOKE: u32 = 0x1012;
+pub const EVT_RELEASE_APP: u32 = 0x1013;
 
 pub const MOUSE_MOVE: u32 = 0;
 pub const MOUSE_DOWN: u32 = 1;

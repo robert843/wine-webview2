@@ -35,6 +35,8 @@
 #include "stubs.h"
 #include "webview2_private.h"
 #include "unixlib.h"
+#include "proxy.h"
+#include "proxy_gen.h"
 
 #include "wine/debug.h"
 #include "wine/list.h"
@@ -779,6 +781,13 @@ static DWORD WINAPI reader_thread(void *arg)
             params.size = payload;
             continue;
         }
+        /* Generic calls: replies wake the waiting thread directly; invokes go to the object's thread. */
+        switch (params.header.type)
+        {
+        case WV2_EVT_REPLY: proxy_handle_reply(params.buffer, payload); continue;
+        case WV2_EVT_INVOKE: proxy_handle_invoke(params.buffer, payload); continue;
+        case WV2_EVT_RELEASE_APP: proxy_handle_release_app(params.buffer, payload); continue;
+        }
         if (!(view = find_view(params.header.view)))
         {
             TRACE("event %#x for unknown view %u\n", params.header.type, params.header.view);
@@ -802,6 +811,7 @@ static DWORD WINAPI reader_thread(void *arg)
         view_release(view);
     }
     ERR("helper connection lost\n");
+    proxy_connection_lost();
     free(params.buffer);
     return 0;
 }
@@ -830,7 +840,7 @@ static NTSTATUS load_unixlib(void)
 
 static BOOL WINAPI start_helper_once(INIT_ONCE *once, void *param, void **context)
 {
-    struct helper_start_params params = {0};
+    struct helper_start_params params = {WV2_API_HASH};
     HANDLE thread;
 
     if (load_unixlib()) return TRUE;
@@ -1474,7 +1484,6 @@ static HRESULT STDMETHODCALLTYPE webview_OpenDevToolsWindow(ICoreWebView2_29 *if
 
     TRACE("iface %p.\n", iface);
     if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
-    if (view->settings && !(settings_get_flags(view->settings) & WV2_SETTING_DEVTOOLS)) return S_OK;
     return helper_send(view, WV2_CMD_OPEN_DEVTOOLS, NULL, 0);
 }
 
@@ -1485,7 +1494,18 @@ static HRESULT STDMETHODCALLTYPE webview_get_Settings(ICoreWebView2_29 *iface, I
     TRACE("iface %p, settings %p.\n", iface, settings);
     if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
     if (!settings) return E_POINTER;
-    if (!view->settings && !(view->settings = settings_create(view->id))) return E_OUTOFMEMORY;
+    if (!view->settings)
+    {
+        struct wv2_buffer args = {0};
+        struct wv2_reader ret;
+        HRESULT hr;
+
+        wv2_put_u32(&args, view->id);
+        if (FAILED(hr = proxy_call_root(WV2_ROOT_CREATE_SETTINGS, &args, &ret))) return hr;
+        view->settings = (ICoreWebView2Settings *)wv2_get_iface(&ret);
+        wv2_reader_free(&ret);
+        if (!view->settings) return E_FAIL;
+    }
     *settings = view->settings;
     ICoreWebView2Settings_AddRef(*settings);
     return S_OK;

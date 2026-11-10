@@ -326,7 +326,7 @@ static NTSTATUS helper_start(void *args)
     posix_spawn_file_actions_t actions;
     struct wv2_msg_header *header;
     const char *payload;
-    struct wv2_hello hello = {WV2_PROTOCOL_VERSION, getpid()};
+    struct wv2_hello hello = {WV2_PROTOCOL_VERSION, getpid(), params->api_hash};
     char path_buf[PATH_MAX], fd_arg[32];
     const char *path = find_helper_path(path_buf, sizeof(path_buf));
     char *argv[] = {(char *)path, fd_arg, NULL};
@@ -369,7 +369,8 @@ static NTSTATUS helper_start(void *args)
     }
     if (fd != -1) close(fd);
     if (header->type != WV2_EVT_HELLO || header->size < sizeof(*header) + sizeof(hello) ||
-        ((const struct wv2_hello *)payload)->version != WV2_PROTOCOL_VERSION)
+        ((const struct wv2_hello *)payload)->version != WV2_PROTOCOL_VERSION ||
+        ((const struct wv2_hello *)payload)->api_hash != params->api_hash)
     {
         ERR("helper protocol mismatch (type %#x)\n", header->type);
         close_helper(helper);

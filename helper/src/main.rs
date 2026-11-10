@@ -10,8 +10,11 @@
 
 mod ipc;
 mod protocol;
+mod api_gen;
 mod renderer;
 mod resources;
+mod rpc;
+mod settings;
 
 use cef::args::Args;
 use cef::rc::Rc as _;
@@ -68,7 +71,7 @@ const DEFAULT_BACKGROUND: u32 = 0xFFFF_FFFF;
 
 /// Domyślny User-Agent jak w WebView2 na Windows (aplikacje i strony sprawdzają platformę;
 /// pod Wine program ma widzieć Windows). Wersja = wersja Chromium w CEF.
-const DEFAULT_USER_AGENT: &str =
+pub const DEFAULT_USER_AGENT: &str =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0";
 
 /// Wywołanie metody DevTools na przeglądarce (bez otwierania DevTools).
@@ -94,6 +97,7 @@ fn set_user_agent(browser: &Browser, ua: &str) {
 struct View {
     browser: Option<Browser>,
     doc_scripts: Vec<String>,
+    settings: u32,
     last_source: String,
     /// Zakończenie nawigacji czekające na OnLoadingStateChange(false): (http_status, net_error).
     pending_completion: Option<(i32, i32)>,
@@ -483,6 +487,43 @@ fn send_navigation_completed(view: u32, http_status: i32, net_error: i32) {
     send_event(EVT_NAVIGATION_COMPLETED, view, &payload);
 }
 
+/// Flagi ustawień widoku (z obiektu Settings): zapis dla renderera, stan dla DevTools.
+pub fn apply_settings(view: u32, flags: u32) {
+    with_state(|st| {
+        if let Some(v) = st.views.get_mut(&view) {
+            v.settings = flags;
+        }
+    });
+    if let (Some(b), Some(dir)) = (view_browser(view), SCRIPTS_DIR.get()) {
+        let path = renderer::settings_file(&dir.to_string_lossy(), b.identifier());
+        if let Err(e) = std::fs::write(&path, flags.to_le_bytes()) {
+            eprintln!("helper: cannot write {}: {e}", path.display());
+        }
+    }
+}
+
+pub fn apply_user_agent(view: u32, ua: &str) {
+    if let Some(b) = view_browser(view) {
+        set_user_agent(&b, ua);
+    }
+}
+
+/// Korzeń (obiekt 0) ogólnych wywołań.
+fn root_call(ctx: &mut rpc::Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+    match method {
+        rpc::ROOT_CREATE_SETTINGS => {
+            let view = rd.u32().unwrap_or(0);
+            let obj = rpc::ObjRef::Runtime(std::rc::Rc::new(api_gen::ICoreWebView2Settings9Obj(settings::Settings::new(view))));
+            ctx.write_objref(wr, &obj);
+            rpc::S_OK
+        }
+        _ => {
+            eprintln!("helper: unknown root method {method:#x}");
+            rpc::E_NOTIMPL
+        }
+    }
+}
+
 fn view_browser(view: u32) -> Option<Browser> {
     with_state(|st| st.views.get(&view).and_then(|v| v.browser.clone())).flatten()
 }
@@ -510,7 +551,7 @@ fn handle_command(msg: Message) {
             // DefaultBackgroundColor nakłada DLL pod klatką (kolor albo zawartość rodzica).
             let background = 0u32;
             with_state(|st| {
-                st.views.insert(msg.view, View { browser: None, doc_scripts: Vec::new(), last_source: String::new(), pending_completion: None, width: w, height: h, frames: None, dropped: false })
+                st.views.insert(msg.view, View { browser: None, doc_scripts: Vec::new(), settings: SETTINGS_DEFAULT, last_source: String::new(), pending_completion: None, width: w, height: h, frames: None, dropped: false })
             });
             let window_info = WindowInfo { windowless_rendering_enabled: true as _, ..Default::default() };
             // WebView2: DefaultBackgroundColor = nieprzezroczysta biel (CEF OSR domyślnie: przezroczyste).
@@ -708,8 +749,9 @@ fn handle_command(msg: Message) {
             }
         }
         CMD_OPEN_DEVTOOLS => {
-            // Natywne okno DevTools (Chrome style) obok aplikacji.
-            if let Some(host) = view_browser(msg.view).and_then(|b| b.host()) {
+            // Natywne okno DevTools (Chrome style) obok aplikacji; AreDevToolsEnabled = FALSE blokuje.
+            let allowed = with_state(|st| st.views.get(&msg.view).map(|v| v.settings & SETTING_DEVTOOLS != 0)).flatten().unwrap_or(true);
+            if let Some(host) = view_browser(msg.view).and_then(|b| b.host()).filter(|_| allowed) {
                 let window_info = WindowInfo::default();
                 let settings = BrowserSettings::default();
                 host.show_dev_tools(Some(&window_info), None, Some(&settings), None);
@@ -742,7 +784,10 @@ fn handle_command(msg: Message) {
 fn reader_thread(chan: Channel) {
     loop {
         match chan.recv() {
-            Ok(Some(msg)) => post_ui(move || handle_command(msg)),
+            Ok(Some(msg)) => {
+                rpc::enqueue(Some(msg));
+                post_ui(drain_queue);
+            }
             Ok(None) => break,
             Err(e) => {
                 eprintln!("helper: recv failed: {e}");
@@ -750,7 +795,15 @@ fn reader_thread(chan: Channel) {
             }
         }
     }
-    post_ui(shutdown_ipc);
+    rpc::enqueue(None);
+    post_ui(drain_queue);
+}
+
+/// Zadanie UI: opróżnia kolejkę (CALL/RELEASE przez rpc, reszta przez handle_command).
+fn drain_queue() {
+    if !rpc::drain() {
+        shutdown_ipc();
+    }
 }
 
 // ======================================================================
@@ -951,6 +1004,7 @@ wrap_browser_process_handler! {
                     STATE.with(|s| {
                         *s.borrow_mut() = Some(IpcState { chan, views: HashMap::new(), next_generation: 0 })
                     });
+                    rpc::set_handlers(root_call, handle_command);
                     std::thread::spawn(move || reader_thread(reader));
                 }
                 Mode::Shot(shot) => {
@@ -988,12 +1042,13 @@ fn cef_dir() -> PathBuf {
 /// Uzgodnienie wersji protokołu przed startem CEF.
 fn handshake(chan: &Channel) -> Result<(), String> {
     let msg = chan.recv().map_err(|e| e.to_string())?.ok_or("connection closed")?;
-    let version = Reader(&msg.payload).u32();
-    if msg.ty != CMD_HELLO || version != Some(PROTOCOL_VERSION) {
+    let mut r = Reader(&msg.payload);
+    let (version, _pid, hash) = (r.u32(), r.u32(), r.u64());
+    if msg.ty != CMD_HELLO || version != Some(PROTOCOL_VERSION) || hash != Some(api_gen::API_HASH) {
         let _ = chan.send(EVT_ERROR, 0, b"protocol version mismatch", None);
-        return Err(format!("bad hello (type {:#x}, version {:?})", msg.ty, version));
+        return Err(format!("bad hello (type {:#x}, version {:?}, api {:x?})", msg.ty, version, hash));
     }
-    let reply = Writer::default().u32(PROTOCOL_VERSION).u32(std::process::id()).0;
+    let reply = Writer::default().u32(PROTOCOL_VERSION).u32(std::process::id()).u64(api_gen::API_HASH).0;
     chan.send(EVT_HELLO, 0, &reply, None).map_err(|e| e.to_string())
 }
 

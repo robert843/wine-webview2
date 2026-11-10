@@ -12,7 +12,10 @@
 //! parametry wyjściowe będące interfejsami runtime'u dostają nowy obiekt-zaślepkę, żeby aplikacja
 //! szła dalej i odsłaniała kolejne używane metody.
 //!
-//! Użycie: gen-stubs <webview2.h> <webview2.idl> <katalog_wyjściowy>
+//! Użycie: gen-stubs <webview2.h> <webview2.idl> <katalog_wyjściowy> [<api_gen.rs>]
+//! Z czwartym argumentem generuje też ogólnego pośrednika (proxy.rs, docs/architektura-proxy.md).
+
+mod proxy;
 
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt::Write as _;
@@ -246,8 +249,8 @@ fn classify(ty: &str, structs: &BTreeSet<String>) -> Kind {
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    if args.len() != 4 {
-        die("użycie: gen-stubs <webview2.h> <webview2.idl> <katalog_wyjściowy>");
+    if args.len() != 4 && args.len() != 5 {
+        die("użycie: gen-stubs <webview2.h> <webview2.idl> <katalog_wyjściowy> [<api_gen.rs>]");
     }
     let header = fs::read_to_string(&args[1]).unwrap_or_else(|e| die(&format!("{}: {e}", args[1])));
     let idl = fs::read_to_string(&args[2]).unwrap_or_else(|e| die(&format!("{}: {e}", args[2])));
@@ -298,6 +301,12 @@ fn main() {
             }
             out_flags.insert((i.name.clone(), m.name.clone()), flags.clone());
         }
+    }
+
+    if let Some(rust_file) = args.get(4) {
+        let app_ifaces: Vec<&Iface> =
+            ifaces.iter().filter(|i| implemented_by_app(&i.name) && i.name != "IUnknown").collect();
+        proxy::generate(&ifaces, &out_flags, &leaves, &app_ifaces, outdir, rust_file);
     }
 
     let mut c = String::new();

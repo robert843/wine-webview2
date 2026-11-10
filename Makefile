@@ -23,7 +23,7 @@ CEF_DIR      = $(CEF_PATH)/$(CEF_VERSION)/cef_linux_x86_64
 
 B   = build
 DLL = dlls/embeddedbrowserwebview
-SRCS = main.c controller.c resource.c navigation.c settings.c stubs.c
+SRCS = main.c controller.c resource.c navigation.c proxy.c proxy_gen.c stubs.c
 
 INCLUDES = -I$(B) -I$(DLL) -I$(WINE_BUILD)/include -I$(WINE_SRC)/include -I$(WINE_SRC)/include/msvcrt
 CFLAGS   = -O2 -g -Wall -fno-strict-aliasing -D_UCRT -D__WINESRC__ -D__WINE_PE_BUILD \
@@ -66,7 +66,7 @@ $(B)/version.res: $(DLL)/version.rc $(DLL)/webview2_private.h
 	$(WRC) --nostdinc -I$(DLL) -I$(WINE_BUILD)/include -I$(WINE_SRC)/include -o $@ $<
 
 define arch_rules
-$(B)/$(1)/%.o: $(DLL)/%.c $(B)/webview2.h $(DLL)/stubs.h $(DLL)/webview2_private.h $(DLL)/unixlib.h $(DLL)/protocol.h
+$(B)/$(1)/%.o: $(DLL)/%.c $(B)/webview2.h $(DLL)/stubs.h $(DLL)/webview2_private.h $(DLL)/unixlib.h $(DLL)/protocol.h $(DLL)/proxy.h $(DLL)/proxy_gen.h
 	@mkdir -p $(B)/$(1)
 	$(2)-gcc -c -o $$@ $$< $(INCLUDES) $(CFLAGS)
 
@@ -81,7 +81,7 @@ $(eval $(call arch_rules,i386,i686-w64-mingw32))
 
 stubs: $(B)/webview2.h
 	cd tools/gen-stubs && cargo build --release -q
-	tools/gen-stubs/target/release/gen-stubs $(B)/webview2.h include/webview2.idl $(DLL)
+	tools/gen-stubs/target/release/gen-stubs $(B)/webview2.h include/webview2.idl $(DLL) helper/src/api_gen.rs
 
 clean:
 	rm -rf $(B)

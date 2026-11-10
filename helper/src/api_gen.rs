@@ -1,0 +1,12501 @@
+//! Wygenerowane przez tools/gen-stubs (proxy) — NIE EDYTOWAĆ ręcznie.
+#![allow(non_snake_case, non_camel_case_types, non_upper_case_globals, dead_code, unused_variables, unused_mut, clippy::all)]
+
+use crate::rpc::{Ctx, Dispatch, ObjRef, AppRef, WvResult, S_OK, E_NOTIMPL};
+use crate::protocol::{Reader, Writer};
+use std::any::Any;
+use std::rc::Rc;
+
+pub const API_HASH: u64 = 0xca5e32e083a17f7b;
+pub const FAMILY_COUNT: u32 = 94;
+
+pub const F_ICoreWebView2RegionRectCollectionView: u32 = 0;
+pub const F_ICoreWebView2StringCollection: u32 = 1;
+pub const F_ICoreWebView2ClientCertificateCollection: u32 = 2;
+pub const F_ICoreWebView2CookieList: u32 = 3;
+pub const F_ICoreWebView2BasicAuthenticationRequestedEventArgs: u32 = 4;
+pub const F_ICoreWebView2BasicAuthenticationResponse: u32 = 5;
+pub const F_ICoreWebView2BrowserExtension: u32 = 6;
+pub const F_ICoreWebView2Certificate: u32 = 7;
+pub const F_ICoreWebView2ClientCertificate: u32 = 8;
+pub const F_ICoreWebView2ClientCertificateRequestedEventArgs: u32 = 9;
+pub const F_ICoreWebView2ContextMenuItem: u32 = 10;
+pub const F_ICoreWebView2ContextMenuTarget: u32 = 11;
+pub const F_ICoreWebView2ContextMenuRequestedEventArgs: u32 = 12;
+pub const F_ICoreWebView2Cookie: u32 = 13;
+pub const F_ICoreWebView2CookieManager: u32 = 14;
+pub const F_ICoreWebView2DownloadOperation: u32 = 15;
+pub const F_ICoreWebView2DownloadStartingEventArgs: u32 = 16;
+pub const F_ICoreWebView2ExecuteScriptResult: u32 = 17;
+pub const F_ICoreWebView2FrameInfo2: u32 = 18;
+pub const F_ICoreWebView2HttpHeadersCollectionIterator: u32 = 19;
+pub const F_ICoreWebView2LaunchingExternalUriSchemeEventArgs: u32 = 20;
+pub const F_ICoreWebView2MoveFocusRequestedEventArgs: u32 = 21;
+pub const F_ICoreWebView2PermissionSettingCollectionView: u32 = 22;
+pub const F_ICoreWebView2PointerInfo: u32 = 23;
+pub const F_ICoreWebView2PrintSettings2: u32 = 24;
+pub const F_ICoreWebView2ProcessExtendedInfo: u32 = 25;
+pub const F_ICoreWebView2ProcessInfo: u32 = 26;
+pub const F_ICoreWebView2ScriptDialogOpeningEventArgs: u32 = 27;
+pub const F_ICoreWebView2ScriptException: u32 = 28;
+pub const F_ICoreWebView2ServerCertificateErrorDetectedEventArgs: u32 = 29;
+pub const F_ICoreWebView2SharedBuffer: u32 = 30;
+pub const F_ICoreWebView2WebResourceRequest: u32 = 31;
+pub const F_ICoreWebView2WebResourceResponse: u32 = 32;
+pub const F_ICoreWebView2WebResourceResponseView: u32 = 33;
+pub const F_ICoreWebView2WindowFeatures: u32 = 34;
+pub const F_ICoreWebView2ObjectCollection: u32 = 35;
+pub const F_ICoreWebView2Notification: u32 = 36;
+pub const F_ICoreWebView2NotificationReceivedEventArgs: u32 = 37;
+pub const F_ICoreWebView2SaveAsUIShowingEventArgs: u32 = 38;
+pub const F_ICoreWebView2AcceleratorKeyPressedEventArgs2: u32 = 39;
+pub const F_ICoreWebView2BrowserProcessExitedEventArgs: u32 = 40;
+pub const F_ICoreWebView2CompositionController5: u32 = 41;
+pub const F_ICoreWebView2ContentLoadingEventArgs: u32 = 42;
+pub const F_ICoreWebView2ContextMenuItemCollection: u32 = 43;
+pub const F_ICoreWebView2Controller4: u32 = 44;
+pub const F_ICoreWebView2ControllerOptions4: u32 = 45;
+pub const F_ICoreWebView2CrashReport: u32 = 46;
+pub const F_ICoreWebView2DOMContentLoadedEventArgs: u32 = 47;
+pub const F_ICoreWebView2DedicatedWorker: u32 = 48;
+pub const F_ICoreWebView2DedicatedWorkerCreatedEventArgs: u32 = 49;
+pub const F_ICoreWebView2Deferral: u32 = 50;
+pub const F_ICoreWebView2DevToolsProtocolEventReceivedEventArgs2: u32 = 51;
+pub const F_ICoreWebView2DevToolsProtocolEventReceiver: u32 = 52;
+pub const F_ICoreWebView2DragStartingEventArgs: u32 = 53;
+pub const F_ICoreWebView2ProcessExtendedInfoCollection: u32 = 54;
+pub const F_ICoreWebView2Environment15: u32 = 55;
+pub const F_ICoreWebView2ProcessInfoCollection: u32 = 56;
+pub const F_ICoreWebView2File: u32 = 57;
+pub const F_ICoreWebView2FileSystemHandle: u32 = 58;
+pub const F_ICoreWebView2Find: u32 = 59;
+pub const F_ICoreWebView2FindOptions: u32 = 60;
+pub const F_ICoreWebView2Frame8: u32 = 61;
+pub const F_ICoreWebView2FrameCreatedEventArgs: u32 = 62;
+pub const F_ICoreWebView2FrameInfoCollection: u32 = 63;
+pub const F_ICoreWebView2FrameInfoCollectionIterator: u32 = 64;
+pub const F_ICoreWebView2HttpRequestHeaders: u32 = 65;
+pub const F_ICoreWebView2HttpResponseHeaders: u32 = 66;
+pub const F_ICoreWebView2NavigationCompletedEventArgs2: u32 = 67;
+pub const F_ICoreWebView2NavigationStartingEventArgs3: u32 = 68;
+pub const F_ICoreWebView2NewWindowRequestedEventArgs3: u32 = 69;
+pub const F_ICoreWebView2NonClientRegionChangedEventArgs: u32 = 70;
+pub const F_ICoreWebView2PermissionRequestedEventArgs3: u32 = 71;
+pub const F_ICoreWebView2PermissionSetting: u32 = 72;
+pub const F_ICoreWebView2ProcessFailedEventArgs4: u32 = 73;
+pub const F_ICoreWebView2Profile9: u32 = 74;
+pub const F_ICoreWebView2BrowserExtensionList: u32 = 75;
+pub const F_ICoreWebView2SaveFileSecurityCheckStartingEventArgs: u32 = 76;
+pub const F_ICoreWebView2ScreenCaptureStartingEventArgs: u32 = 77;
+pub const F_ICoreWebView2ServiceWorker: u32 = 78;
+pub const F_ICoreWebView2ServiceWorkerActivatedEventArgs: u32 = 79;
+pub const F_ICoreWebView2ServiceWorkerRegistrationCollectionView: u32 = 80;
+pub const F_ICoreWebView2ServiceWorkerManager: u32 = 81;
+pub const F_ICoreWebView2ServiceWorkerRegisteredEventArgs: u32 = 82;
+pub const F_ICoreWebView2ServiceWorkerRegistration: u32 = 83;
+pub const F_ICoreWebView2Settings9: u32 = 84;
+pub const F_ICoreWebView2SharedWorker: u32 = 85;
+pub const F_ICoreWebView2SharedWorkerCreatedEventArgs: u32 = 86;
+pub const F_ICoreWebView2SharedWorkerCollectionView: u32 = 87;
+pub const F_ICoreWebView2SharedWorkerManager: u32 = 88;
+pub const F_ICoreWebView2SourceChangedEventArgs: u32 = 89;
+pub const F_ICoreWebView2WebMessageReceivedEventArgs2: u32 = 90;
+pub const F_ICoreWebView2WebResourceRequestedEventArgs2: u32 = 91;
+pub const F_ICoreWebView2WebResourceResponseReceivedEventArgs: u32 = 92;
+pub const F_ICoreWebView2_29: u32 = 93;
+pub const M_ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler_Invoke: u32 = 1;
+pub const M_ICoreWebView2ExecuteScriptCompletedHandler_Invoke: u32 = 2;
+pub const M_ICoreWebView2CapturePreviewCompletedHandler_Invoke: u32 = 3;
+pub const M_ICoreWebView2CallDevToolsProtocolMethodCompletedHandler_Invoke: u32 = 4;
+pub const M_ICoreWebView2ContainsFullScreenElementChangedEventHandler_Invoke: u32 = 5;
+pub const M_ICoreWebView2ContentLoadingEventHandler_Invoke: u32 = 6;
+pub const M_ICoreWebView2DocumentTitleChangedEventHandler_Invoke: u32 = 7;
+pub const M_ICoreWebView2HistoryChangedEventHandler_Invoke: u32 = 8;
+pub const M_ICoreWebView2NavigationCompletedEventHandler_Invoke: u32 = 9;
+pub const M_ICoreWebView2NavigationStartingEventHandler_Invoke: u32 = 10;
+pub const M_ICoreWebView2NewWindowRequestedEventHandler_Invoke: u32 = 11;
+pub const M_ICoreWebView2PermissionRequestedEventHandler_Invoke: u32 = 12;
+pub const M_ICoreWebView2ProcessFailedEventHandler_Invoke: u32 = 13;
+pub const M_ICoreWebView2ScriptDialogOpeningEventHandler_Invoke: u32 = 14;
+pub const M_ICoreWebView2SourceChangedEventHandler_Invoke: u32 = 15;
+pub const M_ICoreWebView2WebMessageReceivedEventHandler_Invoke: u32 = 16;
+pub const M_ICoreWebView2WebResourceRequestedEventHandler_Invoke: u32 = 17;
+pub const M_ICoreWebView2WindowCloseRequestedEventHandler_Invoke: u32 = 18;
+pub const M_ICoreWebView2DOMContentLoadedEventHandler_Invoke: u32 = 19;
+pub const M_ICoreWebView2WebResourceResponseReceivedEventHandler_Invoke: u32 = 20;
+pub const M_ICoreWebView2TrySuspendCompletedHandler_Invoke: u32 = 21;
+pub const M_ICoreWebView2DownloadStartingEventHandler_Invoke: u32 = 22;
+pub const M_ICoreWebView2FrameCreatedEventHandler_Invoke: u32 = 23;
+pub const M_ICoreWebView2IsDocumentPlayingAudioChangedEventHandler_Invoke: u32 = 24;
+pub const M_ICoreWebView2IsMutedChangedEventHandler_Invoke: u32 = 25;
+pub const M_ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler_Invoke: u32 = 26;
+pub const M_ICoreWebView2ContextMenuRequestedEventHandler_Invoke: u32 = 27;
+pub const M_ICoreWebView2StatusBarTextChangedEventHandler_Invoke: u32 = 28;
+pub const M_ICoreWebView2GetFaviconCompletedHandler_Invoke: u32 = 29;
+pub const M_ICoreWebView2FaviconChangedEventHandler_Invoke: u32 = 30;
+pub const M_ICoreWebView2PrintCompletedHandler_Invoke: u32 = 31;
+pub const M_ICoreWebView2PrintToPdfStreamCompletedHandler_Invoke: u32 = 32;
+pub const M_ICoreWebView2CursorChangedEventHandler_Invoke: u32 = 33;
+pub const M_ICoreWebView2NonClientRegionChangedEventHandler_Invoke: u32 = 34;
+pub const M_ICoreWebView2RegionRectCollectionView_get_Count: u32 = 35;
+pub const M_ICoreWebView2RegionRectCollectionView_GetValueAtIndex: u32 = 36;
+pub const M_ICoreWebView2AcceleratorKeyPressedEventHandler_Invoke: u32 = 37;
+pub const M_ICoreWebView2FocusChangedEventHandler_Invoke: u32 = 38;
+pub const M_ICoreWebView2MoveFocusRequestedEventHandler_Invoke: u32 = 39;
+pub const M_ICoreWebView2ZoomFactorChangedEventHandler_Invoke: u32 = 40;
+pub const M_ICoreWebView2RasterizationScaleChangedEventHandler_Invoke: u32 = 41;
+pub const M_ICoreWebView2CreateCoreWebView2ControllerCompletedHandler_Invoke: u32 = 42;
+pub const M_ICoreWebView2NewBrowserVersionAvailableEventHandler_Invoke: u32 = 43;
+pub const M_ICoreWebView2BrowserExtensionRemoveCompletedHandler_Invoke: u32 = 44;
+pub const M_ICoreWebView2BrowserExtensionEnableCompletedHandler_Invoke: u32 = 45;
+pub const M_ICoreWebView2StringCollection_get_Count: u32 = 46;
+pub const M_ICoreWebView2StringCollection_GetValueAtIndex: u32 = 47;
+pub const M_ICoreWebView2ClientCertificateCollection_get_Count: u32 = 48;
+pub const M_ICoreWebView2ClientCertificateCollection_GetValueAtIndex: u32 = 49;
+pub const M_ICoreWebView2CustomItemSelectedEventHandler_Invoke: u32 = 50;
+pub const M_ICoreWebView2GetCookiesCompletedHandler_Invoke: u32 = 51;
+pub const M_ICoreWebView2CookieList_get_Count: u32 = 52;
+pub const M_ICoreWebView2CookieList_GetValueAtIndex: u32 = 53;
+pub const M_ICoreWebView2BytesReceivedChangedEventHandler_Invoke: u32 = 54;
+pub const M_ICoreWebView2EstimatedEndTimeChangedEventHandler_Invoke: u32 = 55;
+pub const M_ICoreWebView2StateChangedEventHandler_Invoke: u32 = 56;
+pub const M_ICoreWebView2FrameDestroyedEventHandler_Invoke: u32 = 57;
+pub const M_ICoreWebView2FrameNameChangedEventHandler_Invoke: u32 = 58;
+pub const M_ICoreWebView2FrameContentLoadingEventHandler_Invoke: u32 = 59;
+pub const M_ICoreWebView2FrameDOMContentLoadedEventHandler_Invoke: u32 = 60;
+pub const M_ICoreWebView2FrameNavigationCompletedEventHandler_Invoke: u32 = 61;
+pub const M_ICoreWebView2FrameNavigationStartingEventHandler_Invoke: u32 = 62;
+pub const M_ICoreWebView2FrameWebMessageReceivedEventHandler_Invoke: u32 = 63;
+pub const M_ICoreWebView2ProfileDeletedEventHandler_Invoke: u32 = 64;
+pub const M_ICoreWebView2WebResourceResponseViewGetContentCompletedHandler_Invoke: u32 = 65;
+pub const M_ICoreWebView2NotificationCloseRequestedEventHandler_Invoke: u32 = 66;
+pub const M_ICoreWebView2_get_Settings: u32 = 67;
+pub const M_ICoreWebView2_get_Source: u32 = 68;
+pub const M_ICoreWebView2_Navigate: u32 = 69;
+pub const M_ICoreWebView2_NavigateToString: u32 = 70;
+pub const M_ICoreWebView2_add_NavigationStarting: u32 = 71;
+pub const M_ICoreWebView2_remove_NavigationStarting: u32 = 72;
+pub const M_ICoreWebView2_add_ContentLoading: u32 = 73;
+pub const M_ICoreWebView2_remove_ContentLoading: u32 = 74;
+pub const M_ICoreWebView2_add_SourceChanged: u32 = 75;
+pub const M_ICoreWebView2_remove_SourceChanged: u32 = 76;
+pub const M_ICoreWebView2_add_HistoryChanged: u32 = 77;
+pub const M_ICoreWebView2_remove_HistoryChanged: u32 = 78;
+pub const M_ICoreWebView2_add_NavigationCompleted: u32 = 79;
+pub const M_ICoreWebView2_remove_NavigationCompleted: u32 = 80;
+pub const M_ICoreWebView2_add_FrameNavigationStarting: u32 = 81;
+pub const M_ICoreWebView2_remove_FrameNavigationStarting: u32 = 82;
+pub const M_ICoreWebView2_add_FrameNavigationCompleted: u32 = 83;
+pub const M_ICoreWebView2_remove_FrameNavigationCompleted: u32 = 84;
+pub const M_ICoreWebView2_add_ScriptDialogOpening: u32 = 85;
+pub const M_ICoreWebView2_remove_ScriptDialogOpening: u32 = 86;
+pub const M_ICoreWebView2_add_PermissionRequested: u32 = 87;
+pub const M_ICoreWebView2_remove_PermissionRequested: u32 = 88;
+pub const M_ICoreWebView2_add_ProcessFailed: u32 = 89;
+pub const M_ICoreWebView2_remove_ProcessFailed: u32 = 90;
+pub const M_ICoreWebView2_AddScriptToExecuteOnDocumentCreated: u32 = 91;
+pub const M_ICoreWebView2_RemoveScriptToExecuteOnDocumentCreated: u32 = 92;
+pub const M_ICoreWebView2_ExecuteScript: u32 = 93;
+pub const M_ICoreWebView2_CapturePreview: u32 = 94;
+pub const M_ICoreWebView2_Reload: u32 = 95;
+pub const M_ICoreWebView2_PostWebMessageAsJson: u32 = 96;
+pub const M_ICoreWebView2_PostWebMessageAsString: u32 = 97;
+pub const M_ICoreWebView2_add_WebMessageReceived: u32 = 98;
+pub const M_ICoreWebView2_remove_WebMessageReceived: u32 = 99;
+pub const M_ICoreWebView2_CallDevToolsProtocolMethod: u32 = 100;
+pub const M_ICoreWebView2_get_BrowserProcessId: u32 = 101;
+pub const M_ICoreWebView2_get_CanGoBack: u32 = 102;
+pub const M_ICoreWebView2_get_CanGoForward: u32 = 103;
+pub const M_ICoreWebView2_GoBack: u32 = 104;
+pub const M_ICoreWebView2_GoForward: u32 = 105;
+pub const M_ICoreWebView2_GetDevToolsProtocolEventReceiver: u32 = 106;
+pub const M_ICoreWebView2_Stop: u32 = 107;
+pub const M_ICoreWebView2_add_NewWindowRequested: u32 = 108;
+pub const M_ICoreWebView2_remove_NewWindowRequested: u32 = 109;
+pub const M_ICoreWebView2_add_DocumentTitleChanged: u32 = 110;
+pub const M_ICoreWebView2_remove_DocumentTitleChanged: u32 = 111;
+pub const M_ICoreWebView2_get_DocumentTitle: u32 = 112;
+pub const M_ICoreWebView2_AddHostObjectToScript: u32 = 113;
+pub const M_ICoreWebView2_RemoveHostObjectFromScript: u32 = 114;
+pub const M_ICoreWebView2_OpenDevToolsWindow: u32 = 115;
+pub const M_ICoreWebView2_add_ContainsFullScreenElementChanged: u32 = 116;
+pub const M_ICoreWebView2_remove_ContainsFullScreenElementChanged: u32 = 117;
+pub const M_ICoreWebView2_get_ContainsFullScreenElement: u32 = 118;
+pub const M_ICoreWebView2_add_WebResourceRequested: u32 = 119;
+pub const M_ICoreWebView2_remove_WebResourceRequested: u32 = 120;
+pub const M_ICoreWebView2_AddWebResourceRequestedFilter: u32 = 121;
+pub const M_ICoreWebView2_RemoveWebResourceRequestedFilter: u32 = 122;
+pub const M_ICoreWebView2_add_WindowCloseRequested: u32 = 123;
+pub const M_ICoreWebView2_remove_WindowCloseRequested: u32 = 124;
+pub const M_ICoreWebView2_2_add_WebResourceResponseReceived: u32 = 125;
+pub const M_ICoreWebView2_2_remove_WebResourceResponseReceived: u32 = 126;
+pub const M_ICoreWebView2_2_NavigateWithWebResourceRequest: u32 = 127;
+pub const M_ICoreWebView2_2_add_DOMContentLoaded: u32 = 128;
+pub const M_ICoreWebView2_2_remove_DOMContentLoaded: u32 = 129;
+pub const M_ICoreWebView2_2_get_CookieManager: u32 = 130;
+pub const M_ICoreWebView2_2_get_Environment: u32 = 131;
+pub const M_ICoreWebView2_3_TrySuspend: u32 = 132;
+pub const M_ICoreWebView2_3_Resume: u32 = 133;
+pub const M_ICoreWebView2_3_get_IsSuspended: u32 = 134;
+pub const M_ICoreWebView2_3_SetVirtualHostNameToFolderMapping: u32 = 135;
+pub const M_ICoreWebView2_3_ClearVirtualHostNameToFolderMapping: u32 = 136;
+pub const M_ICoreWebView2_4_add_FrameCreated: u32 = 137;
+pub const M_ICoreWebView2_4_remove_FrameCreated: u32 = 138;
+pub const M_ICoreWebView2_4_add_DownloadStarting: u32 = 139;
+pub const M_ICoreWebView2_4_remove_DownloadStarting: u32 = 140;
+pub const M_ICoreWebView2_5_add_ClientCertificateRequested: u32 = 141;
+pub const M_ICoreWebView2_5_remove_ClientCertificateRequested: u32 = 142;
+pub const M_ICoreWebView2_6_OpenTaskManagerWindow: u32 = 143;
+pub const M_ICoreWebView2_7_PrintToPdf: u32 = 144;
+pub const M_ICoreWebView2_8_add_IsMutedChanged: u32 = 145;
+pub const M_ICoreWebView2_8_remove_IsMutedChanged: u32 = 146;
+pub const M_ICoreWebView2_8_get_IsMuted: u32 = 147;
+pub const M_ICoreWebView2_8_put_IsMuted: u32 = 148;
+pub const M_ICoreWebView2_8_add_IsDocumentPlayingAudioChanged: u32 = 149;
+pub const M_ICoreWebView2_8_remove_IsDocumentPlayingAudioChanged: u32 = 150;
+pub const M_ICoreWebView2_8_get_IsDocumentPlayingAudio: u32 = 151;
+pub const M_ICoreWebView2_9_add_IsDefaultDownloadDialogOpenChanged: u32 = 152;
+pub const M_ICoreWebView2_9_remove_IsDefaultDownloadDialogOpenChanged: u32 = 153;
+pub const M_ICoreWebView2_9_get_IsDefaultDownloadDialogOpen: u32 = 154;
+pub const M_ICoreWebView2_9_OpenDefaultDownloadDialog: u32 = 155;
+pub const M_ICoreWebView2_9_CloseDefaultDownloadDialog: u32 = 156;
+pub const M_ICoreWebView2_9_get_DefaultDownloadDialogCornerAlignment: u32 = 157;
+pub const M_ICoreWebView2_9_put_DefaultDownloadDialogCornerAlignment: u32 = 158;
+pub const M_ICoreWebView2_9_get_DefaultDownloadDialogMargin: u32 = 159;
+pub const M_ICoreWebView2_9_put_DefaultDownloadDialogMargin: u32 = 160;
+pub const M_ICoreWebView2_10_add_BasicAuthenticationRequested: u32 = 161;
+pub const M_ICoreWebView2_10_remove_BasicAuthenticationRequested: u32 = 162;
+pub const M_ICoreWebView2_11_CallDevToolsProtocolMethodForSession: u32 = 163;
+pub const M_ICoreWebView2_11_add_ContextMenuRequested: u32 = 164;
+pub const M_ICoreWebView2_11_remove_ContextMenuRequested: u32 = 165;
+pub const M_ICoreWebView2_12_add_StatusBarTextChanged: u32 = 166;
+pub const M_ICoreWebView2_12_remove_StatusBarTextChanged: u32 = 167;
+pub const M_ICoreWebView2_12_get_StatusBarText: u32 = 168;
+pub const M_ICoreWebView2_13_get_Profile: u32 = 169;
+pub const M_ICoreWebView2_14_add_ServerCertificateErrorDetected: u32 = 170;
+pub const M_ICoreWebView2_14_remove_ServerCertificateErrorDetected: u32 = 171;
+pub const M_ICoreWebView2_14_ClearServerCertificateErrorActions: u32 = 172;
+pub const M_ICoreWebView2_15_add_FaviconChanged: u32 = 173;
+pub const M_ICoreWebView2_15_remove_FaviconChanged: u32 = 174;
+pub const M_ICoreWebView2_15_get_FaviconUri: u32 = 175;
+pub const M_ICoreWebView2_15_GetFavicon: u32 = 176;
+pub const M_ICoreWebView2_16_Print: u32 = 177;
+pub const M_ICoreWebView2_16_ShowPrintUI: u32 = 178;
+pub const M_ICoreWebView2_16_PrintToPdfStream: u32 = 179;
+pub const M_ICoreWebView2Settings_get_IsScriptEnabled: u32 = 180;
+pub const M_ICoreWebView2Settings_put_IsScriptEnabled: u32 = 181;
+pub const M_ICoreWebView2Settings_get_IsWebMessageEnabled: u32 = 182;
+pub const M_ICoreWebView2Settings_put_IsWebMessageEnabled: u32 = 183;
+pub const M_ICoreWebView2Settings_get_AreDefaultScriptDialogsEnabled: u32 = 184;
+pub const M_ICoreWebView2Settings_put_AreDefaultScriptDialogsEnabled: u32 = 185;
+pub const M_ICoreWebView2Settings_get_IsStatusBarEnabled: u32 = 186;
+pub const M_ICoreWebView2Settings_put_IsStatusBarEnabled: u32 = 187;
+pub const M_ICoreWebView2Settings_get_AreDevToolsEnabled: u32 = 188;
+pub const M_ICoreWebView2Settings_put_AreDevToolsEnabled: u32 = 189;
+pub const M_ICoreWebView2Settings_get_AreDefaultContextMenusEnabled: u32 = 190;
+pub const M_ICoreWebView2Settings_put_AreDefaultContextMenusEnabled: u32 = 191;
+pub const M_ICoreWebView2Settings_get_AreHostObjectsAllowed: u32 = 192;
+pub const M_ICoreWebView2Settings_put_AreHostObjectsAllowed: u32 = 193;
+pub const M_ICoreWebView2Settings_get_IsZoomControlEnabled: u32 = 194;
+pub const M_ICoreWebView2Settings_put_IsZoomControlEnabled: u32 = 195;
+pub const M_ICoreWebView2Settings_get_IsBuiltInErrorPageEnabled: u32 = 196;
+pub const M_ICoreWebView2Settings_put_IsBuiltInErrorPageEnabled: u32 = 197;
+pub const M_ICoreWebView2Settings2_get_UserAgent: u32 = 198;
+pub const M_ICoreWebView2Settings2_put_UserAgent: u32 = 199;
+pub const M_ICoreWebView2Settings3_get_AreBrowserAcceleratorKeysEnabled: u32 = 200;
+pub const M_ICoreWebView2Settings3_put_AreBrowserAcceleratorKeysEnabled: u32 = 201;
+pub const M_ICoreWebView2Settings4_get_IsPasswordAutosaveEnabled: u32 = 202;
+pub const M_ICoreWebView2Settings4_put_IsPasswordAutosaveEnabled: u32 = 203;
+pub const M_ICoreWebView2Settings4_get_IsGeneralAutofillEnabled: u32 = 204;
+pub const M_ICoreWebView2Settings4_put_IsGeneralAutofillEnabled: u32 = 205;
+pub const M_ICoreWebView2Controller_get_IsVisible: u32 = 206;
+pub const M_ICoreWebView2Controller_put_IsVisible: u32 = 207;
+pub const M_ICoreWebView2Controller_get_Bounds: u32 = 208;
+pub const M_ICoreWebView2Controller_put_Bounds: u32 = 209;
+pub const M_ICoreWebView2Controller_get_ZoomFactor: u32 = 210;
+pub const M_ICoreWebView2Controller_put_ZoomFactor: u32 = 211;
+pub const M_ICoreWebView2Controller_add_ZoomFactorChanged: u32 = 212;
+pub const M_ICoreWebView2Controller_remove_ZoomFactorChanged: u32 = 213;
+pub const M_ICoreWebView2Controller_SetBoundsAndZoomFactor: u32 = 214;
+pub const M_ICoreWebView2Controller_MoveFocus: u32 = 215;
+pub const M_ICoreWebView2Controller_add_MoveFocusRequested: u32 = 216;
+pub const M_ICoreWebView2Controller_remove_MoveFocusRequested: u32 = 217;
+pub const M_ICoreWebView2Controller_add_GotFocus: u32 = 218;
+pub const M_ICoreWebView2Controller_remove_GotFocus: u32 = 219;
+pub const M_ICoreWebView2Controller_add_LostFocus: u32 = 220;
+pub const M_ICoreWebView2Controller_remove_LostFocus: u32 = 221;
+pub const M_ICoreWebView2Controller_add_AcceleratorKeyPressed: u32 = 222;
+pub const M_ICoreWebView2Controller_remove_AcceleratorKeyPressed: u32 = 223;
+pub const M_ICoreWebView2Controller_get_ParentWindow: u32 = 224;
+pub const M_ICoreWebView2Controller_put_ParentWindow: u32 = 225;
+pub const M_ICoreWebView2Controller_NotifyParentWindowPositionChanged: u32 = 226;
+pub const M_ICoreWebView2Controller_Close: u32 = 227;
+pub const M_ICoreWebView2Controller_get_CoreWebView2: u32 = 228;
+pub const M_ICoreWebView2Controller2_get_DefaultBackgroundColor: u32 = 229;
+pub const M_ICoreWebView2Controller2_put_DefaultBackgroundColor: u32 = 230;
+pub const M_ICoreWebView2Controller3_get_RasterizationScale: u32 = 231;
+pub const M_ICoreWebView2Controller3_put_RasterizationScale: u32 = 232;
+pub const M_ICoreWebView2Controller3_get_ShouldDetectMonitorScaleChanges: u32 = 233;
+pub const M_ICoreWebView2Controller3_put_ShouldDetectMonitorScaleChanges: u32 = 234;
+pub const M_ICoreWebView2Controller3_add_RasterizationScaleChanged: u32 = 235;
+pub const M_ICoreWebView2Controller3_remove_RasterizationScaleChanged: u32 = 236;
+pub const M_ICoreWebView2Controller3_get_BoundsMode: u32 = 237;
+pub const M_ICoreWebView2Controller3_put_BoundsMode: u32 = 238;
+pub const M_ICoreWebView2Environment_CreateCoreWebView2Controller: u32 = 239;
+pub const M_ICoreWebView2Environment_CreateWebResourceResponse: u32 = 240;
+pub const M_ICoreWebView2Environment_get_BrowserVersionString: u32 = 241;
+pub const M_ICoreWebView2Environment_add_NewBrowserVersionAvailable: u32 = 242;
+pub const M_ICoreWebView2Environment_remove_NewBrowserVersionAvailable: u32 = 243;
+pub const M_ICoreWebView2EnvironmentOptions_get_AdditionalBrowserArguments: u32 = 244;
+pub const M_ICoreWebView2EnvironmentOptions_put_AdditionalBrowserArguments: u32 = 245;
+pub const M_ICoreWebView2EnvironmentOptions_get_Language: u32 = 246;
+pub const M_ICoreWebView2EnvironmentOptions_put_Language: u32 = 247;
+pub const M_ICoreWebView2EnvironmentOptions_get_TargetCompatibleBrowserVersion: u32 = 248;
+pub const M_ICoreWebView2EnvironmentOptions_put_TargetCompatibleBrowserVersion: u32 = 249;
+pub const M_ICoreWebView2EnvironmentOptions_get_AllowSingleSignOnUsingOSPrimaryAccount: u32 = 250;
+pub const M_ICoreWebView2EnvironmentOptions_put_AllowSingleSignOnUsingOSPrimaryAccount: u32 = 251;
+pub const M_ICoreWebView2AcceleratorKeyPressedEventArgs_get_KeyEventKind: u32 = 252;
+pub const M_ICoreWebView2AcceleratorKeyPressedEventArgs_get_VirtualKey: u32 = 253;
+pub const M_ICoreWebView2AcceleratorKeyPressedEventArgs_get_KeyEventLParam: u32 = 254;
+pub const M_ICoreWebView2AcceleratorKeyPressedEventArgs_get_PhysicalKeyStatus: u32 = 255;
+pub const M_ICoreWebView2AcceleratorKeyPressedEventArgs_get_Handled: u32 = 256;
+pub const M_ICoreWebView2AcceleratorKeyPressedEventArgs_put_Handled: u32 = 257;
+pub const M_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Uri: u32 = 258;
+pub const M_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Challenge: u32 = 259;
+pub const M_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Response: u32 = 260;
+pub const M_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Cancel: u32 = 261;
+pub const M_ICoreWebView2BasicAuthenticationRequestedEventArgs_put_Cancel: u32 = 262;
+pub const M_ICoreWebView2BasicAuthenticationRequestedEventArgs_GetDeferral: u32 = 263;
+pub const M_ICoreWebView2BasicAuthenticationResponse_get_UserName: u32 = 264;
+pub const M_ICoreWebView2BasicAuthenticationResponse_put_UserName: u32 = 265;
+pub const M_ICoreWebView2BasicAuthenticationResponse_get_Password: u32 = 266;
+pub const M_ICoreWebView2BasicAuthenticationResponse_put_Password: u32 = 267;
+pub const M_ICoreWebView2BrowserExtension_get_Id: u32 = 268;
+pub const M_ICoreWebView2BrowserExtension_get_Name: u32 = 269;
+pub const M_ICoreWebView2BrowserExtension_Remove: u32 = 270;
+pub const M_ICoreWebView2BrowserExtension_get_IsEnabled: u32 = 271;
+pub const M_ICoreWebView2BrowserExtension_Enable: u32 = 272;
+pub const M_ICoreWebView2Certificate_get_Subject: u32 = 273;
+pub const M_ICoreWebView2Certificate_get_Issuer: u32 = 274;
+pub const M_ICoreWebView2Certificate_get_ValidFrom: u32 = 275;
+pub const M_ICoreWebView2Certificate_get_ValidTo: u32 = 276;
+pub const M_ICoreWebView2Certificate_get_DerEncodedSerialNumber: u32 = 277;
+pub const M_ICoreWebView2Certificate_get_DisplayName: u32 = 278;
+pub const M_ICoreWebView2Certificate_ToPemEncoding: u32 = 279;
+pub const M_ICoreWebView2Certificate_get_PemEncodedIssuerCertificateChain: u32 = 280;
+pub const M_ICoreWebView2ClientCertificate_get_Subject: u32 = 281;
+pub const M_ICoreWebView2ClientCertificate_get_Issuer: u32 = 282;
+pub const M_ICoreWebView2ClientCertificate_get_ValidFrom: u32 = 283;
+pub const M_ICoreWebView2ClientCertificate_get_ValidTo: u32 = 284;
+pub const M_ICoreWebView2ClientCertificate_get_DerEncodedSerialNumber: u32 = 285;
+pub const M_ICoreWebView2ClientCertificate_get_DisplayName: u32 = 286;
+pub const M_ICoreWebView2ClientCertificate_ToPemEncoding: u32 = 287;
+pub const M_ICoreWebView2ClientCertificate_get_PemEncodedIssuerCertificateChain: u32 = 288;
+pub const M_ICoreWebView2ClientCertificate_get_Kind: u32 = 289;
+pub const M_ICoreWebView2ClientCertificateRequestedEventArgs_get_Host: u32 = 290;
+pub const M_ICoreWebView2ClientCertificateRequestedEventArgs_get_Port: u32 = 291;
+pub const M_ICoreWebView2ClientCertificateRequestedEventArgs_get_IsProxy: u32 = 292;
+pub const M_ICoreWebView2ClientCertificateRequestedEventArgs_get_AllowedCertificateAuthorities: u32 = 293;
+pub const M_ICoreWebView2ClientCertificateRequestedEventArgs_get_MutuallyTrustedCertificates: u32 = 294;
+pub const M_ICoreWebView2ClientCertificateRequestedEventArgs_get_SelectedCertificate: u32 = 295;
+pub const M_ICoreWebView2ClientCertificateRequestedEventArgs_put_SelectedCertificate: u32 = 296;
+pub const M_ICoreWebView2ClientCertificateRequestedEventArgs_get_Cancel: u32 = 297;
+pub const M_ICoreWebView2ClientCertificateRequestedEventArgs_put_Cancel: u32 = 298;
+pub const M_ICoreWebView2ClientCertificateRequestedEventArgs_get_Handled: u32 = 299;
+pub const M_ICoreWebView2ClientCertificateRequestedEventArgs_put_Handled: u32 = 300;
+pub const M_ICoreWebView2ClientCertificateRequestedEventArgs_GetDeferral: u32 = 301;
+pub const M_ICoreWebView2CompositionController_get_RootVisualTarget: u32 = 302;
+pub const M_ICoreWebView2CompositionController_put_RootVisualTarget: u32 = 303;
+pub const M_ICoreWebView2CompositionController_SendMouseInput: u32 = 304;
+pub const M_ICoreWebView2CompositionController_SendPointerInput: u32 = 305;
+pub const M_ICoreWebView2CompositionController_get_Cursor: u32 = 306;
+pub const M_ICoreWebView2CompositionController_get_SystemCursorId: u32 = 307;
+pub const M_ICoreWebView2CompositionController_add_CursorChanged: u32 = 308;
+pub const M_ICoreWebView2CompositionController_remove_CursorChanged: u32 = 309;
+pub const M_ICoreWebView2CompositionController2_get_AutomationProvider: u32 = 310;
+pub const M_ICoreWebView2CompositionController3_DragEnter: u32 = 311;
+pub const M_ICoreWebView2CompositionController3_DragLeave: u32 = 312;
+pub const M_ICoreWebView2CompositionController3_DragOver: u32 = 313;
+pub const M_ICoreWebView2CompositionController3_Drop: u32 = 314;
+pub const M_ICoreWebView2CompositionController4_GetNonClientRegionAtPoint: u32 = 315;
+pub const M_ICoreWebView2CompositionController4_QueryNonClientRegion: u32 = 316;
+pub const M_ICoreWebView2CompositionController4_add_NonClientRegionChanged: u32 = 317;
+pub const M_ICoreWebView2CompositionController4_remove_NonClientRegionChanged: u32 = 318;
+pub const M_ICoreWebView2ContextMenuItem_get_Name: u32 = 319;
+pub const M_ICoreWebView2ContextMenuItem_get_Label: u32 = 320;
+pub const M_ICoreWebView2ContextMenuItem_get_CommandId: u32 = 321;
+pub const M_ICoreWebView2ContextMenuItem_get_ShortcutKeyDescription: u32 = 322;
+pub const M_ICoreWebView2ContextMenuItem_get_Icon: u32 = 323;
+pub const M_ICoreWebView2ContextMenuItem_get_Kind: u32 = 324;
+pub const M_ICoreWebView2ContextMenuItem_put_IsEnabled: u32 = 325;
+pub const M_ICoreWebView2ContextMenuItem_get_IsEnabled: u32 = 326;
+pub const M_ICoreWebView2ContextMenuItem_put_IsChecked: u32 = 327;
+pub const M_ICoreWebView2ContextMenuItem_get_IsChecked: u32 = 328;
+pub const M_ICoreWebView2ContextMenuItem_get_Children: u32 = 329;
+pub const M_ICoreWebView2ContextMenuItem_add_CustomItemSelected: u32 = 330;
+pub const M_ICoreWebView2ContextMenuItem_remove_CustomItemSelected: u32 = 331;
+pub const M_ICoreWebView2ContextMenuTarget_get_Kind: u32 = 332;
+pub const M_ICoreWebView2ContextMenuTarget_get_IsEditable: u32 = 333;
+pub const M_ICoreWebView2ContextMenuTarget_get_IsRequestedForMainFrame: u32 = 334;
+pub const M_ICoreWebView2ContextMenuTarget_get_PageUri: u32 = 335;
+pub const M_ICoreWebView2ContextMenuTarget_get_FrameUri: u32 = 336;
+pub const M_ICoreWebView2ContextMenuTarget_get_HasLinkUri: u32 = 337;
+pub const M_ICoreWebView2ContextMenuTarget_get_LinkUri: u32 = 338;
+pub const M_ICoreWebView2ContextMenuTarget_get_HasLinkText: u32 = 339;
+pub const M_ICoreWebView2ContextMenuTarget_get_LinkText: u32 = 340;
+pub const M_ICoreWebView2ContextMenuTarget_get_HasSourceUri: u32 = 341;
+pub const M_ICoreWebView2ContextMenuTarget_get_SourceUri: u32 = 342;
+pub const M_ICoreWebView2ContextMenuTarget_get_HasSelection: u32 = 343;
+pub const M_ICoreWebView2ContextMenuTarget_get_SelectionText: u32 = 344;
+pub const M_ICoreWebView2ContextMenuRequestedEventArgs_get_MenuItems: u32 = 345;
+pub const M_ICoreWebView2ContextMenuRequestedEventArgs_get_ContextMenuTarget: u32 = 346;
+pub const M_ICoreWebView2ContextMenuRequestedEventArgs_get_Location: u32 = 347;
+pub const M_ICoreWebView2ContextMenuRequestedEventArgs_put_SelectedCommandId: u32 = 348;
+pub const M_ICoreWebView2ContextMenuRequestedEventArgs_get_SelectedCommandId: u32 = 349;
+pub const M_ICoreWebView2ContextMenuRequestedEventArgs_put_Handled: u32 = 350;
+pub const M_ICoreWebView2ContextMenuRequestedEventArgs_get_Handled: u32 = 351;
+pub const M_ICoreWebView2ContextMenuRequestedEventArgs_GetDeferral: u32 = 352;
+pub const M_ICoreWebView2ControllerOptions_get_ProfileName: u32 = 353;
+pub const M_ICoreWebView2ControllerOptions_put_ProfileName: u32 = 354;
+pub const M_ICoreWebView2ControllerOptions_get_IsInPrivateModeEnabled: u32 = 355;
+pub const M_ICoreWebView2ControllerOptions_put_IsInPrivateModeEnabled: u32 = 356;
+pub const M_ICoreWebView2Cookie_get_Name: u32 = 357;
+pub const M_ICoreWebView2Cookie_get_Value: u32 = 358;
+pub const M_ICoreWebView2Cookie_put_Value: u32 = 359;
+pub const M_ICoreWebView2Cookie_get_Domain: u32 = 360;
+pub const M_ICoreWebView2Cookie_get_Path: u32 = 361;
+pub const M_ICoreWebView2Cookie_get_Expires: u32 = 362;
+pub const M_ICoreWebView2Cookie_put_Expires: u32 = 363;
+pub const M_ICoreWebView2Cookie_get_IsHttpOnly: u32 = 364;
+pub const M_ICoreWebView2Cookie_put_IsHttpOnly: u32 = 365;
+pub const M_ICoreWebView2Cookie_get_SameSite: u32 = 366;
+pub const M_ICoreWebView2Cookie_put_SameSite: u32 = 367;
+pub const M_ICoreWebView2Cookie_get_IsSecure: u32 = 368;
+pub const M_ICoreWebView2Cookie_put_IsSecure: u32 = 369;
+pub const M_ICoreWebView2Cookie_get_IsSession: u32 = 370;
+pub const M_ICoreWebView2CookieManager_CreateCookie: u32 = 371;
+pub const M_ICoreWebView2CookieManager_CopyCookie: u32 = 372;
+pub const M_ICoreWebView2CookieManager_GetCookies: u32 = 373;
+pub const M_ICoreWebView2CookieManager_AddOrUpdateCookie: u32 = 374;
+pub const M_ICoreWebView2CookieManager_DeleteCookie: u32 = 375;
+pub const M_ICoreWebView2CookieManager_DeleteCookies: u32 = 376;
+pub const M_ICoreWebView2CookieManager_DeleteCookiesWithDomainAndPath: u32 = 377;
+pub const M_ICoreWebView2CookieManager_DeleteAllCookies: u32 = 378;
+pub const M_ICoreWebView2CustomSchemeRegistration_get_SchemeName: u32 = 379;
+pub const M_ICoreWebView2CustomSchemeRegistration_get_TreatAsSecure: u32 = 380;
+pub const M_ICoreWebView2CustomSchemeRegistration_put_TreatAsSecure: u32 = 381;
+pub const M_ICoreWebView2CustomSchemeRegistration_GetAllowedOrigins: u32 = 382;
+pub const M_ICoreWebView2CustomSchemeRegistration_SetAllowedOrigins: u32 = 383;
+pub const M_ICoreWebView2CustomSchemeRegistration_get_HasAuthorityComponent: u32 = 384;
+pub const M_ICoreWebView2CustomSchemeRegistration_put_HasAuthorityComponent: u32 = 385;
+pub const M_ICoreWebView2DownloadOperation_add_BytesReceivedChanged: u32 = 386;
+pub const M_ICoreWebView2DownloadOperation_remove_BytesReceivedChanged: u32 = 387;
+pub const M_ICoreWebView2DownloadOperation_add_EstimatedEndTimeChanged: u32 = 388;
+pub const M_ICoreWebView2DownloadOperation_remove_EstimatedEndTimeChanged: u32 = 389;
+pub const M_ICoreWebView2DownloadOperation_add_StateChanged: u32 = 390;
+pub const M_ICoreWebView2DownloadOperation_remove_StateChanged: u32 = 391;
+pub const M_ICoreWebView2DownloadOperation_get_Uri: u32 = 392;
+pub const M_ICoreWebView2DownloadOperation_get_ContentDisposition: u32 = 393;
+pub const M_ICoreWebView2DownloadOperation_get_MimeType: u32 = 394;
+pub const M_ICoreWebView2DownloadOperation_get_TotalBytesToReceive: u32 = 395;
+pub const M_ICoreWebView2DownloadOperation_get_BytesReceived: u32 = 396;
+pub const M_ICoreWebView2DownloadOperation_get_EstimatedEndTime: u32 = 397;
+pub const M_ICoreWebView2DownloadOperation_get_ResultFilePath: u32 = 398;
+pub const M_ICoreWebView2DownloadOperation_get_State: u32 = 399;
+pub const M_ICoreWebView2DownloadOperation_get_InterruptReason: u32 = 400;
+pub const M_ICoreWebView2DownloadOperation_Cancel: u32 = 401;
+pub const M_ICoreWebView2DownloadOperation_Pause: u32 = 402;
+pub const M_ICoreWebView2DownloadOperation_Resume: u32 = 403;
+pub const M_ICoreWebView2DownloadOperation_get_CanResume: u32 = 404;
+pub const M_ICoreWebView2DownloadStartingEventArgs_get_DownloadOperation: u32 = 405;
+pub const M_ICoreWebView2DownloadStartingEventArgs_get_Cancel: u32 = 406;
+pub const M_ICoreWebView2DownloadStartingEventArgs_put_Cancel: u32 = 407;
+pub const M_ICoreWebView2DownloadStartingEventArgs_get_ResultFilePath: u32 = 408;
+pub const M_ICoreWebView2DownloadStartingEventArgs_put_ResultFilePath: u32 = 409;
+pub const M_ICoreWebView2DownloadStartingEventArgs_get_Handled: u32 = 410;
+pub const M_ICoreWebView2DownloadStartingEventArgs_put_Handled: u32 = 411;
+pub const M_ICoreWebView2DownloadStartingEventArgs_GetDeferral: u32 = 412;
+pub const M_ICoreWebView2ExecuteScriptResult_get_Succeeded: u32 = 413;
+pub const M_ICoreWebView2ExecuteScriptResult_get_ResultAsJson: u32 = 414;
+pub const M_ICoreWebView2ExecuteScriptResult_TryGetResultAsString: u32 = 415;
+pub const M_ICoreWebView2ExecuteScriptResult_get_Exception: u32 = 416;
+pub const M_ICoreWebView2Frame_get_Name: u32 = 417;
+pub const M_ICoreWebView2Frame_add_NameChanged: u32 = 418;
+pub const M_ICoreWebView2Frame_remove_NameChanged: u32 = 419;
+pub const M_ICoreWebView2Frame_AddHostObjectToScriptWithOrigins: u32 = 420;
+pub const M_ICoreWebView2Frame_RemoveHostObjectFromScript: u32 = 421;
+pub const M_ICoreWebView2Frame_add_Destroyed: u32 = 422;
+pub const M_ICoreWebView2Frame_remove_Destroyed: u32 = 423;
+pub const M_ICoreWebView2Frame_IsDestroyed: u32 = 424;
+pub const M_ICoreWebView2Frame2_add_NavigationStarting: u32 = 425;
+pub const M_ICoreWebView2Frame2_remove_NavigationStarting: u32 = 426;
+pub const M_ICoreWebView2Frame2_add_ContentLoading: u32 = 427;
+pub const M_ICoreWebView2Frame2_remove_ContentLoading: u32 = 428;
+pub const M_ICoreWebView2Frame2_add_NavigationCompleted: u32 = 429;
+pub const M_ICoreWebView2Frame2_remove_NavigationCompleted: u32 = 430;
+pub const M_ICoreWebView2Frame2_add_DOMContentLoaded: u32 = 431;
+pub const M_ICoreWebView2Frame2_remove_DOMContentLoaded: u32 = 432;
+pub const M_ICoreWebView2Frame2_ExecuteScript: u32 = 433;
+pub const M_ICoreWebView2Frame2_PostWebMessageAsJson: u32 = 434;
+pub const M_ICoreWebView2Frame2_PostWebMessageAsString: u32 = 435;
+pub const M_ICoreWebView2Frame2_add_WebMessageReceived: u32 = 436;
+pub const M_ICoreWebView2Frame2_remove_WebMessageReceived: u32 = 437;
+pub const M_ICoreWebView2FrameInfo_get_Name: u32 = 438;
+pub const M_ICoreWebView2FrameInfo_get_Source: u32 = 439;
+pub const M_ICoreWebView2FrameInfo2_get_ParentFrameInfo: u32 = 440;
+pub const M_ICoreWebView2FrameInfo2_get_FrameId: u32 = 441;
+pub const M_ICoreWebView2FrameInfo2_get_FrameKind: u32 = 442;
+pub const M_ICoreWebView2HttpHeadersCollectionIterator_GetCurrentHeader: u32 = 443;
+pub const M_ICoreWebView2HttpHeadersCollectionIterator_get_HasCurrentHeader: u32 = 444;
+pub const M_ICoreWebView2HttpHeadersCollectionIterator_MoveNext: u32 = 445;
+pub const M_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_Uri: u32 = 446;
+pub const M_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_InitiatingOrigin: u32 = 447;
+pub const M_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_IsUserInitiated: u32 = 448;
+pub const M_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_Cancel: u32 = 449;
+pub const M_ICoreWebView2LaunchingExternalUriSchemeEventArgs_put_Cancel: u32 = 450;
+pub const M_ICoreWebView2LaunchingExternalUriSchemeEventArgs_GetDeferral: u32 = 451;
+pub const M_ICoreWebView2MoveFocusRequestedEventArgs_get_Reason: u32 = 452;
+pub const M_ICoreWebView2MoveFocusRequestedEventArgs_get_Handled: u32 = 453;
+pub const M_ICoreWebView2MoveFocusRequestedEventArgs_put_Handled: u32 = 454;
+pub const M_ICoreWebView2NavigationCompletedEventArgs_get_IsSuccess: u32 = 455;
+pub const M_ICoreWebView2NavigationCompletedEventArgs_get_WebErrorStatus: u32 = 456;
+pub const M_ICoreWebView2NavigationCompletedEventArgs_get_NavigationId: u32 = 457;
+pub const M_ICoreWebView2NavigationStartingEventArgs_get_Uri: u32 = 458;
+pub const M_ICoreWebView2NavigationStartingEventArgs_get_IsUserInitiated: u32 = 459;
+pub const M_ICoreWebView2NavigationStartingEventArgs_get_IsRedirected: u32 = 460;
+pub const M_ICoreWebView2NavigationStartingEventArgs_get_RequestHeaders: u32 = 461;
+pub const M_ICoreWebView2NavigationStartingEventArgs_get_Cancel: u32 = 462;
+pub const M_ICoreWebView2NavigationStartingEventArgs_put_Cancel: u32 = 463;
+pub const M_ICoreWebView2NavigationStartingEventArgs_get_NavigationId: u32 = 464;
+pub const M_ICoreWebView2NewWindowRequestedEventArgs_get_Uri: u32 = 465;
+pub const M_ICoreWebView2NewWindowRequestedEventArgs_put_NewWindow: u32 = 466;
+pub const M_ICoreWebView2NewWindowRequestedEventArgs_get_NewWindow: u32 = 467;
+pub const M_ICoreWebView2NewWindowRequestedEventArgs_put_Handled: u32 = 468;
+pub const M_ICoreWebView2NewWindowRequestedEventArgs_get_Handled: u32 = 469;
+pub const M_ICoreWebView2NewWindowRequestedEventArgs_get_IsUserInitiated: u32 = 470;
+pub const M_ICoreWebView2NewWindowRequestedEventArgs_GetDeferral: u32 = 471;
+pub const M_ICoreWebView2NewWindowRequestedEventArgs_get_WindowFeatures: u32 = 472;
+pub const M_ICoreWebView2PermissionRequestedEventArgs_get_Uri: u32 = 473;
+pub const M_ICoreWebView2PermissionRequestedEventArgs_get_PermissionKind: u32 = 474;
+pub const M_ICoreWebView2PermissionRequestedEventArgs_get_IsUserInitiated: u32 = 475;
+pub const M_ICoreWebView2PermissionRequestedEventArgs_get_State: u32 = 476;
+pub const M_ICoreWebView2PermissionRequestedEventArgs_put_State: u32 = 477;
+pub const M_ICoreWebView2PermissionRequestedEventArgs_GetDeferral: u32 = 478;
+pub const M_ICoreWebView2PermissionSettingCollectionView_GetValueAtIndex: u32 = 479;
+pub const M_ICoreWebView2PermissionSettingCollectionView_get_Count: u32 = 480;
+pub const M_ICoreWebView2PointerInfo_get_PointerKind: u32 = 481;
+pub const M_ICoreWebView2PointerInfo_put_PointerKind: u32 = 482;
+pub const M_ICoreWebView2PointerInfo_get_PointerId: u32 = 483;
+pub const M_ICoreWebView2PointerInfo_put_PointerId: u32 = 484;
+pub const M_ICoreWebView2PointerInfo_get_FrameId: u32 = 485;
+pub const M_ICoreWebView2PointerInfo_put_FrameId: u32 = 486;
+pub const M_ICoreWebView2PointerInfo_get_PointerFlags: u32 = 487;
+pub const M_ICoreWebView2PointerInfo_put_PointerFlags: u32 = 488;
+pub const M_ICoreWebView2PointerInfo_get_PointerDeviceRect: u32 = 489;
+pub const M_ICoreWebView2PointerInfo_put_PointerDeviceRect: u32 = 490;
+pub const M_ICoreWebView2PointerInfo_get_DisplayRect: u32 = 491;
+pub const M_ICoreWebView2PointerInfo_put_DisplayRect: u32 = 492;
+pub const M_ICoreWebView2PointerInfo_get_PixelLocation: u32 = 493;
+pub const M_ICoreWebView2PointerInfo_put_PixelLocation: u32 = 494;
+pub const M_ICoreWebView2PointerInfo_get_HimetricLocation: u32 = 495;
+pub const M_ICoreWebView2PointerInfo_put_HimetricLocation: u32 = 496;
+pub const M_ICoreWebView2PointerInfo_get_PixelLocationRaw: u32 = 497;
+pub const M_ICoreWebView2PointerInfo_put_PixelLocationRaw: u32 = 498;
+pub const M_ICoreWebView2PointerInfo_get_HimetricLocationRaw: u32 = 499;
+pub const M_ICoreWebView2PointerInfo_put_HimetricLocationRaw: u32 = 500;
+pub const M_ICoreWebView2PointerInfo_get_Time: u32 = 501;
+pub const M_ICoreWebView2PointerInfo_put_Time: u32 = 502;
+pub const M_ICoreWebView2PointerInfo_get_HistoryCount: u32 = 503;
+pub const M_ICoreWebView2PointerInfo_put_HistoryCount: u32 = 504;
+pub const M_ICoreWebView2PointerInfo_get_InputData: u32 = 505;
+pub const M_ICoreWebView2PointerInfo_put_InputData: u32 = 506;
+pub const M_ICoreWebView2PointerInfo_get_KeyStates: u32 = 507;
+pub const M_ICoreWebView2PointerInfo_put_KeyStates: u32 = 508;
+pub const M_ICoreWebView2PointerInfo_get_PerformanceCount: u32 = 509;
+pub const M_ICoreWebView2PointerInfo_put_PerformanceCount: u32 = 510;
+pub const M_ICoreWebView2PointerInfo_get_ButtonChangeKind: u32 = 511;
+pub const M_ICoreWebView2PointerInfo_put_ButtonChangeKind: u32 = 512;
+pub const M_ICoreWebView2PointerInfo_get_PenFlags: u32 = 513;
+pub const M_ICoreWebView2PointerInfo_put_PenFlags: u32 = 514;
+pub const M_ICoreWebView2PointerInfo_get_PenMask: u32 = 515;
+pub const M_ICoreWebView2PointerInfo_put_PenMask: u32 = 516;
+pub const M_ICoreWebView2PointerInfo_get_PenPressure: u32 = 517;
+pub const M_ICoreWebView2PointerInfo_put_PenPressure: u32 = 518;
+pub const M_ICoreWebView2PointerInfo_get_PenRotation: u32 = 519;
+pub const M_ICoreWebView2PointerInfo_put_PenRotation: u32 = 520;
+pub const M_ICoreWebView2PointerInfo_get_PenTiltX: u32 = 521;
+pub const M_ICoreWebView2PointerInfo_put_PenTiltX: u32 = 522;
+pub const M_ICoreWebView2PointerInfo_get_PenTiltY: u32 = 523;
+pub const M_ICoreWebView2PointerInfo_put_PenTiltY: u32 = 524;
+pub const M_ICoreWebView2PointerInfo_get_TouchFlags: u32 = 525;
+pub const M_ICoreWebView2PointerInfo_put_TouchFlags: u32 = 526;
+pub const M_ICoreWebView2PointerInfo_get_TouchMask: u32 = 527;
+pub const M_ICoreWebView2PointerInfo_put_TouchMask: u32 = 528;
+pub const M_ICoreWebView2PointerInfo_get_TouchContact: u32 = 529;
+pub const M_ICoreWebView2PointerInfo_put_TouchContact: u32 = 530;
+pub const M_ICoreWebView2PointerInfo_get_TouchContactRaw: u32 = 531;
+pub const M_ICoreWebView2PointerInfo_put_TouchContactRaw: u32 = 532;
+pub const M_ICoreWebView2PointerInfo_get_TouchOrientation: u32 = 533;
+pub const M_ICoreWebView2PointerInfo_put_TouchOrientation: u32 = 534;
+pub const M_ICoreWebView2PointerInfo_get_TouchPressure: u32 = 535;
+pub const M_ICoreWebView2PointerInfo_put_TouchPressure: u32 = 536;
+pub const M_ICoreWebView2PrintSettings_get_Orientation: u32 = 537;
+pub const M_ICoreWebView2PrintSettings_put_Orientation: u32 = 538;
+pub const M_ICoreWebView2PrintSettings_get_ScaleFactor: u32 = 539;
+pub const M_ICoreWebView2PrintSettings_put_ScaleFactor: u32 = 540;
+pub const M_ICoreWebView2PrintSettings_get_PageWidth: u32 = 541;
+pub const M_ICoreWebView2PrintSettings_put_PageWidth: u32 = 542;
+pub const M_ICoreWebView2PrintSettings_get_PageHeight: u32 = 543;
+pub const M_ICoreWebView2PrintSettings_put_PageHeight: u32 = 544;
+pub const M_ICoreWebView2PrintSettings_get_MarginTop: u32 = 545;
+pub const M_ICoreWebView2PrintSettings_put_MarginTop: u32 = 546;
+pub const M_ICoreWebView2PrintSettings_get_MarginBottom: u32 = 547;
+pub const M_ICoreWebView2PrintSettings_put_MarginBottom: u32 = 548;
+pub const M_ICoreWebView2PrintSettings_get_MarginLeft: u32 = 549;
+pub const M_ICoreWebView2PrintSettings_put_MarginLeft: u32 = 550;
+pub const M_ICoreWebView2PrintSettings_get_MarginRight: u32 = 551;
+pub const M_ICoreWebView2PrintSettings_put_MarginRight: u32 = 552;
+pub const M_ICoreWebView2PrintSettings_get_ShouldPrintBackgrounds: u32 = 553;
+pub const M_ICoreWebView2PrintSettings_put_ShouldPrintBackgrounds: u32 = 554;
+pub const M_ICoreWebView2PrintSettings_get_ShouldPrintSelectionOnly: u32 = 555;
+pub const M_ICoreWebView2PrintSettings_put_ShouldPrintSelectionOnly: u32 = 556;
+pub const M_ICoreWebView2PrintSettings_get_ShouldPrintHeaderAndFooter: u32 = 557;
+pub const M_ICoreWebView2PrintSettings_put_ShouldPrintHeaderAndFooter: u32 = 558;
+pub const M_ICoreWebView2PrintSettings_get_HeaderTitle: u32 = 559;
+pub const M_ICoreWebView2PrintSettings_put_HeaderTitle: u32 = 560;
+pub const M_ICoreWebView2PrintSettings_get_FooterUri: u32 = 561;
+pub const M_ICoreWebView2PrintSettings_put_FooterUri: u32 = 562;
+pub const M_ICoreWebView2PrintSettings2_get_PageRanges: u32 = 563;
+pub const M_ICoreWebView2PrintSettings2_put_PageRanges: u32 = 564;
+pub const M_ICoreWebView2PrintSettings2_get_PagesPerSide: u32 = 565;
+pub const M_ICoreWebView2PrintSettings2_put_PagesPerSide: u32 = 566;
+pub const M_ICoreWebView2PrintSettings2_get_Copies: u32 = 567;
+pub const M_ICoreWebView2PrintSettings2_put_Copies: u32 = 568;
+pub const M_ICoreWebView2PrintSettings2_get_Collation: u32 = 569;
+pub const M_ICoreWebView2PrintSettings2_put_Collation: u32 = 570;
+pub const M_ICoreWebView2PrintSettings2_get_ColorMode: u32 = 571;
+pub const M_ICoreWebView2PrintSettings2_put_ColorMode: u32 = 572;
+pub const M_ICoreWebView2PrintSettings2_get_Duplex: u32 = 573;
+pub const M_ICoreWebView2PrintSettings2_put_Duplex: u32 = 574;
+pub const M_ICoreWebView2PrintSettings2_get_MediaSize: u32 = 575;
+pub const M_ICoreWebView2PrintSettings2_put_MediaSize: u32 = 576;
+pub const M_ICoreWebView2PrintSettings2_get_PrinterName: u32 = 577;
+pub const M_ICoreWebView2PrintSettings2_put_PrinterName: u32 = 578;
+pub const M_ICoreWebView2ProcessExtendedInfo_get_ProcessInfo: u32 = 579;
+pub const M_ICoreWebView2ProcessExtendedInfo_get_AssociatedFrameInfos: u32 = 580;
+pub const M_ICoreWebView2ProcessFailedEventArgs_get_ProcessFailedKind: u32 = 581;
+pub const M_ICoreWebView2ProcessFailedEventArgs2_get_Reason: u32 = 582;
+pub const M_ICoreWebView2ProcessFailedEventArgs2_get_ExitCode: u32 = 583;
+pub const M_ICoreWebView2ProcessFailedEventArgs2_get_ProcessDescription: u32 = 584;
+pub const M_ICoreWebView2ProcessFailedEventArgs2_get_FrameInfosForFailedProcess: u32 = 585;
+pub const M_ICoreWebView2ProcessInfo_get_ProcessId: u32 = 586;
+pub const M_ICoreWebView2ProcessInfo_get_Kind: u32 = 587;
+pub const M_ICoreWebView2Profile_get_ProfileName: u32 = 588;
+pub const M_ICoreWebView2Profile_get_IsInPrivateModeEnabled: u32 = 589;
+pub const M_ICoreWebView2Profile_get_ProfilePath: u32 = 590;
+pub const M_ICoreWebView2Profile_get_DefaultDownloadFolderPath: u32 = 591;
+pub const M_ICoreWebView2Profile_put_DefaultDownloadFolderPath: u32 = 592;
+pub const M_ICoreWebView2Profile_get_PreferredColorScheme: u32 = 593;
+pub const M_ICoreWebView2Profile_put_PreferredColorScheme: u32 = 594;
+pub const M_ICoreWebView2Profile2_ClearBrowsingData: u32 = 595;
+pub const M_ICoreWebView2Profile2_ClearBrowsingDataInTimeRange: u32 = 596;
+pub const M_ICoreWebView2Profile2_ClearBrowsingDataAll: u32 = 597;
+pub const M_ICoreWebView2Profile3_get_PreferredTrackingPreventionLevel: u32 = 598;
+pub const M_ICoreWebView2Profile3_put_PreferredTrackingPreventionLevel: u32 = 599;
+pub const M_ICoreWebView2Profile4_SetPermissionState: u32 = 600;
+pub const M_ICoreWebView2Profile4_GetNonDefaultPermissionSettings: u32 = 601;
+pub const M_ICoreWebView2Profile5_get_CookieManager: u32 = 602;
+pub const M_ICoreWebView2Profile6_get_IsPasswordAutosaveEnabled: u32 = 603;
+pub const M_ICoreWebView2Profile6_put_IsPasswordAutosaveEnabled: u32 = 604;
+pub const M_ICoreWebView2Profile6_get_IsGeneralAutofillEnabled: u32 = 605;
+pub const M_ICoreWebView2Profile6_put_IsGeneralAutofillEnabled: u32 = 606;
+pub const M_ICoreWebView2Profile7_AddBrowserExtension: u32 = 607;
+pub const M_ICoreWebView2Profile7_GetBrowserExtensions: u32 = 608;
+pub const M_ICoreWebView2Profile8_Delete: u32 = 609;
+pub const M_ICoreWebView2Profile8_add_Deleted: u32 = 610;
+pub const M_ICoreWebView2Profile8_remove_Deleted: u32 = 611;
+pub const M_ICoreWebView2ScriptDialogOpeningEventArgs_get_Uri: u32 = 612;
+pub const M_ICoreWebView2ScriptDialogOpeningEventArgs_get_Kind: u32 = 613;
+pub const M_ICoreWebView2ScriptDialogOpeningEventArgs_get_Message: u32 = 614;
+pub const M_ICoreWebView2ScriptDialogOpeningEventArgs_Accept: u32 = 615;
+pub const M_ICoreWebView2ScriptDialogOpeningEventArgs_get_DefaultText: u32 = 616;
+pub const M_ICoreWebView2ScriptDialogOpeningEventArgs_get_ResultText: u32 = 617;
+pub const M_ICoreWebView2ScriptDialogOpeningEventArgs_put_ResultText: u32 = 618;
+pub const M_ICoreWebView2ScriptDialogOpeningEventArgs_GetDeferral: u32 = 619;
+pub const M_ICoreWebView2ScriptException_get_LineNumber: u32 = 620;
+pub const M_ICoreWebView2ScriptException_get_ColumnNumber: u32 = 621;
+pub const M_ICoreWebView2ScriptException_get_Name: u32 = 622;
+pub const M_ICoreWebView2ScriptException_get_Message: u32 = 623;
+pub const M_ICoreWebView2ScriptException_get_ToJson: u32 = 624;
+pub const M_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_ErrorStatus: u32 = 625;
+pub const M_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_RequestUri: u32 = 626;
+pub const M_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_ServerCertificate: u32 = 627;
+pub const M_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_Action: u32 = 628;
+pub const M_ICoreWebView2ServerCertificateErrorDetectedEventArgs_put_Action: u32 = 629;
+pub const M_ICoreWebView2ServerCertificateErrorDetectedEventArgs_GetDeferral: u32 = 630;
+pub const M_ICoreWebView2SharedBuffer_get_Size: u32 = 631;
+pub const M_ICoreWebView2SharedBuffer_get_Buffer: u32 = 632;
+pub const M_ICoreWebView2SharedBuffer_OpenStream: u32 = 633;
+pub const M_ICoreWebView2SharedBuffer_get_FileMappingHandle: u32 = 634;
+pub const M_ICoreWebView2SharedBuffer_Close: u32 = 635;
+pub const M_ICoreWebView2WebResourceRequest_get_Uri: u32 = 636;
+pub const M_ICoreWebView2WebResourceRequest_put_Uri: u32 = 637;
+pub const M_ICoreWebView2WebResourceRequest_get_Method: u32 = 638;
+pub const M_ICoreWebView2WebResourceRequest_put_Method: u32 = 639;
+pub const M_ICoreWebView2WebResourceRequest_get_Content: u32 = 640;
+pub const M_ICoreWebView2WebResourceRequest_put_Content: u32 = 641;
+pub const M_ICoreWebView2WebResourceRequest_get_Headers: u32 = 642;
+pub const M_ICoreWebView2WebResourceRequestedEventArgs_get_Request: u32 = 643;
+pub const M_ICoreWebView2WebResourceRequestedEventArgs_get_Response: u32 = 644;
+pub const M_ICoreWebView2WebResourceRequestedEventArgs_put_Response: u32 = 645;
+pub const M_ICoreWebView2WebResourceRequestedEventArgs_GetDeferral: u32 = 646;
+pub const M_ICoreWebView2WebResourceRequestedEventArgs_get_ResourceContext: u32 = 647;
+pub const M_ICoreWebView2WebResourceResponse_get_Content: u32 = 648;
+pub const M_ICoreWebView2WebResourceResponse_put_Content: u32 = 649;
+pub const M_ICoreWebView2WebResourceResponse_get_Headers: u32 = 650;
+pub const M_ICoreWebView2WebResourceResponse_get_StatusCode: u32 = 651;
+pub const M_ICoreWebView2WebResourceResponse_put_StatusCode: u32 = 652;
+pub const M_ICoreWebView2WebResourceResponse_get_ReasonPhrase: u32 = 653;
+pub const M_ICoreWebView2WebResourceResponse_put_ReasonPhrase: u32 = 654;
+pub const M_ICoreWebView2WebResourceResponseView_get_Headers: u32 = 655;
+pub const M_ICoreWebView2WebResourceResponseView_get_StatusCode: u32 = 656;
+pub const M_ICoreWebView2WebResourceResponseView_get_ReasonPhrase: u32 = 657;
+pub const M_ICoreWebView2WebResourceResponseView_GetContent: u32 = 658;
+pub const M_ICoreWebView2WindowFeatures_get_HasPosition: u32 = 659;
+pub const M_ICoreWebView2WindowFeatures_get_HasSize: u32 = 660;
+pub const M_ICoreWebView2WindowFeatures_get_Left: u32 = 661;
+pub const M_ICoreWebView2WindowFeatures_get_Top: u32 = 662;
+pub const M_ICoreWebView2WindowFeatures_get_Height: u32 = 663;
+pub const M_ICoreWebView2WindowFeatures_get_Width: u32 = 664;
+pub const M_ICoreWebView2WindowFeatures_get_ShouldDisplayMenuBar: u32 = 665;
+pub const M_ICoreWebView2WindowFeatures_get_ShouldDisplayStatus: u32 = 666;
+pub const M_ICoreWebView2WindowFeatures_get_ShouldDisplayToolbar: u32 = 667;
+pub const M_ICoreWebView2WindowFeatures_get_ShouldDisplayScrollBars: u32 = 668;
+pub const M_ICoreWebView2ObjectCollectionView_get_Count: u32 = 669;
+pub const M_ICoreWebView2ObjectCollectionView_GetValueAtIndex: u32 = 670;
+pub const M_ICoreWebView2ObjectCollection_RemoveValueAtIndex: u32 = 671;
+pub const M_ICoreWebView2ObjectCollection_InsertValueAtIndex: u32 = 672;
+pub const M_ICoreWebView2Notification_add_CloseRequested: u32 = 673;
+pub const M_ICoreWebView2Notification_remove_CloseRequested: u32 = 674;
+pub const M_ICoreWebView2Notification_ReportShown: u32 = 675;
+pub const M_ICoreWebView2Notification_ReportClicked: u32 = 676;
+pub const M_ICoreWebView2Notification_ReportClosed: u32 = 677;
+pub const M_ICoreWebView2Notification_get_Body: u32 = 678;
+pub const M_ICoreWebView2Notification_get_Direction: u32 = 679;
+pub const M_ICoreWebView2Notification_get_Language: u32 = 680;
+pub const M_ICoreWebView2Notification_get_Tag: u32 = 681;
+pub const M_ICoreWebView2Notification_get_IconUri: u32 = 682;
+pub const M_ICoreWebView2Notification_get_Title: u32 = 683;
+pub const M_ICoreWebView2Notification_get_BadgeUri: u32 = 684;
+pub const M_ICoreWebView2Notification_get_BodyImageUri: u32 = 685;
+pub const M_ICoreWebView2Notification_get_ShouldRenotify: u32 = 686;
+pub const M_ICoreWebView2Notification_get_RequiresInteraction: u32 = 687;
+pub const M_ICoreWebView2Notification_get_IsSilent: u32 = 688;
+pub const M_ICoreWebView2Notification_get_Timestamp: u32 = 689;
+pub const M_ICoreWebView2Notification_GetVibrationPattern: u32 = 690;
+pub const M_ICoreWebView2NotificationReceivedEventArgs_get_SenderOrigin: u32 = 691;
+pub const M_ICoreWebView2NotificationReceivedEventArgs_get_Notification: u32 = 692;
+pub const M_ICoreWebView2NotificationReceivedEventArgs_put_Handled: u32 = 693;
+pub const M_ICoreWebView2NotificationReceivedEventArgs_get_Handled: u32 = 694;
+pub const M_ICoreWebView2NotificationReceivedEventArgs_GetDeferral: u32 = 695;
+pub const M_ICoreWebView2SaveAsUIShowingEventArgs_get_ContentMimeType: u32 = 696;
+pub const M_ICoreWebView2SaveAsUIShowingEventArgs_put_Cancel: u32 = 697;
+pub const M_ICoreWebView2SaveAsUIShowingEventArgs_get_Cancel: u32 = 698;
+pub const M_ICoreWebView2SaveAsUIShowingEventArgs_put_SuppressDefaultDialog: u32 = 699;
+pub const M_ICoreWebView2SaveAsUIShowingEventArgs_get_SuppressDefaultDialog: u32 = 700;
+pub const M_ICoreWebView2SaveAsUIShowingEventArgs_GetDeferral: u32 = 701;
+pub const M_ICoreWebView2SaveAsUIShowingEventArgs_put_SaveAsFilePath: u32 = 702;
+pub const M_ICoreWebView2SaveAsUIShowingEventArgs_get_SaveAsFilePath: u32 = 703;
+pub const M_ICoreWebView2SaveAsUIShowingEventArgs_put_AllowReplace: u32 = 704;
+pub const M_ICoreWebView2SaveAsUIShowingEventArgs_get_AllowReplace: u32 = 705;
+pub const M_ICoreWebView2SaveAsUIShowingEventArgs_put_Kind: u32 = 706;
+pub const M_ICoreWebView2SaveAsUIShowingEventArgs_get_Kind: u32 = 707;
+pub const M_ICoreWebView2AcceleratorKeyPressedEventArgs2_get_IsBrowserAcceleratorKeyEnabled: u32 = 708;
+pub const M_ICoreWebView2AcceleratorKeyPressedEventArgs2_put_IsBrowserAcceleratorKeyEnabled: u32 = 709;
+pub const M_ICoreWebView2BrowserProcessExitedEventArgs_get_BrowserProcessExitKind: u32 = 710;
+pub const M_ICoreWebView2BrowserProcessExitedEventArgs_get_BrowserProcessId: u32 = 711;
+pub const M_ICoreWebView2DragStartingEventHandler_Invoke: u32 = 712;
+pub const M_ICoreWebView2CompositionController5_add_DragStarting: u32 = 713;
+pub const M_ICoreWebView2CompositionController5_remove_DragStarting: u32 = 714;
+pub const M_ICoreWebView2ContentLoadingEventArgs_get_IsErrorPage: u32 = 715;
+pub const M_ICoreWebView2ContentLoadingEventArgs_get_NavigationId: u32 = 716;
+pub const M_ICoreWebView2ContextMenuItemCollection_get_Count: u32 = 717;
+pub const M_ICoreWebView2ContextMenuItemCollection_GetValueAtIndex: u32 = 718;
+pub const M_ICoreWebView2ContextMenuItemCollection_RemoveValueAtIndex: u32 = 719;
+pub const M_ICoreWebView2ContextMenuItemCollection_InsertValueAtIndex: u32 = 720;
+pub const M_ICoreWebView2Controller4_get_AllowExternalDrop: u32 = 721;
+pub const M_ICoreWebView2Controller4_put_AllowExternalDrop: u32 = 722;
+pub const M_ICoreWebView2ControllerOptions2_get_ScriptLocale: u32 = 723;
+pub const M_ICoreWebView2ControllerOptions2_put_ScriptLocale: u32 = 724;
+pub const M_ICoreWebView2ControllerOptions3_get_DefaultBackgroundColor: u32 = 725;
+pub const M_ICoreWebView2ControllerOptions3_put_DefaultBackgroundColor: u32 = 726;
+pub const M_ICoreWebView2ControllerOptions4_get_AllowHostInputProcessing: u32 = 727;
+pub const M_ICoreWebView2ControllerOptions4_put_AllowHostInputProcessing: u32 = 728;
+pub const M_ICoreWebView2CrashReport_get_BucketId: u32 = 729;
+pub const M_ICoreWebView2CrashReport_get_CrashReportId: u32 = 730;
+pub const M_ICoreWebView2CrashReport_get_ExceptionCode: u32 = 731;
+pub const M_ICoreWebView2CrashReport_get_FaultOffset: u32 = 732;
+pub const M_ICoreWebView2CrashReport_get_FaultingModuleName: u32 = 733;
+pub const M_ICoreWebView2CrashReport_get_FaultingModuleVersion: u32 = 734;
+pub const M_ICoreWebView2CrashReport_get_ReportTime: u32 = 735;
+pub const M_ICoreWebView2DOMContentLoadedEventArgs_get_NavigationId: u32 = 736;
+pub const M_ICoreWebView2DedicatedWorkerDedicatedWorkerCreatedEventHandler_Invoke: u32 = 737;
+pub const M_ICoreWebView2DedicatedWorkerDestroyingEventHandler_Invoke: u32 = 738;
+pub const M_ICoreWebView2DedicatedWorkerWebMessageReceivedEventHandler_Invoke: u32 = 739;
+pub const M_ICoreWebView2DedicatedWorker_get_ScriptUri: u32 = 740;
+pub const M_ICoreWebView2DedicatedWorker_add_DedicatedWorkerCreated: u32 = 741;
+pub const M_ICoreWebView2DedicatedWorker_remove_DedicatedWorkerCreated: u32 = 742;
+pub const M_ICoreWebView2DedicatedWorker_add_Destroying: u32 = 743;
+pub const M_ICoreWebView2DedicatedWorker_remove_Destroying: u32 = 744;
+pub const M_ICoreWebView2DedicatedWorker_add_WebMessageReceived: u32 = 745;
+pub const M_ICoreWebView2DedicatedWorker_remove_WebMessageReceived: u32 = 746;
+pub const M_ICoreWebView2DedicatedWorker_PostWebMessageAsJson: u32 = 747;
+pub const M_ICoreWebView2DedicatedWorker_PostWebMessageAsString: u32 = 748;
+pub const M_ICoreWebView2DedicatedWorkerCreatedEventArgs_get_OriginalSourceFrameInfo: u32 = 749;
+pub const M_ICoreWebView2DedicatedWorkerCreatedEventArgs_get_Worker: u32 = 750;
+pub const M_ICoreWebView2Deferral_Complete: u32 = 751;
+pub const M_ICoreWebView2DevToolsProtocolEventReceivedEventArgs_get_ParameterObjectAsJson: u32 = 752;
+pub const M_ICoreWebView2DevToolsProtocolEventReceivedEventArgs2_get_SessionId: u32 = 753;
+pub const M_ICoreWebView2DevToolsProtocolEventReceivedEventHandler_Invoke: u32 = 754;
+pub const M_ICoreWebView2DevToolsProtocolEventReceiver_add_DevToolsProtocolEventReceived: u32 = 755;
+pub const M_ICoreWebView2DevToolsProtocolEventReceiver_remove_DevToolsProtocolEventReceived: u32 = 756;
+pub const M_ICoreWebView2DragStartingEventArgs_get_AllowedDropEffects: u32 = 757;
+pub const M_ICoreWebView2DragStartingEventArgs_get_Data: u32 = 758;
+pub const M_ICoreWebView2DragStartingEventArgs_get_Handled: u32 = 759;
+pub const M_ICoreWebView2DragStartingEventArgs_put_Handled: u32 = 760;
+pub const M_ICoreWebView2DragStartingEventArgs_get_Position: u32 = 761;
+pub const M_ICoreWebView2DragStartingEventArgs_GetDeferral: u32 = 762;
+pub const M_ICoreWebView2Environment2_CreateWebResourceRequest: u32 = 763;
+pub const M_ICoreWebView2Environment3_CreateCoreWebView2CompositionController: u32 = 764;
+pub const M_ICoreWebView2Environment3_CreateCoreWebView2PointerInfo: u32 = 765;
+pub const M_ICoreWebView2Environment4_GetAutomationProviderForWindow: u32 = 766;
+pub const M_ICoreWebView2Environment5_add_BrowserProcessExited: u32 = 767;
+pub const M_ICoreWebView2Environment5_remove_BrowserProcessExited: u32 = 768;
+pub const M_ICoreWebView2Environment6_CreatePrintSettings: u32 = 769;
+pub const M_ICoreWebView2Environment7_get_UserDataFolder: u32 = 770;
+pub const M_ICoreWebView2Environment8_add_ProcessInfosChanged: u32 = 771;
+pub const M_ICoreWebView2Environment8_remove_ProcessInfosChanged: u32 = 772;
+pub const M_ICoreWebView2Environment8_GetProcessInfos: u32 = 773;
+pub const M_ICoreWebView2Environment9_CreateContextMenuItem: u32 = 774;
+pub const M_ICoreWebView2Environment10_CreateCoreWebView2ControllerOptions: u32 = 775;
+pub const M_ICoreWebView2Environment10_CreateCoreWebView2ControllerWithOptions: u32 = 776;
+pub const M_ICoreWebView2Environment10_CreateCoreWebView2CompositionControllerWithOptions: u32 = 777;
+pub const M_ICoreWebView2Environment11_get_FailureReportFolderPath: u32 = 778;
+pub const M_ICoreWebView2Environment12_CreateSharedBuffer: u32 = 779;
+pub const M_ICoreWebView2GetProcessExtendedInfosCompletedHandler_Invoke: u32 = 780;
+pub const M_ICoreWebView2ProcessExtendedInfoCollection_get_Count: u32 = 781;
+pub const M_ICoreWebView2ProcessExtendedInfoCollection_GetValueAtIndex: u32 = 782;
+pub const M_ICoreWebView2Environment13_GetProcessExtendedInfos: u32 = 783;
+pub const M_ICoreWebView2Environment14_CreateWebFileSystemFileHandle: u32 = 784;
+pub const M_ICoreWebView2Environment14_CreateWebFileSystemDirectoryHandle: u32 = 785;
+pub const M_ICoreWebView2Environment14_CreateObjectCollection: u32 = 786;
+pub const M_ICoreWebView2Environment15_CreateFindOptions: u32 = 787;
+pub const M_ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandler_Invoke: u32 = 788;
+pub const M_ICoreWebView2BrowserProcessExitedEventHandler_Invoke: u32 = 789;
+pub const M_ICoreWebView2ProcessInfosChangedEventHandler_Invoke: u32 = 790;
+pub const M_ICoreWebView2ProcessInfoCollection_get_Count: u32 = 791;
+pub const M_ICoreWebView2ProcessInfoCollection_GetValueAtIndex: u32 = 792;
+pub const M_ICoreWebView2EnvironmentOptions2_get_ExclusiveUserDataFolderAccess: u32 = 793;
+pub const M_ICoreWebView2EnvironmentOptions2_put_ExclusiveUserDataFolderAccess: u32 = 794;
+pub const M_ICoreWebView2EnvironmentOptions3_get_IsCustomCrashReportingEnabled: u32 = 795;
+pub const M_ICoreWebView2EnvironmentOptions3_put_IsCustomCrashReportingEnabled: u32 = 796;
+pub const M_ICoreWebView2EnvironmentOptions4_GetCustomSchemeRegistrations: u32 = 797;
+pub const M_ICoreWebView2EnvironmentOptions4_SetCustomSchemeRegistrations: u32 = 798;
+pub const M_ICoreWebView2EnvironmentOptions5_get_EnableTrackingPrevention: u32 = 799;
+pub const M_ICoreWebView2EnvironmentOptions5_put_EnableTrackingPrevention: u32 = 800;
+pub const M_ICoreWebView2EnvironmentOptions6_get_AreBrowserExtensionsEnabled: u32 = 801;
+pub const M_ICoreWebView2EnvironmentOptions6_put_AreBrowserExtensionsEnabled: u32 = 802;
+pub const M_ICoreWebView2EnvironmentOptions8_get_ScrollBarStyle: u32 = 803;
+pub const M_ICoreWebView2EnvironmentOptions8_put_ScrollBarStyle: u32 = 804;
+pub const M_ICoreWebView2EnvironmentOptions7_get_ChannelSearchKind: u32 = 805;
+pub const M_ICoreWebView2EnvironmentOptions7_put_ChannelSearchKind: u32 = 806;
+pub const M_ICoreWebView2EnvironmentOptions7_get_ReleaseChannels: u32 = 807;
+pub const M_ICoreWebView2EnvironmentOptions7_put_ReleaseChannels: u32 = 808;
+pub const M_ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler_Invoke: u32 = 809;
+pub const M_ICoreWebView2File_get_Path: u32 = 810;
+pub const M_ICoreWebView2FileSystemHandle_get_Kind: u32 = 811;
+pub const M_ICoreWebView2FileSystemHandle_get_Path: u32 = 812;
+pub const M_ICoreWebView2FileSystemHandle_get_Permission: u32 = 813;
+pub const M_ICoreWebView2FindStartCompletedHandler_Invoke: u32 = 814;
+pub const M_ICoreWebView2FindActiveMatchIndexChangedEventHandler_Invoke: u32 = 815;
+pub const M_ICoreWebView2FindMatchCountChangedEventHandler_Invoke: u32 = 816;
+pub const M_ICoreWebView2Find_get_ActiveMatchIndex: u32 = 817;
+pub const M_ICoreWebView2Find_get_MatchCount: u32 = 818;
+pub const M_ICoreWebView2Find_add_ActiveMatchIndexChanged: u32 = 819;
+pub const M_ICoreWebView2Find_remove_ActiveMatchIndexChanged: u32 = 820;
+pub const M_ICoreWebView2Find_add_MatchCountChanged: u32 = 821;
+pub const M_ICoreWebView2Find_remove_MatchCountChanged: u32 = 822;
+pub const M_ICoreWebView2Find_Start: u32 = 823;
+pub const M_ICoreWebView2Find_FindNext: u32 = 824;
+pub const M_ICoreWebView2Find_FindPrevious: u32 = 825;
+pub const M_ICoreWebView2Find_Stop: u32 = 826;
+pub const M_ICoreWebView2FindOptions_get_FindTerm: u32 = 827;
+pub const M_ICoreWebView2FindOptions_put_FindTerm: u32 = 828;
+pub const M_ICoreWebView2FindOptions_get_IsCaseSensitive: u32 = 829;
+pub const M_ICoreWebView2FindOptions_put_IsCaseSensitive: u32 = 830;
+pub const M_ICoreWebView2FindOptions_get_ShouldHighlightAllMatches: u32 = 831;
+pub const M_ICoreWebView2FindOptions_put_ShouldHighlightAllMatches: u32 = 832;
+pub const M_ICoreWebView2FindOptions_get_ShouldMatchWord: u32 = 833;
+pub const M_ICoreWebView2FindOptions_put_ShouldMatchWord: u32 = 834;
+pub const M_ICoreWebView2FindOptions_get_SuppressDefaultFindDialog: u32 = 835;
+pub const M_ICoreWebView2FindOptions_put_SuppressDefaultFindDialog: u32 = 836;
+pub const M_ICoreWebView2FramePermissionRequestedEventHandler_Invoke: u32 = 837;
+pub const M_ICoreWebView2Frame3_add_PermissionRequested: u32 = 838;
+pub const M_ICoreWebView2Frame3_remove_PermissionRequested: u32 = 839;
+pub const M_ICoreWebView2Frame4_PostSharedBufferToScript: u32 = 840;
+pub const M_ICoreWebView2Frame5_get_FrameId: u32 = 841;
+pub const M_ICoreWebView2FrameScreenCaptureStartingEventHandler_Invoke: u32 = 842;
+pub const M_ICoreWebView2Frame6_add_ScreenCaptureStarting: u32 = 843;
+pub const M_ICoreWebView2Frame6_remove_ScreenCaptureStarting: u32 = 844;
+pub const M_ICoreWebView2FrameChildFrameCreatedEventHandler_Invoke: u32 = 845;
+pub const M_ICoreWebView2Frame7_add_FrameCreated: u32 = 846;
+pub const M_ICoreWebView2Frame7_remove_FrameCreated: u32 = 847;
+pub const M_ICoreWebView2FrameDedicatedWorkerCreatedEventHandler_Invoke: u32 = 848;
+pub const M_ICoreWebView2Frame8_add_DedicatedWorkerCreated: u32 = 849;
+pub const M_ICoreWebView2Frame8_remove_DedicatedWorkerCreated: u32 = 850;
+pub const M_ICoreWebView2FrameCreatedEventArgs_get_Frame: u32 = 851;
+pub const M_ICoreWebView2FrameInfoCollection_GetIterator: u32 = 852;
+pub const M_ICoreWebView2FrameInfoCollectionIterator_get_HasCurrent: u32 = 853;
+pub const M_ICoreWebView2FrameInfoCollectionIterator_GetCurrent: u32 = 854;
+pub const M_ICoreWebView2FrameInfoCollectionIterator_MoveNext: u32 = 855;
+pub const M_ICoreWebView2HttpRequestHeaders_GetHeader: u32 = 856;
+pub const M_ICoreWebView2HttpRequestHeaders_GetHeaders: u32 = 857;
+pub const M_ICoreWebView2HttpRequestHeaders_Contains: u32 = 858;
+pub const M_ICoreWebView2HttpRequestHeaders_SetHeader: u32 = 859;
+pub const M_ICoreWebView2HttpRequestHeaders_RemoveHeader: u32 = 860;
+pub const M_ICoreWebView2HttpRequestHeaders_GetIterator: u32 = 861;
+pub const M_ICoreWebView2HttpResponseHeaders_AppendHeader: u32 = 862;
+pub const M_ICoreWebView2HttpResponseHeaders_Contains: u32 = 863;
+pub const M_ICoreWebView2HttpResponseHeaders_GetHeader: u32 = 864;
+pub const M_ICoreWebView2HttpResponseHeaders_GetHeaders: u32 = 865;
+pub const M_ICoreWebView2HttpResponseHeaders_GetIterator: u32 = 866;
+pub const M_ICoreWebView2NavigationCompletedEventArgs2_get_HttpStatusCode: u32 = 867;
+pub const M_ICoreWebView2NavigationStartingEventArgs2_get_AdditionalAllowedFrameAncestors: u32 = 868;
+pub const M_ICoreWebView2NavigationStartingEventArgs2_put_AdditionalAllowedFrameAncestors: u32 = 869;
+pub const M_ICoreWebView2NavigationStartingEventArgs3_get_NavigationKind: u32 = 870;
+pub const M_ICoreWebView2NewWindowRequestedEventArgs2_get_Name: u32 = 871;
+pub const M_ICoreWebView2NewWindowRequestedEventArgs3_get_OriginalSourceFrameInfo: u32 = 872;
+pub const M_ICoreWebView2NonClientRegionChangedEventArgs_get_RegionKind: u32 = 873;
+pub const M_ICoreWebView2PermissionRequestedEventArgs2_get_Handled: u32 = 874;
+pub const M_ICoreWebView2PermissionRequestedEventArgs2_put_Handled: u32 = 875;
+pub const M_ICoreWebView2PermissionRequestedEventArgs3_get_SavesInProfile: u32 = 876;
+pub const M_ICoreWebView2PermissionRequestedEventArgs3_put_SavesInProfile: u32 = 877;
+pub const M_ICoreWebView2PermissionSetting_get_PermissionKind: u32 = 878;
+pub const M_ICoreWebView2PermissionSetting_get_PermissionOrigin: u32 = 879;
+pub const M_ICoreWebView2PermissionSetting_get_PermissionState: u32 = 880;
+pub const M_ICoreWebView2ProcessFailedEventArgs3_get_FailureSourceModulePath: u32 = 881;
+pub const M_ICoreWebView2ProcessFailedEventArgs4_get_CrashReport: u32 = 882;
+pub const M_ICoreWebView2Profile9_get_AreWebViewScriptApisEnabledForServiceWorkers: u32 = 883;
+pub const M_ICoreWebView2Profile9_put_AreWebViewScriptApisEnabledForServiceWorkers: u32 = 884;
+pub const M_ICoreWebView2Profile9_get_ServiceWorkerManager: u32 = 885;
+pub const M_ICoreWebView2Profile9_get_SharedWorkerManager: u32 = 886;
+pub const M_ICoreWebView2ClearBrowsingDataCompletedHandler_Invoke: u32 = 887;
+pub const M_ICoreWebView2SetPermissionStateCompletedHandler_Invoke: u32 = 888;
+pub const M_ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler_Invoke: u32 = 889;
+pub const M_ICoreWebView2ProfileAddBrowserExtensionCompletedHandler_Invoke: u32 = 890;
+pub const M_ICoreWebView2ProfileGetBrowserExtensionsCompletedHandler_Invoke: u32 = 891;
+pub const M_ICoreWebView2BrowserExtensionList_get_Count: u32 = 892;
+pub const M_ICoreWebView2BrowserExtensionList_GetValueAtIndex: u32 = 893;
+pub const M_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_CancelSave: u32 = 894;
+pub const M_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_put_CancelSave: u32 = 895;
+pub const M_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_DocumentOriginUri: u32 = 896;
+pub const M_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_FileExtension: u32 = 897;
+pub const M_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_FilePath: u32 = 898;
+pub const M_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_SuppressDefaultPolicy: u32 = 899;
+pub const M_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_put_SuppressDefaultPolicy: u32 = 900;
+pub const M_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_GetDeferral: u32 = 901;
+pub const M_ICoreWebView2ScreenCaptureStartingEventArgs_get_Cancel: u32 = 902;
+pub const M_ICoreWebView2ScreenCaptureStartingEventArgs_put_Cancel: u32 = 903;
+pub const M_ICoreWebView2ScreenCaptureStartingEventArgs_get_Handled: u32 = 904;
+pub const M_ICoreWebView2ScreenCaptureStartingEventArgs_put_Handled: u32 = 905;
+pub const M_ICoreWebView2ScreenCaptureStartingEventArgs_get_OriginalSourceFrameInfo: u32 = 906;
+pub const M_ICoreWebView2ScreenCaptureStartingEventArgs_GetDeferral: u32 = 907;
+pub const M_ICoreWebView2ServiceWorkerDestroyingEventHandler_Invoke: u32 = 908;
+pub const M_ICoreWebView2ServiceWorkerWebMessageReceivedEventHandler_Invoke: u32 = 909;
+pub const M_ICoreWebView2ServiceWorker_get_ScriptUri: u32 = 910;
+pub const M_ICoreWebView2ServiceWorker_add_Destroying: u32 = 911;
+pub const M_ICoreWebView2ServiceWorker_remove_Destroying: u32 = 912;
+pub const M_ICoreWebView2ServiceWorker_add_WebMessageReceived: u32 = 913;
+pub const M_ICoreWebView2ServiceWorker_remove_WebMessageReceived: u32 = 914;
+pub const M_ICoreWebView2ServiceWorker_PostWebMessageAsJson: u32 = 915;
+pub const M_ICoreWebView2ServiceWorker_PostWebMessageAsString: u32 = 916;
+pub const M_ICoreWebView2ServiceWorkerActivatedEventArgs_get_ActiveServiceWorker: u32 = 917;
+pub const M_ICoreWebView2GetServiceWorkerRegistrationsCompletedHandler_Invoke: u32 = 918;
+pub const M_ICoreWebView2ServiceWorkerRegisteredEventHandler_Invoke: u32 = 919;
+pub const M_ICoreWebView2ServiceWorkerRegistrationCollectionView_get_Count: u32 = 920;
+pub const M_ICoreWebView2ServiceWorkerRegistrationCollectionView_GetValueAtIndex: u32 = 921;
+pub const M_ICoreWebView2ServiceWorkerManager_add_ServiceWorkerRegistered: u32 = 922;
+pub const M_ICoreWebView2ServiceWorkerManager_remove_ServiceWorkerRegistered: u32 = 923;
+pub const M_ICoreWebView2ServiceWorkerManager_GetServiceWorkerRegistrations: u32 = 924;
+pub const M_ICoreWebView2ServiceWorkerManager_GetServiceWorkerRegistrationsForScope: u32 = 925;
+pub const M_ICoreWebView2ServiceWorkerRegisteredEventArgs_get_ServiceWorkerRegistration: u32 = 926;
+pub const M_ICoreWebView2ServiceWorkerActivatedEventHandler_Invoke: u32 = 927;
+pub const M_ICoreWebView2ServiceWorkerRegistrationUnregisteringEventHandler_Invoke: u32 = 928;
+pub const M_ICoreWebView2ServiceWorkerRegistration_get_ActiveServiceWorker: u32 = 929;
+pub const M_ICoreWebView2ServiceWorkerRegistration_get_Origin: u32 = 930;
+pub const M_ICoreWebView2ServiceWorkerRegistration_get_ScopeUri: u32 = 931;
+pub const M_ICoreWebView2ServiceWorkerRegistration_get_TopLevelOrigin: u32 = 932;
+pub const M_ICoreWebView2ServiceWorkerRegistration_add_ServiceWorkerActivated: u32 = 933;
+pub const M_ICoreWebView2ServiceWorkerRegistration_remove_ServiceWorkerActivated: u32 = 934;
+pub const M_ICoreWebView2ServiceWorkerRegistration_add_Unregistering: u32 = 935;
+pub const M_ICoreWebView2ServiceWorkerRegistration_remove_Unregistering: u32 = 936;
+pub const M_ICoreWebView2Settings5_get_IsPinchZoomEnabled: u32 = 937;
+pub const M_ICoreWebView2Settings5_put_IsPinchZoomEnabled: u32 = 938;
+pub const M_ICoreWebView2Settings6_get_IsSwipeNavigationEnabled: u32 = 939;
+pub const M_ICoreWebView2Settings6_put_IsSwipeNavigationEnabled: u32 = 940;
+pub const M_ICoreWebView2Settings7_get_HiddenPdfToolbarItems: u32 = 941;
+pub const M_ICoreWebView2Settings7_put_HiddenPdfToolbarItems: u32 = 942;
+pub const M_ICoreWebView2Settings8_get_IsReputationCheckingRequired: u32 = 943;
+pub const M_ICoreWebView2Settings8_put_IsReputationCheckingRequired: u32 = 944;
+pub const M_ICoreWebView2Settings9_get_IsNonClientRegionSupportEnabled: u32 = 945;
+pub const M_ICoreWebView2Settings9_put_IsNonClientRegionSupportEnabled: u32 = 946;
+pub const M_ICoreWebView2SharedWorkerDestroyingEventHandler_Invoke: u32 = 947;
+pub const M_ICoreWebView2SharedWorker_get_Origin: u32 = 948;
+pub const M_ICoreWebView2SharedWorker_get_ScriptUri: u32 = 949;
+pub const M_ICoreWebView2SharedWorker_get_TopLevelOrigin: u32 = 950;
+pub const M_ICoreWebView2SharedWorker_add_Destroying: u32 = 951;
+pub const M_ICoreWebView2SharedWorker_remove_Destroying: u32 = 952;
+pub const M_ICoreWebView2SharedWorkerCreatedEventArgs_get_Worker: u32 = 953;
+pub const M_ICoreWebView2GetSharedWorkersCompletedHandler_Invoke: u32 = 954;
+pub const M_ICoreWebView2SharedWorkerCreatedEventHandler_Invoke: u32 = 955;
+pub const M_ICoreWebView2SharedWorkerCollectionView_get_Count: u32 = 956;
+pub const M_ICoreWebView2SharedWorkerCollectionView_GetValueAtIndex: u32 = 957;
+pub const M_ICoreWebView2SharedWorkerManager_add_SharedWorkerCreated: u32 = 958;
+pub const M_ICoreWebView2SharedWorkerManager_remove_SharedWorkerCreated: u32 = 959;
+pub const M_ICoreWebView2SharedWorkerManager_GetSharedWorkers: u32 = 960;
+pub const M_ICoreWebView2SourceChangedEventArgs_get_IsNewDocument: u32 = 961;
+pub const M_ICoreWebView2WebMessageReceivedEventArgs_get_Source: u32 = 962;
+pub const M_ICoreWebView2WebMessageReceivedEventArgs_get_WebMessageAsJson: u32 = 963;
+pub const M_ICoreWebView2WebMessageReceivedEventArgs_TryGetWebMessageAsString: u32 = 964;
+pub const M_ICoreWebView2WebMessageReceivedEventArgs2_get_AdditionalObjects: u32 = 965;
+pub const M_ICoreWebView2WebResourceRequestedEventArgs2_get_RequestedSourceKind: u32 = 966;
+pub const M_ICoreWebView2WebResourceResponseReceivedEventArgs_get_Request: u32 = 967;
+pub const M_ICoreWebView2WebResourceResponseReceivedEventArgs_get_Response: u32 = 968;
+pub const M_ICoreWebView2BasicAuthenticationRequestedEventHandler_Invoke: u32 = 969;
+pub const M_ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler_Invoke: u32 = 970;
+pub const M_ICoreWebView2ServerCertificateErrorDetectedEventHandler_Invoke: u32 = 971;
+pub const M_ICoreWebView2_17_PostSharedBufferToScript: u32 = 972;
+pub const M_ICoreWebView2LaunchingExternalUriSchemeEventHandler_Invoke: u32 = 973;
+pub const M_ICoreWebView2_18_add_LaunchingExternalUriScheme: u32 = 974;
+pub const M_ICoreWebView2_18_remove_LaunchingExternalUriScheme: u32 = 975;
+pub const M_ICoreWebView2_19_get_MemoryUsageTargetLevel: u32 = 976;
+pub const M_ICoreWebView2_19_put_MemoryUsageTargetLevel: u32 = 977;
+pub const M_ICoreWebView2_20_get_FrameId: u32 = 978;
+pub const M_ICoreWebView2ExecuteScriptWithResultCompletedHandler_Invoke: u32 = 979;
+pub const M_ICoreWebView2_21_ExecuteScriptWithResult: u32 = 980;
+pub const M_ICoreWebView2_22_AddWebResourceRequestedFilterWithRequestSourceKinds: u32 = 981;
+pub const M_ICoreWebView2_22_RemoveWebResourceRequestedFilterWithRequestSourceKinds: u32 = 982;
+pub const M_ICoreWebView2ShowSaveAsUICompletedHandler_Invoke: u32 = 983;
+pub const M_ICoreWebView2SaveAsUIShowingEventHandler_Invoke: u32 = 984;
+pub const M_ICoreWebView2_23_PostWebMessageAsJsonWithAdditionalObjects: u32 = 985;
+pub const M_ICoreWebView2_24_add_NotificationReceived: u32 = 986;
+pub const M_ICoreWebView2_24_remove_NotificationReceived: u32 = 987;
+pub const M_ICoreWebView2_25_add_SaveAsUIShowing: u32 = 988;
+pub const M_ICoreWebView2_25_remove_SaveAsUIShowing: u32 = 989;
+pub const M_ICoreWebView2_25_ShowSaveAsUI: u32 = 990;
+pub const M_ICoreWebView2ScreenCaptureStartingEventHandler_Invoke: u32 = 991;
+pub const M_ICoreWebView2_26_add_SaveFileSecurityCheckStarting: u32 = 992;
+pub const M_ICoreWebView2_26_remove_SaveFileSecurityCheckStarting: u32 = 993;
+pub const M_ICoreWebView2_27_add_ScreenCaptureStarting: u32 = 994;
+pub const M_ICoreWebView2_27_remove_ScreenCaptureStarting: u32 = 995;
+pub const M_ICoreWebView2_28_get_Find: u32 = 996;
+pub const M_ICoreWebView2SaveFileSecurityCheckStartingEventHandler_Invoke: u32 = 997;
+pub const M_ICoreWebView2NotificationReceivedEventHandler_Invoke: u32 = 998;
+pub const M_ICoreWebView2DedicatedWorkerCreatedEventHandler_Invoke: u32 = 999;
+pub const M_ICoreWebView2_29_add_DedicatedWorkerCreated: u32 = 1000;
+pub const M_ICoreWebView2_29_remove_DedicatedWorkerCreated: u32 = 1001;
+pub const M_ICoreWebView2ClientCertificateRequestedEventHandler_Invoke: u32 = 1002;
+pub const M_ICoreWebView2PrintToPdfCompletedHandler_Invoke: u32 = 1003;
+
+#[repr(C)]
+#[derive(Clone, Copy, Default, Debug, PartialEq)]
+pub struct POINT {
+    pub x: i32,
+    pub y: i32,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Default, Debug, PartialEq)]
+pub struct RECT {
+    pub left: i32,
+    pub top: i32,
+    pub right: i32,
+    pub bottom: i32,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Default, Debug, PartialEq)]
+pub struct EventRegistrationToken {
+    pub value: i64,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Default, Debug, PartialEq)]
+pub struct COREWEBVIEW2_COLOR {
+    pub A: u8,
+    pub R: u8,
+    pub G: u8,
+    pub B: u8,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Default, Debug, PartialEq)]
+pub struct COREWEBVIEW2_PHYSICAL_KEY_STATUS {
+    pub RepeatCount: u32,
+    pub ScanCode: u32,
+    pub IsExtendedKey: i32,
+    pub IsMenuKeyDown: i32,
+    pub WasKeyDown: i32,
+    pub IsKeyReleased: i32,
+}
+
+pub fn family_name(f: u32) -> &'static str {
+    match f {
+        0 => "ICoreWebView2RegionRectCollectionView",
+        1 => "ICoreWebView2StringCollection",
+        2 => "ICoreWebView2ClientCertificateCollection",
+        3 => "ICoreWebView2CookieList",
+        4 => "ICoreWebView2BasicAuthenticationRequestedEventArgs",
+        5 => "ICoreWebView2BasicAuthenticationResponse",
+        6 => "ICoreWebView2BrowserExtension",
+        7 => "ICoreWebView2Certificate",
+        8 => "ICoreWebView2ClientCertificate",
+        9 => "ICoreWebView2ClientCertificateRequestedEventArgs",
+        10 => "ICoreWebView2ContextMenuItem",
+        11 => "ICoreWebView2ContextMenuTarget",
+        12 => "ICoreWebView2ContextMenuRequestedEventArgs",
+        13 => "ICoreWebView2Cookie",
+        14 => "ICoreWebView2CookieManager",
+        15 => "ICoreWebView2DownloadOperation",
+        16 => "ICoreWebView2DownloadStartingEventArgs",
+        17 => "ICoreWebView2ExecuteScriptResult",
+        18 => "ICoreWebView2FrameInfo2",
+        19 => "ICoreWebView2HttpHeadersCollectionIterator",
+        20 => "ICoreWebView2LaunchingExternalUriSchemeEventArgs",
+        21 => "ICoreWebView2MoveFocusRequestedEventArgs",
+        22 => "ICoreWebView2PermissionSettingCollectionView",
+        23 => "ICoreWebView2PointerInfo",
+        24 => "ICoreWebView2PrintSettings2",
+        25 => "ICoreWebView2ProcessExtendedInfo",
+        26 => "ICoreWebView2ProcessInfo",
+        27 => "ICoreWebView2ScriptDialogOpeningEventArgs",
+        28 => "ICoreWebView2ScriptException",
+        29 => "ICoreWebView2ServerCertificateErrorDetectedEventArgs",
+        30 => "ICoreWebView2SharedBuffer",
+        31 => "ICoreWebView2WebResourceRequest",
+        32 => "ICoreWebView2WebResourceResponse",
+        33 => "ICoreWebView2WebResourceResponseView",
+        34 => "ICoreWebView2WindowFeatures",
+        35 => "ICoreWebView2ObjectCollection",
+        36 => "ICoreWebView2Notification",
+        37 => "ICoreWebView2NotificationReceivedEventArgs",
+        38 => "ICoreWebView2SaveAsUIShowingEventArgs",
+        39 => "ICoreWebView2AcceleratorKeyPressedEventArgs2",
+        40 => "ICoreWebView2BrowserProcessExitedEventArgs",
+        41 => "ICoreWebView2CompositionController5",
+        42 => "ICoreWebView2ContentLoadingEventArgs",
+        43 => "ICoreWebView2ContextMenuItemCollection",
+        44 => "ICoreWebView2Controller4",
+        45 => "ICoreWebView2ControllerOptions4",
+        46 => "ICoreWebView2CrashReport",
+        47 => "ICoreWebView2DOMContentLoadedEventArgs",
+        48 => "ICoreWebView2DedicatedWorker",
+        49 => "ICoreWebView2DedicatedWorkerCreatedEventArgs",
+        50 => "ICoreWebView2Deferral",
+        51 => "ICoreWebView2DevToolsProtocolEventReceivedEventArgs2",
+        52 => "ICoreWebView2DevToolsProtocolEventReceiver",
+        53 => "ICoreWebView2DragStartingEventArgs",
+        54 => "ICoreWebView2ProcessExtendedInfoCollection",
+        55 => "ICoreWebView2Environment15",
+        56 => "ICoreWebView2ProcessInfoCollection",
+        57 => "ICoreWebView2File",
+        58 => "ICoreWebView2FileSystemHandle",
+        59 => "ICoreWebView2Find",
+        60 => "ICoreWebView2FindOptions",
+        61 => "ICoreWebView2Frame8",
+        62 => "ICoreWebView2FrameCreatedEventArgs",
+        63 => "ICoreWebView2FrameInfoCollection",
+        64 => "ICoreWebView2FrameInfoCollectionIterator",
+        65 => "ICoreWebView2HttpRequestHeaders",
+        66 => "ICoreWebView2HttpResponseHeaders",
+        67 => "ICoreWebView2NavigationCompletedEventArgs2",
+        68 => "ICoreWebView2NavigationStartingEventArgs3",
+        69 => "ICoreWebView2NewWindowRequestedEventArgs3",
+        70 => "ICoreWebView2NonClientRegionChangedEventArgs",
+        71 => "ICoreWebView2PermissionRequestedEventArgs3",
+        72 => "ICoreWebView2PermissionSetting",
+        73 => "ICoreWebView2ProcessFailedEventArgs4",
+        74 => "ICoreWebView2Profile9",
+        75 => "ICoreWebView2BrowserExtensionList",
+        76 => "ICoreWebView2SaveFileSecurityCheckStartingEventArgs",
+        77 => "ICoreWebView2ScreenCaptureStartingEventArgs",
+        78 => "ICoreWebView2ServiceWorker",
+        79 => "ICoreWebView2ServiceWorkerActivatedEventArgs",
+        80 => "ICoreWebView2ServiceWorkerRegistrationCollectionView",
+        81 => "ICoreWebView2ServiceWorkerManager",
+        82 => "ICoreWebView2ServiceWorkerRegisteredEventArgs",
+        83 => "ICoreWebView2ServiceWorkerRegistration",
+        84 => "ICoreWebView2Settings9",
+        85 => "ICoreWebView2SharedWorker",
+        86 => "ICoreWebView2SharedWorkerCreatedEventArgs",
+        87 => "ICoreWebView2SharedWorkerCollectionView",
+        88 => "ICoreWebView2SharedWorkerManager",
+        89 => "ICoreWebView2SourceChangedEventArgs",
+        90 => "ICoreWebView2WebMessageReceivedEventArgs2",
+        91 => "ICoreWebView2WebResourceRequestedEventArgs2",
+        92 => "ICoreWebView2WebResourceResponseReceivedEventArgs",
+        93 => "ICoreWebView2_29",
+        _ => "?",
+    }
+}
+
+// ===== ICoreWebView2RegionRectCollectionView =====
+
+pub trait ICoreWebView2RegionRectCollectionViewImpl: 'static {
+    fn get_Count(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2RegionRectCollectionView::get_Count");
+        Ok(Default::default())
+    }
+    fn GetValueAtIndex(&self, ctx: &mut Ctx, index: u32) -> WvResult<RECT> {
+        ctx.fixme("ICoreWebView2RegionRectCollectionView::GetValueAtIndex");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2RegionRectCollectionViewObj<T: ICoreWebView2RegionRectCollectionViewImpl>(pub T);
+
+impl<T: ICoreWebView2RegionRectCollectionViewImpl> Dispatch for ICoreWebView2RegionRectCollectionViewObj<T> {
+    fn family(&self) -> u32 { 0 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2RegionRectCollectionView_get_Count => {
+                match self.0.get_Count(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2RegionRectCollectionView_GetValueAtIndex => {
+                let a_index = rd.u32().unwrap_or(0);
+                match self.0.GetValueAtIndex(ctx, a_index) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2RegionRectCollectionViewStub;
+impl ICoreWebView2RegionRectCollectionViewImpl for ICoreWebView2RegionRectCollectionViewStub {}
+
+// ===== ICoreWebView2StringCollection =====
+
+pub trait ICoreWebView2StringCollectionImpl: 'static {
+    fn get_Count(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2StringCollection::get_Count");
+        Ok(Default::default())
+    }
+    fn GetValueAtIndex(&self, ctx: &mut Ctx, index: u32) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2StringCollection::GetValueAtIndex");
+        Ok(String::new())
+    }
+}
+
+pub struct ICoreWebView2StringCollectionObj<T: ICoreWebView2StringCollectionImpl>(pub T);
+
+impl<T: ICoreWebView2StringCollectionImpl> Dispatch for ICoreWebView2StringCollectionObj<T> {
+    fn family(&self) -> u32 { 1 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2StringCollection_get_Count => {
+                match self.0.get_Count(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2StringCollection_GetValueAtIndex => {
+                let a_index = rd.u32().unwrap_or(0);
+                match self.0.GetValueAtIndex(ctx, a_index) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2StringCollectionStub;
+impl ICoreWebView2StringCollectionImpl for ICoreWebView2StringCollectionStub {}
+
+// ===== ICoreWebView2ClientCertificateCollection =====
+
+pub trait ICoreWebView2ClientCertificateCollectionImpl: 'static {
+    fn get_Count(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2ClientCertificateCollection::get_Count");
+        Ok(Default::default())
+    }
+    fn GetValueAtIndex(&self, ctx: &mut Ctx, index: u32) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ClientCertificateCollection::GetValueAtIndex");
+        Ok(ctx.stub(8))
+    }
+}
+
+pub struct ICoreWebView2ClientCertificateCollectionObj<T: ICoreWebView2ClientCertificateCollectionImpl>(pub T);
+
+impl<T: ICoreWebView2ClientCertificateCollectionImpl> Dispatch for ICoreWebView2ClientCertificateCollectionObj<T> {
+    fn family(&self) -> u32 { 2 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ClientCertificateCollection_get_Count => {
+                match self.0.get_Count(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificateCollection_GetValueAtIndex => {
+                let a_index = rd.u32().unwrap_or(0);
+                match self.0.GetValueAtIndex(ctx, a_index) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ClientCertificateCollectionStub;
+impl ICoreWebView2ClientCertificateCollectionImpl for ICoreWebView2ClientCertificateCollectionStub {}
+
+// ===== ICoreWebView2CookieList =====
+
+pub trait ICoreWebView2CookieListImpl: 'static {
+    fn get_Count(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2CookieList::get_Count");
+        Ok(Default::default())
+    }
+    fn GetValueAtIndex(&self, ctx: &mut Ctx, index: u32) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2CookieList::GetValueAtIndex");
+        Ok(ctx.stub(13))
+    }
+}
+
+pub struct ICoreWebView2CookieListObj<T: ICoreWebView2CookieListImpl>(pub T);
+
+impl<T: ICoreWebView2CookieListImpl> Dispatch for ICoreWebView2CookieListObj<T> {
+    fn family(&self) -> u32 { 3 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2CookieList_get_Count => {
+                match self.0.get_Count(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CookieList_GetValueAtIndex => {
+                let a_index = rd.u32().unwrap_or(0);
+                match self.0.GetValueAtIndex(ctx, a_index) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2CookieListStub;
+impl ICoreWebView2CookieListImpl for ICoreWebView2CookieListStub {}
+
+// ===== ICoreWebView2BasicAuthenticationRequestedEventArgs =====
+
+pub trait ICoreWebView2BasicAuthenticationRequestedEventArgsImpl: 'static {
+    fn get_Uri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2BasicAuthenticationRequestedEventArgs::get_Uri");
+        Ok(String::new())
+    }
+    fn get_Challenge(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2BasicAuthenticationRequestedEventArgs::get_Challenge");
+        Ok(String::new())
+    }
+    fn get_Response(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2BasicAuthenticationRequestedEventArgs::get_Response");
+        Ok(ctx.stub(5))
+    }
+    fn get_Cancel(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2BasicAuthenticationRequestedEventArgs::get_Cancel");
+        Ok(Default::default())
+    }
+    fn put_Cancel(&self, ctx: &mut Ctx, cancel: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2BasicAuthenticationRequestedEventArgs::put_Cancel");
+        Ok(())
+    }
+    fn GetDeferral(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2BasicAuthenticationRequestedEventArgs::GetDeferral");
+        Ok(ctx.stub(50))
+    }
+}
+
+pub struct ICoreWebView2BasicAuthenticationRequestedEventArgsObj<T: ICoreWebView2BasicAuthenticationRequestedEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2BasicAuthenticationRequestedEventArgsImpl> Dispatch for ICoreWebView2BasicAuthenticationRequestedEventArgsObj<T> {
+    fn family(&self) -> u32 { 4 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Uri => {
+                match self.0.get_Uri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Challenge => {
+                match self.0.get_Challenge(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Response => {
+                match self.0.get_Response(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2BasicAuthenticationRequestedEventArgs_get_Cancel => {
+                match self.0.get_Cancel(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2BasicAuthenticationRequestedEventArgs_put_Cancel => {
+                let a_cancel = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_Cancel(ctx, a_cancel) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2BasicAuthenticationRequestedEventArgs_GetDeferral => {
+                match self.0.GetDeferral(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2BasicAuthenticationRequestedEventArgsStub;
+impl ICoreWebView2BasicAuthenticationRequestedEventArgsImpl for ICoreWebView2BasicAuthenticationRequestedEventArgsStub {}
+
+// ===== ICoreWebView2BasicAuthenticationResponse =====
+
+pub trait ICoreWebView2BasicAuthenticationResponseImpl: 'static {
+    fn get_UserName(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2BasicAuthenticationResponse::get_UserName");
+        Ok(String::new())
+    }
+    fn put_UserName(&self, ctx: &mut Ctx, userName: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2BasicAuthenticationResponse::put_UserName");
+        Ok(())
+    }
+    fn get_Password(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2BasicAuthenticationResponse::get_Password");
+        Ok(String::new())
+    }
+    fn put_Password(&self, ctx: &mut Ctx, password: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2BasicAuthenticationResponse::put_Password");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2BasicAuthenticationResponseObj<T: ICoreWebView2BasicAuthenticationResponseImpl>(pub T);
+
+impl<T: ICoreWebView2BasicAuthenticationResponseImpl> Dispatch for ICoreWebView2BasicAuthenticationResponseObj<T> {
+    fn family(&self) -> u32 { 5 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2BasicAuthenticationResponse_get_UserName => {
+                match self.0.get_UserName(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2BasicAuthenticationResponse_put_UserName => {
+                let a_userName = rd.str_opt();
+                match self.0.put_UserName(ctx, a_userName) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2BasicAuthenticationResponse_get_Password => {
+                match self.0.get_Password(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2BasicAuthenticationResponse_put_Password => {
+                let a_password = rd.str_opt();
+                match self.0.put_Password(ctx, a_password) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2BasicAuthenticationResponseStub;
+impl ICoreWebView2BasicAuthenticationResponseImpl for ICoreWebView2BasicAuthenticationResponseStub {}
+
+// ===== ICoreWebView2BrowserExtension =====
+
+pub trait ICoreWebView2BrowserExtensionImpl: 'static {
+    fn get_Id(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2BrowserExtension::get_Id");
+        Ok(String::new())
+    }
+    fn get_Name(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2BrowserExtension::get_Name");
+        Ok(String::new())
+    }
+    fn Remove(&self, ctx: &mut Ctx, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2BrowserExtension::Remove");
+        Ok(())
+    }
+    fn get_IsEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2BrowserExtension::get_IsEnabled");
+        Ok(Default::default())
+    }
+    fn Enable(&self, ctx: &mut Ctx, isEnabled: bool, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2BrowserExtension::Enable");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2BrowserExtensionObj<T: ICoreWebView2BrowserExtensionImpl>(pub T);
+
+impl<T: ICoreWebView2BrowserExtensionImpl> Dispatch for ICoreWebView2BrowserExtensionObj<T> {
+    fn family(&self) -> u32 { 6 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2BrowserExtension_get_Id => {
+                match self.0.get_Id(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2BrowserExtension_get_Name => {
+                match self.0.get_Name(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2BrowserExtension_Remove => {
+                let a_handler = ctx.read_objref(rd);
+                match self.0.Remove(ctx, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2BrowserExtension_get_IsEnabled => {
+                match self.0.get_IsEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2BrowserExtension_Enable => {
+                let a_isEnabled = rd.u32().unwrap_or(0) != 0;
+                let a_handler = ctx.read_objref(rd);
+                match self.0.Enable(ctx, a_isEnabled, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2BrowserExtensionStub;
+impl ICoreWebView2BrowserExtensionImpl for ICoreWebView2BrowserExtensionStub {}
+
+// ===== ICoreWebView2Certificate =====
+
+pub trait ICoreWebView2CertificateImpl: 'static {
+    fn get_Subject(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Certificate::get_Subject");
+        Ok(String::new())
+    }
+    fn get_Issuer(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Certificate::get_Issuer");
+        Ok(String::new())
+    }
+    fn get_ValidFrom(&self, ctx: &mut Ctx) -> WvResult<f64> {
+        ctx.fixme("ICoreWebView2Certificate::get_ValidFrom");
+        Ok(Default::default())
+    }
+    fn get_ValidTo(&self, ctx: &mut Ctx) -> WvResult<f64> {
+        ctx.fixme("ICoreWebView2Certificate::get_ValidTo");
+        Ok(Default::default())
+    }
+    fn get_DerEncodedSerialNumber(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Certificate::get_DerEncodedSerialNumber");
+        Ok(String::new())
+    }
+    fn get_DisplayName(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Certificate::get_DisplayName");
+        Ok(String::new())
+    }
+    fn ToPemEncoding(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Certificate::ToPemEncoding");
+        Ok(String::new())
+    }
+    fn get_PemEncodedIssuerCertificateChain(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2Certificate::get_PemEncodedIssuerCertificateChain");
+        Ok(ctx.stub(1))
+    }
+}
+
+pub struct ICoreWebView2CertificateObj<T: ICoreWebView2CertificateImpl>(pub T);
+
+impl<T: ICoreWebView2CertificateImpl> Dispatch for ICoreWebView2CertificateObj<T> {
+    fn family(&self) -> u32 { 7 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2Certificate_get_Subject => {
+                match self.0.get_Subject(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Certificate_get_Issuer => {
+                match self.0.get_Issuer(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Certificate_get_ValidFrom => {
+                match self.0.get_ValidFrom(ctx) { Ok(v) => { wr.put_u64(v.to_bits()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Certificate_get_ValidTo => {
+                match self.0.get_ValidTo(ctx) { Ok(v) => { wr.put_u64(v.to_bits()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Certificate_get_DerEncodedSerialNumber => {
+                match self.0.get_DerEncodedSerialNumber(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Certificate_get_DisplayName => {
+                match self.0.get_DisplayName(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Certificate_ToPemEncoding => {
+                match self.0.ToPemEncoding(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Certificate_get_PemEncodedIssuerCertificateChain => {
+                match self.0.get_PemEncodedIssuerCertificateChain(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2CertificateStub;
+impl ICoreWebView2CertificateImpl for ICoreWebView2CertificateStub {}
+
+// ===== ICoreWebView2ClientCertificate =====
+
+pub trait ICoreWebView2ClientCertificateImpl: 'static {
+    fn get_Subject(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ClientCertificate::get_Subject");
+        Ok(String::new())
+    }
+    fn get_Issuer(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ClientCertificate::get_Issuer");
+        Ok(String::new())
+    }
+    fn get_ValidFrom(&self, ctx: &mut Ctx) -> WvResult<f64> {
+        ctx.fixme("ICoreWebView2ClientCertificate::get_ValidFrom");
+        Ok(Default::default())
+    }
+    fn get_ValidTo(&self, ctx: &mut Ctx) -> WvResult<f64> {
+        ctx.fixme("ICoreWebView2ClientCertificate::get_ValidTo");
+        Ok(Default::default())
+    }
+    fn get_DerEncodedSerialNumber(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ClientCertificate::get_DerEncodedSerialNumber");
+        Ok(String::new())
+    }
+    fn get_DisplayName(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ClientCertificate::get_DisplayName");
+        Ok(String::new())
+    }
+    fn ToPemEncoding(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ClientCertificate::ToPemEncoding");
+        Ok(String::new())
+    }
+    fn get_PemEncodedIssuerCertificateChain(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ClientCertificate::get_PemEncodedIssuerCertificateChain");
+        Ok(ctx.stub(1))
+    }
+    fn get_Kind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2ClientCertificate::get_Kind");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2ClientCertificateObj<T: ICoreWebView2ClientCertificateImpl>(pub T);
+
+impl<T: ICoreWebView2ClientCertificateImpl> Dispatch for ICoreWebView2ClientCertificateObj<T> {
+    fn family(&self) -> u32 { 8 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ClientCertificate_get_Subject => {
+                match self.0.get_Subject(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificate_get_Issuer => {
+                match self.0.get_Issuer(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificate_get_ValidFrom => {
+                match self.0.get_ValidFrom(ctx) { Ok(v) => { wr.put_u64(v.to_bits()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificate_get_ValidTo => {
+                match self.0.get_ValidTo(ctx) { Ok(v) => { wr.put_u64(v.to_bits()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificate_get_DerEncodedSerialNumber => {
+                match self.0.get_DerEncodedSerialNumber(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificate_get_DisplayName => {
+                match self.0.get_DisplayName(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificate_ToPemEncoding => {
+                match self.0.ToPemEncoding(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificate_get_PemEncodedIssuerCertificateChain => {
+                match self.0.get_PemEncodedIssuerCertificateChain(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificate_get_Kind => {
+                match self.0.get_Kind(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ClientCertificateStub;
+impl ICoreWebView2ClientCertificateImpl for ICoreWebView2ClientCertificateStub {}
+
+// ===== ICoreWebView2ClientCertificateRequestedEventArgs =====
+
+pub trait ICoreWebView2ClientCertificateRequestedEventArgsImpl: 'static {
+    fn get_Host(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ClientCertificateRequestedEventArgs::get_Host");
+        Ok(String::new())
+    }
+    fn get_Port(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2ClientCertificateRequestedEventArgs::get_Port");
+        Ok(Default::default())
+    }
+    fn get_IsProxy(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ClientCertificateRequestedEventArgs::get_IsProxy");
+        Ok(Default::default())
+    }
+    fn get_AllowedCertificateAuthorities(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ClientCertificateRequestedEventArgs::get_AllowedCertificateAuthorities");
+        Ok(ctx.stub(1))
+    }
+    fn get_MutuallyTrustedCertificates(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ClientCertificateRequestedEventArgs::get_MutuallyTrustedCertificates");
+        Ok(ctx.stub(2))
+    }
+    fn get_SelectedCertificate(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ClientCertificateRequestedEventArgs::get_SelectedCertificate");
+        Ok(ctx.stub(8))
+    }
+    fn put_SelectedCertificate(&self, ctx: &mut Ctx, value: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ClientCertificateRequestedEventArgs::put_SelectedCertificate");
+        Ok(())
+    }
+    fn get_Cancel(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ClientCertificateRequestedEventArgs::get_Cancel");
+        Ok(Default::default())
+    }
+    fn put_Cancel(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ClientCertificateRequestedEventArgs::put_Cancel");
+        Ok(())
+    }
+    fn get_Handled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ClientCertificateRequestedEventArgs::get_Handled");
+        Ok(Default::default())
+    }
+    fn put_Handled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ClientCertificateRequestedEventArgs::put_Handled");
+        Ok(())
+    }
+    fn GetDeferral(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ClientCertificateRequestedEventArgs::GetDeferral");
+        Ok(ctx.stub(50))
+    }
+}
+
+pub struct ICoreWebView2ClientCertificateRequestedEventArgsObj<T: ICoreWebView2ClientCertificateRequestedEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2ClientCertificateRequestedEventArgsImpl> Dispatch for ICoreWebView2ClientCertificateRequestedEventArgsObj<T> {
+    fn family(&self) -> u32 { 9 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ClientCertificateRequestedEventArgs_get_Host => {
+                match self.0.get_Host(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificateRequestedEventArgs_get_Port => {
+                match self.0.get_Port(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificateRequestedEventArgs_get_IsProxy => {
+                match self.0.get_IsProxy(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificateRequestedEventArgs_get_AllowedCertificateAuthorities => {
+                match self.0.get_AllowedCertificateAuthorities(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificateRequestedEventArgs_get_MutuallyTrustedCertificates => {
+                match self.0.get_MutuallyTrustedCertificates(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificateRequestedEventArgs_get_SelectedCertificate => {
+                match self.0.get_SelectedCertificate(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificateRequestedEventArgs_put_SelectedCertificate => {
+                let a_value = ctx.read_objref(rd);
+                match self.0.put_SelectedCertificate(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificateRequestedEventArgs_get_Cancel => {
+                match self.0.get_Cancel(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificateRequestedEventArgs_put_Cancel => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_Cancel(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificateRequestedEventArgs_get_Handled => {
+                match self.0.get_Handled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificateRequestedEventArgs_put_Handled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_Handled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ClientCertificateRequestedEventArgs_GetDeferral => {
+                match self.0.GetDeferral(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ClientCertificateRequestedEventArgsStub;
+impl ICoreWebView2ClientCertificateRequestedEventArgsImpl for ICoreWebView2ClientCertificateRequestedEventArgsStub {}
+
+// ===== ICoreWebView2ContextMenuItem =====
+
+pub trait ICoreWebView2ContextMenuItemImpl: 'static {
+    fn get_Name(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ContextMenuItem::get_Name");
+        Ok(String::new())
+    }
+    fn get_Label(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ContextMenuItem::get_Label");
+        Ok(String::new())
+    }
+    fn get_CommandId(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2ContextMenuItem::get_CommandId");
+        Ok(Default::default())
+    }
+    fn get_ShortcutKeyDescription(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ContextMenuItem::get_ShortcutKeyDescription");
+        Ok(String::new())
+    }
+    fn get_Icon(&self, ctx: &mut Ctx) -> WvResult<Option<Vec<u8>>> {
+        ctx.fixme("ICoreWebView2ContextMenuItem::get_Icon");
+        Ok(None)
+    }
+    fn get_Kind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2ContextMenuItem::get_Kind");
+        Ok(Default::default())
+    }
+    fn put_IsEnabled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ContextMenuItem::put_IsEnabled");
+        Ok(())
+    }
+    fn get_IsEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ContextMenuItem::get_IsEnabled");
+        Ok(Default::default())
+    }
+    fn put_IsChecked(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ContextMenuItem::put_IsChecked");
+        Ok(())
+    }
+    fn get_IsChecked(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ContextMenuItem::get_IsChecked");
+        Ok(Default::default())
+    }
+    fn get_Children(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ContextMenuItem::get_Children");
+        Ok(ctx.stub(43))
+    }
+    fn add_CustomItemSelected(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2ContextMenuItem::add_CustomItemSelected");
+        Ok(Default::default())
+    }
+    fn remove_CustomItemSelected(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ContextMenuItem::remove_CustomItemSelected");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2ContextMenuItemObj<T: ICoreWebView2ContextMenuItemImpl>(pub T);
+
+impl<T: ICoreWebView2ContextMenuItemImpl> Dispatch for ICoreWebView2ContextMenuItemObj<T> {
+    fn family(&self) -> u32 { 10 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ContextMenuItem_get_Name => {
+                match self.0.get_Name(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuItem_get_Label => {
+                match self.0.get_Label(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuItem_get_CommandId => {
+                match self.0.get_CommandId(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuItem_get_ShortcutKeyDescription => {
+                match self.0.get_ShortcutKeyDescription(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuItem_get_Icon => {
+                match self.0.get_Icon(ctx) { Ok(v) => { wr.put_stream(v.as_deref()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuItem_get_Kind => {
+                match self.0.get_Kind(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuItem_put_IsEnabled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsEnabled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuItem_get_IsEnabled => {
+                match self.0.get_IsEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuItem_put_IsChecked => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsChecked(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuItem_get_IsChecked => {
+                match self.0.get_IsChecked(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuItem_get_Children => {
+                match self.0.get_Children(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuItem_add_CustomItemSelected => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_CustomItemSelected(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuItem_remove_CustomItemSelected => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_CustomItemSelected(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ContextMenuItemStub;
+impl ICoreWebView2ContextMenuItemImpl for ICoreWebView2ContextMenuItemStub {}
+
+// ===== ICoreWebView2ContextMenuTarget =====
+
+pub trait ICoreWebView2ContextMenuTargetImpl: 'static {
+    fn get_Kind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2ContextMenuTarget::get_Kind");
+        Ok(Default::default())
+    }
+    fn get_IsEditable(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ContextMenuTarget::get_IsEditable");
+        Ok(Default::default())
+    }
+    fn get_IsRequestedForMainFrame(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ContextMenuTarget::get_IsRequestedForMainFrame");
+        Ok(Default::default())
+    }
+    fn get_PageUri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ContextMenuTarget::get_PageUri");
+        Ok(String::new())
+    }
+    fn get_FrameUri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ContextMenuTarget::get_FrameUri");
+        Ok(String::new())
+    }
+    fn get_HasLinkUri(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ContextMenuTarget::get_HasLinkUri");
+        Ok(Default::default())
+    }
+    fn get_LinkUri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ContextMenuTarget::get_LinkUri");
+        Ok(String::new())
+    }
+    fn get_HasLinkText(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ContextMenuTarget::get_HasLinkText");
+        Ok(Default::default())
+    }
+    fn get_LinkText(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ContextMenuTarget::get_LinkText");
+        Ok(String::new())
+    }
+    fn get_HasSourceUri(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ContextMenuTarget::get_HasSourceUri");
+        Ok(Default::default())
+    }
+    fn get_SourceUri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ContextMenuTarget::get_SourceUri");
+        Ok(String::new())
+    }
+    fn get_HasSelection(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ContextMenuTarget::get_HasSelection");
+        Ok(Default::default())
+    }
+    fn get_SelectionText(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ContextMenuTarget::get_SelectionText");
+        Ok(String::new())
+    }
+}
+
+pub struct ICoreWebView2ContextMenuTargetObj<T: ICoreWebView2ContextMenuTargetImpl>(pub T);
+
+impl<T: ICoreWebView2ContextMenuTargetImpl> Dispatch for ICoreWebView2ContextMenuTargetObj<T> {
+    fn family(&self) -> u32 { 11 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ContextMenuTarget_get_Kind => {
+                match self.0.get_Kind(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuTarget_get_IsEditable => {
+                match self.0.get_IsEditable(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuTarget_get_IsRequestedForMainFrame => {
+                match self.0.get_IsRequestedForMainFrame(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuTarget_get_PageUri => {
+                match self.0.get_PageUri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuTarget_get_FrameUri => {
+                match self.0.get_FrameUri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuTarget_get_HasLinkUri => {
+                match self.0.get_HasLinkUri(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuTarget_get_LinkUri => {
+                match self.0.get_LinkUri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuTarget_get_HasLinkText => {
+                match self.0.get_HasLinkText(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuTarget_get_LinkText => {
+                match self.0.get_LinkText(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuTarget_get_HasSourceUri => {
+                match self.0.get_HasSourceUri(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuTarget_get_SourceUri => {
+                match self.0.get_SourceUri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuTarget_get_HasSelection => {
+                match self.0.get_HasSelection(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuTarget_get_SelectionText => {
+                match self.0.get_SelectionText(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ContextMenuTargetStub;
+impl ICoreWebView2ContextMenuTargetImpl for ICoreWebView2ContextMenuTargetStub {}
+
+// ===== ICoreWebView2ContextMenuRequestedEventArgs =====
+
+pub trait ICoreWebView2ContextMenuRequestedEventArgsImpl: 'static {
+    fn get_MenuItems(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ContextMenuRequestedEventArgs::get_MenuItems");
+        Ok(ctx.stub(43))
+    }
+    fn get_ContextMenuTarget(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ContextMenuRequestedEventArgs::get_ContextMenuTarget");
+        Ok(ctx.stub(11))
+    }
+    fn get_Location(&self, ctx: &mut Ctx) -> WvResult<POINT> {
+        ctx.fixme("ICoreWebView2ContextMenuRequestedEventArgs::get_Location");
+        Ok(Default::default())
+    }
+    fn put_SelectedCommandId(&self, ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ContextMenuRequestedEventArgs::put_SelectedCommandId");
+        Ok(())
+    }
+    fn get_SelectedCommandId(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2ContextMenuRequestedEventArgs::get_SelectedCommandId");
+        Ok(Default::default())
+    }
+    fn put_Handled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ContextMenuRequestedEventArgs::put_Handled");
+        Ok(())
+    }
+    fn get_Handled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ContextMenuRequestedEventArgs::get_Handled");
+        Ok(Default::default())
+    }
+    fn GetDeferral(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ContextMenuRequestedEventArgs::GetDeferral");
+        Ok(ctx.stub(50))
+    }
+}
+
+pub struct ICoreWebView2ContextMenuRequestedEventArgsObj<T: ICoreWebView2ContextMenuRequestedEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2ContextMenuRequestedEventArgsImpl> Dispatch for ICoreWebView2ContextMenuRequestedEventArgsObj<T> {
+    fn family(&self) -> u32 { 12 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ContextMenuRequestedEventArgs_get_MenuItems => {
+                match self.0.get_MenuItems(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuRequestedEventArgs_get_ContextMenuTarget => {
+                match self.0.get_ContextMenuTarget(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuRequestedEventArgs_get_Location => {
+                match self.0.get_Location(ctx) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuRequestedEventArgs_put_SelectedCommandId => {
+                let a_value = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_SelectedCommandId(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuRequestedEventArgs_get_SelectedCommandId => {
+                match self.0.get_SelectedCommandId(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuRequestedEventArgs_put_Handled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_Handled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuRequestedEventArgs_get_Handled => {
+                match self.0.get_Handled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuRequestedEventArgs_GetDeferral => {
+                match self.0.GetDeferral(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ContextMenuRequestedEventArgsStub;
+impl ICoreWebView2ContextMenuRequestedEventArgsImpl for ICoreWebView2ContextMenuRequestedEventArgsStub {}
+
+// ===== ICoreWebView2Cookie =====
+
+pub trait ICoreWebView2CookieImpl: 'static {
+    fn get_Name(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Cookie::get_Name");
+        Ok(String::new())
+    }
+    fn get_Value(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Cookie::get_Value");
+        Ok(String::new())
+    }
+    fn put_Value(&self, ctx: &mut Ctx, value: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Cookie::put_Value");
+        Ok(())
+    }
+    fn get_Domain(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Cookie::get_Domain");
+        Ok(String::new())
+    }
+    fn get_Path(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Cookie::get_Path");
+        Ok(String::new())
+    }
+    fn get_Expires(&self, ctx: &mut Ctx) -> WvResult<f64> {
+        ctx.fixme("ICoreWebView2Cookie::get_Expires");
+        Ok(Default::default())
+    }
+    fn put_Expires(&self, ctx: &mut Ctx, expires: f64) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Cookie::put_Expires");
+        Ok(())
+    }
+    fn get_IsHttpOnly(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Cookie::get_IsHttpOnly");
+        Ok(Default::default())
+    }
+    fn put_IsHttpOnly(&self, ctx: &mut Ctx, isHttpOnly: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Cookie::put_IsHttpOnly");
+        Ok(())
+    }
+    fn get_SameSite(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2Cookie::get_SameSite");
+        Ok(Default::default())
+    }
+    fn put_SameSite(&self, ctx: &mut Ctx, sameSite: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Cookie::put_SameSite");
+        Ok(())
+    }
+    fn get_IsSecure(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Cookie::get_IsSecure");
+        Ok(Default::default())
+    }
+    fn put_IsSecure(&self, ctx: &mut Ctx, isSecure: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Cookie::put_IsSecure");
+        Ok(())
+    }
+    fn get_IsSession(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Cookie::get_IsSession");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2CookieObj<T: ICoreWebView2CookieImpl>(pub T);
+
+impl<T: ICoreWebView2CookieImpl> Dispatch for ICoreWebView2CookieObj<T> {
+    fn family(&self) -> u32 { 13 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2Cookie_get_Name => {
+                match self.0.get_Name(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Cookie_get_Value => {
+                match self.0.get_Value(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Cookie_put_Value => {
+                let a_value = rd.str_opt();
+                match self.0.put_Value(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Cookie_get_Domain => {
+                match self.0.get_Domain(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Cookie_get_Path => {
+                match self.0.get_Path(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Cookie_get_Expires => {
+                match self.0.get_Expires(ctx) { Ok(v) => { wr.put_u64(v.to_bits()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Cookie_put_Expires => {
+                let a_expires = f64::from_bits(rd.u64().unwrap_or(0));
+                match self.0.put_Expires(ctx, a_expires) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Cookie_get_IsHttpOnly => {
+                match self.0.get_IsHttpOnly(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Cookie_put_IsHttpOnly => {
+                let a_isHttpOnly = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsHttpOnly(ctx, a_isHttpOnly) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Cookie_get_SameSite => {
+                match self.0.get_SameSite(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Cookie_put_SameSite => {
+                let a_sameSite = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_SameSite(ctx, a_sameSite) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Cookie_get_IsSecure => {
+                match self.0.get_IsSecure(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Cookie_put_IsSecure => {
+                let a_isSecure = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsSecure(ctx, a_isSecure) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Cookie_get_IsSession => {
+                match self.0.get_IsSession(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2CookieStub;
+impl ICoreWebView2CookieImpl for ICoreWebView2CookieStub {}
+
+// ===== ICoreWebView2CookieManager =====
+
+pub trait ICoreWebView2CookieManagerImpl: 'static {
+    fn CreateCookie(&self, ctx: &mut Ctx, name: Option<String>, value: Option<String>, domain: Option<String>, path: Option<String>) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2CookieManager::CreateCookie");
+        Ok(ctx.stub(13))
+    }
+    fn CopyCookie(&self, ctx: &mut Ctx, cookieParam: ObjRef) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2CookieManager::CopyCookie");
+        Ok(ctx.stub(13))
+    }
+    fn GetCookies(&self, ctx: &mut Ctx, uri: Option<String>, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2CookieManager::GetCookies");
+        Ok(())
+    }
+    fn AddOrUpdateCookie(&self, ctx: &mut Ctx, cookie: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2CookieManager::AddOrUpdateCookie");
+        Ok(())
+    }
+    fn DeleteCookie(&self, ctx: &mut Ctx, cookie: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2CookieManager::DeleteCookie");
+        Ok(())
+    }
+    fn DeleteCookies(&self, ctx: &mut Ctx, name: Option<String>, uri: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2CookieManager::DeleteCookies");
+        Ok(())
+    }
+    fn DeleteCookiesWithDomainAndPath(&self, ctx: &mut Ctx, name: Option<String>, domain: Option<String>, path: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2CookieManager::DeleteCookiesWithDomainAndPath");
+        Ok(())
+    }
+    fn DeleteAllCookies(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2CookieManager::DeleteAllCookies");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2CookieManagerObj<T: ICoreWebView2CookieManagerImpl>(pub T);
+
+impl<T: ICoreWebView2CookieManagerImpl> Dispatch for ICoreWebView2CookieManagerObj<T> {
+    fn family(&self) -> u32 { 14 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2CookieManager_CreateCookie => {
+                let a_name = rd.str_opt();
+                let a_value = rd.str_opt();
+                let a_domain = rd.str_opt();
+                let a_path = rd.str_opt();
+                match self.0.CreateCookie(ctx, a_name, a_value, a_domain, a_path) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CookieManager_CopyCookie => {
+                let a_cookieParam = ctx.read_objref(rd);
+                match self.0.CopyCookie(ctx, a_cookieParam) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CookieManager_GetCookies => {
+                let a_uri = rd.str_opt();
+                let a_handler = ctx.read_objref(rd);
+                match self.0.GetCookies(ctx, a_uri, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2CookieManager_AddOrUpdateCookie => {
+                let a_cookie = ctx.read_objref(rd);
+                match self.0.AddOrUpdateCookie(ctx, a_cookie) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2CookieManager_DeleteCookie => {
+                let a_cookie = ctx.read_objref(rd);
+                match self.0.DeleteCookie(ctx, a_cookie) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2CookieManager_DeleteCookies => {
+                let a_name = rd.str_opt();
+                let a_uri = rd.str_opt();
+                match self.0.DeleteCookies(ctx, a_name, a_uri) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2CookieManager_DeleteCookiesWithDomainAndPath => {
+                let a_name = rd.str_opt();
+                let a_domain = rd.str_opt();
+                let a_path = rd.str_opt();
+                match self.0.DeleteCookiesWithDomainAndPath(ctx, a_name, a_domain, a_path) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2CookieManager_DeleteAllCookies => {
+                match self.0.DeleteAllCookies(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2CookieManagerStub;
+impl ICoreWebView2CookieManagerImpl for ICoreWebView2CookieManagerStub {}
+
+// ===== ICoreWebView2DownloadOperation =====
+
+pub trait ICoreWebView2DownloadOperationImpl: 'static {
+    fn add_BytesReceivedChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2DownloadOperation::add_BytesReceivedChanged");
+        Ok(Default::default())
+    }
+    fn remove_BytesReceivedChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2DownloadOperation::remove_BytesReceivedChanged");
+        Ok(())
+    }
+    fn add_EstimatedEndTimeChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2DownloadOperation::add_EstimatedEndTimeChanged");
+        Ok(Default::default())
+    }
+    fn remove_EstimatedEndTimeChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2DownloadOperation::remove_EstimatedEndTimeChanged");
+        Ok(())
+    }
+    fn add_StateChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2DownloadOperation::add_StateChanged");
+        Ok(Default::default())
+    }
+    fn remove_StateChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2DownloadOperation::remove_StateChanged");
+        Ok(())
+    }
+    fn get_Uri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2DownloadOperation::get_Uri");
+        Ok(String::new())
+    }
+    fn get_ContentDisposition(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2DownloadOperation::get_ContentDisposition");
+        Ok(String::new())
+    }
+    fn get_MimeType(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2DownloadOperation::get_MimeType");
+        Ok(String::new())
+    }
+    fn get_TotalBytesToReceive(&self, ctx: &mut Ctx) -> WvResult<i64> {
+        ctx.fixme("ICoreWebView2DownloadOperation::get_TotalBytesToReceive");
+        Ok(Default::default())
+    }
+    fn get_BytesReceived(&self, ctx: &mut Ctx) -> WvResult<i64> {
+        ctx.fixme("ICoreWebView2DownloadOperation::get_BytesReceived");
+        Ok(Default::default())
+    }
+    fn get_EstimatedEndTime(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2DownloadOperation::get_EstimatedEndTime");
+        Ok(String::new())
+    }
+    fn get_ResultFilePath(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2DownloadOperation::get_ResultFilePath");
+        Ok(String::new())
+    }
+    fn get_State(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2DownloadOperation::get_State");
+        Ok(Default::default())
+    }
+    fn get_InterruptReason(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2DownloadOperation::get_InterruptReason");
+        Ok(Default::default())
+    }
+    fn Cancel(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2DownloadOperation::Cancel");
+        Ok(())
+    }
+    fn Pause(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2DownloadOperation::Pause");
+        Ok(())
+    }
+    fn Resume(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2DownloadOperation::Resume");
+        Ok(())
+    }
+    fn get_CanResume(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2DownloadOperation::get_CanResume");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2DownloadOperationObj<T: ICoreWebView2DownloadOperationImpl>(pub T);
+
+impl<T: ICoreWebView2DownloadOperationImpl> Dispatch for ICoreWebView2DownloadOperationObj<T> {
+    fn family(&self) -> u32 { 15 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2DownloadOperation_add_BytesReceivedChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_BytesReceivedChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_remove_BytesReceivedChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_BytesReceivedChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_add_EstimatedEndTimeChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_EstimatedEndTimeChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_remove_EstimatedEndTimeChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_EstimatedEndTimeChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_add_StateChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_StateChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_remove_StateChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_StateChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_get_Uri => {
+                match self.0.get_Uri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_get_ContentDisposition => {
+                match self.0.get_ContentDisposition(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_get_MimeType => {
+                match self.0.get_MimeType(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_get_TotalBytesToReceive => {
+                match self.0.get_TotalBytesToReceive(ctx) { Ok(v) => { wr.put_u64(v as u64); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_get_BytesReceived => {
+                match self.0.get_BytesReceived(ctx) { Ok(v) => { wr.put_u64(v as u64); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_get_EstimatedEndTime => {
+                match self.0.get_EstimatedEndTime(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_get_ResultFilePath => {
+                match self.0.get_ResultFilePath(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_get_State => {
+                match self.0.get_State(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_get_InterruptReason => {
+                match self.0.get_InterruptReason(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_Cancel => {
+                match self.0.Cancel(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_Pause => {
+                match self.0.Pause(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_Resume => {
+                match self.0.Resume(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2DownloadOperation_get_CanResume => {
+                match self.0.get_CanResume(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2DownloadOperationStub;
+impl ICoreWebView2DownloadOperationImpl for ICoreWebView2DownloadOperationStub {}
+
+// ===== ICoreWebView2DownloadStartingEventArgs =====
+
+pub trait ICoreWebView2DownloadStartingEventArgsImpl: 'static {
+    fn get_DownloadOperation(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2DownloadStartingEventArgs::get_DownloadOperation");
+        Ok(ctx.stub(15))
+    }
+    fn get_Cancel(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2DownloadStartingEventArgs::get_Cancel");
+        Ok(Default::default())
+    }
+    fn put_Cancel(&self, ctx: &mut Ctx, cancel: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2DownloadStartingEventArgs::put_Cancel");
+        Ok(())
+    }
+    fn get_ResultFilePath(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2DownloadStartingEventArgs::get_ResultFilePath");
+        Ok(String::new())
+    }
+    fn put_ResultFilePath(&self, ctx: &mut Ctx, resultFilePath: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2DownloadStartingEventArgs::put_ResultFilePath");
+        Ok(())
+    }
+    fn get_Handled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2DownloadStartingEventArgs::get_Handled");
+        Ok(Default::default())
+    }
+    fn put_Handled(&self, ctx: &mut Ctx, handled: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2DownloadStartingEventArgs::put_Handled");
+        Ok(())
+    }
+    fn GetDeferral(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2DownloadStartingEventArgs::GetDeferral");
+        Ok(ctx.stub(50))
+    }
+}
+
+pub struct ICoreWebView2DownloadStartingEventArgsObj<T: ICoreWebView2DownloadStartingEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2DownloadStartingEventArgsImpl> Dispatch for ICoreWebView2DownloadStartingEventArgsObj<T> {
+    fn family(&self) -> u32 { 16 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2DownloadStartingEventArgs_get_DownloadOperation => {
+                match self.0.get_DownloadOperation(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DownloadStartingEventArgs_get_Cancel => {
+                match self.0.get_Cancel(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DownloadStartingEventArgs_put_Cancel => {
+                let a_cancel = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_Cancel(ctx, a_cancel) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2DownloadStartingEventArgs_get_ResultFilePath => {
+                match self.0.get_ResultFilePath(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DownloadStartingEventArgs_put_ResultFilePath => {
+                let a_resultFilePath = rd.str_opt();
+                match self.0.put_ResultFilePath(ctx, a_resultFilePath) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2DownloadStartingEventArgs_get_Handled => {
+                match self.0.get_Handled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DownloadStartingEventArgs_put_Handled => {
+                let a_handled = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_Handled(ctx, a_handled) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2DownloadStartingEventArgs_GetDeferral => {
+                match self.0.GetDeferral(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2DownloadStartingEventArgsStub;
+impl ICoreWebView2DownloadStartingEventArgsImpl for ICoreWebView2DownloadStartingEventArgsStub {}
+
+// ===== ICoreWebView2ExecuteScriptResult =====
+
+pub trait ICoreWebView2ExecuteScriptResultImpl: 'static {
+    fn get_Succeeded(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ExecuteScriptResult::get_Succeeded");
+        Ok(Default::default())
+    }
+    fn get_ResultAsJson(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ExecuteScriptResult::get_ResultAsJson");
+        Ok(String::new())
+    }
+    fn TryGetResultAsString(&self, ctx: &mut Ctx) -> WvResult<(String, bool)> {
+        ctx.fixme("ICoreWebView2ExecuteScriptResult::TryGetResultAsString");
+        Ok((String::new(), Default::default()))
+    }
+    fn get_Exception(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ExecuteScriptResult::get_Exception");
+        Ok(ctx.stub(28))
+    }
+}
+
+pub struct ICoreWebView2ExecuteScriptResultObj<T: ICoreWebView2ExecuteScriptResultImpl>(pub T);
+
+impl<T: ICoreWebView2ExecuteScriptResultImpl> Dispatch for ICoreWebView2ExecuteScriptResultObj<T> {
+    fn family(&self) -> u32 { 17 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ExecuteScriptResult_get_Succeeded => {
+                match self.0.get_Succeeded(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ExecuteScriptResult_get_ResultAsJson => {
+                match self.0.get_ResultAsJson(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ExecuteScriptResult_TryGetResultAsString => {
+                match self.0.TryGetResultAsString(ctx) { Ok((v0, v1)) => { wr.put_str(Some(&v0)); wr.put_u32(v1 as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ExecuteScriptResult_get_Exception => {
+                match self.0.get_Exception(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ExecuteScriptResultStub;
+impl ICoreWebView2ExecuteScriptResultImpl for ICoreWebView2ExecuteScriptResultStub {}
+
+// ===== ICoreWebView2FrameInfo2 =====
+
+pub trait ICoreWebView2FrameInfo2Impl: 'static {
+    fn get_Name(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2FrameInfo::get_Name");
+        Ok(String::new())
+    }
+    fn get_Source(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2FrameInfo::get_Source");
+        Ok(String::new())
+    }
+    fn get_ParentFrameInfo(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2FrameInfo2::get_ParentFrameInfo");
+        Ok(ctx.stub(18))
+    }
+    fn get_FrameId(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2FrameInfo2::get_FrameId");
+        Ok(Default::default())
+    }
+    fn get_FrameKind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2FrameInfo2::get_FrameKind");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2FrameInfo2Obj<T: ICoreWebView2FrameInfo2Impl>(pub T);
+
+impl<T: ICoreWebView2FrameInfo2Impl> Dispatch for ICoreWebView2FrameInfo2Obj<T> {
+    fn family(&self) -> u32 { 18 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2FrameInfo_get_Name => {
+                match self.0.get_Name(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2FrameInfo_get_Source => {
+                match self.0.get_Source(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2FrameInfo2_get_ParentFrameInfo => {
+                match self.0.get_ParentFrameInfo(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2FrameInfo2_get_FrameId => {
+                match self.0.get_FrameId(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2FrameInfo2_get_FrameKind => {
+                match self.0.get_FrameKind(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2FrameInfo2Stub;
+impl ICoreWebView2FrameInfo2Impl for ICoreWebView2FrameInfo2Stub {}
+
+// ===== ICoreWebView2HttpHeadersCollectionIterator =====
+
+pub trait ICoreWebView2HttpHeadersCollectionIteratorImpl: 'static {
+    fn GetCurrentHeader(&self, ctx: &mut Ctx) -> WvResult<(String, String)> {
+        ctx.fixme("ICoreWebView2HttpHeadersCollectionIterator::GetCurrentHeader");
+        Ok((String::new(), String::new()))
+    }
+    fn get_HasCurrentHeader(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2HttpHeadersCollectionIterator::get_HasCurrentHeader");
+        Ok(Default::default())
+    }
+    fn MoveNext(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2HttpHeadersCollectionIterator::MoveNext");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2HttpHeadersCollectionIteratorObj<T: ICoreWebView2HttpHeadersCollectionIteratorImpl>(pub T);
+
+impl<T: ICoreWebView2HttpHeadersCollectionIteratorImpl> Dispatch for ICoreWebView2HttpHeadersCollectionIteratorObj<T> {
+    fn family(&self) -> u32 { 19 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2HttpHeadersCollectionIterator_GetCurrentHeader => {
+                match self.0.GetCurrentHeader(ctx) { Ok((v0, v1)) => { wr.put_str(Some(&v0)); wr.put_str(Some(&v1)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2HttpHeadersCollectionIterator_get_HasCurrentHeader => {
+                match self.0.get_HasCurrentHeader(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2HttpHeadersCollectionIterator_MoveNext => {
+                match self.0.MoveNext(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2HttpHeadersCollectionIteratorStub;
+impl ICoreWebView2HttpHeadersCollectionIteratorImpl for ICoreWebView2HttpHeadersCollectionIteratorStub {}
+
+// ===== ICoreWebView2LaunchingExternalUriSchemeEventArgs =====
+
+pub trait ICoreWebView2LaunchingExternalUriSchemeEventArgsImpl: 'static {
+    fn get_Uri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2LaunchingExternalUriSchemeEventArgs::get_Uri");
+        Ok(String::new())
+    }
+    fn get_InitiatingOrigin(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2LaunchingExternalUriSchemeEventArgs::get_InitiatingOrigin");
+        Ok(String::new())
+    }
+    fn get_IsUserInitiated(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2LaunchingExternalUriSchemeEventArgs::get_IsUserInitiated");
+        Ok(Default::default())
+    }
+    fn get_Cancel(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2LaunchingExternalUriSchemeEventArgs::get_Cancel");
+        Ok(Default::default())
+    }
+    fn put_Cancel(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2LaunchingExternalUriSchemeEventArgs::put_Cancel");
+        Ok(())
+    }
+    fn GetDeferral(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2LaunchingExternalUriSchemeEventArgs::GetDeferral");
+        Ok(ctx.stub(50))
+    }
+}
+
+pub struct ICoreWebView2LaunchingExternalUriSchemeEventArgsObj<T: ICoreWebView2LaunchingExternalUriSchemeEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2LaunchingExternalUriSchemeEventArgsImpl> Dispatch for ICoreWebView2LaunchingExternalUriSchemeEventArgsObj<T> {
+    fn family(&self) -> u32 { 20 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_Uri => {
+                match self.0.get_Uri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_InitiatingOrigin => {
+                match self.0.get_InitiatingOrigin(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_IsUserInitiated => {
+                match self.0.get_IsUserInitiated(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2LaunchingExternalUriSchemeEventArgs_get_Cancel => {
+                match self.0.get_Cancel(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2LaunchingExternalUriSchemeEventArgs_put_Cancel => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_Cancel(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2LaunchingExternalUriSchemeEventArgs_GetDeferral => {
+                match self.0.GetDeferral(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2LaunchingExternalUriSchemeEventArgsStub;
+impl ICoreWebView2LaunchingExternalUriSchemeEventArgsImpl for ICoreWebView2LaunchingExternalUriSchemeEventArgsStub {}
+
+// ===== ICoreWebView2MoveFocusRequestedEventArgs =====
+
+pub trait ICoreWebView2MoveFocusRequestedEventArgsImpl: 'static {
+    fn get_Reason(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2MoveFocusRequestedEventArgs::get_Reason");
+        Ok(Default::default())
+    }
+    fn get_Handled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2MoveFocusRequestedEventArgs::get_Handled");
+        Ok(Default::default())
+    }
+    fn put_Handled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2MoveFocusRequestedEventArgs::put_Handled");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2MoveFocusRequestedEventArgsObj<T: ICoreWebView2MoveFocusRequestedEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2MoveFocusRequestedEventArgsImpl> Dispatch for ICoreWebView2MoveFocusRequestedEventArgsObj<T> {
+    fn family(&self) -> u32 { 21 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2MoveFocusRequestedEventArgs_get_Reason => {
+                match self.0.get_Reason(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2MoveFocusRequestedEventArgs_get_Handled => {
+                match self.0.get_Handled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2MoveFocusRequestedEventArgs_put_Handled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_Handled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2MoveFocusRequestedEventArgsStub;
+impl ICoreWebView2MoveFocusRequestedEventArgsImpl for ICoreWebView2MoveFocusRequestedEventArgsStub {}
+
+// ===== ICoreWebView2PermissionSettingCollectionView =====
+
+pub trait ICoreWebView2PermissionSettingCollectionViewImpl: 'static {
+    fn GetValueAtIndex(&self, ctx: &mut Ctx, index: u32) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2PermissionSettingCollectionView::GetValueAtIndex");
+        Ok(ctx.stub(72))
+    }
+    fn get_Count(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2PermissionSettingCollectionView::get_Count");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2PermissionSettingCollectionViewObj<T: ICoreWebView2PermissionSettingCollectionViewImpl>(pub T);
+
+impl<T: ICoreWebView2PermissionSettingCollectionViewImpl> Dispatch for ICoreWebView2PermissionSettingCollectionViewObj<T> {
+    fn family(&self) -> u32 { 22 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2PermissionSettingCollectionView_GetValueAtIndex => {
+                let a_index = rd.u32().unwrap_or(0);
+                match self.0.GetValueAtIndex(ctx, a_index) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PermissionSettingCollectionView_get_Count => {
+                match self.0.get_Count(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2PermissionSettingCollectionViewStub;
+impl ICoreWebView2PermissionSettingCollectionViewImpl for ICoreWebView2PermissionSettingCollectionViewStub {}
+
+// ===== ICoreWebView2PointerInfo =====
+
+pub trait ICoreWebView2PointerInfoImpl: 'static {
+    fn get_PointerKind(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_PointerKind");
+        Ok(Default::default())
+    }
+    fn put_PointerKind(&self, ctx: &mut Ctx, pointerKind: u32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_PointerKind");
+        Ok(())
+    }
+    fn get_PointerId(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_PointerId");
+        Ok(Default::default())
+    }
+    fn put_PointerId(&self, ctx: &mut Ctx, pointerId: u32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_PointerId");
+        Ok(())
+    }
+    fn get_FrameId(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_FrameId");
+        Ok(Default::default())
+    }
+    fn put_FrameId(&self, ctx: &mut Ctx, frameId: u32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_FrameId");
+        Ok(())
+    }
+    fn get_PointerFlags(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_PointerFlags");
+        Ok(Default::default())
+    }
+    fn put_PointerFlags(&self, ctx: &mut Ctx, pointerFlags: u32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_PointerFlags");
+        Ok(())
+    }
+    fn get_PointerDeviceRect(&self, ctx: &mut Ctx) -> WvResult<RECT> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_PointerDeviceRect");
+        Ok(Default::default())
+    }
+    fn put_PointerDeviceRect(&self, ctx: &mut Ctx, pointerDeviceRect: RECT) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_PointerDeviceRect");
+        Ok(())
+    }
+    fn get_DisplayRect(&self, ctx: &mut Ctx) -> WvResult<RECT> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_DisplayRect");
+        Ok(Default::default())
+    }
+    fn put_DisplayRect(&self, ctx: &mut Ctx, displayRect: RECT) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_DisplayRect");
+        Ok(())
+    }
+    fn get_PixelLocation(&self, ctx: &mut Ctx) -> WvResult<POINT> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_PixelLocation");
+        Ok(Default::default())
+    }
+    fn put_PixelLocation(&self, ctx: &mut Ctx, pixelLocation: POINT) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_PixelLocation");
+        Ok(())
+    }
+    fn get_HimetricLocation(&self, ctx: &mut Ctx) -> WvResult<POINT> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_HimetricLocation");
+        Ok(Default::default())
+    }
+    fn put_HimetricLocation(&self, ctx: &mut Ctx, himetricLocation: POINT) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_HimetricLocation");
+        Ok(())
+    }
+    fn get_PixelLocationRaw(&self, ctx: &mut Ctx) -> WvResult<POINT> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_PixelLocationRaw");
+        Ok(Default::default())
+    }
+    fn put_PixelLocationRaw(&self, ctx: &mut Ctx, pixelLocationRaw: POINT) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_PixelLocationRaw");
+        Ok(())
+    }
+    fn get_HimetricLocationRaw(&self, ctx: &mut Ctx) -> WvResult<POINT> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_HimetricLocationRaw");
+        Ok(Default::default())
+    }
+    fn put_HimetricLocationRaw(&self, ctx: &mut Ctx, himetricLocationRaw: POINT) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_HimetricLocationRaw");
+        Ok(())
+    }
+    fn get_Time(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_Time");
+        Ok(Default::default())
+    }
+    fn put_Time(&self, ctx: &mut Ctx, time: u32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_Time");
+        Ok(())
+    }
+    fn get_HistoryCount(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_HistoryCount");
+        Ok(Default::default())
+    }
+    fn put_HistoryCount(&self, ctx: &mut Ctx, historyCount: u32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_HistoryCount");
+        Ok(())
+    }
+    fn get_InputData(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_InputData");
+        Ok(Default::default())
+    }
+    fn put_InputData(&self, ctx: &mut Ctx, inputData: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_InputData");
+        Ok(())
+    }
+    fn get_KeyStates(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_KeyStates");
+        Ok(Default::default())
+    }
+    fn put_KeyStates(&self, ctx: &mut Ctx, keyStates: u32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_KeyStates");
+        Ok(())
+    }
+    fn get_PerformanceCount(&self, ctx: &mut Ctx) -> WvResult<u64> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_PerformanceCount");
+        Ok(Default::default())
+    }
+    fn put_PerformanceCount(&self, ctx: &mut Ctx, performanceCount: u64) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_PerformanceCount");
+        Ok(())
+    }
+    fn get_ButtonChangeKind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_ButtonChangeKind");
+        Ok(Default::default())
+    }
+    fn put_ButtonChangeKind(&self, ctx: &mut Ctx, buttonChangeKind: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_ButtonChangeKind");
+        Ok(())
+    }
+    fn get_PenFlags(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_PenFlags");
+        Ok(Default::default())
+    }
+    fn put_PenFlags(&self, ctx: &mut Ctx, penFLags: u32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_PenFlags");
+        Ok(())
+    }
+    fn get_PenMask(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_PenMask");
+        Ok(Default::default())
+    }
+    fn put_PenMask(&self, ctx: &mut Ctx, penMask: u32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_PenMask");
+        Ok(())
+    }
+    fn get_PenPressure(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_PenPressure");
+        Ok(Default::default())
+    }
+    fn put_PenPressure(&self, ctx: &mut Ctx, penPressure: u32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_PenPressure");
+        Ok(())
+    }
+    fn get_PenRotation(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_PenRotation");
+        Ok(Default::default())
+    }
+    fn put_PenRotation(&self, ctx: &mut Ctx, penRotation: u32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_PenRotation");
+        Ok(())
+    }
+    fn get_PenTiltX(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_PenTiltX");
+        Ok(Default::default())
+    }
+    fn put_PenTiltX(&self, ctx: &mut Ctx, penTiltX: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_PenTiltX");
+        Ok(())
+    }
+    fn get_PenTiltY(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_PenTiltY");
+        Ok(Default::default())
+    }
+    fn put_PenTiltY(&self, ctx: &mut Ctx, penTiltY: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_PenTiltY");
+        Ok(())
+    }
+    fn get_TouchFlags(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_TouchFlags");
+        Ok(Default::default())
+    }
+    fn put_TouchFlags(&self, ctx: &mut Ctx, touchFlags: u32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_TouchFlags");
+        Ok(())
+    }
+    fn get_TouchMask(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_TouchMask");
+        Ok(Default::default())
+    }
+    fn put_TouchMask(&self, ctx: &mut Ctx, touchMask: u32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_TouchMask");
+        Ok(())
+    }
+    fn get_TouchContact(&self, ctx: &mut Ctx) -> WvResult<RECT> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_TouchContact");
+        Ok(Default::default())
+    }
+    fn put_TouchContact(&self, ctx: &mut Ctx, touchContact: RECT) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_TouchContact");
+        Ok(())
+    }
+    fn get_TouchContactRaw(&self, ctx: &mut Ctx) -> WvResult<RECT> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_TouchContactRaw");
+        Ok(Default::default())
+    }
+    fn put_TouchContactRaw(&self, ctx: &mut Ctx, touchContactRaw: RECT) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_TouchContactRaw");
+        Ok(())
+    }
+    fn get_TouchOrientation(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_TouchOrientation");
+        Ok(Default::default())
+    }
+    fn put_TouchOrientation(&self, ctx: &mut Ctx, touchOrientation: u32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_TouchOrientation");
+        Ok(())
+    }
+    fn get_TouchPressure(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2PointerInfo::get_TouchPressure");
+        Ok(Default::default())
+    }
+    fn put_TouchPressure(&self, ctx: &mut Ctx, touchPressure: u32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PointerInfo::put_TouchPressure");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2PointerInfoObj<T: ICoreWebView2PointerInfoImpl>(pub T);
+
+impl<T: ICoreWebView2PointerInfoImpl> Dispatch for ICoreWebView2PointerInfoObj<T> {
+    fn family(&self) -> u32 { 23 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2PointerInfo_get_PointerKind => {
+                match self.0.get_PointerKind(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_PointerKind => {
+                let a_pointerKind = rd.u32().unwrap_or(0);
+                match self.0.put_PointerKind(ctx, a_pointerKind) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_PointerId => {
+                match self.0.get_PointerId(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_PointerId => {
+                let a_pointerId = rd.u32().unwrap_or(0);
+                match self.0.put_PointerId(ctx, a_pointerId) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_FrameId => {
+                match self.0.get_FrameId(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_FrameId => {
+                let a_frameId = rd.u32().unwrap_or(0);
+                match self.0.put_FrameId(ctx, a_frameId) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_PointerFlags => {
+                match self.0.get_PointerFlags(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_PointerFlags => {
+                let a_pointerFlags = rd.u32().unwrap_or(0);
+                match self.0.put_PointerFlags(ctx, a_pointerFlags) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_PointerDeviceRect => {
+                match self.0.get_PointerDeviceRect(ctx) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_PointerDeviceRect => {
+                let a_pointerDeviceRect = rd.pod::<RECT>();
+                match self.0.put_PointerDeviceRect(ctx, a_pointerDeviceRect) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_DisplayRect => {
+                match self.0.get_DisplayRect(ctx) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_DisplayRect => {
+                let a_displayRect = rd.pod::<RECT>();
+                match self.0.put_DisplayRect(ctx, a_displayRect) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_PixelLocation => {
+                match self.0.get_PixelLocation(ctx) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_PixelLocation => {
+                let a_pixelLocation = rd.pod::<POINT>();
+                match self.0.put_PixelLocation(ctx, a_pixelLocation) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_HimetricLocation => {
+                match self.0.get_HimetricLocation(ctx) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_HimetricLocation => {
+                let a_himetricLocation = rd.pod::<POINT>();
+                match self.0.put_HimetricLocation(ctx, a_himetricLocation) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_PixelLocationRaw => {
+                match self.0.get_PixelLocationRaw(ctx) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_PixelLocationRaw => {
+                let a_pixelLocationRaw = rd.pod::<POINT>();
+                match self.0.put_PixelLocationRaw(ctx, a_pixelLocationRaw) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_HimetricLocationRaw => {
+                match self.0.get_HimetricLocationRaw(ctx) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_HimetricLocationRaw => {
+                let a_himetricLocationRaw = rd.pod::<POINT>();
+                match self.0.put_HimetricLocationRaw(ctx, a_himetricLocationRaw) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_Time => {
+                match self.0.get_Time(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_Time => {
+                let a_time = rd.u32().unwrap_or(0);
+                match self.0.put_Time(ctx, a_time) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_HistoryCount => {
+                match self.0.get_HistoryCount(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_HistoryCount => {
+                let a_historyCount = rd.u32().unwrap_or(0);
+                match self.0.put_HistoryCount(ctx, a_historyCount) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_InputData => {
+                match self.0.get_InputData(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_InputData => {
+                let a_inputData = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_InputData(ctx, a_inputData) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_KeyStates => {
+                match self.0.get_KeyStates(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_KeyStates => {
+                let a_keyStates = rd.u32().unwrap_or(0);
+                match self.0.put_KeyStates(ctx, a_keyStates) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_PerformanceCount => {
+                match self.0.get_PerformanceCount(ctx) { Ok(v) => { wr.put_u64(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_PerformanceCount => {
+                let a_performanceCount = rd.u64().unwrap_or(0);
+                match self.0.put_PerformanceCount(ctx, a_performanceCount) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_ButtonChangeKind => {
+                match self.0.get_ButtonChangeKind(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_ButtonChangeKind => {
+                let a_buttonChangeKind = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_ButtonChangeKind(ctx, a_buttonChangeKind) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_PenFlags => {
+                match self.0.get_PenFlags(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_PenFlags => {
+                let a_penFLags = rd.u32().unwrap_or(0);
+                match self.0.put_PenFlags(ctx, a_penFLags) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_PenMask => {
+                match self.0.get_PenMask(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_PenMask => {
+                let a_penMask = rd.u32().unwrap_or(0);
+                match self.0.put_PenMask(ctx, a_penMask) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_PenPressure => {
+                match self.0.get_PenPressure(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_PenPressure => {
+                let a_penPressure = rd.u32().unwrap_or(0);
+                match self.0.put_PenPressure(ctx, a_penPressure) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_PenRotation => {
+                match self.0.get_PenRotation(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_PenRotation => {
+                let a_penRotation = rd.u32().unwrap_or(0);
+                match self.0.put_PenRotation(ctx, a_penRotation) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_PenTiltX => {
+                match self.0.get_PenTiltX(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_PenTiltX => {
+                let a_penTiltX = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_PenTiltX(ctx, a_penTiltX) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_PenTiltY => {
+                match self.0.get_PenTiltY(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_PenTiltY => {
+                let a_penTiltY = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_PenTiltY(ctx, a_penTiltY) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_TouchFlags => {
+                match self.0.get_TouchFlags(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_TouchFlags => {
+                let a_touchFlags = rd.u32().unwrap_or(0);
+                match self.0.put_TouchFlags(ctx, a_touchFlags) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_TouchMask => {
+                match self.0.get_TouchMask(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_TouchMask => {
+                let a_touchMask = rd.u32().unwrap_or(0);
+                match self.0.put_TouchMask(ctx, a_touchMask) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_TouchContact => {
+                match self.0.get_TouchContact(ctx) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_TouchContact => {
+                let a_touchContact = rd.pod::<RECT>();
+                match self.0.put_TouchContact(ctx, a_touchContact) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_TouchContactRaw => {
+                match self.0.get_TouchContactRaw(ctx) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_TouchContactRaw => {
+                let a_touchContactRaw = rd.pod::<RECT>();
+                match self.0.put_TouchContactRaw(ctx, a_touchContactRaw) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_TouchOrientation => {
+                match self.0.get_TouchOrientation(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_TouchOrientation => {
+                let a_touchOrientation = rd.u32().unwrap_or(0);
+                match self.0.put_TouchOrientation(ctx, a_touchOrientation) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_get_TouchPressure => {
+                match self.0.get_TouchPressure(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PointerInfo_put_TouchPressure => {
+                let a_touchPressure = rd.u32().unwrap_or(0);
+                match self.0.put_TouchPressure(ctx, a_touchPressure) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2PointerInfoStub;
+impl ICoreWebView2PointerInfoImpl for ICoreWebView2PointerInfoStub {}
+
+// ===== ICoreWebView2PrintSettings2 =====
+
+pub trait ICoreWebView2PrintSettings2Impl: 'static {
+    fn get_Orientation(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2PrintSettings::get_Orientation");
+        Ok(Default::default())
+    }
+    fn put_Orientation(&self, ctx: &mut Ctx, orientation: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings::put_Orientation");
+        Ok(())
+    }
+    fn get_ScaleFactor(&self, ctx: &mut Ctx) -> WvResult<f64> {
+        ctx.fixme("ICoreWebView2PrintSettings::get_ScaleFactor");
+        Ok(Default::default())
+    }
+    fn put_ScaleFactor(&self, ctx: &mut Ctx, scaleFactor: f64) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings::put_ScaleFactor");
+        Ok(())
+    }
+    fn get_PageWidth(&self, ctx: &mut Ctx) -> WvResult<f64> {
+        ctx.fixme("ICoreWebView2PrintSettings::get_PageWidth");
+        Ok(Default::default())
+    }
+    fn put_PageWidth(&self, ctx: &mut Ctx, pageWidth: f64) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings::put_PageWidth");
+        Ok(())
+    }
+    fn get_PageHeight(&self, ctx: &mut Ctx) -> WvResult<f64> {
+        ctx.fixme("ICoreWebView2PrintSettings::get_PageHeight");
+        Ok(Default::default())
+    }
+    fn put_PageHeight(&self, ctx: &mut Ctx, pageHeight: f64) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings::put_PageHeight");
+        Ok(())
+    }
+    fn get_MarginTop(&self, ctx: &mut Ctx) -> WvResult<f64> {
+        ctx.fixme("ICoreWebView2PrintSettings::get_MarginTop");
+        Ok(Default::default())
+    }
+    fn put_MarginTop(&self, ctx: &mut Ctx, marginTop: f64) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings::put_MarginTop");
+        Ok(())
+    }
+    fn get_MarginBottom(&self, ctx: &mut Ctx) -> WvResult<f64> {
+        ctx.fixme("ICoreWebView2PrintSettings::get_MarginBottom");
+        Ok(Default::default())
+    }
+    fn put_MarginBottom(&self, ctx: &mut Ctx, marginBottom: f64) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings::put_MarginBottom");
+        Ok(())
+    }
+    fn get_MarginLeft(&self, ctx: &mut Ctx) -> WvResult<f64> {
+        ctx.fixme("ICoreWebView2PrintSettings::get_MarginLeft");
+        Ok(Default::default())
+    }
+    fn put_MarginLeft(&self, ctx: &mut Ctx, marginLeft: f64) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings::put_MarginLeft");
+        Ok(())
+    }
+    fn get_MarginRight(&self, ctx: &mut Ctx) -> WvResult<f64> {
+        ctx.fixme("ICoreWebView2PrintSettings::get_MarginRight");
+        Ok(Default::default())
+    }
+    fn put_MarginRight(&self, ctx: &mut Ctx, marginRight: f64) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings::put_MarginRight");
+        Ok(())
+    }
+    fn get_ShouldPrintBackgrounds(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2PrintSettings::get_ShouldPrintBackgrounds");
+        Ok(Default::default())
+    }
+    fn put_ShouldPrintBackgrounds(&self, ctx: &mut Ctx, shouldPrintBackgrounds: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings::put_ShouldPrintBackgrounds");
+        Ok(())
+    }
+    fn get_ShouldPrintSelectionOnly(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2PrintSettings::get_ShouldPrintSelectionOnly");
+        Ok(Default::default())
+    }
+    fn put_ShouldPrintSelectionOnly(&self, ctx: &mut Ctx, shouldPrintSelectionOnly: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings::put_ShouldPrintSelectionOnly");
+        Ok(())
+    }
+    fn get_ShouldPrintHeaderAndFooter(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2PrintSettings::get_ShouldPrintHeaderAndFooter");
+        Ok(Default::default())
+    }
+    fn put_ShouldPrintHeaderAndFooter(&self, ctx: &mut Ctx, shouldPrintHeaderAndFooter: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings::put_ShouldPrintHeaderAndFooter");
+        Ok(())
+    }
+    fn get_HeaderTitle(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2PrintSettings::get_HeaderTitle");
+        Ok(String::new())
+    }
+    fn put_HeaderTitle(&self, ctx: &mut Ctx, headerTitle: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings::put_HeaderTitle");
+        Ok(())
+    }
+    fn get_FooterUri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2PrintSettings::get_FooterUri");
+        Ok(String::new())
+    }
+    fn put_FooterUri(&self, ctx: &mut Ctx, footerUri: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings::put_FooterUri");
+        Ok(())
+    }
+    fn get_PageRanges(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2PrintSettings2::get_PageRanges");
+        Ok(String::new())
+    }
+    fn put_PageRanges(&self, ctx: &mut Ctx, value: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings2::put_PageRanges");
+        Ok(())
+    }
+    fn get_PagesPerSide(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2PrintSettings2::get_PagesPerSide");
+        Ok(Default::default())
+    }
+    fn put_PagesPerSide(&self, ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings2::put_PagesPerSide");
+        Ok(())
+    }
+    fn get_Copies(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2PrintSettings2::get_Copies");
+        Ok(Default::default())
+    }
+    fn put_Copies(&self, ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings2::put_Copies");
+        Ok(())
+    }
+    fn get_Collation(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2PrintSettings2::get_Collation");
+        Ok(Default::default())
+    }
+    fn put_Collation(&self, ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings2::put_Collation");
+        Ok(())
+    }
+    fn get_ColorMode(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2PrintSettings2::get_ColorMode");
+        Ok(Default::default())
+    }
+    fn put_ColorMode(&self, ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings2::put_ColorMode");
+        Ok(())
+    }
+    fn get_Duplex(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2PrintSettings2::get_Duplex");
+        Ok(Default::default())
+    }
+    fn put_Duplex(&self, ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings2::put_Duplex");
+        Ok(())
+    }
+    fn get_MediaSize(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2PrintSettings2::get_MediaSize");
+        Ok(Default::default())
+    }
+    fn put_MediaSize(&self, ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings2::put_MediaSize");
+        Ok(())
+    }
+    fn get_PrinterName(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2PrintSettings2::get_PrinterName");
+        Ok(String::new())
+    }
+    fn put_PrinterName(&self, ctx: &mut Ctx, value: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PrintSettings2::put_PrinterName");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2PrintSettings2Obj<T: ICoreWebView2PrintSettings2Impl>(pub T);
+
+impl<T: ICoreWebView2PrintSettings2Impl> Dispatch for ICoreWebView2PrintSettings2Obj<T> {
+    fn family(&self) -> u32 { 24 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2PrintSettings_get_Orientation => {
+                match self.0.get_Orientation(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_put_Orientation => {
+                let a_orientation = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_Orientation(ctx, a_orientation) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_get_ScaleFactor => {
+                match self.0.get_ScaleFactor(ctx) { Ok(v) => { wr.put_u64(v.to_bits()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_put_ScaleFactor => {
+                let a_scaleFactor = f64::from_bits(rd.u64().unwrap_or(0));
+                match self.0.put_ScaleFactor(ctx, a_scaleFactor) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_get_PageWidth => {
+                match self.0.get_PageWidth(ctx) { Ok(v) => { wr.put_u64(v.to_bits()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_put_PageWidth => {
+                let a_pageWidth = f64::from_bits(rd.u64().unwrap_or(0));
+                match self.0.put_PageWidth(ctx, a_pageWidth) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_get_PageHeight => {
+                match self.0.get_PageHeight(ctx) { Ok(v) => { wr.put_u64(v.to_bits()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_put_PageHeight => {
+                let a_pageHeight = f64::from_bits(rd.u64().unwrap_or(0));
+                match self.0.put_PageHeight(ctx, a_pageHeight) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_get_MarginTop => {
+                match self.0.get_MarginTop(ctx) { Ok(v) => { wr.put_u64(v.to_bits()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_put_MarginTop => {
+                let a_marginTop = f64::from_bits(rd.u64().unwrap_or(0));
+                match self.0.put_MarginTop(ctx, a_marginTop) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_get_MarginBottom => {
+                match self.0.get_MarginBottom(ctx) { Ok(v) => { wr.put_u64(v.to_bits()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_put_MarginBottom => {
+                let a_marginBottom = f64::from_bits(rd.u64().unwrap_or(0));
+                match self.0.put_MarginBottom(ctx, a_marginBottom) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_get_MarginLeft => {
+                match self.0.get_MarginLeft(ctx) { Ok(v) => { wr.put_u64(v.to_bits()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_put_MarginLeft => {
+                let a_marginLeft = f64::from_bits(rd.u64().unwrap_or(0));
+                match self.0.put_MarginLeft(ctx, a_marginLeft) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_get_MarginRight => {
+                match self.0.get_MarginRight(ctx) { Ok(v) => { wr.put_u64(v.to_bits()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_put_MarginRight => {
+                let a_marginRight = f64::from_bits(rd.u64().unwrap_or(0));
+                match self.0.put_MarginRight(ctx, a_marginRight) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_get_ShouldPrintBackgrounds => {
+                match self.0.get_ShouldPrintBackgrounds(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_put_ShouldPrintBackgrounds => {
+                let a_shouldPrintBackgrounds = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_ShouldPrintBackgrounds(ctx, a_shouldPrintBackgrounds) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_get_ShouldPrintSelectionOnly => {
+                match self.0.get_ShouldPrintSelectionOnly(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_put_ShouldPrintSelectionOnly => {
+                let a_shouldPrintSelectionOnly = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_ShouldPrintSelectionOnly(ctx, a_shouldPrintSelectionOnly) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_get_ShouldPrintHeaderAndFooter => {
+                match self.0.get_ShouldPrintHeaderAndFooter(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_put_ShouldPrintHeaderAndFooter => {
+                let a_shouldPrintHeaderAndFooter = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_ShouldPrintHeaderAndFooter(ctx, a_shouldPrintHeaderAndFooter) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_get_HeaderTitle => {
+                match self.0.get_HeaderTitle(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_put_HeaderTitle => {
+                let a_headerTitle = rd.str_opt();
+                match self.0.put_HeaderTitle(ctx, a_headerTitle) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_get_FooterUri => {
+                match self.0.get_FooterUri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings_put_FooterUri => {
+                let a_footerUri = rd.str_opt();
+                match self.0.put_FooterUri(ctx, a_footerUri) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings2_get_PageRanges => {
+                match self.0.get_PageRanges(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings2_put_PageRanges => {
+                let a_value = rd.str_opt();
+                match self.0.put_PageRanges(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings2_get_PagesPerSide => {
+                match self.0.get_PagesPerSide(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings2_put_PagesPerSide => {
+                let a_value = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_PagesPerSide(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings2_get_Copies => {
+                match self.0.get_Copies(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings2_put_Copies => {
+                let a_value = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_Copies(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings2_get_Collation => {
+                match self.0.get_Collation(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings2_put_Collation => {
+                let a_value = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_Collation(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings2_get_ColorMode => {
+                match self.0.get_ColorMode(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings2_put_ColorMode => {
+                let a_value = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_ColorMode(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings2_get_Duplex => {
+                match self.0.get_Duplex(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings2_put_Duplex => {
+                let a_value = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_Duplex(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings2_get_MediaSize => {
+                match self.0.get_MediaSize(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings2_put_MediaSize => {
+                let a_value = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_MediaSize(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings2_get_PrinterName => {
+                match self.0.get_PrinterName(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PrintSettings2_put_PrinterName => {
+                let a_value = rd.str_opt();
+                match self.0.put_PrinterName(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2PrintSettings2Stub;
+impl ICoreWebView2PrintSettings2Impl for ICoreWebView2PrintSettings2Stub {}
+
+// ===== ICoreWebView2ProcessExtendedInfo =====
+
+pub trait ICoreWebView2ProcessExtendedInfoImpl: 'static {
+    fn get_ProcessInfo(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ProcessExtendedInfo::get_ProcessInfo");
+        Ok(ctx.stub(26))
+    }
+    fn get_AssociatedFrameInfos(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ProcessExtendedInfo::get_AssociatedFrameInfos");
+        Ok(ctx.stub(63))
+    }
+}
+
+pub struct ICoreWebView2ProcessExtendedInfoObj<T: ICoreWebView2ProcessExtendedInfoImpl>(pub T);
+
+impl<T: ICoreWebView2ProcessExtendedInfoImpl> Dispatch for ICoreWebView2ProcessExtendedInfoObj<T> {
+    fn family(&self) -> u32 { 25 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ProcessExtendedInfo_get_ProcessInfo => {
+                match self.0.get_ProcessInfo(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ProcessExtendedInfo_get_AssociatedFrameInfos => {
+                match self.0.get_AssociatedFrameInfos(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ProcessExtendedInfoStub;
+impl ICoreWebView2ProcessExtendedInfoImpl for ICoreWebView2ProcessExtendedInfoStub {}
+
+// ===== ICoreWebView2ProcessInfo =====
+
+pub trait ICoreWebView2ProcessInfoImpl: 'static {
+    fn get_ProcessId(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2ProcessInfo::get_ProcessId");
+        Ok(Default::default())
+    }
+    fn get_Kind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2ProcessInfo::get_Kind");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2ProcessInfoObj<T: ICoreWebView2ProcessInfoImpl>(pub T);
+
+impl<T: ICoreWebView2ProcessInfoImpl> Dispatch for ICoreWebView2ProcessInfoObj<T> {
+    fn family(&self) -> u32 { 26 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ProcessInfo_get_ProcessId => {
+                match self.0.get_ProcessId(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ProcessInfo_get_Kind => {
+                match self.0.get_Kind(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ProcessInfoStub;
+impl ICoreWebView2ProcessInfoImpl for ICoreWebView2ProcessInfoStub {}
+
+// ===== ICoreWebView2ScriptDialogOpeningEventArgs =====
+
+pub trait ICoreWebView2ScriptDialogOpeningEventArgsImpl: 'static {
+    fn get_Uri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ScriptDialogOpeningEventArgs::get_Uri");
+        Ok(String::new())
+    }
+    fn get_Kind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2ScriptDialogOpeningEventArgs::get_Kind");
+        Ok(Default::default())
+    }
+    fn get_Message(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ScriptDialogOpeningEventArgs::get_Message");
+        Ok(String::new())
+    }
+    fn Accept(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ScriptDialogOpeningEventArgs::Accept");
+        Ok(())
+    }
+    fn get_DefaultText(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ScriptDialogOpeningEventArgs::get_DefaultText");
+        Ok(String::new())
+    }
+    fn get_ResultText(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ScriptDialogOpeningEventArgs::get_ResultText");
+        Ok(String::new())
+    }
+    fn put_ResultText(&self, ctx: &mut Ctx, resultText: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ScriptDialogOpeningEventArgs::put_ResultText");
+        Ok(())
+    }
+    fn GetDeferral(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ScriptDialogOpeningEventArgs::GetDeferral");
+        Ok(ctx.stub(50))
+    }
+}
+
+pub struct ICoreWebView2ScriptDialogOpeningEventArgsObj<T: ICoreWebView2ScriptDialogOpeningEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2ScriptDialogOpeningEventArgsImpl> Dispatch for ICoreWebView2ScriptDialogOpeningEventArgsObj<T> {
+    fn family(&self) -> u32 { 27 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ScriptDialogOpeningEventArgs_get_Uri => {
+                match self.0.get_Uri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ScriptDialogOpeningEventArgs_get_Kind => {
+                match self.0.get_Kind(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ScriptDialogOpeningEventArgs_get_Message => {
+                match self.0.get_Message(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ScriptDialogOpeningEventArgs_Accept => {
+                match self.0.Accept(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ScriptDialogOpeningEventArgs_get_DefaultText => {
+                match self.0.get_DefaultText(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ScriptDialogOpeningEventArgs_get_ResultText => {
+                match self.0.get_ResultText(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ScriptDialogOpeningEventArgs_put_ResultText => {
+                let a_resultText = rd.str_opt();
+                match self.0.put_ResultText(ctx, a_resultText) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ScriptDialogOpeningEventArgs_GetDeferral => {
+                match self.0.GetDeferral(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ScriptDialogOpeningEventArgsStub;
+impl ICoreWebView2ScriptDialogOpeningEventArgsImpl for ICoreWebView2ScriptDialogOpeningEventArgsStub {}
+
+// ===== ICoreWebView2ScriptException =====
+
+pub trait ICoreWebView2ScriptExceptionImpl: 'static {
+    fn get_LineNumber(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2ScriptException::get_LineNumber");
+        Ok(Default::default())
+    }
+    fn get_ColumnNumber(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2ScriptException::get_ColumnNumber");
+        Ok(Default::default())
+    }
+    fn get_Name(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ScriptException::get_Name");
+        Ok(String::new())
+    }
+    fn get_Message(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ScriptException::get_Message");
+        Ok(String::new())
+    }
+    fn get_ToJson(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ScriptException::get_ToJson");
+        Ok(String::new())
+    }
+}
+
+pub struct ICoreWebView2ScriptExceptionObj<T: ICoreWebView2ScriptExceptionImpl>(pub T);
+
+impl<T: ICoreWebView2ScriptExceptionImpl> Dispatch for ICoreWebView2ScriptExceptionObj<T> {
+    fn family(&self) -> u32 { 28 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ScriptException_get_LineNumber => {
+                match self.0.get_LineNumber(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ScriptException_get_ColumnNumber => {
+                match self.0.get_ColumnNumber(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ScriptException_get_Name => {
+                match self.0.get_Name(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ScriptException_get_Message => {
+                match self.0.get_Message(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ScriptException_get_ToJson => {
+                match self.0.get_ToJson(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ScriptExceptionStub;
+impl ICoreWebView2ScriptExceptionImpl for ICoreWebView2ScriptExceptionStub {}
+
+// ===== ICoreWebView2ServerCertificateErrorDetectedEventArgs =====
+
+pub trait ICoreWebView2ServerCertificateErrorDetectedEventArgsImpl: 'static {
+    fn get_ErrorStatus(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2ServerCertificateErrorDetectedEventArgs::get_ErrorStatus");
+        Ok(Default::default())
+    }
+    fn get_RequestUri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ServerCertificateErrorDetectedEventArgs::get_RequestUri");
+        Ok(String::new())
+    }
+    fn get_ServerCertificate(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ServerCertificateErrorDetectedEventArgs::get_ServerCertificate");
+        Ok(ctx.stub(7))
+    }
+    fn get_Action(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2ServerCertificateErrorDetectedEventArgs::get_Action");
+        Ok(Default::default())
+    }
+    fn put_Action(&self, ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ServerCertificateErrorDetectedEventArgs::put_Action");
+        Ok(())
+    }
+    fn GetDeferral(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ServerCertificateErrorDetectedEventArgs::GetDeferral");
+        Ok(ctx.stub(50))
+    }
+}
+
+pub struct ICoreWebView2ServerCertificateErrorDetectedEventArgsObj<T: ICoreWebView2ServerCertificateErrorDetectedEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2ServerCertificateErrorDetectedEventArgsImpl> Dispatch for ICoreWebView2ServerCertificateErrorDetectedEventArgsObj<T> {
+    fn family(&self) -> u32 { 29 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_ErrorStatus => {
+                match self.0.get_ErrorStatus(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_RequestUri => {
+                match self.0.get_RequestUri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_ServerCertificate => {
+                match self.0.get_ServerCertificate(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ServerCertificateErrorDetectedEventArgs_get_Action => {
+                match self.0.get_Action(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ServerCertificateErrorDetectedEventArgs_put_Action => {
+                let a_value = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_Action(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ServerCertificateErrorDetectedEventArgs_GetDeferral => {
+                match self.0.GetDeferral(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ServerCertificateErrorDetectedEventArgsStub;
+impl ICoreWebView2ServerCertificateErrorDetectedEventArgsImpl for ICoreWebView2ServerCertificateErrorDetectedEventArgsStub {}
+
+// ===== ICoreWebView2SharedBuffer =====
+
+pub trait ICoreWebView2SharedBufferImpl: 'static {
+    fn get_Size(&self, ctx: &mut Ctx) -> WvResult<u64> {
+        ctx.fixme("ICoreWebView2SharedBuffer::get_Size");
+        Ok(Default::default())
+    }
+    fn OpenStream(&self, ctx: &mut Ctx) -> WvResult<Option<Vec<u8>>> {
+        ctx.fixme("ICoreWebView2SharedBuffer::OpenStream");
+        Ok(None)
+    }
+    fn Close(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2SharedBuffer::Close");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2SharedBufferObj<T: ICoreWebView2SharedBufferImpl>(pub T);
+
+impl<T: ICoreWebView2SharedBufferImpl> Dispatch for ICoreWebView2SharedBufferObj<T> {
+    fn family(&self) -> u32 { 30 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2SharedBuffer_get_Size => {
+                match self.0.get_Size(ctx) { Ok(v) => { wr.put_u64(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SharedBuffer_OpenStream => {
+                match self.0.OpenStream(ctx) { Ok(v) => { wr.put_stream(v.as_deref()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SharedBuffer_Close => {
+                match self.0.Close(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2SharedBufferStub;
+impl ICoreWebView2SharedBufferImpl for ICoreWebView2SharedBufferStub {}
+
+// ===== ICoreWebView2WebResourceRequest =====
+
+pub trait ICoreWebView2WebResourceRequestImpl: 'static {
+    fn get_Uri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2WebResourceRequest::get_Uri");
+        Ok(String::new())
+    }
+    fn put_Uri(&self, ctx: &mut Ctx, uri: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2WebResourceRequest::put_Uri");
+        Ok(())
+    }
+    fn get_Method(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2WebResourceRequest::get_Method");
+        Ok(String::new())
+    }
+    fn put_Method(&self, ctx: &mut Ctx, method: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2WebResourceRequest::put_Method");
+        Ok(())
+    }
+    fn get_Content(&self, ctx: &mut Ctx) -> WvResult<Option<Vec<u8>>> {
+        ctx.fixme("ICoreWebView2WebResourceRequest::get_Content");
+        Ok(None)
+    }
+    fn put_Content(&self, ctx: &mut Ctx, content: Option<Vec<u8>>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2WebResourceRequest::put_Content");
+        Ok(())
+    }
+    fn get_Headers(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2WebResourceRequest::get_Headers");
+        Ok(ctx.stub(65))
+    }
+}
+
+pub struct ICoreWebView2WebResourceRequestObj<T: ICoreWebView2WebResourceRequestImpl>(pub T);
+
+impl<T: ICoreWebView2WebResourceRequestImpl> Dispatch for ICoreWebView2WebResourceRequestObj<T> {
+    fn family(&self) -> u32 { 31 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2WebResourceRequest_get_Uri => {
+                match self.0.get_Uri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceRequest_put_Uri => {
+                let a_uri = rd.str_opt();
+                match self.0.put_Uri(ctx, a_uri) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceRequest_get_Method => {
+                match self.0.get_Method(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceRequest_put_Method => {
+                let a_method = rd.str_opt();
+                match self.0.put_Method(ctx, a_method) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceRequest_get_Content => {
+                match self.0.get_Content(ctx) { Ok(v) => { wr.put_stream(v.as_deref()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceRequest_put_Content => {
+                let a_content = rd.stream();
+                match self.0.put_Content(ctx, a_content) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceRequest_get_Headers => {
+                match self.0.get_Headers(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2WebResourceRequestStub;
+impl ICoreWebView2WebResourceRequestImpl for ICoreWebView2WebResourceRequestStub {}
+
+// ===== ICoreWebView2WebResourceResponse =====
+
+pub trait ICoreWebView2WebResourceResponseImpl: 'static {
+    fn get_Content(&self, ctx: &mut Ctx) -> WvResult<Option<Vec<u8>>> {
+        ctx.fixme("ICoreWebView2WebResourceResponse::get_Content");
+        Ok(None)
+    }
+    fn put_Content(&self, ctx: &mut Ctx, content: Option<Vec<u8>>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2WebResourceResponse::put_Content");
+        Ok(())
+    }
+    fn get_Headers(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2WebResourceResponse::get_Headers");
+        Ok(ctx.stub(66))
+    }
+    fn get_StatusCode(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2WebResourceResponse::get_StatusCode");
+        Ok(Default::default())
+    }
+    fn put_StatusCode(&self, ctx: &mut Ctx, statusCode: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2WebResourceResponse::put_StatusCode");
+        Ok(())
+    }
+    fn get_ReasonPhrase(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2WebResourceResponse::get_ReasonPhrase");
+        Ok(String::new())
+    }
+    fn put_ReasonPhrase(&self, ctx: &mut Ctx, reasonPhrase: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2WebResourceResponse::put_ReasonPhrase");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2WebResourceResponseObj<T: ICoreWebView2WebResourceResponseImpl>(pub T);
+
+impl<T: ICoreWebView2WebResourceResponseImpl> Dispatch for ICoreWebView2WebResourceResponseObj<T> {
+    fn family(&self) -> u32 { 32 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2WebResourceResponse_get_Content => {
+                match self.0.get_Content(ctx) { Ok(v) => { wr.put_stream(v.as_deref()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceResponse_put_Content => {
+                let a_content = rd.stream();
+                match self.0.put_Content(ctx, a_content) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceResponse_get_Headers => {
+                match self.0.get_Headers(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceResponse_get_StatusCode => {
+                match self.0.get_StatusCode(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceResponse_put_StatusCode => {
+                let a_statusCode = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_StatusCode(ctx, a_statusCode) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceResponse_get_ReasonPhrase => {
+                match self.0.get_ReasonPhrase(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceResponse_put_ReasonPhrase => {
+                let a_reasonPhrase = rd.str_opt();
+                match self.0.put_ReasonPhrase(ctx, a_reasonPhrase) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2WebResourceResponseStub;
+impl ICoreWebView2WebResourceResponseImpl for ICoreWebView2WebResourceResponseStub {}
+
+// ===== ICoreWebView2WebResourceResponseView =====
+
+pub trait ICoreWebView2WebResourceResponseViewImpl: 'static {
+    fn get_Headers(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2WebResourceResponseView::get_Headers");
+        Ok(ctx.stub(66))
+    }
+    fn get_StatusCode(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2WebResourceResponseView::get_StatusCode");
+        Ok(Default::default())
+    }
+    fn get_ReasonPhrase(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2WebResourceResponseView::get_ReasonPhrase");
+        Ok(String::new())
+    }
+    fn GetContent(&self, ctx: &mut Ctx, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2WebResourceResponseView::GetContent");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2WebResourceResponseViewObj<T: ICoreWebView2WebResourceResponseViewImpl>(pub T);
+
+impl<T: ICoreWebView2WebResourceResponseViewImpl> Dispatch for ICoreWebView2WebResourceResponseViewObj<T> {
+    fn family(&self) -> u32 { 33 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2WebResourceResponseView_get_Headers => {
+                match self.0.get_Headers(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceResponseView_get_StatusCode => {
+                match self.0.get_StatusCode(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceResponseView_get_ReasonPhrase => {
+                match self.0.get_ReasonPhrase(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceResponseView_GetContent => {
+                let a_handler = ctx.read_objref(rd);
+                match self.0.GetContent(ctx, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2WebResourceResponseViewStub;
+impl ICoreWebView2WebResourceResponseViewImpl for ICoreWebView2WebResourceResponseViewStub {}
+
+// ===== ICoreWebView2WindowFeatures =====
+
+pub trait ICoreWebView2WindowFeaturesImpl: 'static {
+    fn get_HasPosition(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2WindowFeatures::get_HasPosition");
+        Ok(Default::default())
+    }
+    fn get_HasSize(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2WindowFeatures::get_HasSize");
+        Ok(Default::default())
+    }
+    fn get_Left(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2WindowFeatures::get_Left");
+        Ok(Default::default())
+    }
+    fn get_Top(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2WindowFeatures::get_Top");
+        Ok(Default::default())
+    }
+    fn get_Height(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2WindowFeatures::get_Height");
+        Ok(Default::default())
+    }
+    fn get_Width(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2WindowFeatures::get_Width");
+        Ok(Default::default())
+    }
+    fn get_ShouldDisplayMenuBar(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2WindowFeatures::get_ShouldDisplayMenuBar");
+        Ok(Default::default())
+    }
+    fn get_ShouldDisplayStatus(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2WindowFeatures::get_ShouldDisplayStatus");
+        Ok(Default::default())
+    }
+    fn get_ShouldDisplayToolbar(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2WindowFeatures::get_ShouldDisplayToolbar");
+        Ok(Default::default())
+    }
+    fn get_ShouldDisplayScrollBars(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2WindowFeatures::get_ShouldDisplayScrollBars");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2WindowFeaturesObj<T: ICoreWebView2WindowFeaturesImpl>(pub T);
+
+impl<T: ICoreWebView2WindowFeaturesImpl> Dispatch for ICoreWebView2WindowFeaturesObj<T> {
+    fn family(&self) -> u32 { 34 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2WindowFeatures_get_HasPosition => {
+                match self.0.get_HasPosition(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WindowFeatures_get_HasSize => {
+                match self.0.get_HasSize(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WindowFeatures_get_Left => {
+                match self.0.get_Left(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WindowFeatures_get_Top => {
+                match self.0.get_Top(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WindowFeatures_get_Height => {
+                match self.0.get_Height(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WindowFeatures_get_Width => {
+                match self.0.get_Width(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WindowFeatures_get_ShouldDisplayMenuBar => {
+                match self.0.get_ShouldDisplayMenuBar(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WindowFeatures_get_ShouldDisplayStatus => {
+                match self.0.get_ShouldDisplayStatus(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WindowFeatures_get_ShouldDisplayToolbar => {
+                match self.0.get_ShouldDisplayToolbar(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WindowFeatures_get_ShouldDisplayScrollBars => {
+                match self.0.get_ShouldDisplayScrollBars(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2WindowFeaturesStub;
+impl ICoreWebView2WindowFeaturesImpl for ICoreWebView2WindowFeaturesStub {}
+
+// ===== ICoreWebView2ObjectCollection =====
+
+pub trait ICoreWebView2ObjectCollectionImpl: 'static {
+    fn get_Count(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2ObjectCollectionView::get_Count");
+        Ok(Default::default())
+    }
+    fn GetValueAtIndex(&self, ctx: &mut Ctx, index: u32) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ObjectCollectionView::GetValueAtIndex");
+        Ok(ctx.stub(93))
+    }
+    fn RemoveValueAtIndex(&self, ctx: &mut Ctx, index: u32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ObjectCollection::RemoveValueAtIndex");
+        Ok(())
+    }
+    fn InsertValueAtIndex(&self, ctx: &mut Ctx, index: u32, value: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ObjectCollection::InsertValueAtIndex");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2ObjectCollectionObj<T: ICoreWebView2ObjectCollectionImpl>(pub T);
+
+impl<T: ICoreWebView2ObjectCollectionImpl> Dispatch for ICoreWebView2ObjectCollectionObj<T> {
+    fn family(&self) -> u32 { 35 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ObjectCollectionView_get_Count => {
+                match self.0.get_Count(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ObjectCollectionView_GetValueAtIndex => {
+                let a_index = rd.u32().unwrap_or(0);
+                match self.0.GetValueAtIndex(ctx, a_index) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ObjectCollection_RemoveValueAtIndex => {
+                let a_index = rd.u32().unwrap_or(0);
+                match self.0.RemoveValueAtIndex(ctx, a_index) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ObjectCollection_InsertValueAtIndex => {
+                let a_index = rd.u32().unwrap_or(0);
+                let a_value = ctx.read_objref(rd);
+                match self.0.InsertValueAtIndex(ctx, a_index, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ObjectCollectionStub;
+impl ICoreWebView2ObjectCollectionImpl for ICoreWebView2ObjectCollectionStub {}
+
+// ===== ICoreWebView2Notification =====
+
+pub trait ICoreWebView2NotificationImpl: 'static {
+    fn add_CloseRequested(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Notification::add_CloseRequested");
+        Ok(Default::default())
+    }
+    fn remove_CloseRequested(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Notification::remove_CloseRequested");
+        Ok(())
+    }
+    fn ReportShown(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Notification::ReportShown");
+        Ok(())
+    }
+    fn ReportClicked(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Notification::ReportClicked");
+        Ok(())
+    }
+    fn ReportClosed(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Notification::ReportClosed");
+        Ok(())
+    }
+    fn get_Body(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Notification::get_Body");
+        Ok(String::new())
+    }
+    fn get_Direction(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2Notification::get_Direction");
+        Ok(Default::default())
+    }
+    fn get_Language(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Notification::get_Language");
+        Ok(String::new())
+    }
+    fn get_Tag(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Notification::get_Tag");
+        Ok(String::new())
+    }
+    fn get_IconUri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Notification::get_IconUri");
+        Ok(String::new())
+    }
+    fn get_Title(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Notification::get_Title");
+        Ok(String::new())
+    }
+    fn get_BadgeUri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Notification::get_BadgeUri");
+        Ok(String::new())
+    }
+    fn get_BodyImageUri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Notification::get_BodyImageUri");
+        Ok(String::new())
+    }
+    fn get_ShouldRenotify(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Notification::get_ShouldRenotify");
+        Ok(Default::default())
+    }
+    fn get_RequiresInteraction(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Notification::get_RequiresInteraction");
+        Ok(Default::default())
+    }
+    fn get_IsSilent(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Notification::get_IsSilent");
+        Ok(Default::default())
+    }
+    fn get_Timestamp(&self, ctx: &mut Ctx) -> WvResult<f64> {
+        ctx.fixme("ICoreWebView2Notification::get_Timestamp");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2NotificationObj<T: ICoreWebView2NotificationImpl>(pub T);
+
+impl<T: ICoreWebView2NotificationImpl> Dispatch for ICoreWebView2NotificationObj<T> {
+    fn family(&self) -> u32 { 36 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2Notification_add_CloseRequested => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_CloseRequested(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Notification_remove_CloseRequested => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_CloseRequested(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Notification_ReportShown => {
+                match self.0.ReportShown(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Notification_ReportClicked => {
+                match self.0.ReportClicked(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Notification_ReportClosed => {
+                match self.0.ReportClosed(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Notification_get_Body => {
+                match self.0.get_Body(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Notification_get_Direction => {
+                match self.0.get_Direction(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Notification_get_Language => {
+                match self.0.get_Language(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Notification_get_Tag => {
+                match self.0.get_Tag(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Notification_get_IconUri => {
+                match self.0.get_IconUri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Notification_get_Title => {
+                match self.0.get_Title(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Notification_get_BadgeUri => {
+                match self.0.get_BadgeUri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Notification_get_BodyImageUri => {
+                match self.0.get_BodyImageUri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Notification_get_ShouldRenotify => {
+                match self.0.get_ShouldRenotify(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Notification_get_RequiresInteraction => {
+                match self.0.get_RequiresInteraction(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Notification_get_IsSilent => {
+                match self.0.get_IsSilent(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Notification_get_Timestamp => {
+                match self.0.get_Timestamp(ctx) { Ok(v) => { wr.put_u64(v.to_bits()); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2NotificationStub;
+impl ICoreWebView2NotificationImpl for ICoreWebView2NotificationStub {}
+
+// ===== ICoreWebView2NotificationReceivedEventArgs =====
+
+pub trait ICoreWebView2NotificationReceivedEventArgsImpl: 'static {
+    fn get_SenderOrigin(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2NotificationReceivedEventArgs::get_SenderOrigin");
+        Ok(String::new())
+    }
+    fn get_Notification(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2NotificationReceivedEventArgs::get_Notification");
+        Ok(ctx.stub(36))
+    }
+    fn put_Handled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2NotificationReceivedEventArgs::put_Handled");
+        Ok(())
+    }
+    fn get_Handled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2NotificationReceivedEventArgs::get_Handled");
+        Ok(Default::default())
+    }
+    fn GetDeferral(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2NotificationReceivedEventArgs::GetDeferral");
+        Ok(ctx.stub(50))
+    }
+}
+
+pub struct ICoreWebView2NotificationReceivedEventArgsObj<T: ICoreWebView2NotificationReceivedEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2NotificationReceivedEventArgsImpl> Dispatch for ICoreWebView2NotificationReceivedEventArgsObj<T> {
+    fn family(&self) -> u32 { 37 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2NotificationReceivedEventArgs_get_SenderOrigin => {
+                match self.0.get_SenderOrigin(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NotificationReceivedEventArgs_get_Notification => {
+                match self.0.get_Notification(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NotificationReceivedEventArgs_put_Handled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_Handled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2NotificationReceivedEventArgs_get_Handled => {
+                match self.0.get_Handled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NotificationReceivedEventArgs_GetDeferral => {
+                match self.0.GetDeferral(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2NotificationReceivedEventArgsStub;
+impl ICoreWebView2NotificationReceivedEventArgsImpl for ICoreWebView2NotificationReceivedEventArgsStub {}
+
+// ===== ICoreWebView2SaveAsUIShowingEventArgs =====
+
+pub trait ICoreWebView2SaveAsUIShowingEventArgsImpl: 'static {
+    fn get_ContentMimeType(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2SaveAsUIShowingEventArgs::get_ContentMimeType");
+        Ok(String::new())
+    }
+    fn put_Cancel(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2SaveAsUIShowingEventArgs::put_Cancel");
+        Ok(())
+    }
+    fn get_Cancel(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2SaveAsUIShowingEventArgs::get_Cancel");
+        Ok(Default::default())
+    }
+    fn put_SuppressDefaultDialog(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2SaveAsUIShowingEventArgs::put_SuppressDefaultDialog");
+        Ok(())
+    }
+    fn get_SuppressDefaultDialog(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2SaveAsUIShowingEventArgs::get_SuppressDefaultDialog");
+        Ok(Default::default())
+    }
+    fn GetDeferral(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2SaveAsUIShowingEventArgs::GetDeferral");
+        Ok(ctx.stub(50))
+    }
+    fn put_SaveAsFilePath(&self, ctx: &mut Ctx, value: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2SaveAsUIShowingEventArgs::put_SaveAsFilePath");
+        Ok(())
+    }
+    fn get_SaveAsFilePath(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2SaveAsUIShowingEventArgs::get_SaveAsFilePath");
+        Ok(String::new())
+    }
+    fn put_AllowReplace(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2SaveAsUIShowingEventArgs::put_AllowReplace");
+        Ok(())
+    }
+    fn get_AllowReplace(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2SaveAsUIShowingEventArgs::get_AllowReplace");
+        Ok(Default::default())
+    }
+    fn put_Kind(&self, ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2SaveAsUIShowingEventArgs::put_Kind");
+        Ok(())
+    }
+    fn get_Kind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2SaveAsUIShowingEventArgs::get_Kind");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2SaveAsUIShowingEventArgsObj<T: ICoreWebView2SaveAsUIShowingEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2SaveAsUIShowingEventArgsImpl> Dispatch for ICoreWebView2SaveAsUIShowingEventArgsObj<T> {
+    fn family(&self) -> u32 { 38 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2SaveAsUIShowingEventArgs_get_ContentMimeType => {
+                match self.0.get_ContentMimeType(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SaveAsUIShowingEventArgs_put_Cancel => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_Cancel(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2SaveAsUIShowingEventArgs_get_Cancel => {
+                match self.0.get_Cancel(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SaveAsUIShowingEventArgs_put_SuppressDefaultDialog => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_SuppressDefaultDialog(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2SaveAsUIShowingEventArgs_get_SuppressDefaultDialog => {
+                match self.0.get_SuppressDefaultDialog(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SaveAsUIShowingEventArgs_GetDeferral => {
+                match self.0.GetDeferral(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SaveAsUIShowingEventArgs_put_SaveAsFilePath => {
+                let a_value = rd.str_opt();
+                match self.0.put_SaveAsFilePath(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2SaveAsUIShowingEventArgs_get_SaveAsFilePath => {
+                match self.0.get_SaveAsFilePath(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SaveAsUIShowingEventArgs_put_AllowReplace => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_AllowReplace(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2SaveAsUIShowingEventArgs_get_AllowReplace => {
+                match self.0.get_AllowReplace(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SaveAsUIShowingEventArgs_put_Kind => {
+                let a_value = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_Kind(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2SaveAsUIShowingEventArgs_get_Kind => {
+                match self.0.get_Kind(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2SaveAsUIShowingEventArgsStub;
+impl ICoreWebView2SaveAsUIShowingEventArgsImpl for ICoreWebView2SaveAsUIShowingEventArgsStub {}
+
+// ===== ICoreWebView2AcceleratorKeyPressedEventArgs2 =====
+
+pub trait ICoreWebView2AcceleratorKeyPressedEventArgs2Impl: 'static {
+    fn get_KeyEventKind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2AcceleratorKeyPressedEventArgs::get_KeyEventKind");
+        Ok(Default::default())
+    }
+    fn get_VirtualKey(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2AcceleratorKeyPressedEventArgs::get_VirtualKey");
+        Ok(Default::default())
+    }
+    fn get_KeyEventLParam(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2AcceleratorKeyPressedEventArgs::get_KeyEventLParam");
+        Ok(Default::default())
+    }
+    fn get_PhysicalKeyStatus(&self, ctx: &mut Ctx) -> WvResult<COREWEBVIEW2_PHYSICAL_KEY_STATUS> {
+        ctx.fixme("ICoreWebView2AcceleratorKeyPressedEventArgs::get_PhysicalKeyStatus");
+        Ok(Default::default())
+    }
+    fn get_Handled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2AcceleratorKeyPressedEventArgs::get_Handled");
+        Ok(Default::default())
+    }
+    fn put_Handled(&self, ctx: &mut Ctx, handled: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2AcceleratorKeyPressedEventArgs::put_Handled");
+        Ok(())
+    }
+    fn get_IsBrowserAcceleratorKeyEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2AcceleratorKeyPressedEventArgs2::get_IsBrowserAcceleratorKeyEnabled");
+        Ok(Default::default())
+    }
+    fn put_IsBrowserAcceleratorKeyEnabled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2AcceleratorKeyPressedEventArgs2::put_IsBrowserAcceleratorKeyEnabled");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2AcceleratorKeyPressedEventArgs2Obj<T: ICoreWebView2AcceleratorKeyPressedEventArgs2Impl>(pub T);
+
+impl<T: ICoreWebView2AcceleratorKeyPressedEventArgs2Impl> Dispatch for ICoreWebView2AcceleratorKeyPressedEventArgs2Obj<T> {
+    fn family(&self) -> u32 { 39 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2AcceleratorKeyPressedEventArgs_get_KeyEventKind => {
+                match self.0.get_KeyEventKind(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2AcceleratorKeyPressedEventArgs_get_VirtualKey => {
+                match self.0.get_VirtualKey(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2AcceleratorKeyPressedEventArgs_get_KeyEventLParam => {
+                match self.0.get_KeyEventLParam(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2AcceleratorKeyPressedEventArgs_get_PhysicalKeyStatus => {
+                match self.0.get_PhysicalKeyStatus(ctx) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2AcceleratorKeyPressedEventArgs_get_Handled => {
+                match self.0.get_Handled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2AcceleratorKeyPressedEventArgs_put_Handled => {
+                let a_handled = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_Handled(ctx, a_handled) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2AcceleratorKeyPressedEventArgs2_get_IsBrowserAcceleratorKeyEnabled => {
+                match self.0.get_IsBrowserAcceleratorKeyEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2AcceleratorKeyPressedEventArgs2_put_IsBrowserAcceleratorKeyEnabled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsBrowserAcceleratorKeyEnabled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2AcceleratorKeyPressedEventArgs2Stub;
+impl ICoreWebView2AcceleratorKeyPressedEventArgs2Impl for ICoreWebView2AcceleratorKeyPressedEventArgs2Stub {}
+
+// ===== ICoreWebView2BrowserProcessExitedEventArgs =====
+
+pub trait ICoreWebView2BrowserProcessExitedEventArgsImpl: 'static {
+    fn get_BrowserProcessExitKind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2BrowserProcessExitedEventArgs::get_BrowserProcessExitKind");
+        Ok(Default::default())
+    }
+    fn get_BrowserProcessId(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2BrowserProcessExitedEventArgs::get_BrowserProcessId");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2BrowserProcessExitedEventArgsObj<T: ICoreWebView2BrowserProcessExitedEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2BrowserProcessExitedEventArgsImpl> Dispatch for ICoreWebView2BrowserProcessExitedEventArgsObj<T> {
+    fn family(&self) -> u32 { 40 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2BrowserProcessExitedEventArgs_get_BrowserProcessExitKind => {
+                match self.0.get_BrowserProcessExitKind(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2BrowserProcessExitedEventArgs_get_BrowserProcessId => {
+                match self.0.get_BrowserProcessId(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2BrowserProcessExitedEventArgsStub;
+impl ICoreWebView2BrowserProcessExitedEventArgsImpl for ICoreWebView2BrowserProcessExitedEventArgsStub {}
+
+// ===== ICoreWebView2CompositionController5 =====
+
+pub trait ICoreWebView2CompositionController5Impl: 'static {
+    fn get_RootVisualTarget(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2CompositionController::get_RootVisualTarget");
+        Ok(ctx.stub(93))
+    }
+    fn put_RootVisualTarget(&self, ctx: &mut Ctx, target: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2CompositionController::put_RootVisualTarget");
+        Ok(())
+    }
+    fn SendMouseInput(&self, ctx: &mut Ctx, eventKind: i32, virtualKeys: i32, mouseData: u32, point: POINT) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2CompositionController::SendMouseInput");
+        Ok(())
+    }
+    fn SendPointerInput(&self, ctx: &mut Ctx, eventKind: i32, pointerInfo: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2CompositionController::SendPointerInput");
+        Ok(())
+    }
+    fn get_SystemCursorId(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2CompositionController::get_SystemCursorId");
+        Ok(Default::default())
+    }
+    fn add_CursorChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2CompositionController::add_CursorChanged");
+        Ok(Default::default())
+    }
+    fn remove_CursorChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2CompositionController::remove_CursorChanged");
+        Ok(())
+    }
+    fn get_AutomationProvider(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2CompositionController2::get_AutomationProvider");
+        Ok(ctx.stub(93))
+    }
+    fn DragLeave(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2CompositionController3::DragLeave");
+        Ok(())
+    }
+    fn DragOver(&self, ctx: &mut Ctx, keyState: u32, point: POINT) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2CompositionController3::DragOver");
+        Ok(Default::default())
+    }
+    fn GetNonClientRegionAtPoint(&self, ctx: &mut Ctx, point: POINT) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2CompositionController4::GetNonClientRegionAtPoint");
+        Ok(Default::default())
+    }
+    fn QueryNonClientRegion(&self, ctx: &mut Ctx, kind: i32) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2CompositionController4::QueryNonClientRegion");
+        Ok(ctx.stub(0))
+    }
+    fn add_NonClientRegionChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2CompositionController4::add_NonClientRegionChanged");
+        Ok(Default::default())
+    }
+    fn remove_NonClientRegionChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2CompositionController4::remove_NonClientRegionChanged");
+        Ok(())
+    }
+    fn add_DragStarting(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2CompositionController5::add_DragStarting");
+        Ok(Default::default())
+    }
+    fn remove_DragStarting(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2CompositionController5::remove_DragStarting");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2CompositionController5Obj<T: ICoreWebView2CompositionController5Impl>(pub T);
+
+impl<T: ICoreWebView2CompositionController5Impl> Dispatch for ICoreWebView2CompositionController5Obj<T> {
+    fn family(&self) -> u32 { 41 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2CompositionController_get_RootVisualTarget => {
+                match self.0.get_RootVisualTarget(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CompositionController_put_RootVisualTarget => {
+                let a_target = ctx.read_objref(rd);
+                match self.0.put_RootVisualTarget(ctx, a_target) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2CompositionController_SendMouseInput => {
+                let a_eventKind = rd.u32().unwrap_or(0) as i32;
+                let a_virtualKeys = rd.u32().unwrap_or(0) as i32;
+                let a_mouseData = rd.u32().unwrap_or(0);
+                let a_point = rd.pod::<POINT>();
+                match self.0.SendMouseInput(ctx, a_eventKind, a_virtualKeys, a_mouseData, a_point) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2CompositionController_SendPointerInput => {
+                let a_eventKind = rd.u32().unwrap_or(0) as i32;
+                let a_pointerInfo = ctx.read_objref(rd);
+                match self.0.SendPointerInput(ctx, a_eventKind, a_pointerInfo) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2CompositionController_get_SystemCursorId => {
+                match self.0.get_SystemCursorId(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CompositionController_add_CursorChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_CursorChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CompositionController_remove_CursorChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_CursorChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2CompositionController2_get_AutomationProvider => {
+                match self.0.get_AutomationProvider(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CompositionController3_DragLeave => {
+                match self.0.DragLeave(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2CompositionController3_DragOver => {
+                let a_keyState = rd.u32().unwrap_or(0);
+                let a_point = rd.pod::<POINT>();
+                match self.0.DragOver(ctx, a_keyState, a_point) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CompositionController4_GetNonClientRegionAtPoint => {
+                let a_point = rd.pod::<POINT>();
+                match self.0.GetNonClientRegionAtPoint(ctx, a_point) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CompositionController4_QueryNonClientRegion => {
+                let a_kind = rd.u32().unwrap_or(0) as i32;
+                match self.0.QueryNonClientRegion(ctx, a_kind) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CompositionController4_add_NonClientRegionChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_NonClientRegionChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CompositionController4_remove_NonClientRegionChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_NonClientRegionChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2CompositionController5_add_DragStarting => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_DragStarting(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CompositionController5_remove_DragStarting => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_DragStarting(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2CompositionController5Stub;
+impl ICoreWebView2CompositionController5Impl for ICoreWebView2CompositionController5Stub {}
+
+// ===== ICoreWebView2ContentLoadingEventArgs =====
+
+pub trait ICoreWebView2ContentLoadingEventArgsImpl: 'static {
+    fn get_IsErrorPage(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ContentLoadingEventArgs::get_IsErrorPage");
+        Ok(Default::default())
+    }
+    fn get_NavigationId(&self, ctx: &mut Ctx) -> WvResult<u64> {
+        ctx.fixme("ICoreWebView2ContentLoadingEventArgs::get_NavigationId");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2ContentLoadingEventArgsObj<T: ICoreWebView2ContentLoadingEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2ContentLoadingEventArgsImpl> Dispatch for ICoreWebView2ContentLoadingEventArgsObj<T> {
+    fn family(&self) -> u32 { 42 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ContentLoadingEventArgs_get_IsErrorPage => {
+                match self.0.get_IsErrorPage(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContentLoadingEventArgs_get_NavigationId => {
+                match self.0.get_NavigationId(ctx) { Ok(v) => { wr.put_u64(v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ContentLoadingEventArgsStub;
+impl ICoreWebView2ContentLoadingEventArgsImpl for ICoreWebView2ContentLoadingEventArgsStub {}
+
+// ===== ICoreWebView2ContextMenuItemCollection =====
+
+pub trait ICoreWebView2ContextMenuItemCollectionImpl: 'static {
+    fn get_Count(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2ContextMenuItemCollection::get_Count");
+        Ok(Default::default())
+    }
+    fn GetValueAtIndex(&self, ctx: &mut Ctx, index: u32) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ContextMenuItemCollection::GetValueAtIndex");
+        Ok(ctx.stub(10))
+    }
+    fn RemoveValueAtIndex(&self, ctx: &mut Ctx, index: u32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ContextMenuItemCollection::RemoveValueAtIndex");
+        Ok(())
+    }
+    fn InsertValueAtIndex(&self, ctx: &mut Ctx, index: u32, value: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ContextMenuItemCollection::InsertValueAtIndex");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2ContextMenuItemCollectionObj<T: ICoreWebView2ContextMenuItemCollectionImpl>(pub T);
+
+impl<T: ICoreWebView2ContextMenuItemCollectionImpl> Dispatch for ICoreWebView2ContextMenuItemCollectionObj<T> {
+    fn family(&self) -> u32 { 43 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ContextMenuItemCollection_get_Count => {
+                match self.0.get_Count(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuItemCollection_GetValueAtIndex => {
+                let a_index = rd.u32().unwrap_or(0);
+                match self.0.GetValueAtIndex(ctx, a_index) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuItemCollection_RemoveValueAtIndex => {
+                let a_index = rd.u32().unwrap_or(0);
+                match self.0.RemoveValueAtIndex(ctx, a_index) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ContextMenuItemCollection_InsertValueAtIndex => {
+                let a_index = rd.u32().unwrap_or(0);
+                let a_value = ctx.read_objref(rd);
+                match self.0.InsertValueAtIndex(ctx, a_index, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ContextMenuItemCollectionStub;
+impl ICoreWebView2ContextMenuItemCollectionImpl for ICoreWebView2ContextMenuItemCollectionStub {}
+
+// ===== ICoreWebView2Controller4 =====
+
+pub trait ICoreWebView2Controller4Impl: 'static {
+    fn get_IsVisible(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Controller::get_IsVisible");
+        Ok(Default::default())
+    }
+    fn put_IsVisible(&self, ctx: &mut Ctx, isVisible: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller::put_IsVisible");
+        Ok(())
+    }
+    fn get_Bounds(&self, ctx: &mut Ctx) -> WvResult<RECT> {
+        ctx.fixme("ICoreWebView2Controller::get_Bounds");
+        Ok(Default::default())
+    }
+    fn put_Bounds(&self, ctx: &mut Ctx, bounds: RECT) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller::put_Bounds");
+        Ok(())
+    }
+    fn get_ZoomFactor(&self, ctx: &mut Ctx) -> WvResult<f64> {
+        ctx.fixme("ICoreWebView2Controller::get_ZoomFactor");
+        Ok(Default::default())
+    }
+    fn put_ZoomFactor(&self, ctx: &mut Ctx, zoomFactor: f64) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller::put_ZoomFactor");
+        Ok(())
+    }
+    fn add_ZoomFactorChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Controller::add_ZoomFactorChanged");
+        Ok(Default::default())
+    }
+    fn remove_ZoomFactorChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller::remove_ZoomFactorChanged");
+        Ok(())
+    }
+    fn SetBoundsAndZoomFactor(&self, ctx: &mut Ctx, bounds: RECT, zoomFactor: f64) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller::SetBoundsAndZoomFactor");
+        Ok(())
+    }
+    fn MoveFocus(&self, ctx: &mut Ctx, reason: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller::MoveFocus");
+        Ok(())
+    }
+    fn add_MoveFocusRequested(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Controller::add_MoveFocusRequested");
+        Ok(Default::default())
+    }
+    fn remove_MoveFocusRequested(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller::remove_MoveFocusRequested");
+        Ok(())
+    }
+    fn add_GotFocus(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Controller::add_GotFocus");
+        Ok(Default::default())
+    }
+    fn remove_GotFocus(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller::remove_GotFocus");
+        Ok(())
+    }
+    fn add_LostFocus(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Controller::add_LostFocus");
+        Ok(Default::default())
+    }
+    fn remove_LostFocus(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller::remove_LostFocus");
+        Ok(())
+    }
+    fn add_AcceleratorKeyPressed(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Controller::add_AcceleratorKeyPressed");
+        Ok(Default::default())
+    }
+    fn remove_AcceleratorKeyPressed(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller::remove_AcceleratorKeyPressed");
+        Ok(())
+    }
+    fn get_ParentWindow(&self, ctx: &mut Ctx) -> WvResult<u64> {
+        ctx.fixme("ICoreWebView2Controller::get_ParentWindow");
+        Ok(Default::default())
+    }
+    fn put_ParentWindow(&self, ctx: &mut Ctx, parentWindow: u64) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller::put_ParentWindow");
+        Ok(())
+    }
+    fn NotifyParentWindowPositionChanged(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller::NotifyParentWindowPositionChanged");
+        Ok(())
+    }
+    fn Close(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller::Close");
+        Ok(())
+    }
+    fn get_CoreWebView2(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2Controller::get_CoreWebView2");
+        Ok(ctx.stub(93))
+    }
+    fn get_DefaultBackgroundColor(&self, ctx: &mut Ctx) -> WvResult<COREWEBVIEW2_COLOR> {
+        ctx.fixme("ICoreWebView2Controller2::get_DefaultBackgroundColor");
+        Ok(Default::default())
+    }
+    fn put_DefaultBackgroundColor(&self, ctx: &mut Ctx, value: COREWEBVIEW2_COLOR) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller2::put_DefaultBackgroundColor");
+        Ok(())
+    }
+    fn get_RasterizationScale(&self, ctx: &mut Ctx) -> WvResult<f64> {
+        ctx.fixme("ICoreWebView2Controller3::get_RasterizationScale");
+        Ok(Default::default())
+    }
+    fn put_RasterizationScale(&self, ctx: &mut Ctx, scale: f64) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller3::put_RasterizationScale");
+        Ok(())
+    }
+    fn get_ShouldDetectMonitorScaleChanges(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Controller3::get_ShouldDetectMonitorScaleChanges");
+        Ok(Default::default())
+    }
+    fn put_ShouldDetectMonitorScaleChanges(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller3::put_ShouldDetectMonitorScaleChanges");
+        Ok(())
+    }
+    fn add_RasterizationScaleChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Controller3::add_RasterizationScaleChanged");
+        Ok(Default::default())
+    }
+    fn remove_RasterizationScaleChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller3::remove_RasterizationScaleChanged");
+        Ok(())
+    }
+    fn get_BoundsMode(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2Controller3::get_BoundsMode");
+        Ok(Default::default())
+    }
+    fn put_BoundsMode(&self, ctx: &mut Ctx, boundsMode: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller3::put_BoundsMode");
+        Ok(())
+    }
+    fn get_AllowExternalDrop(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Controller4::get_AllowExternalDrop");
+        Ok(Default::default())
+    }
+    fn put_AllowExternalDrop(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Controller4::put_AllowExternalDrop");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2Controller4Obj<T: ICoreWebView2Controller4Impl>(pub T);
+
+impl<T: ICoreWebView2Controller4Impl> Dispatch for ICoreWebView2Controller4Obj<T> {
+    fn family(&self) -> u32 { 44 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2Controller_get_IsVisible => {
+                match self.0.get_IsVisible(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Controller_put_IsVisible => {
+                let a_isVisible = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsVisible(ctx, a_isVisible) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller_get_Bounds => {
+                match self.0.get_Bounds(ctx) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Controller_put_Bounds => {
+                let a_bounds = rd.pod::<RECT>();
+                match self.0.put_Bounds(ctx, a_bounds) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller_get_ZoomFactor => {
+                match self.0.get_ZoomFactor(ctx) { Ok(v) => { wr.put_u64(v.to_bits()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Controller_put_ZoomFactor => {
+                let a_zoomFactor = f64::from_bits(rd.u64().unwrap_or(0));
+                match self.0.put_ZoomFactor(ctx, a_zoomFactor) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller_add_ZoomFactorChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_ZoomFactorChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Controller_remove_ZoomFactorChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_ZoomFactorChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller_SetBoundsAndZoomFactor => {
+                let a_bounds = rd.pod::<RECT>();
+                let a_zoomFactor = f64::from_bits(rd.u64().unwrap_or(0));
+                match self.0.SetBoundsAndZoomFactor(ctx, a_bounds, a_zoomFactor) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller_MoveFocus => {
+                let a_reason = rd.u32().unwrap_or(0) as i32;
+                match self.0.MoveFocus(ctx, a_reason) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller_add_MoveFocusRequested => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_MoveFocusRequested(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Controller_remove_MoveFocusRequested => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_MoveFocusRequested(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller_add_GotFocus => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_GotFocus(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Controller_remove_GotFocus => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_GotFocus(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller_add_LostFocus => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_LostFocus(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Controller_remove_LostFocus => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_LostFocus(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller_add_AcceleratorKeyPressed => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_AcceleratorKeyPressed(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Controller_remove_AcceleratorKeyPressed => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_AcceleratorKeyPressed(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller_get_ParentWindow => {
+                match self.0.get_ParentWindow(ctx) { Ok(v) => { wr.put_u64(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Controller_put_ParentWindow => {
+                let a_parentWindow = rd.u64().unwrap_or(0);
+                match self.0.put_ParentWindow(ctx, a_parentWindow) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller_NotifyParentWindowPositionChanged => {
+                match self.0.NotifyParentWindowPositionChanged(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller_Close => {
+                match self.0.Close(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller_get_CoreWebView2 => {
+                match self.0.get_CoreWebView2(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Controller2_get_DefaultBackgroundColor => {
+                match self.0.get_DefaultBackgroundColor(ctx) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Controller2_put_DefaultBackgroundColor => {
+                let a_value = rd.pod::<COREWEBVIEW2_COLOR>();
+                match self.0.put_DefaultBackgroundColor(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller3_get_RasterizationScale => {
+                match self.0.get_RasterizationScale(ctx) { Ok(v) => { wr.put_u64(v.to_bits()); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Controller3_put_RasterizationScale => {
+                let a_scale = f64::from_bits(rd.u64().unwrap_or(0));
+                match self.0.put_RasterizationScale(ctx, a_scale) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller3_get_ShouldDetectMonitorScaleChanges => {
+                match self.0.get_ShouldDetectMonitorScaleChanges(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Controller3_put_ShouldDetectMonitorScaleChanges => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_ShouldDetectMonitorScaleChanges(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller3_add_RasterizationScaleChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_RasterizationScaleChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Controller3_remove_RasterizationScaleChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_RasterizationScaleChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller3_get_BoundsMode => {
+                match self.0.get_BoundsMode(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Controller3_put_BoundsMode => {
+                let a_boundsMode = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_BoundsMode(ctx, a_boundsMode) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Controller4_get_AllowExternalDrop => {
+                match self.0.get_AllowExternalDrop(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Controller4_put_AllowExternalDrop => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_AllowExternalDrop(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2Controller4Stub;
+impl ICoreWebView2Controller4Impl for ICoreWebView2Controller4Stub {}
+
+// ===== ICoreWebView2ControllerOptions4 =====
+
+pub trait ICoreWebView2ControllerOptions4Impl: 'static {
+    fn get_ProfileName(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ControllerOptions::get_ProfileName");
+        Ok(String::new())
+    }
+    fn put_ProfileName(&self, ctx: &mut Ctx, value: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ControllerOptions::put_ProfileName");
+        Ok(())
+    }
+    fn get_IsInPrivateModeEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ControllerOptions::get_IsInPrivateModeEnabled");
+        Ok(Default::default())
+    }
+    fn put_IsInPrivateModeEnabled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ControllerOptions::put_IsInPrivateModeEnabled");
+        Ok(())
+    }
+    fn get_ScriptLocale(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ControllerOptions2::get_ScriptLocale");
+        Ok(String::new())
+    }
+    fn put_ScriptLocale(&self, ctx: &mut Ctx, value: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ControllerOptions2::put_ScriptLocale");
+        Ok(())
+    }
+    fn get_DefaultBackgroundColor(&self, ctx: &mut Ctx) -> WvResult<COREWEBVIEW2_COLOR> {
+        ctx.fixme("ICoreWebView2ControllerOptions3::get_DefaultBackgroundColor");
+        Ok(Default::default())
+    }
+    fn put_DefaultBackgroundColor(&self, ctx: &mut Ctx, value: COREWEBVIEW2_COLOR) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ControllerOptions3::put_DefaultBackgroundColor");
+        Ok(())
+    }
+    fn get_AllowHostInputProcessing(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ControllerOptions4::get_AllowHostInputProcessing");
+        Ok(Default::default())
+    }
+    fn put_AllowHostInputProcessing(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ControllerOptions4::put_AllowHostInputProcessing");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2ControllerOptions4Obj<T: ICoreWebView2ControllerOptions4Impl>(pub T);
+
+impl<T: ICoreWebView2ControllerOptions4Impl> Dispatch for ICoreWebView2ControllerOptions4Obj<T> {
+    fn family(&self) -> u32 { 45 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ControllerOptions_get_ProfileName => {
+                match self.0.get_ProfileName(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ControllerOptions_put_ProfileName => {
+                let a_value = rd.str_opt();
+                match self.0.put_ProfileName(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ControllerOptions_get_IsInPrivateModeEnabled => {
+                match self.0.get_IsInPrivateModeEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ControllerOptions_put_IsInPrivateModeEnabled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsInPrivateModeEnabled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ControllerOptions2_get_ScriptLocale => {
+                match self.0.get_ScriptLocale(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ControllerOptions2_put_ScriptLocale => {
+                let a_value = rd.str_opt();
+                match self.0.put_ScriptLocale(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ControllerOptions3_get_DefaultBackgroundColor => {
+                match self.0.get_DefaultBackgroundColor(ctx) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ControllerOptions3_put_DefaultBackgroundColor => {
+                let a_value = rd.pod::<COREWEBVIEW2_COLOR>();
+                match self.0.put_DefaultBackgroundColor(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ControllerOptions4_get_AllowHostInputProcessing => {
+                match self.0.get_AllowHostInputProcessing(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ControllerOptions4_put_AllowHostInputProcessing => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_AllowHostInputProcessing(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ControllerOptions4Stub;
+impl ICoreWebView2ControllerOptions4Impl for ICoreWebView2ControllerOptions4Stub {}
+
+// ===== ICoreWebView2CrashReport =====
+
+pub trait ICoreWebView2CrashReportImpl: 'static {
+    fn get_BucketId(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2CrashReport::get_BucketId");
+        Ok(String::new())
+    }
+    fn get_CrashReportId(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2CrashReport::get_CrashReportId");
+        Ok(String::new())
+    }
+    fn get_ExceptionCode(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2CrashReport::get_ExceptionCode");
+        Ok(Default::default())
+    }
+    fn get_FaultOffset(&self, ctx: &mut Ctx) -> WvResult<u64> {
+        ctx.fixme("ICoreWebView2CrashReport::get_FaultOffset");
+        Ok(Default::default())
+    }
+    fn get_FaultingModuleName(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2CrashReport::get_FaultingModuleName");
+        Ok(String::new())
+    }
+    fn get_FaultingModuleVersion(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2CrashReport::get_FaultingModuleVersion");
+        Ok(String::new())
+    }
+    fn get_ReportTime(&self, ctx: &mut Ctx) -> WvResult<u64> {
+        ctx.fixme("ICoreWebView2CrashReport::get_ReportTime");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2CrashReportObj<T: ICoreWebView2CrashReportImpl>(pub T);
+
+impl<T: ICoreWebView2CrashReportImpl> Dispatch for ICoreWebView2CrashReportObj<T> {
+    fn family(&self) -> u32 { 46 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2CrashReport_get_BucketId => {
+                match self.0.get_BucketId(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CrashReport_get_CrashReportId => {
+                match self.0.get_CrashReportId(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CrashReport_get_ExceptionCode => {
+                match self.0.get_ExceptionCode(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CrashReport_get_FaultOffset => {
+                match self.0.get_FaultOffset(ctx) { Ok(v) => { wr.put_u64(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CrashReport_get_FaultingModuleName => {
+                match self.0.get_FaultingModuleName(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CrashReport_get_FaultingModuleVersion => {
+                match self.0.get_FaultingModuleVersion(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2CrashReport_get_ReportTime => {
+                match self.0.get_ReportTime(ctx) { Ok(v) => { wr.put_u64(v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2CrashReportStub;
+impl ICoreWebView2CrashReportImpl for ICoreWebView2CrashReportStub {}
+
+// ===== ICoreWebView2DOMContentLoadedEventArgs =====
+
+pub trait ICoreWebView2DOMContentLoadedEventArgsImpl: 'static {
+    fn get_NavigationId(&self, ctx: &mut Ctx) -> WvResult<u64> {
+        ctx.fixme("ICoreWebView2DOMContentLoadedEventArgs::get_NavigationId");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2DOMContentLoadedEventArgsObj<T: ICoreWebView2DOMContentLoadedEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2DOMContentLoadedEventArgsImpl> Dispatch for ICoreWebView2DOMContentLoadedEventArgsObj<T> {
+    fn family(&self) -> u32 { 47 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2DOMContentLoadedEventArgs_get_NavigationId => {
+                match self.0.get_NavigationId(ctx) { Ok(v) => { wr.put_u64(v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2DOMContentLoadedEventArgsStub;
+impl ICoreWebView2DOMContentLoadedEventArgsImpl for ICoreWebView2DOMContentLoadedEventArgsStub {}
+
+// ===== ICoreWebView2DedicatedWorker =====
+
+pub trait ICoreWebView2DedicatedWorkerImpl: 'static {
+    fn get_ScriptUri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2DedicatedWorker::get_ScriptUri");
+        Ok(String::new())
+    }
+    fn add_DedicatedWorkerCreated(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2DedicatedWorker::add_DedicatedWorkerCreated");
+        Ok(Default::default())
+    }
+    fn remove_DedicatedWorkerCreated(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2DedicatedWorker::remove_DedicatedWorkerCreated");
+        Ok(())
+    }
+    fn add_Destroying(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2DedicatedWorker::add_Destroying");
+        Ok(Default::default())
+    }
+    fn remove_Destroying(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2DedicatedWorker::remove_Destroying");
+        Ok(())
+    }
+    fn add_WebMessageReceived(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2DedicatedWorker::add_WebMessageReceived");
+        Ok(Default::default())
+    }
+    fn remove_WebMessageReceived(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2DedicatedWorker::remove_WebMessageReceived");
+        Ok(())
+    }
+    fn PostWebMessageAsJson(&self, ctx: &mut Ctx, webMessageAsJson: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2DedicatedWorker::PostWebMessageAsJson");
+        Ok(())
+    }
+    fn PostWebMessageAsString(&self, ctx: &mut Ctx, webMessageAsString: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2DedicatedWorker::PostWebMessageAsString");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2DedicatedWorkerObj<T: ICoreWebView2DedicatedWorkerImpl>(pub T);
+
+impl<T: ICoreWebView2DedicatedWorkerImpl> Dispatch for ICoreWebView2DedicatedWorkerObj<T> {
+    fn family(&self) -> u32 { 48 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2DedicatedWorker_get_ScriptUri => {
+                match self.0.get_ScriptUri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DedicatedWorker_add_DedicatedWorkerCreated => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_DedicatedWorkerCreated(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DedicatedWorker_remove_DedicatedWorkerCreated => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_DedicatedWorkerCreated(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2DedicatedWorker_add_Destroying => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_Destroying(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DedicatedWorker_remove_Destroying => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_Destroying(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2DedicatedWorker_add_WebMessageReceived => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_WebMessageReceived(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DedicatedWorker_remove_WebMessageReceived => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_WebMessageReceived(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2DedicatedWorker_PostWebMessageAsJson => {
+                let a_webMessageAsJson = rd.str_opt();
+                match self.0.PostWebMessageAsJson(ctx, a_webMessageAsJson) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2DedicatedWorker_PostWebMessageAsString => {
+                let a_webMessageAsString = rd.str_opt();
+                match self.0.PostWebMessageAsString(ctx, a_webMessageAsString) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2DedicatedWorkerStub;
+impl ICoreWebView2DedicatedWorkerImpl for ICoreWebView2DedicatedWorkerStub {}
+
+// ===== ICoreWebView2DedicatedWorkerCreatedEventArgs =====
+
+pub trait ICoreWebView2DedicatedWorkerCreatedEventArgsImpl: 'static {
+    fn get_OriginalSourceFrameInfo(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2DedicatedWorkerCreatedEventArgs::get_OriginalSourceFrameInfo");
+        Ok(ctx.stub(18))
+    }
+    fn get_Worker(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2DedicatedWorkerCreatedEventArgs::get_Worker");
+        Ok(ctx.stub(48))
+    }
+}
+
+pub struct ICoreWebView2DedicatedWorkerCreatedEventArgsObj<T: ICoreWebView2DedicatedWorkerCreatedEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2DedicatedWorkerCreatedEventArgsImpl> Dispatch for ICoreWebView2DedicatedWorkerCreatedEventArgsObj<T> {
+    fn family(&self) -> u32 { 49 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2DedicatedWorkerCreatedEventArgs_get_OriginalSourceFrameInfo => {
+                match self.0.get_OriginalSourceFrameInfo(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DedicatedWorkerCreatedEventArgs_get_Worker => {
+                match self.0.get_Worker(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2DedicatedWorkerCreatedEventArgsStub;
+impl ICoreWebView2DedicatedWorkerCreatedEventArgsImpl for ICoreWebView2DedicatedWorkerCreatedEventArgsStub {}
+
+// ===== ICoreWebView2Deferral =====
+
+pub trait ICoreWebView2DeferralImpl: 'static {
+    fn Complete(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Deferral::Complete");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2DeferralObj<T: ICoreWebView2DeferralImpl>(pub T);
+
+impl<T: ICoreWebView2DeferralImpl> Dispatch for ICoreWebView2DeferralObj<T> {
+    fn family(&self) -> u32 { 50 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2Deferral_Complete => {
+                match self.0.Complete(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2DeferralStub;
+impl ICoreWebView2DeferralImpl for ICoreWebView2DeferralStub {}
+
+// ===== ICoreWebView2DevToolsProtocolEventReceivedEventArgs2 =====
+
+pub trait ICoreWebView2DevToolsProtocolEventReceivedEventArgs2Impl: 'static {
+    fn get_ParameterObjectAsJson(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2DevToolsProtocolEventReceivedEventArgs::get_ParameterObjectAsJson");
+        Ok(String::new())
+    }
+    fn get_SessionId(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2DevToolsProtocolEventReceivedEventArgs2::get_SessionId");
+        Ok(String::new())
+    }
+}
+
+pub struct ICoreWebView2DevToolsProtocolEventReceivedEventArgs2Obj<T: ICoreWebView2DevToolsProtocolEventReceivedEventArgs2Impl>(pub T);
+
+impl<T: ICoreWebView2DevToolsProtocolEventReceivedEventArgs2Impl> Dispatch for ICoreWebView2DevToolsProtocolEventReceivedEventArgs2Obj<T> {
+    fn family(&self) -> u32 { 51 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2DevToolsProtocolEventReceivedEventArgs_get_ParameterObjectAsJson => {
+                match self.0.get_ParameterObjectAsJson(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DevToolsProtocolEventReceivedEventArgs2_get_SessionId => {
+                match self.0.get_SessionId(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2DevToolsProtocolEventReceivedEventArgs2Stub;
+impl ICoreWebView2DevToolsProtocolEventReceivedEventArgs2Impl for ICoreWebView2DevToolsProtocolEventReceivedEventArgs2Stub {}
+
+// ===== ICoreWebView2DevToolsProtocolEventReceiver =====
+
+pub trait ICoreWebView2DevToolsProtocolEventReceiverImpl: 'static {
+    fn add_DevToolsProtocolEventReceived(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2DevToolsProtocolEventReceiver::add_DevToolsProtocolEventReceived");
+        Ok(Default::default())
+    }
+    fn remove_DevToolsProtocolEventReceived(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2DevToolsProtocolEventReceiver::remove_DevToolsProtocolEventReceived");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2DevToolsProtocolEventReceiverObj<T: ICoreWebView2DevToolsProtocolEventReceiverImpl>(pub T);
+
+impl<T: ICoreWebView2DevToolsProtocolEventReceiverImpl> Dispatch for ICoreWebView2DevToolsProtocolEventReceiverObj<T> {
+    fn family(&self) -> u32 { 52 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2DevToolsProtocolEventReceiver_add_DevToolsProtocolEventReceived => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_DevToolsProtocolEventReceived(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DevToolsProtocolEventReceiver_remove_DevToolsProtocolEventReceived => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_DevToolsProtocolEventReceived(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2DevToolsProtocolEventReceiverStub;
+impl ICoreWebView2DevToolsProtocolEventReceiverImpl for ICoreWebView2DevToolsProtocolEventReceiverStub {}
+
+// ===== ICoreWebView2DragStartingEventArgs =====
+
+pub trait ICoreWebView2DragStartingEventArgsImpl: 'static {
+    fn get_AllowedDropEffects(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2DragStartingEventArgs::get_AllowedDropEffects");
+        Ok(Default::default())
+    }
+    fn get_Handled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2DragStartingEventArgs::get_Handled");
+        Ok(Default::default())
+    }
+    fn put_Handled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2DragStartingEventArgs::put_Handled");
+        Ok(())
+    }
+    fn get_Position(&self, ctx: &mut Ctx) -> WvResult<POINT> {
+        ctx.fixme("ICoreWebView2DragStartingEventArgs::get_Position");
+        Ok(Default::default())
+    }
+    fn GetDeferral(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2DragStartingEventArgs::GetDeferral");
+        Ok(ctx.stub(50))
+    }
+}
+
+pub struct ICoreWebView2DragStartingEventArgsObj<T: ICoreWebView2DragStartingEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2DragStartingEventArgsImpl> Dispatch for ICoreWebView2DragStartingEventArgsObj<T> {
+    fn family(&self) -> u32 { 53 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2DragStartingEventArgs_get_AllowedDropEffects => {
+                match self.0.get_AllowedDropEffects(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DragStartingEventArgs_get_Handled => {
+                match self.0.get_Handled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DragStartingEventArgs_put_Handled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_Handled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2DragStartingEventArgs_get_Position => {
+                match self.0.get_Position(ctx) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2DragStartingEventArgs_GetDeferral => {
+                match self.0.GetDeferral(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2DragStartingEventArgsStub;
+impl ICoreWebView2DragStartingEventArgsImpl for ICoreWebView2DragStartingEventArgsStub {}
+
+// ===== ICoreWebView2ProcessExtendedInfoCollection =====
+
+pub trait ICoreWebView2ProcessExtendedInfoCollectionImpl: 'static {
+    fn get_Count(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2ProcessExtendedInfoCollection::get_Count");
+        Ok(Default::default())
+    }
+    fn GetValueAtIndex(&self, ctx: &mut Ctx, index: u32) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ProcessExtendedInfoCollection::GetValueAtIndex");
+        Ok(ctx.stub(25))
+    }
+}
+
+pub struct ICoreWebView2ProcessExtendedInfoCollectionObj<T: ICoreWebView2ProcessExtendedInfoCollectionImpl>(pub T);
+
+impl<T: ICoreWebView2ProcessExtendedInfoCollectionImpl> Dispatch for ICoreWebView2ProcessExtendedInfoCollectionObj<T> {
+    fn family(&self) -> u32 { 54 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ProcessExtendedInfoCollection_get_Count => {
+                match self.0.get_Count(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ProcessExtendedInfoCollection_GetValueAtIndex => {
+                let a_index = rd.u32().unwrap_or(0);
+                match self.0.GetValueAtIndex(ctx, a_index) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ProcessExtendedInfoCollectionStub;
+impl ICoreWebView2ProcessExtendedInfoCollectionImpl for ICoreWebView2ProcessExtendedInfoCollectionStub {}
+
+// ===== ICoreWebView2Environment15 =====
+
+pub trait ICoreWebView2Environment15Impl: 'static {
+    fn CreateCoreWebView2Controller(&self, ctx: &mut Ctx, parentWindow: u64, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Environment::CreateCoreWebView2Controller");
+        Ok(())
+    }
+    fn CreateWebResourceResponse(&self, ctx: &mut Ctx, content: Option<Vec<u8>>, statusCode: i32, reasonPhrase: Option<String>, headers: Option<String>) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2Environment::CreateWebResourceResponse");
+        Ok(ctx.stub(32))
+    }
+    fn get_BrowserVersionString(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Environment::get_BrowserVersionString");
+        Ok(String::new())
+    }
+    fn add_NewBrowserVersionAvailable(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Environment::add_NewBrowserVersionAvailable");
+        Ok(Default::default())
+    }
+    fn remove_NewBrowserVersionAvailable(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Environment::remove_NewBrowserVersionAvailable");
+        Ok(())
+    }
+    fn CreateWebResourceRequest(&self, ctx: &mut Ctx, uri: Option<String>, Method: Option<String>, postData: Option<Vec<u8>>, Headers: Option<String>) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2Environment2::CreateWebResourceRequest");
+        Ok(ctx.stub(31))
+    }
+    fn CreateCoreWebView2CompositionController(&self, ctx: &mut Ctx, ParentWindow: u64, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Environment3::CreateCoreWebView2CompositionController");
+        Ok(())
+    }
+    fn CreateCoreWebView2PointerInfo(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2Environment3::CreateCoreWebView2PointerInfo");
+        Ok(ctx.stub(23))
+    }
+    fn GetAutomationProviderForWindow(&self, ctx: &mut Ctx, hwnd: u64) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2Environment4::GetAutomationProviderForWindow");
+        Ok(ctx.stub(93))
+    }
+    fn add_BrowserProcessExited(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Environment5::add_BrowserProcessExited");
+        Ok(Default::default())
+    }
+    fn remove_BrowserProcessExited(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Environment5::remove_BrowserProcessExited");
+        Ok(())
+    }
+    fn CreatePrintSettings(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2Environment6::CreatePrintSettings");
+        Ok(ctx.stub(24))
+    }
+    fn get_UserDataFolder(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Environment7::get_UserDataFolder");
+        Ok(String::new())
+    }
+    fn add_ProcessInfosChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Environment8::add_ProcessInfosChanged");
+        Ok(Default::default())
+    }
+    fn remove_ProcessInfosChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Environment8::remove_ProcessInfosChanged");
+        Ok(())
+    }
+    fn GetProcessInfos(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2Environment8::GetProcessInfos");
+        Ok(ctx.stub(56))
+    }
+    fn CreateContextMenuItem(&self, ctx: &mut Ctx, Label: Option<String>, iconStream: Option<Vec<u8>>, Kind: i32) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2Environment9::CreateContextMenuItem");
+        Ok(ctx.stub(10))
+    }
+    fn CreateCoreWebView2ControllerOptions(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2Environment10::CreateCoreWebView2ControllerOptions");
+        Ok(ctx.stub(45))
+    }
+    fn CreateCoreWebView2ControllerWithOptions(&self, ctx: &mut Ctx, ParentWindow: u64, options: ObjRef, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Environment10::CreateCoreWebView2ControllerWithOptions");
+        Ok(())
+    }
+    fn CreateCoreWebView2CompositionControllerWithOptions(&self, ctx: &mut Ctx, ParentWindow: u64, options: ObjRef, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Environment10::CreateCoreWebView2CompositionControllerWithOptions");
+        Ok(())
+    }
+    fn get_FailureReportFolderPath(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Environment11::get_FailureReportFolderPath");
+        Ok(String::new())
+    }
+    fn CreateSharedBuffer(&self, ctx: &mut Ctx, Size: u64) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2Environment12::CreateSharedBuffer");
+        Ok(ctx.stub(30))
+    }
+    fn GetProcessExtendedInfos(&self, ctx: &mut Ctx, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Environment13::GetProcessExtendedInfos");
+        Ok(())
+    }
+    fn CreateWebFileSystemFileHandle(&self, ctx: &mut Ctx, path: Option<String>, permission: i32) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2Environment14::CreateWebFileSystemFileHandle");
+        Ok(ctx.stub(58))
+    }
+    fn CreateWebFileSystemDirectoryHandle(&self, ctx: &mut Ctx, path: Option<String>, permission: i32) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2Environment14::CreateWebFileSystemDirectoryHandle");
+        Ok(ctx.stub(58))
+    }
+    fn CreateFindOptions(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2Environment15::CreateFindOptions");
+        Ok(ctx.stub(60))
+    }
+}
+
+pub struct ICoreWebView2Environment15Obj<T: ICoreWebView2Environment15Impl>(pub T);
+
+impl<T: ICoreWebView2Environment15Impl> Dispatch for ICoreWebView2Environment15Obj<T> {
+    fn family(&self) -> u32 { 55 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2Environment_CreateCoreWebView2Controller => {
+                let a_parentWindow = rd.u64().unwrap_or(0);
+                let a_handler = ctx.read_objref(rd);
+                match self.0.CreateCoreWebView2Controller(ctx, a_parentWindow, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Environment_CreateWebResourceResponse => {
+                let a_content = rd.stream();
+                let a_statusCode = rd.u32().unwrap_or(0) as i32;
+                let a_reasonPhrase = rd.str_opt();
+                let a_headers = rd.str_opt();
+                match self.0.CreateWebResourceResponse(ctx, a_content, a_statusCode, a_reasonPhrase, a_headers) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Environment_get_BrowserVersionString => {
+                match self.0.get_BrowserVersionString(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Environment_add_NewBrowserVersionAvailable => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_NewBrowserVersionAvailable(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Environment_remove_NewBrowserVersionAvailable => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_NewBrowserVersionAvailable(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Environment2_CreateWebResourceRequest => {
+                let a_uri = rd.str_opt();
+                let a_Method = rd.str_opt();
+                let a_postData = rd.stream();
+                let a_Headers = rd.str_opt();
+                match self.0.CreateWebResourceRequest(ctx, a_uri, a_Method, a_postData, a_Headers) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Environment3_CreateCoreWebView2CompositionController => {
+                let a_ParentWindow = rd.u64().unwrap_or(0);
+                let a_handler = ctx.read_objref(rd);
+                match self.0.CreateCoreWebView2CompositionController(ctx, a_ParentWindow, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Environment3_CreateCoreWebView2PointerInfo => {
+                match self.0.CreateCoreWebView2PointerInfo(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Environment4_GetAutomationProviderForWindow => {
+                let a_hwnd = rd.u64().unwrap_or(0);
+                match self.0.GetAutomationProviderForWindow(ctx, a_hwnd) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Environment5_add_BrowserProcessExited => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_BrowserProcessExited(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Environment5_remove_BrowserProcessExited => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_BrowserProcessExited(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Environment6_CreatePrintSettings => {
+                match self.0.CreatePrintSettings(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Environment7_get_UserDataFolder => {
+                match self.0.get_UserDataFolder(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Environment8_add_ProcessInfosChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_ProcessInfosChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Environment8_remove_ProcessInfosChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_ProcessInfosChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Environment8_GetProcessInfos => {
+                match self.0.GetProcessInfos(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Environment9_CreateContextMenuItem => {
+                let a_Label = rd.str_opt();
+                let a_iconStream = rd.stream();
+                let a_Kind = rd.u32().unwrap_or(0) as i32;
+                match self.0.CreateContextMenuItem(ctx, a_Label, a_iconStream, a_Kind) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Environment10_CreateCoreWebView2ControllerOptions => {
+                match self.0.CreateCoreWebView2ControllerOptions(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Environment10_CreateCoreWebView2ControllerWithOptions => {
+                let a_ParentWindow = rd.u64().unwrap_or(0);
+                let a_options = ctx.read_objref(rd);
+                let a_handler = ctx.read_objref(rd);
+                match self.0.CreateCoreWebView2ControllerWithOptions(ctx, a_ParentWindow, a_options, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Environment10_CreateCoreWebView2CompositionControllerWithOptions => {
+                let a_ParentWindow = rd.u64().unwrap_or(0);
+                let a_options = ctx.read_objref(rd);
+                let a_handler = ctx.read_objref(rd);
+                match self.0.CreateCoreWebView2CompositionControllerWithOptions(ctx, a_ParentWindow, a_options, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Environment11_get_FailureReportFolderPath => {
+                match self.0.get_FailureReportFolderPath(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Environment12_CreateSharedBuffer => {
+                let a_Size = rd.u64().unwrap_or(0);
+                match self.0.CreateSharedBuffer(ctx, a_Size) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Environment13_GetProcessExtendedInfos => {
+                let a_handler = ctx.read_objref(rd);
+                match self.0.GetProcessExtendedInfos(ctx, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Environment14_CreateWebFileSystemFileHandle => {
+                let a_path = rd.str_opt();
+                let a_permission = rd.u32().unwrap_or(0) as i32;
+                match self.0.CreateWebFileSystemFileHandle(ctx, a_path, a_permission) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Environment14_CreateWebFileSystemDirectoryHandle => {
+                let a_path = rd.str_opt();
+                let a_permission = rd.u32().unwrap_or(0) as i32;
+                match self.0.CreateWebFileSystemDirectoryHandle(ctx, a_path, a_permission) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Environment15_CreateFindOptions => {
+                match self.0.CreateFindOptions(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2Environment15Stub;
+impl ICoreWebView2Environment15Impl for ICoreWebView2Environment15Stub {}
+
+// ===== ICoreWebView2ProcessInfoCollection =====
+
+pub trait ICoreWebView2ProcessInfoCollectionImpl: 'static {
+    fn get_Count(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2ProcessInfoCollection::get_Count");
+        Ok(Default::default())
+    }
+    fn GetValueAtIndex(&self, ctx: &mut Ctx, index: u32) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ProcessInfoCollection::GetValueAtIndex");
+        Ok(ctx.stub(26))
+    }
+}
+
+pub struct ICoreWebView2ProcessInfoCollectionObj<T: ICoreWebView2ProcessInfoCollectionImpl>(pub T);
+
+impl<T: ICoreWebView2ProcessInfoCollectionImpl> Dispatch for ICoreWebView2ProcessInfoCollectionObj<T> {
+    fn family(&self) -> u32 { 56 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ProcessInfoCollection_get_Count => {
+                match self.0.get_Count(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ProcessInfoCollection_GetValueAtIndex => {
+                let a_index = rd.u32().unwrap_or(0);
+                match self.0.GetValueAtIndex(ctx, a_index) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ProcessInfoCollectionStub;
+impl ICoreWebView2ProcessInfoCollectionImpl for ICoreWebView2ProcessInfoCollectionStub {}
+
+// ===== ICoreWebView2File =====
+
+pub trait ICoreWebView2FileImpl: 'static {
+    fn get_Path(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2File::get_Path");
+        Ok(String::new())
+    }
+}
+
+pub struct ICoreWebView2FileObj<T: ICoreWebView2FileImpl>(pub T);
+
+impl<T: ICoreWebView2FileImpl> Dispatch for ICoreWebView2FileObj<T> {
+    fn family(&self) -> u32 { 57 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2File_get_Path => {
+                match self.0.get_Path(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2FileStub;
+impl ICoreWebView2FileImpl for ICoreWebView2FileStub {}
+
+// ===== ICoreWebView2FileSystemHandle =====
+
+pub trait ICoreWebView2FileSystemHandleImpl: 'static {
+    fn get_Kind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2FileSystemHandle::get_Kind");
+        Ok(Default::default())
+    }
+    fn get_Path(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2FileSystemHandle::get_Path");
+        Ok(String::new())
+    }
+    fn get_Permission(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2FileSystemHandle::get_Permission");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2FileSystemHandleObj<T: ICoreWebView2FileSystemHandleImpl>(pub T);
+
+impl<T: ICoreWebView2FileSystemHandleImpl> Dispatch for ICoreWebView2FileSystemHandleObj<T> {
+    fn family(&self) -> u32 { 58 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2FileSystemHandle_get_Kind => {
+                match self.0.get_Kind(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2FileSystemHandle_get_Path => {
+                match self.0.get_Path(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2FileSystemHandle_get_Permission => {
+                match self.0.get_Permission(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2FileSystemHandleStub;
+impl ICoreWebView2FileSystemHandleImpl for ICoreWebView2FileSystemHandleStub {}
+
+// ===== ICoreWebView2Find =====
+
+pub trait ICoreWebView2FindImpl: 'static {
+    fn get_ActiveMatchIndex(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2Find::get_ActiveMatchIndex");
+        Ok(Default::default())
+    }
+    fn get_MatchCount(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2Find::get_MatchCount");
+        Ok(Default::default())
+    }
+    fn add_ActiveMatchIndexChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Find::add_ActiveMatchIndexChanged");
+        Ok(Default::default())
+    }
+    fn remove_ActiveMatchIndexChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Find::remove_ActiveMatchIndexChanged");
+        Ok(())
+    }
+    fn add_MatchCountChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Find::add_MatchCountChanged");
+        Ok(Default::default())
+    }
+    fn remove_MatchCountChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Find::remove_MatchCountChanged");
+        Ok(())
+    }
+    fn Start(&self, ctx: &mut Ctx, options: ObjRef, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Find::Start");
+        Ok(())
+    }
+    fn FindNext(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Find::FindNext");
+        Ok(())
+    }
+    fn FindPrevious(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Find::FindPrevious");
+        Ok(())
+    }
+    fn Stop(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Find::Stop");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2FindObj<T: ICoreWebView2FindImpl>(pub T);
+
+impl<T: ICoreWebView2FindImpl> Dispatch for ICoreWebView2FindObj<T> {
+    fn family(&self) -> u32 { 59 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2Find_get_ActiveMatchIndex => {
+                match self.0.get_ActiveMatchIndex(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Find_get_MatchCount => {
+                match self.0.get_MatchCount(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Find_add_ActiveMatchIndexChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_ActiveMatchIndexChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Find_remove_ActiveMatchIndexChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_ActiveMatchIndexChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Find_add_MatchCountChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_MatchCountChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Find_remove_MatchCountChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_MatchCountChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Find_Start => {
+                let a_options = ctx.read_objref(rd);
+                let a_handler = ctx.read_objref(rd);
+                match self.0.Start(ctx, a_options, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Find_FindNext => {
+                match self.0.FindNext(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Find_FindPrevious => {
+                match self.0.FindPrevious(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Find_Stop => {
+                match self.0.Stop(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2FindStub;
+impl ICoreWebView2FindImpl for ICoreWebView2FindStub {}
+
+// ===== ICoreWebView2FindOptions =====
+
+pub trait ICoreWebView2FindOptionsImpl: 'static {
+    fn get_FindTerm(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2FindOptions::get_FindTerm");
+        Ok(String::new())
+    }
+    fn put_FindTerm(&self, ctx: &mut Ctx, value: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2FindOptions::put_FindTerm");
+        Ok(())
+    }
+    fn get_IsCaseSensitive(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2FindOptions::get_IsCaseSensitive");
+        Ok(Default::default())
+    }
+    fn put_IsCaseSensitive(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2FindOptions::put_IsCaseSensitive");
+        Ok(())
+    }
+    fn get_ShouldHighlightAllMatches(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2FindOptions::get_ShouldHighlightAllMatches");
+        Ok(Default::default())
+    }
+    fn put_ShouldHighlightAllMatches(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2FindOptions::put_ShouldHighlightAllMatches");
+        Ok(())
+    }
+    fn get_ShouldMatchWord(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2FindOptions::get_ShouldMatchWord");
+        Ok(Default::default())
+    }
+    fn put_ShouldMatchWord(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2FindOptions::put_ShouldMatchWord");
+        Ok(())
+    }
+    fn get_SuppressDefaultFindDialog(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2FindOptions::get_SuppressDefaultFindDialog");
+        Ok(Default::default())
+    }
+    fn put_SuppressDefaultFindDialog(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2FindOptions::put_SuppressDefaultFindDialog");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2FindOptionsObj<T: ICoreWebView2FindOptionsImpl>(pub T);
+
+impl<T: ICoreWebView2FindOptionsImpl> Dispatch for ICoreWebView2FindOptionsObj<T> {
+    fn family(&self) -> u32 { 60 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2FindOptions_get_FindTerm => {
+                match self.0.get_FindTerm(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2FindOptions_put_FindTerm => {
+                let a_value = rd.str_opt();
+                match self.0.put_FindTerm(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2FindOptions_get_IsCaseSensitive => {
+                match self.0.get_IsCaseSensitive(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2FindOptions_put_IsCaseSensitive => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsCaseSensitive(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2FindOptions_get_ShouldHighlightAllMatches => {
+                match self.0.get_ShouldHighlightAllMatches(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2FindOptions_put_ShouldHighlightAllMatches => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_ShouldHighlightAllMatches(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2FindOptions_get_ShouldMatchWord => {
+                match self.0.get_ShouldMatchWord(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2FindOptions_put_ShouldMatchWord => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_ShouldMatchWord(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2FindOptions_get_SuppressDefaultFindDialog => {
+                match self.0.get_SuppressDefaultFindDialog(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2FindOptions_put_SuppressDefaultFindDialog => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_SuppressDefaultFindDialog(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2FindOptionsStub;
+impl ICoreWebView2FindOptionsImpl for ICoreWebView2FindOptionsStub {}
+
+// ===== ICoreWebView2Frame8 =====
+
+pub trait ICoreWebView2Frame8Impl: 'static {
+    fn get_Name(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Frame::get_Name");
+        Ok(String::new())
+    }
+    fn add_NameChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Frame::add_NameChanged");
+        Ok(Default::default())
+    }
+    fn remove_NameChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Frame::remove_NameChanged");
+        Ok(())
+    }
+    fn RemoveHostObjectFromScript(&self, ctx: &mut Ctx, name: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Frame::RemoveHostObjectFromScript");
+        Ok(())
+    }
+    fn add_Destroyed(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Frame::add_Destroyed");
+        Ok(Default::default())
+    }
+    fn remove_Destroyed(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Frame::remove_Destroyed");
+        Ok(())
+    }
+    fn IsDestroyed(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Frame::IsDestroyed");
+        Ok(Default::default())
+    }
+    fn add_NavigationStarting(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Frame2::add_NavigationStarting");
+        Ok(Default::default())
+    }
+    fn remove_NavigationStarting(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Frame2::remove_NavigationStarting");
+        Ok(())
+    }
+    fn add_ContentLoading(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Frame2::add_ContentLoading");
+        Ok(Default::default())
+    }
+    fn remove_ContentLoading(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Frame2::remove_ContentLoading");
+        Ok(())
+    }
+    fn add_NavigationCompleted(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Frame2::add_NavigationCompleted");
+        Ok(Default::default())
+    }
+    fn remove_NavigationCompleted(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Frame2::remove_NavigationCompleted");
+        Ok(())
+    }
+    fn add_DOMContentLoaded(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Frame2::add_DOMContentLoaded");
+        Ok(Default::default())
+    }
+    fn remove_DOMContentLoaded(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Frame2::remove_DOMContentLoaded");
+        Ok(())
+    }
+    fn ExecuteScript(&self, ctx: &mut Ctx, javaScript: Option<String>, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Frame2::ExecuteScript");
+        Ok(())
+    }
+    fn PostWebMessageAsJson(&self, ctx: &mut Ctx, webMessageAsJson: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Frame2::PostWebMessageAsJson");
+        Ok(())
+    }
+    fn PostWebMessageAsString(&self, ctx: &mut Ctx, webMessageAsString: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Frame2::PostWebMessageAsString");
+        Ok(())
+    }
+    fn add_WebMessageReceived(&self, ctx: &mut Ctx, handler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Frame2::add_WebMessageReceived");
+        Ok(Default::default())
+    }
+    fn remove_WebMessageReceived(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Frame2::remove_WebMessageReceived");
+        Ok(())
+    }
+    fn add_PermissionRequested(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Frame3::add_PermissionRequested");
+        Ok(Default::default())
+    }
+    fn remove_PermissionRequested(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Frame3::remove_PermissionRequested");
+        Ok(())
+    }
+    fn PostSharedBufferToScript(&self, ctx: &mut Ctx, sharedBuffer: ObjRef, access: i32, additionalDataAsJson: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Frame4::PostSharedBufferToScript");
+        Ok(())
+    }
+    fn get_FrameId(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2Frame5::get_FrameId");
+        Ok(Default::default())
+    }
+    fn add_ScreenCaptureStarting(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Frame6::add_ScreenCaptureStarting");
+        Ok(Default::default())
+    }
+    fn remove_ScreenCaptureStarting(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Frame6::remove_ScreenCaptureStarting");
+        Ok(())
+    }
+    fn add_FrameCreated(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Frame7::add_FrameCreated");
+        Ok(Default::default())
+    }
+    fn remove_FrameCreated(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Frame7::remove_FrameCreated");
+        Ok(())
+    }
+    fn add_DedicatedWorkerCreated(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Frame8::add_DedicatedWorkerCreated");
+        Ok(Default::default())
+    }
+    fn remove_DedicatedWorkerCreated(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Frame8::remove_DedicatedWorkerCreated");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2Frame8Obj<T: ICoreWebView2Frame8Impl>(pub T);
+
+impl<T: ICoreWebView2Frame8Impl> Dispatch for ICoreWebView2Frame8Obj<T> {
+    fn family(&self) -> u32 { 61 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2Frame_get_Name => {
+                match self.0.get_Name(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Frame_add_NameChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_NameChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Frame_remove_NameChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_NameChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Frame_RemoveHostObjectFromScript => {
+                let a_name = rd.str_opt();
+                match self.0.RemoveHostObjectFromScript(ctx, a_name) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Frame_add_Destroyed => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_Destroyed(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Frame_remove_Destroyed => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_Destroyed(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Frame_IsDestroyed => {
+                match self.0.IsDestroyed(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Frame2_add_NavigationStarting => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_NavigationStarting(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Frame2_remove_NavigationStarting => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_NavigationStarting(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Frame2_add_ContentLoading => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_ContentLoading(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Frame2_remove_ContentLoading => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_ContentLoading(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Frame2_add_NavigationCompleted => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_NavigationCompleted(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Frame2_remove_NavigationCompleted => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_NavigationCompleted(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Frame2_add_DOMContentLoaded => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_DOMContentLoaded(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Frame2_remove_DOMContentLoaded => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_DOMContentLoaded(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Frame2_ExecuteScript => {
+                let a_javaScript = rd.str_opt();
+                let a_handler = ctx.read_objref(rd);
+                match self.0.ExecuteScript(ctx, a_javaScript, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Frame2_PostWebMessageAsJson => {
+                let a_webMessageAsJson = rd.str_opt();
+                match self.0.PostWebMessageAsJson(ctx, a_webMessageAsJson) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Frame2_PostWebMessageAsString => {
+                let a_webMessageAsString = rd.str_opt();
+                match self.0.PostWebMessageAsString(ctx, a_webMessageAsString) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Frame2_add_WebMessageReceived => {
+                let a_handler = ctx.read_objref(rd);
+                match self.0.add_WebMessageReceived(ctx, a_handler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Frame2_remove_WebMessageReceived => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_WebMessageReceived(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Frame3_add_PermissionRequested => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_PermissionRequested(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Frame3_remove_PermissionRequested => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_PermissionRequested(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Frame4_PostSharedBufferToScript => {
+                let a_sharedBuffer = ctx.read_objref(rd);
+                let a_access = rd.u32().unwrap_or(0) as i32;
+                let a_additionalDataAsJson = rd.str_opt();
+                match self.0.PostSharedBufferToScript(ctx, a_sharedBuffer, a_access, a_additionalDataAsJson) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Frame5_get_FrameId => {
+                match self.0.get_FrameId(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Frame6_add_ScreenCaptureStarting => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_ScreenCaptureStarting(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Frame6_remove_ScreenCaptureStarting => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_ScreenCaptureStarting(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Frame7_add_FrameCreated => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_FrameCreated(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Frame7_remove_FrameCreated => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_FrameCreated(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Frame8_add_DedicatedWorkerCreated => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_DedicatedWorkerCreated(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Frame8_remove_DedicatedWorkerCreated => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_DedicatedWorkerCreated(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2Frame8Stub;
+impl ICoreWebView2Frame8Impl for ICoreWebView2Frame8Stub {}
+
+// ===== ICoreWebView2FrameCreatedEventArgs =====
+
+pub trait ICoreWebView2FrameCreatedEventArgsImpl: 'static {
+    fn get_Frame(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2FrameCreatedEventArgs::get_Frame");
+        Ok(ctx.stub(61))
+    }
+}
+
+pub struct ICoreWebView2FrameCreatedEventArgsObj<T: ICoreWebView2FrameCreatedEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2FrameCreatedEventArgsImpl> Dispatch for ICoreWebView2FrameCreatedEventArgsObj<T> {
+    fn family(&self) -> u32 { 62 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2FrameCreatedEventArgs_get_Frame => {
+                match self.0.get_Frame(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2FrameCreatedEventArgsStub;
+impl ICoreWebView2FrameCreatedEventArgsImpl for ICoreWebView2FrameCreatedEventArgsStub {}
+
+// ===== ICoreWebView2FrameInfoCollection =====
+
+pub trait ICoreWebView2FrameInfoCollectionImpl: 'static {
+    fn GetIterator(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2FrameInfoCollection::GetIterator");
+        Ok(ctx.stub(64))
+    }
+}
+
+pub struct ICoreWebView2FrameInfoCollectionObj<T: ICoreWebView2FrameInfoCollectionImpl>(pub T);
+
+impl<T: ICoreWebView2FrameInfoCollectionImpl> Dispatch for ICoreWebView2FrameInfoCollectionObj<T> {
+    fn family(&self) -> u32 { 63 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2FrameInfoCollection_GetIterator => {
+                match self.0.GetIterator(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2FrameInfoCollectionStub;
+impl ICoreWebView2FrameInfoCollectionImpl for ICoreWebView2FrameInfoCollectionStub {}
+
+// ===== ICoreWebView2FrameInfoCollectionIterator =====
+
+pub trait ICoreWebView2FrameInfoCollectionIteratorImpl: 'static {
+    fn get_HasCurrent(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2FrameInfoCollectionIterator::get_HasCurrent");
+        Ok(Default::default())
+    }
+    fn GetCurrent(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2FrameInfoCollectionIterator::GetCurrent");
+        Ok(ctx.stub(18))
+    }
+    fn MoveNext(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2FrameInfoCollectionIterator::MoveNext");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2FrameInfoCollectionIteratorObj<T: ICoreWebView2FrameInfoCollectionIteratorImpl>(pub T);
+
+impl<T: ICoreWebView2FrameInfoCollectionIteratorImpl> Dispatch for ICoreWebView2FrameInfoCollectionIteratorObj<T> {
+    fn family(&self) -> u32 { 64 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2FrameInfoCollectionIterator_get_HasCurrent => {
+                match self.0.get_HasCurrent(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2FrameInfoCollectionIterator_GetCurrent => {
+                match self.0.GetCurrent(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2FrameInfoCollectionIterator_MoveNext => {
+                match self.0.MoveNext(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2FrameInfoCollectionIteratorStub;
+impl ICoreWebView2FrameInfoCollectionIteratorImpl for ICoreWebView2FrameInfoCollectionIteratorStub {}
+
+// ===== ICoreWebView2HttpRequestHeaders =====
+
+pub trait ICoreWebView2HttpRequestHeadersImpl: 'static {
+    fn GetHeader(&self, ctx: &mut Ctx, name: Option<String>) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2HttpRequestHeaders::GetHeader");
+        Ok(String::new())
+    }
+    fn GetHeaders(&self, ctx: &mut Ctx, name: Option<String>) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2HttpRequestHeaders::GetHeaders");
+        Ok(ctx.stub(19))
+    }
+    fn Contains(&self, ctx: &mut Ctx, name: Option<String>) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2HttpRequestHeaders::Contains");
+        Ok(Default::default())
+    }
+    fn SetHeader(&self, ctx: &mut Ctx, name: Option<String>, value: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2HttpRequestHeaders::SetHeader");
+        Ok(())
+    }
+    fn RemoveHeader(&self, ctx: &mut Ctx, name: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2HttpRequestHeaders::RemoveHeader");
+        Ok(())
+    }
+    fn GetIterator(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2HttpRequestHeaders::GetIterator");
+        Ok(ctx.stub(19))
+    }
+}
+
+pub struct ICoreWebView2HttpRequestHeadersObj<T: ICoreWebView2HttpRequestHeadersImpl>(pub T);
+
+impl<T: ICoreWebView2HttpRequestHeadersImpl> Dispatch for ICoreWebView2HttpRequestHeadersObj<T> {
+    fn family(&self) -> u32 { 65 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2HttpRequestHeaders_GetHeader => {
+                let a_name = rd.str_opt();
+                match self.0.GetHeader(ctx, a_name) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2HttpRequestHeaders_GetHeaders => {
+                let a_name = rd.str_opt();
+                match self.0.GetHeaders(ctx, a_name) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2HttpRequestHeaders_Contains => {
+                let a_name = rd.str_opt();
+                match self.0.Contains(ctx, a_name) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2HttpRequestHeaders_SetHeader => {
+                let a_name = rd.str_opt();
+                let a_value = rd.str_opt();
+                match self.0.SetHeader(ctx, a_name, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2HttpRequestHeaders_RemoveHeader => {
+                let a_name = rd.str_opt();
+                match self.0.RemoveHeader(ctx, a_name) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2HttpRequestHeaders_GetIterator => {
+                match self.0.GetIterator(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2HttpRequestHeadersStub;
+impl ICoreWebView2HttpRequestHeadersImpl for ICoreWebView2HttpRequestHeadersStub {}
+
+// ===== ICoreWebView2HttpResponseHeaders =====
+
+pub trait ICoreWebView2HttpResponseHeadersImpl: 'static {
+    fn AppendHeader(&self, ctx: &mut Ctx, name: Option<String>, value: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2HttpResponseHeaders::AppendHeader");
+        Ok(())
+    }
+    fn Contains(&self, ctx: &mut Ctx, name: Option<String>) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2HttpResponseHeaders::Contains");
+        Ok(Default::default())
+    }
+    fn GetHeader(&self, ctx: &mut Ctx, name: Option<String>) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2HttpResponseHeaders::GetHeader");
+        Ok(String::new())
+    }
+    fn GetHeaders(&self, ctx: &mut Ctx, name: Option<String>) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2HttpResponseHeaders::GetHeaders");
+        Ok(ctx.stub(19))
+    }
+    fn GetIterator(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2HttpResponseHeaders::GetIterator");
+        Ok(ctx.stub(19))
+    }
+}
+
+pub struct ICoreWebView2HttpResponseHeadersObj<T: ICoreWebView2HttpResponseHeadersImpl>(pub T);
+
+impl<T: ICoreWebView2HttpResponseHeadersImpl> Dispatch for ICoreWebView2HttpResponseHeadersObj<T> {
+    fn family(&self) -> u32 { 66 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2HttpResponseHeaders_AppendHeader => {
+                let a_name = rd.str_opt();
+                let a_value = rd.str_opt();
+                match self.0.AppendHeader(ctx, a_name, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2HttpResponseHeaders_Contains => {
+                let a_name = rd.str_opt();
+                match self.0.Contains(ctx, a_name) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2HttpResponseHeaders_GetHeader => {
+                let a_name = rd.str_opt();
+                match self.0.GetHeader(ctx, a_name) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2HttpResponseHeaders_GetHeaders => {
+                let a_name = rd.str_opt();
+                match self.0.GetHeaders(ctx, a_name) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2HttpResponseHeaders_GetIterator => {
+                match self.0.GetIterator(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2HttpResponseHeadersStub;
+impl ICoreWebView2HttpResponseHeadersImpl for ICoreWebView2HttpResponseHeadersStub {}
+
+// ===== ICoreWebView2NavigationCompletedEventArgs2 =====
+
+pub trait ICoreWebView2NavigationCompletedEventArgs2Impl: 'static {
+    fn get_IsSuccess(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2NavigationCompletedEventArgs::get_IsSuccess");
+        Ok(Default::default())
+    }
+    fn get_WebErrorStatus(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2NavigationCompletedEventArgs::get_WebErrorStatus");
+        Ok(Default::default())
+    }
+    fn get_NavigationId(&self, ctx: &mut Ctx) -> WvResult<u64> {
+        ctx.fixme("ICoreWebView2NavigationCompletedEventArgs::get_NavigationId");
+        Ok(Default::default())
+    }
+    fn get_HttpStatusCode(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2NavigationCompletedEventArgs2::get_HttpStatusCode");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2NavigationCompletedEventArgs2Obj<T: ICoreWebView2NavigationCompletedEventArgs2Impl>(pub T);
+
+impl<T: ICoreWebView2NavigationCompletedEventArgs2Impl> Dispatch for ICoreWebView2NavigationCompletedEventArgs2Obj<T> {
+    fn family(&self) -> u32 { 67 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2NavigationCompletedEventArgs_get_IsSuccess => {
+                match self.0.get_IsSuccess(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NavigationCompletedEventArgs_get_WebErrorStatus => {
+                match self.0.get_WebErrorStatus(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NavigationCompletedEventArgs_get_NavigationId => {
+                match self.0.get_NavigationId(ctx) { Ok(v) => { wr.put_u64(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NavigationCompletedEventArgs2_get_HttpStatusCode => {
+                match self.0.get_HttpStatusCode(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2NavigationCompletedEventArgs2Stub;
+impl ICoreWebView2NavigationCompletedEventArgs2Impl for ICoreWebView2NavigationCompletedEventArgs2Stub {}
+
+// ===== ICoreWebView2NavigationStartingEventArgs3 =====
+
+pub trait ICoreWebView2NavigationStartingEventArgs3Impl: 'static {
+    fn get_Uri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2NavigationStartingEventArgs::get_Uri");
+        Ok(String::new())
+    }
+    fn get_IsUserInitiated(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2NavigationStartingEventArgs::get_IsUserInitiated");
+        Ok(Default::default())
+    }
+    fn get_IsRedirected(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2NavigationStartingEventArgs::get_IsRedirected");
+        Ok(Default::default())
+    }
+    fn get_RequestHeaders(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2NavigationStartingEventArgs::get_RequestHeaders");
+        Ok(ctx.stub(65))
+    }
+    fn get_Cancel(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2NavigationStartingEventArgs::get_Cancel");
+        Ok(Default::default())
+    }
+    fn put_Cancel(&self, ctx: &mut Ctx, cancel: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2NavigationStartingEventArgs::put_Cancel");
+        Ok(())
+    }
+    fn get_NavigationId(&self, ctx: &mut Ctx) -> WvResult<u64> {
+        ctx.fixme("ICoreWebView2NavigationStartingEventArgs::get_NavigationId");
+        Ok(Default::default())
+    }
+    fn get_AdditionalAllowedFrameAncestors(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2NavigationStartingEventArgs2::get_AdditionalAllowedFrameAncestors");
+        Ok(String::new())
+    }
+    fn put_AdditionalAllowedFrameAncestors(&self, ctx: &mut Ctx, value: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2NavigationStartingEventArgs2::put_AdditionalAllowedFrameAncestors");
+        Ok(())
+    }
+    fn get_NavigationKind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2NavigationStartingEventArgs3::get_NavigationKind");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2NavigationStartingEventArgs3Obj<T: ICoreWebView2NavigationStartingEventArgs3Impl>(pub T);
+
+impl<T: ICoreWebView2NavigationStartingEventArgs3Impl> Dispatch for ICoreWebView2NavigationStartingEventArgs3Obj<T> {
+    fn family(&self) -> u32 { 68 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2NavigationStartingEventArgs_get_Uri => {
+                match self.0.get_Uri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NavigationStartingEventArgs_get_IsUserInitiated => {
+                match self.0.get_IsUserInitiated(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NavigationStartingEventArgs_get_IsRedirected => {
+                match self.0.get_IsRedirected(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NavigationStartingEventArgs_get_RequestHeaders => {
+                match self.0.get_RequestHeaders(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NavigationStartingEventArgs_get_Cancel => {
+                match self.0.get_Cancel(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NavigationStartingEventArgs_put_Cancel => {
+                let a_cancel = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_Cancel(ctx, a_cancel) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2NavigationStartingEventArgs_get_NavigationId => {
+                match self.0.get_NavigationId(ctx) { Ok(v) => { wr.put_u64(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NavigationStartingEventArgs2_get_AdditionalAllowedFrameAncestors => {
+                match self.0.get_AdditionalAllowedFrameAncestors(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NavigationStartingEventArgs2_put_AdditionalAllowedFrameAncestors => {
+                let a_value = rd.str_opt();
+                match self.0.put_AdditionalAllowedFrameAncestors(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2NavigationStartingEventArgs3_get_NavigationKind => {
+                match self.0.get_NavigationKind(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2NavigationStartingEventArgs3Stub;
+impl ICoreWebView2NavigationStartingEventArgs3Impl for ICoreWebView2NavigationStartingEventArgs3Stub {}
+
+// ===== ICoreWebView2NewWindowRequestedEventArgs3 =====
+
+pub trait ICoreWebView2NewWindowRequestedEventArgs3Impl: 'static {
+    fn get_Uri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2NewWindowRequestedEventArgs::get_Uri");
+        Ok(String::new())
+    }
+    fn put_NewWindow(&self, ctx: &mut Ctx, newWindow: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2NewWindowRequestedEventArgs::put_NewWindow");
+        Ok(())
+    }
+    fn get_NewWindow(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2NewWindowRequestedEventArgs::get_NewWindow");
+        Ok(ctx.stub(93))
+    }
+    fn put_Handled(&self, ctx: &mut Ctx, handled: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2NewWindowRequestedEventArgs::put_Handled");
+        Ok(())
+    }
+    fn get_Handled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2NewWindowRequestedEventArgs::get_Handled");
+        Ok(Default::default())
+    }
+    fn get_IsUserInitiated(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2NewWindowRequestedEventArgs::get_IsUserInitiated");
+        Ok(Default::default())
+    }
+    fn GetDeferral(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2NewWindowRequestedEventArgs::GetDeferral");
+        Ok(ctx.stub(50))
+    }
+    fn get_WindowFeatures(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2NewWindowRequestedEventArgs::get_WindowFeatures");
+        Ok(ctx.stub(34))
+    }
+    fn get_Name(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2NewWindowRequestedEventArgs2::get_Name");
+        Ok(String::new())
+    }
+    fn get_OriginalSourceFrameInfo(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2NewWindowRequestedEventArgs3::get_OriginalSourceFrameInfo");
+        Ok(ctx.stub(18))
+    }
+}
+
+pub struct ICoreWebView2NewWindowRequestedEventArgs3Obj<T: ICoreWebView2NewWindowRequestedEventArgs3Impl>(pub T);
+
+impl<T: ICoreWebView2NewWindowRequestedEventArgs3Impl> Dispatch for ICoreWebView2NewWindowRequestedEventArgs3Obj<T> {
+    fn family(&self) -> u32 { 69 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2NewWindowRequestedEventArgs_get_Uri => {
+                match self.0.get_Uri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NewWindowRequestedEventArgs_put_NewWindow => {
+                let a_newWindow = ctx.read_objref(rd);
+                match self.0.put_NewWindow(ctx, a_newWindow) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2NewWindowRequestedEventArgs_get_NewWindow => {
+                match self.0.get_NewWindow(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NewWindowRequestedEventArgs_put_Handled => {
+                let a_handled = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_Handled(ctx, a_handled) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2NewWindowRequestedEventArgs_get_Handled => {
+                match self.0.get_Handled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NewWindowRequestedEventArgs_get_IsUserInitiated => {
+                match self.0.get_IsUserInitiated(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NewWindowRequestedEventArgs_GetDeferral => {
+                match self.0.GetDeferral(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NewWindowRequestedEventArgs_get_WindowFeatures => {
+                match self.0.get_WindowFeatures(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NewWindowRequestedEventArgs2_get_Name => {
+                match self.0.get_Name(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2NewWindowRequestedEventArgs3_get_OriginalSourceFrameInfo => {
+                match self.0.get_OriginalSourceFrameInfo(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2NewWindowRequestedEventArgs3Stub;
+impl ICoreWebView2NewWindowRequestedEventArgs3Impl for ICoreWebView2NewWindowRequestedEventArgs3Stub {}
+
+// ===== ICoreWebView2NonClientRegionChangedEventArgs =====
+
+pub trait ICoreWebView2NonClientRegionChangedEventArgsImpl: 'static {
+    fn get_RegionKind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2NonClientRegionChangedEventArgs::get_RegionKind");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2NonClientRegionChangedEventArgsObj<T: ICoreWebView2NonClientRegionChangedEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2NonClientRegionChangedEventArgsImpl> Dispatch for ICoreWebView2NonClientRegionChangedEventArgsObj<T> {
+    fn family(&self) -> u32 { 70 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2NonClientRegionChangedEventArgs_get_RegionKind => {
+                match self.0.get_RegionKind(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2NonClientRegionChangedEventArgsStub;
+impl ICoreWebView2NonClientRegionChangedEventArgsImpl for ICoreWebView2NonClientRegionChangedEventArgsStub {}
+
+// ===== ICoreWebView2PermissionRequestedEventArgs3 =====
+
+pub trait ICoreWebView2PermissionRequestedEventArgs3Impl: 'static {
+    fn get_Uri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2PermissionRequestedEventArgs::get_Uri");
+        Ok(String::new())
+    }
+    fn get_PermissionKind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2PermissionRequestedEventArgs::get_PermissionKind");
+        Ok(Default::default())
+    }
+    fn get_IsUserInitiated(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2PermissionRequestedEventArgs::get_IsUserInitiated");
+        Ok(Default::default())
+    }
+    fn get_State(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2PermissionRequestedEventArgs::get_State");
+        Ok(Default::default())
+    }
+    fn put_State(&self, ctx: &mut Ctx, state: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PermissionRequestedEventArgs::put_State");
+        Ok(())
+    }
+    fn GetDeferral(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2PermissionRequestedEventArgs::GetDeferral");
+        Ok(ctx.stub(50))
+    }
+    fn get_Handled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2PermissionRequestedEventArgs2::get_Handled");
+        Ok(Default::default())
+    }
+    fn put_Handled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PermissionRequestedEventArgs2::put_Handled");
+        Ok(())
+    }
+    fn get_SavesInProfile(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2PermissionRequestedEventArgs3::get_SavesInProfile");
+        Ok(Default::default())
+    }
+    fn put_SavesInProfile(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2PermissionRequestedEventArgs3::put_SavesInProfile");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2PermissionRequestedEventArgs3Obj<T: ICoreWebView2PermissionRequestedEventArgs3Impl>(pub T);
+
+impl<T: ICoreWebView2PermissionRequestedEventArgs3Impl> Dispatch for ICoreWebView2PermissionRequestedEventArgs3Obj<T> {
+    fn family(&self) -> u32 { 71 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2PermissionRequestedEventArgs_get_Uri => {
+                match self.0.get_Uri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PermissionRequestedEventArgs_get_PermissionKind => {
+                match self.0.get_PermissionKind(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PermissionRequestedEventArgs_get_IsUserInitiated => {
+                match self.0.get_IsUserInitiated(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PermissionRequestedEventArgs_get_State => {
+                match self.0.get_State(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PermissionRequestedEventArgs_put_State => {
+                let a_state = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_State(ctx, a_state) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PermissionRequestedEventArgs_GetDeferral => {
+                match self.0.GetDeferral(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PermissionRequestedEventArgs2_get_Handled => {
+                match self.0.get_Handled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PermissionRequestedEventArgs2_put_Handled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_Handled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2PermissionRequestedEventArgs3_get_SavesInProfile => {
+                match self.0.get_SavesInProfile(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PermissionRequestedEventArgs3_put_SavesInProfile => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_SavesInProfile(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2PermissionRequestedEventArgs3Stub;
+impl ICoreWebView2PermissionRequestedEventArgs3Impl for ICoreWebView2PermissionRequestedEventArgs3Stub {}
+
+// ===== ICoreWebView2PermissionSetting =====
+
+pub trait ICoreWebView2PermissionSettingImpl: 'static {
+    fn get_PermissionKind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2PermissionSetting::get_PermissionKind");
+        Ok(Default::default())
+    }
+    fn get_PermissionOrigin(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2PermissionSetting::get_PermissionOrigin");
+        Ok(String::new())
+    }
+    fn get_PermissionState(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2PermissionSetting::get_PermissionState");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2PermissionSettingObj<T: ICoreWebView2PermissionSettingImpl>(pub T);
+
+impl<T: ICoreWebView2PermissionSettingImpl> Dispatch for ICoreWebView2PermissionSettingObj<T> {
+    fn family(&self) -> u32 { 72 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2PermissionSetting_get_PermissionKind => {
+                match self.0.get_PermissionKind(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PermissionSetting_get_PermissionOrigin => {
+                match self.0.get_PermissionOrigin(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2PermissionSetting_get_PermissionState => {
+                match self.0.get_PermissionState(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2PermissionSettingStub;
+impl ICoreWebView2PermissionSettingImpl for ICoreWebView2PermissionSettingStub {}
+
+// ===== ICoreWebView2ProcessFailedEventArgs4 =====
+
+pub trait ICoreWebView2ProcessFailedEventArgs4Impl: 'static {
+    fn get_ProcessFailedKind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2ProcessFailedEventArgs::get_ProcessFailedKind");
+        Ok(Default::default())
+    }
+    fn get_Reason(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2ProcessFailedEventArgs2::get_Reason");
+        Ok(Default::default())
+    }
+    fn get_ExitCode(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2ProcessFailedEventArgs2::get_ExitCode");
+        Ok(Default::default())
+    }
+    fn get_ProcessDescription(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ProcessFailedEventArgs2::get_ProcessDescription");
+        Ok(String::new())
+    }
+    fn get_FrameInfosForFailedProcess(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ProcessFailedEventArgs2::get_FrameInfosForFailedProcess");
+        Ok(ctx.stub(63))
+    }
+    fn get_FailureSourceModulePath(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ProcessFailedEventArgs3::get_FailureSourceModulePath");
+        Ok(String::new())
+    }
+    fn get_CrashReport(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ProcessFailedEventArgs4::get_CrashReport");
+        Ok(ctx.stub(46))
+    }
+}
+
+pub struct ICoreWebView2ProcessFailedEventArgs4Obj<T: ICoreWebView2ProcessFailedEventArgs4Impl>(pub T);
+
+impl<T: ICoreWebView2ProcessFailedEventArgs4Impl> Dispatch for ICoreWebView2ProcessFailedEventArgs4Obj<T> {
+    fn family(&self) -> u32 { 73 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ProcessFailedEventArgs_get_ProcessFailedKind => {
+                match self.0.get_ProcessFailedKind(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ProcessFailedEventArgs2_get_Reason => {
+                match self.0.get_Reason(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ProcessFailedEventArgs2_get_ExitCode => {
+                match self.0.get_ExitCode(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ProcessFailedEventArgs2_get_ProcessDescription => {
+                match self.0.get_ProcessDescription(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ProcessFailedEventArgs2_get_FrameInfosForFailedProcess => {
+                match self.0.get_FrameInfosForFailedProcess(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ProcessFailedEventArgs3_get_FailureSourceModulePath => {
+                match self.0.get_FailureSourceModulePath(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ProcessFailedEventArgs4_get_CrashReport => {
+                match self.0.get_CrashReport(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ProcessFailedEventArgs4Stub;
+impl ICoreWebView2ProcessFailedEventArgs4Impl for ICoreWebView2ProcessFailedEventArgs4Stub {}
+
+// ===== ICoreWebView2Profile9 =====
+
+pub trait ICoreWebView2Profile9Impl: 'static {
+    fn get_ProfileName(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Profile::get_ProfileName");
+        Ok(String::new())
+    }
+    fn get_IsInPrivateModeEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Profile::get_IsInPrivateModeEnabled");
+        Ok(Default::default())
+    }
+    fn get_ProfilePath(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Profile::get_ProfilePath");
+        Ok(String::new())
+    }
+    fn get_DefaultDownloadFolderPath(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Profile::get_DefaultDownloadFolderPath");
+        Ok(String::new())
+    }
+    fn put_DefaultDownloadFolderPath(&self, ctx: &mut Ctx, value: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Profile::put_DefaultDownloadFolderPath");
+        Ok(())
+    }
+    fn get_PreferredColorScheme(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2Profile::get_PreferredColorScheme");
+        Ok(Default::default())
+    }
+    fn put_PreferredColorScheme(&self, ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Profile::put_PreferredColorScheme");
+        Ok(())
+    }
+    fn ClearBrowsingData(&self, ctx: &mut Ctx, dataKinds: i32, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Profile2::ClearBrowsingData");
+        Ok(())
+    }
+    fn ClearBrowsingDataInTimeRange(&self, ctx: &mut Ctx, dataKinds: i32, startTime: f64, endTime: f64, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Profile2::ClearBrowsingDataInTimeRange");
+        Ok(())
+    }
+    fn ClearBrowsingDataAll(&self, ctx: &mut Ctx, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Profile2::ClearBrowsingDataAll");
+        Ok(())
+    }
+    fn get_PreferredTrackingPreventionLevel(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2Profile3::get_PreferredTrackingPreventionLevel");
+        Ok(Default::default())
+    }
+    fn put_PreferredTrackingPreventionLevel(&self, ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Profile3::put_PreferredTrackingPreventionLevel");
+        Ok(())
+    }
+    fn SetPermissionState(&self, ctx: &mut Ctx, PermissionKind: i32, origin: Option<String>, State: i32, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Profile4::SetPermissionState");
+        Ok(())
+    }
+    fn GetNonDefaultPermissionSettings(&self, ctx: &mut Ctx, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Profile4::GetNonDefaultPermissionSettings");
+        Ok(())
+    }
+    fn get_CookieManager(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2Profile5::get_CookieManager");
+        Ok(ctx.stub(14))
+    }
+    fn get_IsPasswordAutosaveEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Profile6::get_IsPasswordAutosaveEnabled");
+        Ok(Default::default())
+    }
+    fn put_IsPasswordAutosaveEnabled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Profile6::put_IsPasswordAutosaveEnabled");
+        Ok(())
+    }
+    fn get_IsGeneralAutofillEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Profile6::get_IsGeneralAutofillEnabled");
+        Ok(Default::default())
+    }
+    fn put_IsGeneralAutofillEnabled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Profile6::put_IsGeneralAutofillEnabled");
+        Ok(())
+    }
+    fn AddBrowserExtension(&self, ctx: &mut Ctx, extensionFolderPath: Option<String>, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Profile7::AddBrowserExtension");
+        Ok(())
+    }
+    fn GetBrowserExtensions(&self, ctx: &mut Ctx, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Profile7::GetBrowserExtensions");
+        Ok(())
+    }
+    fn Delete(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Profile8::Delete");
+        Ok(())
+    }
+    fn add_Deleted(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2Profile8::add_Deleted");
+        Ok(Default::default())
+    }
+    fn remove_Deleted(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Profile8::remove_Deleted");
+        Ok(())
+    }
+    fn get_AreWebViewScriptApisEnabledForServiceWorkers(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Profile9::get_AreWebViewScriptApisEnabledForServiceWorkers");
+        Ok(Default::default())
+    }
+    fn put_AreWebViewScriptApisEnabledForServiceWorkers(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Profile9::put_AreWebViewScriptApisEnabledForServiceWorkers");
+        Ok(())
+    }
+    fn get_ServiceWorkerManager(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2Profile9::get_ServiceWorkerManager");
+        Ok(ctx.stub(81))
+    }
+    fn get_SharedWorkerManager(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2Profile9::get_SharedWorkerManager");
+        Ok(ctx.stub(88))
+    }
+}
+
+pub struct ICoreWebView2Profile9Obj<T: ICoreWebView2Profile9Impl>(pub T);
+
+impl<T: ICoreWebView2Profile9Impl> Dispatch for ICoreWebView2Profile9Obj<T> {
+    fn family(&self) -> u32 { 74 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2Profile_get_ProfileName => {
+                match self.0.get_ProfileName(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Profile_get_IsInPrivateModeEnabled => {
+                match self.0.get_IsInPrivateModeEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Profile_get_ProfilePath => {
+                match self.0.get_ProfilePath(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Profile_get_DefaultDownloadFolderPath => {
+                match self.0.get_DefaultDownloadFolderPath(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Profile_put_DefaultDownloadFolderPath => {
+                let a_value = rd.str_opt();
+                match self.0.put_DefaultDownloadFolderPath(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Profile_get_PreferredColorScheme => {
+                match self.0.get_PreferredColorScheme(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Profile_put_PreferredColorScheme => {
+                let a_value = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_PreferredColorScheme(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Profile2_ClearBrowsingData => {
+                let a_dataKinds = rd.u32().unwrap_or(0) as i32;
+                let a_handler = ctx.read_objref(rd);
+                match self.0.ClearBrowsingData(ctx, a_dataKinds, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Profile2_ClearBrowsingDataInTimeRange => {
+                let a_dataKinds = rd.u32().unwrap_or(0) as i32;
+                let a_startTime = f64::from_bits(rd.u64().unwrap_or(0));
+                let a_endTime = f64::from_bits(rd.u64().unwrap_or(0));
+                let a_handler = ctx.read_objref(rd);
+                match self.0.ClearBrowsingDataInTimeRange(ctx, a_dataKinds, a_startTime, a_endTime, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Profile2_ClearBrowsingDataAll => {
+                let a_handler = ctx.read_objref(rd);
+                match self.0.ClearBrowsingDataAll(ctx, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Profile3_get_PreferredTrackingPreventionLevel => {
+                match self.0.get_PreferredTrackingPreventionLevel(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Profile3_put_PreferredTrackingPreventionLevel => {
+                let a_value = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_PreferredTrackingPreventionLevel(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Profile4_SetPermissionState => {
+                let a_PermissionKind = rd.u32().unwrap_or(0) as i32;
+                let a_origin = rd.str_opt();
+                let a_State = rd.u32().unwrap_or(0) as i32;
+                let a_handler = ctx.read_objref(rd);
+                match self.0.SetPermissionState(ctx, a_PermissionKind, a_origin, a_State, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Profile4_GetNonDefaultPermissionSettings => {
+                let a_handler = ctx.read_objref(rd);
+                match self.0.GetNonDefaultPermissionSettings(ctx, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Profile5_get_CookieManager => {
+                match self.0.get_CookieManager(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Profile6_get_IsPasswordAutosaveEnabled => {
+                match self.0.get_IsPasswordAutosaveEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Profile6_put_IsPasswordAutosaveEnabled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsPasswordAutosaveEnabled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Profile6_get_IsGeneralAutofillEnabled => {
+                match self.0.get_IsGeneralAutofillEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Profile6_put_IsGeneralAutofillEnabled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsGeneralAutofillEnabled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Profile7_AddBrowserExtension => {
+                let a_extensionFolderPath = rd.str_opt();
+                let a_handler = ctx.read_objref(rd);
+                match self.0.AddBrowserExtension(ctx, a_extensionFolderPath, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Profile7_GetBrowserExtensions => {
+                let a_handler = ctx.read_objref(rd);
+                match self.0.GetBrowserExtensions(ctx, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Profile8_Delete => {
+                match self.0.Delete(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Profile8_add_Deleted => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_Deleted(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Profile8_remove_Deleted => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_Deleted(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Profile9_get_AreWebViewScriptApisEnabledForServiceWorkers => {
+                match self.0.get_AreWebViewScriptApisEnabledForServiceWorkers(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Profile9_put_AreWebViewScriptApisEnabledForServiceWorkers => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_AreWebViewScriptApisEnabledForServiceWorkers(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Profile9_get_ServiceWorkerManager => {
+                match self.0.get_ServiceWorkerManager(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Profile9_get_SharedWorkerManager => {
+                match self.0.get_SharedWorkerManager(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2Profile9Stub;
+impl ICoreWebView2Profile9Impl for ICoreWebView2Profile9Stub {}
+
+// ===== ICoreWebView2BrowserExtensionList =====
+
+pub trait ICoreWebView2BrowserExtensionListImpl: 'static {
+    fn get_Count(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2BrowserExtensionList::get_Count");
+        Ok(Default::default())
+    }
+    fn GetValueAtIndex(&self, ctx: &mut Ctx, index: u32) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2BrowserExtensionList::GetValueAtIndex");
+        Ok(ctx.stub(6))
+    }
+}
+
+pub struct ICoreWebView2BrowserExtensionListObj<T: ICoreWebView2BrowserExtensionListImpl>(pub T);
+
+impl<T: ICoreWebView2BrowserExtensionListImpl> Dispatch for ICoreWebView2BrowserExtensionListObj<T> {
+    fn family(&self) -> u32 { 75 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2BrowserExtensionList_get_Count => {
+                match self.0.get_Count(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2BrowserExtensionList_GetValueAtIndex => {
+                let a_index = rd.u32().unwrap_or(0);
+                match self.0.GetValueAtIndex(ctx, a_index) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2BrowserExtensionListStub;
+impl ICoreWebView2BrowserExtensionListImpl for ICoreWebView2BrowserExtensionListStub {}
+
+// ===== ICoreWebView2SaveFileSecurityCheckStartingEventArgs =====
+
+pub trait ICoreWebView2SaveFileSecurityCheckStartingEventArgsImpl: 'static {
+    fn get_CancelSave(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2SaveFileSecurityCheckStartingEventArgs::get_CancelSave");
+        Ok(Default::default())
+    }
+    fn put_CancelSave(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2SaveFileSecurityCheckStartingEventArgs::put_CancelSave");
+        Ok(())
+    }
+    fn get_DocumentOriginUri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2SaveFileSecurityCheckStartingEventArgs::get_DocumentOriginUri");
+        Ok(String::new())
+    }
+    fn get_FileExtension(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2SaveFileSecurityCheckStartingEventArgs::get_FileExtension");
+        Ok(String::new())
+    }
+    fn get_FilePath(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2SaveFileSecurityCheckStartingEventArgs::get_FilePath");
+        Ok(String::new())
+    }
+    fn get_SuppressDefaultPolicy(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2SaveFileSecurityCheckStartingEventArgs::get_SuppressDefaultPolicy");
+        Ok(Default::default())
+    }
+    fn put_SuppressDefaultPolicy(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2SaveFileSecurityCheckStartingEventArgs::put_SuppressDefaultPolicy");
+        Ok(())
+    }
+    fn GetDeferral(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2SaveFileSecurityCheckStartingEventArgs::GetDeferral");
+        Ok(ctx.stub(50))
+    }
+}
+
+pub struct ICoreWebView2SaveFileSecurityCheckStartingEventArgsObj<T: ICoreWebView2SaveFileSecurityCheckStartingEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2SaveFileSecurityCheckStartingEventArgsImpl> Dispatch for ICoreWebView2SaveFileSecurityCheckStartingEventArgsObj<T> {
+    fn family(&self) -> u32 { 76 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_CancelSave => {
+                match self.0.get_CancelSave(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_put_CancelSave => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_CancelSave(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_DocumentOriginUri => {
+                match self.0.get_DocumentOriginUri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_FileExtension => {
+                match self.0.get_FileExtension(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_FilePath => {
+                match self.0.get_FilePath(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_get_SuppressDefaultPolicy => {
+                match self.0.get_SuppressDefaultPolicy(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_put_SuppressDefaultPolicy => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_SuppressDefaultPolicy(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2SaveFileSecurityCheckStartingEventArgs_GetDeferral => {
+                match self.0.GetDeferral(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2SaveFileSecurityCheckStartingEventArgsStub;
+impl ICoreWebView2SaveFileSecurityCheckStartingEventArgsImpl for ICoreWebView2SaveFileSecurityCheckStartingEventArgsStub {}
+
+// ===== ICoreWebView2ScreenCaptureStartingEventArgs =====
+
+pub trait ICoreWebView2ScreenCaptureStartingEventArgsImpl: 'static {
+    fn get_Cancel(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ScreenCaptureStartingEventArgs::get_Cancel");
+        Ok(Default::default())
+    }
+    fn put_Cancel(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ScreenCaptureStartingEventArgs::put_Cancel");
+        Ok(())
+    }
+    fn get_Handled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2ScreenCaptureStartingEventArgs::get_Handled");
+        Ok(Default::default())
+    }
+    fn put_Handled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ScreenCaptureStartingEventArgs::put_Handled");
+        Ok(())
+    }
+    fn get_OriginalSourceFrameInfo(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ScreenCaptureStartingEventArgs::get_OriginalSourceFrameInfo");
+        Ok(ctx.stub(18))
+    }
+    fn GetDeferral(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ScreenCaptureStartingEventArgs::GetDeferral");
+        Ok(ctx.stub(50))
+    }
+}
+
+pub struct ICoreWebView2ScreenCaptureStartingEventArgsObj<T: ICoreWebView2ScreenCaptureStartingEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2ScreenCaptureStartingEventArgsImpl> Dispatch for ICoreWebView2ScreenCaptureStartingEventArgsObj<T> {
+    fn family(&self) -> u32 { 77 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ScreenCaptureStartingEventArgs_get_Cancel => {
+                match self.0.get_Cancel(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ScreenCaptureStartingEventArgs_put_Cancel => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_Cancel(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ScreenCaptureStartingEventArgs_get_Handled => {
+                match self.0.get_Handled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ScreenCaptureStartingEventArgs_put_Handled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_Handled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ScreenCaptureStartingEventArgs_get_OriginalSourceFrameInfo => {
+                match self.0.get_OriginalSourceFrameInfo(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ScreenCaptureStartingEventArgs_GetDeferral => {
+                match self.0.GetDeferral(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ScreenCaptureStartingEventArgsStub;
+impl ICoreWebView2ScreenCaptureStartingEventArgsImpl for ICoreWebView2ScreenCaptureStartingEventArgsStub {}
+
+// ===== ICoreWebView2ServiceWorker =====
+
+pub trait ICoreWebView2ServiceWorkerImpl: 'static {
+    fn get_ScriptUri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ServiceWorker::get_ScriptUri");
+        Ok(String::new())
+    }
+    fn add_Destroying(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2ServiceWorker::add_Destroying");
+        Ok(Default::default())
+    }
+    fn remove_Destroying(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ServiceWorker::remove_Destroying");
+        Ok(())
+    }
+    fn add_WebMessageReceived(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2ServiceWorker::add_WebMessageReceived");
+        Ok(Default::default())
+    }
+    fn remove_WebMessageReceived(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ServiceWorker::remove_WebMessageReceived");
+        Ok(())
+    }
+    fn PostWebMessageAsJson(&self, ctx: &mut Ctx, webMessageAsJson: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ServiceWorker::PostWebMessageAsJson");
+        Ok(())
+    }
+    fn PostWebMessageAsString(&self, ctx: &mut Ctx, webMessageAsString: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ServiceWorker::PostWebMessageAsString");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2ServiceWorkerObj<T: ICoreWebView2ServiceWorkerImpl>(pub T);
+
+impl<T: ICoreWebView2ServiceWorkerImpl> Dispatch for ICoreWebView2ServiceWorkerObj<T> {
+    fn family(&self) -> u32 { 78 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ServiceWorker_get_ScriptUri => {
+                match self.0.get_ScriptUri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ServiceWorker_add_Destroying => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_Destroying(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ServiceWorker_remove_Destroying => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_Destroying(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ServiceWorker_add_WebMessageReceived => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_WebMessageReceived(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ServiceWorker_remove_WebMessageReceived => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_WebMessageReceived(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ServiceWorker_PostWebMessageAsJson => {
+                let a_webMessageAsJson = rd.str_opt();
+                match self.0.PostWebMessageAsJson(ctx, a_webMessageAsJson) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ServiceWorker_PostWebMessageAsString => {
+                let a_webMessageAsString = rd.str_opt();
+                match self.0.PostWebMessageAsString(ctx, a_webMessageAsString) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ServiceWorkerStub;
+impl ICoreWebView2ServiceWorkerImpl for ICoreWebView2ServiceWorkerStub {}
+
+// ===== ICoreWebView2ServiceWorkerActivatedEventArgs =====
+
+pub trait ICoreWebView2ServiceWorkerActivatedEventArgsImpl: 'static {
+    fn get_ActiveServiceWorker(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ServiceWorkerActivatedEventArgs::get_ActiveServiceWorker");
+        Ok(ctx.stub(78))
+    }
+}
+
+pub struct ICoreWebView2ServiceWorkerActivatedEventArgsObj<T: ICoreWebView2ServiceWorkerActivatedEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2ServiceWorkerActivatedEventArgsImpl> Dispatch for ICoreWebView2ServiceWorkerActivatedEventArgsObj<T> {
+    fn family(&self) -> u32 { 79 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ServiceWorkerActivatedEventArgs_get_ActiveServiceWorker => {
+                match self.0.get_ActiveServiceWorker(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ServiceWorkerActivatedEventArgsStub;
+impl ICoreWebView2ServiceWorkerActivatedEventArgsImpl for ICoreWebView2ServiceWorkerActivatedEventArgsStub {}
+
+// ===== ICoreWebView2ServiceWorkerRegistrationCollectionView =====
+
+pub trait ICoreWebView2ServiceWorkerRegistrationCollectionViewImpl: 'static {
+    fn get_Count(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2ServiceWorkerRegistrationCollectionView::get_Count");
+        Ok(Default::default())
+    }
+    fn GetValueAtIndex(&self, ctx: &mut Ctx, index: u32) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ServiceWorkerRegistrationCollectionView::GetValueAtIndex");
+        Ok(ctx.stub(83))
+    }
+}
+
+pub struct ICoreWebView2ServiceWorkerRegistrationCollectionViewObj<T: ICoreWebView2ServiceWorkerRegistrationCollectionViewImpl>(pub T);
+
+impl<T: ICoreWebView2ServiceWorkerRegistrationCollectionViewImpl> Dispatch for ICoreWebView2ServiceWorkerRegistrationCollectionViewObj<T> {
+    fn family(&self) -> u32 { 80 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ServiceWorkerRegistrationCollectionView_get_Count => {
+                match self.0.get_Count(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ServiceWorkerRegistrationCollectionView_GetValueAtIndex => {
+                let a_index = rd.u32().unwrap_or(0);
+                match self.0.GetValueAtIndex(ctx, a_index) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ServiceWorkerRegistrationCollectionViewStub;
+impl ICoreWebView2ServiceWorkerRegistrationCollectionViewImpl for ICoreWebView2ServiceWorkerRegistrationCollectionViewStub {}
+
+// ===== ICoreWebView2ServiceWorkerManager =====
+
+pub trait ICoreWebView2ServiceWorkerManagerImpl: 'static {
+    fn add_ServiceWorkerRegistered(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2ServiceWorkerManager::add_ServiceWorkerRegistered");
+        Ok(Default::default())
+    }
+    fn remove_ServiceWorkerRegistered(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ServiceWorkerManager::remove_ServiceWorkerRegistered");
+        Ok(())
+    }
+    fn GetServiceWorkerRegistrations(&self, ctx: &mut Ctx, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ServiceWorkerManager::GetServiceWorkerRegistrations");
+        Ok(())
+    }
+    fn GetServiceWorkerRegistrationsForScope(&self, ctx: &mut Ctx, scopeUri: Option<String>, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ServiceWorkerManager::GetServiceWorkerRegistrationsForScope");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2ServiceWorkerManagerObj<T: ICoreWebView2ServiceWorkerManagerImpl>(pub T);
+
+impl<T: ICoreWebView2ServiceWorkerManagerImpl> Dispatch for ICoreWebView2ServiceWorkerManagerObj<T> {
+    fn family(&self) -> u32 { 81 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ServiceWorkerManager_add_ServiceWorkerRegistered => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_ServiceWorkerRegistered(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ServiceWorkerManager_remove_ServiceWorkerRegistered => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_ServiceWorkerRegistered(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ServiceWorkerManager_GetServiceWorkerRegistrations => {
+                let a_handler = ctx.read_objref(rd);
+                match self.0.GetServiceWorkerRegistrations(ctx, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ServiceWorkerManager_GetServiceWorkerRegistrationsForScope => {
+                let a_scopeUri = rd.str_opt();
+                let a_handler = ctx.read_objref(rd);
+                match self.0.GetServiceWorkerRegistrationsForScope(ctx, a_scopeUri, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ServiceWorkerManagerStub;
+impl ICoreWebView2ServiceWorkerManagerImpl for ICoreWebView2ServiceWorkerManagerStub {}
+
+// ===== ICoreWebView2ServiceWorkerRegisteredEventArgs =====
+
+pub trait ICoreWebView2ServiceWorkerRegisteredEventArgsImpl: 'static {
+    fn get_ServiceWorkerRegistration(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ServiceWorkerRegisteredEventArgs::get_ServiceWorkerRegistration");
+        Ok(ctx.stub(83))
+    }
+}
+
+pub struct ICoreWebView2ServiceWorkerRegisteredEventArgsObj<T: ICoreWebView2ServiceWorkerRegisteredEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2ServiceWorkerRegisteredEventArgsImpl> Dispatch for ICoreWebView2ServiceWorkerRegisteredEventArgsObj<T> {
+    fn family(&self) -> u32 { 82 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ServiceWorkerRegisteredEventArgs_get_ServiceWorkerRegistration => {
+                match self.0.get_ServiceWorkerRegistration(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ServiceWorkerRegisteredEventArgsStub;
+impl ICoreWebView2ServiceWorkerRegisteredEventArgsImpl for ICoreWebView2ServiceWorkerRegisteredEventArgsStub {}
+
+// ===== ICoreWebView2ServiceWorkerRegistration =====
+
+pub trait ICoreWebView2ServiceWorkerRegistrationImpl: 'static {
+    fn get_ActiveServiceWorker(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2ServiceWorkerRegistration::get_ActiveServiceWorker");
+        Ok(ctx.stub(78))
+    }
+    fn get_Origin(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ServiceWorkerRegistration::get_Origin");
+        Ok(String::new())
+    }
+    fn get_ScopeUri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ServiceWorkerRegistration::get_ScopeUri");
+        Ok(String::new())
+    }
+    fn get_TopLevelOrigin(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2ServiceWorkerRegistration::get_TopLevelOrigin");
+        Ok(String::new())
+    }
+    fn add_ServiceWorkerActivated(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2ServiceWorkerRegistration::add_ServiceWorkerActivated");
+        Ok(Default::default())
+    }
+    fn remove_ServiceWorkerActivated(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ServiceWorkerRegistration::remove_ServiceWorkerActivated");
+        Ok(())
+    }
+    fn add_Unregistering(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2ServiceWorkerRegistration::add_Unregistering");
+        Ok(Default::default())
+    }
+    fn remove_Unregistering(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2ServiceWorkerRegistration::remove_Unregistering");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2ServiceWorkerRegistrationObj<T: ICoreWebView2ServiceWorkerRegistrationImpl>(pub T);
+
+impl<T: ICoreWebView2ServiceWorkerRegistrationImpl> Dispatch for ICoreWebView2ServiceWorkerRegistrationObj<T> {
+    fn family(&self) -> u32 { 83 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2ServiceWorkerRegistration_get_ActiveServiceWorker => {
+                match self.0.get_ActiveServiceWorker(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ServiceWorkerRegistration_get_Origin => {
+                match self.0.get_Origin(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ServiceWorkerRegistration_get_ScopeUri => {
+                match self.0.get_ScopeUri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ServiceWorkerRegistration_get_TopLevelOrigin => {
+                match self.0.get_TopLevelOrigin(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ServiceWorkerRegistration_add_ServiceWorkerActivated => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_ServiceWorkerActivated(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ServiceWorkerRegistration_remove_ServiceWorkerActivated => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_ServiceWorkerActivated(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2ServiceWorkerRegistration_add_Unregistering => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_Unregistering(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2ServiceWorkerRegistration_remove_Unregistering => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_Unregistering(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2ServiceWorkerRegistrationStub;
+impl ICoreWebView2ServiceWorkerRegistrationImpl for ICoreWebView2ServiceWorkerRegistrationStub {}
+
+// ===== ICoreWebView2Settings9 =====
+
+pub trait ICoreWebView2Settings9Impl: 'static {
+    fn get_IsScriptEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Settings::get_IsScriptEnabled");
+        Ok(Default::default())
+    }
+    fn put_IsScriptEnabled(&self, ctx: &mut Ctx, isScriptEnabled: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings::put_IsScriptEnabled");
+        Ok(())
+    }
+    fn get_IsWebMessageEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Settings::get_IsWebMessageEnabled");
+        Ok(Default::default())
+    }
+    fn put_IsWebMessageEnabled(&self, ctx: &mut Ctx, isWebMessageEnabled: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings::put_IsWebMessageEnabled");
+        Ok(())
+    }
+    fn get_AreDefaultScriptDialogsEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Settings::get_AreDefaultScriptDialogsEnabled");
+        Ok(Default::default())
+    }
+    fn put_AreDefaultScriptDialogsEnabled(&self, ctx: &mut Ctx, areDefaultScriptDialogsEnabled: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings::put_AreDefaultScriptDialogsEnabled");
+        Ok(())
+    }
+    fn get_IsStatusBarEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Settings::get_IsStatusBarEnabled");
+        Ok(Default::default())
+    }
+    fn put_IsStatusBarEnabled(&self, ctx: &mut Ctx, isStatusBarEnabled: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings::put_IsStatusBarEnabled");
+        Ok(())
+    }
+    fn get_AreDevToolsEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Settings::get_AreDevToolsEnabled");
+        Ok(Default::default())
+    }
+    fn put_AreDevToolsEnabled(&self, ctx: &mut Ctx, areDevToolsEnabled: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings::put_AreDevToolsEnabled");
+        Ok(())
+    }
+    fn get_AreDefaultContextMenusEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Settings::get_AreDefaultContextMenusEnabled");
+        Ok(Default::default())
+    }
+    fn put_AreDefaultContextMenusEnabled(&self, ctx: &mut Ctx, enabled: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings::put_AreDefaultContextMenusEnabled");
+        Ok(())
+    }
+    fn get_AreHostObjectsAllowed(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Settings::get_AreHostObjectsAllowed");
+        Ok(Default::default())
+    }
+    fn put_AreHostObjectsAllowed(&self, ctx: &mut Ctx, allowed: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings::put_AreHostObjectsAllowed");
+        Ok(())
+    }
+    fn get_IsZoomControlEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Settings::get_IsZoomControlEnabled");
+        Ok(Default::default())
+    }
+    fn put_IsZoomControlEnabled(&self, ctx: &mut Ctx, enabled: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings::put_IsZoomControlEnabled");
+        Ok(())
+    }
+    fn get_IsBuiltInErrorPageEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Settings::get_IsBuiltInErrorPageEnabled");
+        Ok(Default::default())
+    }
+    fn put_IsBuiltInErrorPageEnabled(&self, ctx: &mut Ctx, enabled: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings::put_IsBuiltInErrorPageEnabled");
+        Ok(())
+    }
+    fn get_UserAgent(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2Settings2::get_UserAgent");
+        Ok(String::new())
+    }
+    fn put_UserAgent(&self, ctx: &mut Ctx, value: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings2::put_UserAgent");
+        Ok(())
+    }
+    fn get_AreBrowserAcceleratorKeysEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Settings3::get_AreBrowserAcceleratorKeysEnabled");
+        Ok(Default::default())
+    }
+    fn put_AreBrowserAcceleratorKeysEnabled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings3::put_AreBrowserAcceleratorKeysEnabled");
+        Ok(())
+    }
+    fn get_IsPasswordAutosaveEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Settings4::get_IsPasswordAutosaveEnabled");
+        Ok(Default::default())
+    }
+    fn put_IsPasswordAutosaveEnabled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings4::put_IsPasswordAutosaveEnabled");
+        Ok(())
+    }
+    fn get_IsGeneralAutofillEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Settings4::get_IsGeneralAutofillEnabled");
+        Ok(Default::default())
+    }
+    fn put_IsGeneralAutofillEnabled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings4::put_IsGeneralAutofillEnabled");
+        Ok(())
+    }
+    fn get_IsPinchZoomEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Settings5::get_IsPinchZoomEnabled");
+        Ok(Default::default())
+    }
+    fn put_IsPinchZoomEnabled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings5::put_IsPinchZoomEnabled");
+        Ok(())
+    }
+    fn get_IsSwipeNavigationEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Settings6::get_IsSwipeNavigationEnabled");
+        Ok(Default::default())
+    }
+    fn put_IsSwipeNavigationEnabled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings6::put_IsSwipeNavigationEnabled");
+        Ok(())
+    }
+    fn get_HiddenPdfToolbarItems(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2Settings7::get_HiddenPdfToolbarItems");
+        Ok(Default::default())
+    }
+    fn put_HiddenPdfToolbarItems(&self, ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings7::put_HiddenPdfToolbarItems");
+        Ok(())
+    }
+    fn get_IsReputationCheckingRequired(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Settings8::get_IsReputationCheckingRequired");
+        Ok(Default::default())
+    }
+    fn put_IsReputationCheckingRequired(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings8::put_IsReputationCheckingRequired");
+        Ok(())
+    }
+    fn get_IsNonClientRegionSupportEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2Settings9::get_IsNonClientRegionSupportEnabled");
+        Ok(Default::default())
+    }
+    fn put_IsNonClientRegionSupportEnabled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2Settings9::put_IsNonClientRegionSupportEnabled");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2Settings9Obj<T: ICoreWebView2Settings9Impl>(pub T);
+
+impl<T: ICoreWebView2Settings9Impl> Dispatch for ICoreWebView2Settings9Obj<T> {
+    fn family(&self) -> u32 { 84 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2Settings_get_IsScriptEnabled => {
+                match self.0.get_IsScriptEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings_put_IsScriptEnabled => {
+                let a_isScriptEnabled = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsScriptEnabled(ctx, a_isScriptEnabled) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Settings_get_IsWebMessageEnabled => {
+                match self.0.get_IsWebMessageEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings_put_IsWebMessageEnabled => {
+                let a_isWebMessageEnabled = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsWebMessageEnabled(ctx, a_isWebMessageEnabled) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Settings_get_AreDefaultScriptDialogsEnabled => {
+                match self.0.get_AreDefaultScriptDialogsEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings_put_AreDefaultScriptDialogsEnabled => {
+                let a_areDefaultScriptDialogsEnabled = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_AreDefaultScriptDialogsEnabled(ctx, a_areDefaultScriptDialogsEnabled) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Settings_get_IsStatusBarEnabled => {
+                match self.0.get_IsStatusBarEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings_put_IsStatusBarEnabled => {
+                let a_isStatusBarEnabled = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsStatusBarEnabled(ctx, a_isStatusBarEnabled) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Settings_get_AreDevToolsEnabled => {
+                match self.0.get_AreDevToolsEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings_put_AreDevToolsEnabled => {
+                let a_areDevToolsEnabled = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_AreDevToolsEnabled(ctx, a_areDevToolsEnabled) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Settings_get_AreDefaultContextMenusEnabled => {
+                match self.0.get_AreDefaultContextMenusEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings_put_AreDefaultContextMenusEnabled => {
+                let a_enabled = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_AreDefaultContextMenusEnabled(ctx, a_enabled) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Settings_get_AreHostObjectsAllowed => {
+                match self.0.get_AreHostObjectsAllowed(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings_put_AreHostObjectsAllowed => {
+                let a_allowed = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_AreHostObjectsAllowed(ctx, a_allowed) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Settings_get_IsZoomControlEnabled => {
+                match self.0.get_IsZoomControlEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings_put_IsZoomControlEnabled => {
+                let a_enabled = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsZoomControlEnabled(ctx, a_enabled) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Settings_get_IsBuiltInErrorPageEnabled => {
+                match self.0.get_IsBuiltInErrorPageEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings_put_IsBuiltInErrorPageEnabled => {
+                let a_enabled = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsBuiltInErrorPageEnabled(ctx, a_enabled) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Settings2_get_UserAgent => {
+                match self.0.get_UserAgent(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings2_put_UserAgent => {
+                let a_value = rd.str_opt();
+                match self.0.put_UserAgent(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Settings3_get_AreBrowserAcceleratorKeysEnabled => {
+                match self.0.get_AreBrowserAcceleratorKeysEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings3_put_AreBrowserAcceleratorKeysEnabled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_AreBrowserAcceleratorKeysEnabled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Settings4_get_IsPasswordAutosaveEnabled => {
+                match self.0.get_IsPasswordAutosaveEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings4_put_IsPasswordAutosaveEnabled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsPasswordAutosaveEnabled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Settings4_get_IsGeneralAutofillEnabled => {
+                match self.0.get_IsGeneralAutofillEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings4_put_IsGeneralAutofillEnabled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsGeneralAutofillEnabled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Settings5_get_IsPinchZoomEnabled => {
+                match self.0.get_IsPinchZoomEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings5_put_IsPinchZoomEnabled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsPinchZoomEnabled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Settings6_get_IsSwipeNavigationEnabled => {
+                match self.0.get_IsSwipeNavigationEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings6_put_IsSwipeNavigationEnabled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsSwipeNavigationEnabled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Settings7_get_HiddenPdfToolbarItems => {
+                match self.0.get_HiddenPdfToolbarItems(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings7_put_HiddenPdfToolbarItems => {
+                let a_value = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_HiddenPdfToolbarItems(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Settings8_get_IsReputationCheckingRequired => {
+                match self.0.get_IsReputationCheckingRequired(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings8_put_IsReputationCheckingRequired => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsReputationCheckingRequired(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2Settings9_get_IsNonClientRegionSupportEnabled => {
+                match self.0.get_IsNonClientRegionSupportEnabled(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2Settings9_put_IsNonClientRegionSupportEnabled => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsNonClientRegionSupportEnabled(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2Settings9Stub;
+impl ICoreWebView2Settings9Impl for ICoreWebView2Settings9Stub {}
+
+// ===== ICoreWebView2SharedWorker =====
+
+pub trait ICoreWebView2SharedWorkerImpl: 'static {
+    fn get_Origin(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2SharedWorker::get_Origin");
+        Ok(String::new())
+    }
+    fn get_ScriptUri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2SharedWorker::get_ScriptUri");
+        Ok(String::new())
+    }
+    fn get_TopLevelOrigin(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2SharedWorker::get_TopLevelOrigin");
+        Ok(String::new())
+    }
+    fn add_Destroying(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2SharedWorker::add_Destroying");
+        Ok(Default::default())
+    }
+    fn remove_Destroying(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2SharedWorker::remove_Destroying");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2SharedWorkerObj<T: ICoreWebView2SharedWorkerImpl>(pub T);
+
+impl<T: ICoreWebView2SharedWorkerImpl> Dispatch for ICoreWebView2SharedWorkerObj<T> {
+    fn family(&self) -> u32 { 85 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2SharedWorker_get_Origin => {
+                match self.0.get_Origin(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SharedWorker_get_ScriptUri => {
+                match self.0.get_ScriptUri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SharedWorker_get_TopLevelOrigin => {
+                match self.0.get_TopLevelOrigin(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SharedWorker_add_Destroying => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_Destroying(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SharedWorker_remove_Destroying => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_Destroying(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2SharedWorkerStub;
+impl ICoreWebView2SharedWorkerImpl for ICoreWebView2SharedWorkerStub {}
+
+// ===== ICoreWebView2SharedWorkerCreatedEventArgs =====
+
+pub trait ICoreWebView2SharedWorkerCreatedEventArgsImpl: 'static {
+    fn get_Worker(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2SharedWorkerCreatedEventArgs::get_Worker");
+        Ok(ctx.stub(85))
+    }
+}
+
+pub struct ICoreWebView2SharedWorkerCreatedEventArgsObj<T: ICoreWebView2SharedWorkerCreatedEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2SharedWorkerCreatedEventArgsImpl> Dispatch for ICoreWebView2SharedWorkerCreatedEventArgsObj<T> {
+    fn family(&self) -> u32 { 86 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2SharedWorkerCreatedEventArgs_get_Worker => {
+                match self.0.get_Worker(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2SharedWorkerCreatedEventArgsStub;
+impl ICoreWebView2SharedWorkerCreatedEventArgsImpl for ICoreWebView2SharedWorkerCreatedEventArgsStub {}
+
+// ===== ICoreWebView2SharedWorkerCollectionView =====
+
+pub trait ICoreWebView2SharedWorkerCollectionViewImpl: 'static {
+    fn get_Count(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2SharedWorkerCollectionView::get_Count");
+        Ok(Default::default())
+    }
+    fn GetValueAtIndex(&self, ctx: &mut Ctx, index: u32) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2SharedWorkerCollectionView::GetValueAtIndex");
+        Ok(ctx.stub(85))
+    }
+}
+
+pub struct ICoreWebView2SharedWorkerCollectionViewObj<T: ICoreWebView2SharedWorkerCollectionViewImpl>(pub T);
+
+impl<T: ICoreWebView2SharedWorkerCollectionViewImpl> Dispatch for ICoreWebView2SharedWorkerCollectionViewObj<T> {
+    fn family(&self) -> u32 { 87 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2SharedWorkerCollectionView_get_Count => {
+                match self.0.get_Count(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SharedWorkerCollectionView_GetValueAtIndex => {
+                let a_index = rd.u32().unwrap_or(0);
+                match self.0.GetValueAtIndex(ctx, a_index) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2SharedWorkerCollectionViewStub;
+impl ICoreWebView2SharedWorkerCollectionViewImpl for ICoreWebView2SharedWorkerCollectionViewStub {}
+
+// ===== ICoreWebView2SharedWorkerManager =====
+
+pub trait ICoreWebView2SharedWorkerManagerImpl: 'static {
+    fn add_SharedWorkerCreated(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2SharedWorkerManager::add_SharedWorkerCreated");
+        Ok(Default::default())
+    }
+    fn remove_SharedWorkerCreated(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2SharedWorkerManager::remove_SharedWorkerCreated");
+        Ok(())
+    }
+    fn GetSharedWorkers(&self, ctx: &mut Ctx, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2SharedWorkerManager::GetSharedWorkers");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2SharedWorkerManagerObj<T: ICoreWebView2SharedWorkerManagerImpl>(pub T);
+
+impl<T: ICoreWebView2SharedWorkerManagerImpl> Dispatch for ICoreWebView2SharedWorkerManagerObj<T> {
+    fn family(&self) -> u32 { 88 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2SharedWorkerManager_add_SharedWorkerCreated => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_SharedWorkerCreated(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2SharedWorkerManager_remove_SharedWorkerCreated => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_SharedWorkerCreated(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2SharedWorkerManager_GetSharedWorkers => {
+                let a_handler = ctx.read_objref(rd);
+                match self.0.GetSharedWorkers(ctx, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2SharedWorkerManagerStub;
+impl ICoreWebView2SharedWorkerManagerImpl for ICoreWebView2SharedWorkerManagerStub {}
+
+// ===== ICoreWebView2SourceChangedEventArgs =====
+
+pub trait ICoreWebView2SourceChangedEventArgsImpl: 'static {
+    fn get_IsNewDocument(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2SourceChangedEventArgs::get_IsNewDocument");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2SourceChangedEventArgsObj<T: ICoreWebView2SourceChangedEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2SourceChangedEventArgsImpl> Dispatch for ICoreWebView2SourceChangedEventArgsObj<T> {
+    fn family(&self) -> u32 { 89 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2SourceChangedEventArgs_get_IsNewDocument => {
+                match self.0.get_IsNewDocument(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2SourceChangedEventArgsStub;
+impl ICoreWebView2SourceChangedEventArgsImpl for ICoreWebView2SourceChangedEventArgsStub {}
+
+// ===== ICoreWebView2WebMessageReceivedEventArgs2 =====
+
+pub trait ICoreWebView2WebMessageReceivedEventArgs2Impl: 'static {
+    fn get_Source(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2WebMessageReceivedEventArgs::get_Source");
+        Ok(String::new())
+    }
+    fn get_WebMessageAsJson(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2WebMessageReceivedEventArgs::get_WebMessageAsJson");
+        Ok(String::new())
+    }
+    fn TryGetWebMessageAsString(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2WebMessageReceivedEventArgs::TryGetWebMessageAsString");
+        Ok(String::new())
+    }
+    fn get_AdditionalObjects(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2WebMessageReceivedEventArgs2::get_AdditionalObjects");
+        Ok(ctx.stub(35))
+    }
+}
+
+pub struct ICoreWebView2WebMessageReceivedEventArgs2Obj<T: ICoreWebView2WebMessageReceivedEventArgs2Impl>(pub T);
+
+impl<T: ICoreWebView2WebMessageReceivedEventArgs2Impl> Dispatch for ICoreWebView2WebMessageReceivedEventArgs2Obj<T> {
+    fn family(&self) -> u32 { 90 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2WebMessageReceivedEventArgs_get_Source => {
+                match self.0.get_Source(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebMessageReceivedEventArgs_get_WebMessageAsJson => {
+                match self.0.get_WebMessageAsJson(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebMessageReceivedEventArgs_TryGetWebMessageAsString => {
+                match self.0.TryGetWebMessageAsString(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebMessageReceivedEventArgs2_get_AdditionalObjects => {
+                match self.0.get_AdditionalObjects(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2WebMessageReceivedEventArgs2Stub;
+impl ICoreWebView2WebMessageReceivedEventArgs2Impl for ICoreWebView2WebMessageReceivedEventArgs2Stub {}
+
+// ===== ICoreWebView2WebResourceRequestedEventArgs2 =====
+
+pub trait ICoreWebView2WebResourceRequestedEventArgs2Impl: 'static {
+    fn get_Request(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2WebResourceRequestedEventArgs::get_Request");
+        Ok(ctx.stub(31))
+    }
+    fn get_Response(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2WebResourceRequestedEventArgs::get_Response");
+        Ok(ctx.stub(32))
+    }
+    fn put_Response(&self, ctx: &mut Ctx, response: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2WebResourceRequestedEventArgs::put_Response");
+        Ok(())
+    }
+    fn GetDeferral(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2WebResourceRequestedEventArgs::GetDeferral");
+        Ok(ctx.stub(50))
+    }
+    fn get_ResourceContext(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2WebResourceRequestedEventArgs::get_ResourceContext");
+        Ok(Default::default())
+    }
+    fn get_RequestedSourceKind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2WebResourceRequestedEventArgs2::get_RequestedSourceKind");
+        Ok(Default::default())
+    }
+}
+
+pub struct ICoreWebView2WebResourceRequestedEventArgs2Obj<T: ICoreWebView2WebResourceRequestedEventArgs2Impl>(pub T);
+
+impl<T: ICoreWebView2WebResourceRequestedEventArgs2Impl> Dispatch for ICoreWebView2WebResourceRequestedEventArgs2Obj<T> {
+    fn family(&self) -> u32 { 91 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2WebResourceRequestedEventArgs_get_Request => {
+                match self.0.get_Request(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceRequestedEventArgs_get_Response => {
+                match self.0.get_Response(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceRequestedEventArgs_put_Response => {
+                let a_response = ctx.read_objref(rd);
+                match self.0.put_Response(ctx, a_response) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceRequestedEventArgs_GetDeferral => {
+                match self.0.GetDeferral(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceRequestedEventArgs_get_ResourceContext => {
+                match self.0.get_ResourceContext(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceRequestedEventArgs2_get_RequestedSourceKind => {
+                match self.0.get_RequestedSourceKind(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2WebResourceRequestedEventArgs2Stub;
+impl ICoreWebView2WebResourceRequestedEventArgs2Impl for ICoreWebView2WebResourceRequestedEventArgs2Stub {}
+
+// ===== ICoreWebView2WebResourceResponseReceivedEventArgs =====
+
+pub trait ICoreWebView2WebResourceResponseReceivedEventArgsImpl: 'static {
+    fn get_Request(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2WebResourceResponseReceivedEventArgs::get_Request");
+        Ok(ctx.stub(31))
+    }
+    fn get_Response(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2WebResourceResponseReceivedEventArgs::get_Response");
+        Ok(ctx.stub(33))
+    }
+}
+
+pub struct ICoreWebView2WebResourceResponseReceivedEventArgsObj<T: ICoreWebView2WebResourceResponseReceivedEventArgsImpl>(pub T);
+
+impl<T: ICoreWebView2WebResourceResponseReceivedEventArgsImpl> Dispatch for ICoreWebView2WebResourceResponseReceivedEventArgsObj<T> {
+    fn family(&self) -> u32 { 92 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2WebResourceResponseReceivedEventArgs_get_Request => {
+                match self.0.get_Request(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2WebResourceResponseReceivedEventArgs_get_Response => {
+                match self.0.get_Response(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2WebResourceResponseReceivedEventArgsStub;
+impl ICoreWebView2WebResourceResponseReceivedEventArgsImpl for ICoreWebView2WebResourceResponseReceivedEventArgsStub {}
+
+// ===== ICoreWebView2_29 =====
+
+pub trait ICoreWebView2_29Impl: 'static {
+    fn get_Settings(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2::get_Settings");
+        Ok(ctx.stub(84))
+    }
+    fn get_Source(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2::get_Source");
+        Ok(String::new())
+    }
+    fn Navigate(&self, ctx: &mut Ctx, uri: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::Navigate");
+        Ok(())
+    }
+    fn NavigateToString(&self, ctx: &mut Ctx, htmlContent: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::NavigateToString");
+        Ok(())
+    }
+    fn add_NavigationStarting(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2::add_NavigationStarting");
+        Ok(Default::default())
+    }
+    fn remove_NavigationStarting(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::remove_NavigationStarting");
+        Ok(())
+    }
+    fn add_ContentLoading(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2::add_ContentLoading");
+        Ok(Default::default())
+    }
+    fn remove_ContentLoading(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::remove_ContentLoading");
+        Ok(())
+    }
+    fn add_SourceChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2::add_SourceChanged");
+        Ok(Default::default())
+    }
+    fn remove_SourceChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::remove_SourceChanged");
+        Ok(())
+    }
+    fn add_HistoryChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2::add_HistoryChanged");
+        Ok(Default::default())
+    }
+    fn remove_HistoryChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::remove_HistoryChanged");
+        Ok(())
+    }
+    fn add_NavigationCompleted(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2::add_NavigationCompleted");
+        Ok(Default::default())
+    }
+    fn remove_NavigationCompleted(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::remove_NavigationCompleted");
+        Ok(())
+    }
+    fn add_FrameNavigationStarting(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2::add_FrameNavigationStarting");
+        Ok(Default::default())
+    }
+    fn remove_FrameNavigationStarting(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::remove_FrameNavigationStarting");
+        Ok(())
+    }
+    fn add_FrameNavigationCompleted(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2::add_FrameNavigationCompleted");
+        Ok(Default::default())
+    }
+    fn remove_FrameNavigationCompleted(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::remove_FrameNavigationCompleted");
+        Ok(())
+    }
+    fn add_ScriptDialogOpening(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2::add_ScriptDialogOpening");
+        Ok(Default::default())
+    }
+    fn remove_ScriptDialogOpening(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::remove_ScriptDialogOpening");
+        Ok(())
+    }
+    fn add_PermissionRequested(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2::add_PermissionRequested");
+        Ok(Default::default())
+    }
+    fn remove_PermissionRequested(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::remove_PermissionRequested");
+        Ok(())
+    }
+    fn add_ProcessFailed(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2::add_ProcessFailed");
+        Ok(Default::default())
+    }
+    fn remove_ProcessFailed(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::remove_ProcessFailed");
+        Ok(())
+    }
+    fn AddScriptToExecuteOnDocumentCreated(&self, ctx: &mut Ctx, javaScript: Option<String>, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::AddScriptToExecuteOnDocumentCreated");
+        Ok(())
+    }
+    fn RemoveScriptToExecuteOnDocumentCreated(&self, ctx: &mut Ctx, id: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::RemoveScriptToExecuteOnDocumentCreated");
+        Ok(())
+    }
+    fn ExecuteScript(&self, ctx: &mut Ctx, javaScript: Option<String>, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::ExecuteScript");
+        Ok(())
+    }
+    fn CapturePreview(&self, ctx: &mut Ctx, imageFormat: i32, imageStream: Option<Vec<u8>>, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::CapturePreview");
+        Ok(())
+    }
+    fn Reload(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::Reload");
+        Ok(())
+    }
+    fn PostWebMessageAsJson(&self, ctx: &mut Ctx, webMessageAsJson: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::PostWebMessageAsJson");
+        Ok(())
+    }
+    fn PostWebMessageAsString(&self, ctx: &mut Ctx, webMessageAsString: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::PostWebMessageAsString");
+        Ok(())
+    }
+    fn add_WebMessageReceived(&self, ctx: &mut Ctx, handler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2::add_WebMessageReceived");
+        Ok(Default::default())
+    }
+    fn remove_WebMessageReceived(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::remove_WebMessageReceived");
+        Ok(())
+    }
+    fn CallDevToolsProtocolMethod(&self, ctx: &mut Ctx, methodName: Option<String>, parametersAsJson: Option<String>, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::CallDevToolsProtocolMethod");
+        Ok(())
+    }
+    fn get_BrowserProcessId(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2::get_BrowserProcessId");
+        Ok(Default::default())
+    }
+    fn get_CanGoBack(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2::get_CanGoBack");
+        Ok(Default::default())
+    }
+    fn get_CanGoForward(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2::get_CanGoForward");
+        Ok(Default::default())
+    }
+    fn GoBack(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::GoBack");
+        Ok(())
+    }
+    fn GoForward(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::GoForward");
+        Ok(())
+    }
+    fn GetDevToolsProtocolEventReceiver(&self, ctx: &mut Ctx, eventName: Option<String>) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2::GetDevToolsProtocolEventReceiver");
+        Ok(ctx.stub(52))
+    }
+    fn Stop(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::Stop");
+        Ok(())
+    }
+    fn add_NewWindowRequested(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2::add_NewWindowRequested");
+        Ok(Default::default())
+    }
+    fn remove_NewWindowRequested(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::remove_NewWindowRequested");
+        Ok(())
+    }
+    fn add_DocumentTitleChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2::add_DocumentTitleChanged");
+        Ok(Default::default())
+    }
+    fn remove_DocumentTitleChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::remove_DocumentTitleChanged");
+        Ok(())
+    }
+    fn get_DocumentTitle(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2::get_DocumentTitle");
+        Ok(String::new())
+    }
+    fn RemoveHostObjectFromScript(&self, ctx: &mut Ctx, name: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::RemoveHostObjectFromScript");
+        Ok(())
+    }
+    fn OpenDevToolsWindow(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::OpenDevToolsWindow");
+        Ok(())
+    }
+    fn add_ContainsFullScreenElementChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2::add_ContainsFullScreenElementChanged");
+        Ok(Default::default())
+    }
+    fn remove_ContainsFullScreenElementChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::remove_ContainsFullScreenElementChanged");
+        Ok(())
+    }
+    fn get_ContainsFullScreenElement(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2::get_ContainsFullScreenElement");
+        Ok(Default::default())
+    }
+    fn add_WebResourceRequested(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2::add_WebResourceRequested");
+        Ok(Default::default())
+    }
+    fn remove_WebResourceRequested(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::remove_WebResourceRequested");
+        Ok(())
+    }
+    fn AddWebResourceRequestedFilter(&self, ctx: &mut Ctx, uri: Option<String>, resourceContext: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::AddWebResourceRequestedFilter");
+        Ok(())
+    }
+    fn RemoveWebResourceRequestedFilter(&self, ctx: &mut Ctx, uri: Option<String>, resourceContext: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::RemoveWebResourceRequestedFilter");
+        Ok(())
+    }
+    fn add_WindowCloseRequested(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2::add_WindowCloseRequested");
+        Ok(Default::default())
+    }
+    fn remove_WindowCloseRequested(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2::remove_WindowCloseRequested");
+        Ok(())
+    }
+    fn add_WebResourceResponseReceived(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_2::add_WebResourceResponseReceived");
+        Ok(Default::default())
+    }
+    fn remove_WebResourceResponseReceived(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_2::remove_WebResourceResponseReceived");
+        Ok(())
+    }
+    fn NavigateWithWebResourceRequest(&self, ctx: &mut Ctx, request: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_2::NavigateWithWebResourceRequest");
+        Ok(())
+    }
+    fn add_DOMContentLoaded(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_2::add_DOMContentLoaded");
+        Ok(Default::default())
+    }
+    fn remove_DOMContentLoaded(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_2::remove_DOMContentLoaded");
+        Ok(())
+    }
+    fn get_CookieManager(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2_2::get_CookieManager");
+        Ok(ctx.stub(14))
+    }
+    fn get_Environment(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2_2::get_Environment");
+        Ok(ctx.stub(55))
+    }
+    fn TrySuspend(&self, ctx: &mut Ctx, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_3::TrySuspend");
+        Ok(())
+    }
+    fn Resume(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_3::Resume");
+        Ok(())
+    }
+    fn get_IsSuspended(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2_3::get_IsSuspended");
+        Ok(Default::default())
+    }
+    fn SetVirtualHostNameToFolderMapping(&self, ctx: &mut Ctx, hostName: Option<String>, folderPath: Option<String>, accessKind: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_3::SetVirtualHostNameToFolderMapping");
+        Ok(())
+    }
+    fn ClearVirtualHostNameToFolderMapping(&self, ctx: &mut Ctx, hostName: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_3::ClearVirtualHostNameToFolderMapping");
+        Ok(())
+    }
+    fn add_FrameCreated(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_4::add_FrameCreated");
+        Ok(Default::default())
+    }
+    fn remove_FrameCreated(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_4::remove_FrameCreated");
+        Ok(())
+    }
+    fn add_DownloadStarting(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_4::add_DownloadStarting");
+        Ok(Default::default())
+    }
+    fn remove_DownloadStarting(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_4::remove_DownloadStarting");
+        Ok(())
+    }
+    fn add_ClientCertificateRequested(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_5::add_ClientCertificateRequested");
+        Ok(Default::default())
+    }
+    fn remove_ClientCertificateRequested(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_5::remove_ClientCertificateRequested");
+        Ok(())
+    }
+    fn OpenTaskManagerWindow(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_6::OpenTaskManagerWindow");
+        Ok(())
+    }
+    fn PrintToPdf(&self, ctx: &mut Ctx, ResultFilePath: Option<String>, printSettings: ObjRef, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_7::PrintToPdf");
+        Ok(())
+    }
+    fn add_IsMutedChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_8::add_IsMutedChanged");
+        Ok(Default::default())
+    }
+    fn remove_IsMutedChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_8::remove_IsMutedChanged");
+        Ok(())
+    }
+    fn get_IsMuted(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2_8::get_IsMuted");
+        Ok(Default::default())
+    }
+    fn put_IsMuted(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_8::put_IsMuted");
+        Ok(())
+    }
+    fn add_IsDocumentPlayingAudioChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_8::add_IsDocumentPlayingAudioChanged");
+        Ok(Default::default())
+    }
+    fn remove_IsDocumentPlayingAudioChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_8::remove_IsDocumentPlayingAudioChanged");
+        Ok(())
+    }
+    fn get_IsDocumentPlayingAudio(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2_8::get_IsDocumentPlayingAudio");
+        Ok(Default::default())
+    }
+    fn add_IsDefaultDownloadDialogOpenChanged(&self, ctx: &mut Ctx, handler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_9::add_IsDefaultDownloadDialogOpenChanged");
+        Ok(Default::default())
+    }
+    fn remove_IsDefaultDownloadDialogOpenChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_9::remove_IsDefaultDownloadDialogOpenChanged");
+        Ok(())
+    }
+    fn get_IsDefaultDownloadDialogOpen(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        ctx.fixme("ICoreWebView2_9::get_IsDefaultDownloadDialogOpen");
+        Ok(Default::default())
+    }
+    fn OpenDefaultDownloadDialog(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_9::OpenDefaultDownloadDialog");
+        Ok(())
+    }
+    fn CloseDefaultDownloadDialog(&self, ctx: &mut Ctx) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_9::CloseDefaultDownloadDialog");
+        Ok(())
+    }
+    fn get_DefaultDownloadDialogCornerAlignment(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2_9::get_DefaultDownloadDialogCornerAlignment");
+        Ok(Default::default())
+    }
+    fn put_DefaultDownloadDialogCornerAlignment(&self, ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_9::put_DefaultDownloadDialogCornerAlignment");
+        Ok(())
+    }
+    fn get_DefaultDownloadDialogMargin(&self, ctx: &mut Ctx) -> WvResult<POINT> {
+        ctx.fixme("ICoreWebView2_9::get_DefaultDownloadDialogMargin");
+        Ok(Default::default())
+    }
+    fn put_DefaultDownloadDialogMargin(&self, ctx: &mut Ctx, value: POINT) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_9::put_DefaultDownloadDialogMargin");
+        Ok(())
+    }
+    fn add_BasicAuthenticationRequested(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_10::add_BasicAuthenticationRequested");
+        Ok(Default::default())
+    }
+    fn remove_BasicAuthenticationRequested(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_10::remove_BasicAuthenticationRequested");
+        Ok(())
+    }
+    fn CallDevToolsProtocolMethodForSession(&self, ctx: &mut Ctx, sessionId: Option<String>, methodName: Option<String>, parametersAsJson: Option<String>, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_11::CallDevToolsProtocolMethodForSession");
+        Ok(())
+    }
+    fn add_ContextMenuRequested(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_11::add_ContextMenuRequested");
+        Ok(Default::default())
+    }
+    fn remove_ContextMenuRequested(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_11::remove_ContextMenuRequested");
+        Ok(())
+    }
+    fn add_StatusBarTextChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_12::add_StatusBarTextChanged");
+        Ok(Default::default())
+    }
+    fn remove_StatusBarTextChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_12::remove_StatusBarTextChanged");
+        Ok(())
+    }
+    fn get_StatusBarText(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2_12::get_StatusBarText");
+        Ok(String::new())
+    }
+    fn get_Profile(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2_13::get_Profile");
+        Ok(ctx.stub(74))
+    }
+    fn add_ServerCertificateErrorDetected(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_14::add_ServerCertificateErrorDetected");
+        Ok(Default::default())
+    }
+    fn remove_ServerCertificateErrorDetected(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_14::remove_ServerCertificateErrorDetected");
+        Ok(())
+    }
+    fn ClearServerCertificateErrorActions(&self, ctx: &mut Ctx, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_14::ClearServerCertificateErrorActions");
+        Ok(())
+    }
+    fn add_FaviconChanged(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_15::add_FaviconChanged");
+        Ok(Default::default())
+    }
+    fn remove_FaviconChanged(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_15::remove_FaviconChanged");
+        Ok(())
+    }
+    fn get_FaviconUri(&self, ctx: &mut Ctx) -> WvResult<String> {
+        ctx.fixme("ICoreWebView2_15::get_FaviconUri");
+        Ok(String::new())
+    }
+    fn GetFavicon(&self, ctx: &mut Ctx, format: i32, completedHandler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_15::GetFavicon");
+        Ok(())
+    }
+    fn Print(&self, ctx: &mut Ctx, printSettings: ObjRef, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_16::Print");
+        Ok(())
+    }
+    fn ShowPrintUI(&self, ctx: &mut Ctx, printDialogKind: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_16::ShowPrintUI");
+        Ok(())
+    }
+    fn PrintToPdfStream(&self, ctx: &mut Ctx, printSettings: ObjRef, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_16::PrintToPdfStream");
+        Ok(())
+    }
+    fn PostSharedBufferToScript(&self, ctx: &mut Ctx, sharedBuffer: ObjRef, access: i32, additionalDataAsJson: Option<String>) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_17::PostSharedBufferToScript");
+        Ok(())
+    }
+    fn add_LaunchingExternalUriScheme(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_18::add_LaunchingExternalUriScheme");
+        Ok(Default::default())
+    }
+    fn remove_LaunchingExternalUriScheme(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_18::remove_LaunchingExternalUriScheme");
+        Ok(())
+    }
+    fn get_MemoryUsageTargetLevel(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        ctx.fixme("ICoreWebView2_19::get_MemoryUsageTargetLevel");
+        Ok(Default::default())
+    }
+    fn put_MemoryUsageTargetLevel(&self, ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_19::put_MemoryUsageTargetLevel");
+        Ok(())
+    }
+    fn get_FrameId(&self, ctx: &mut Ctx) -> WvResult<u32> {
+        ctx.fixme("ICoreWebView2_20::get_FrameId");
+        Ok(Default::default())
+    }
+    fn ExecuteScriptWithResult(&self, ctx: &mut Ctx, javaScript: Option<String>, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_21::ExecuteScriptWithResult");
+        Ok(())
+    }
+    fn AddWebResourceRequestedFilterWithRequestSourceKinds(&self, ctx: &mut Ctx, uri: Option<String>, ResourceContext: i32, requestSourceKinds: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_22::AddWebResourceRequestedFilterWithRequestSourceKinds");
+        Ok(())
+    }
+    fn RemoveWebResourceRequestedFilterWithRequestSourceKinds(&self, ctx: &mut Ctx, uri: Option<String>, ResourceContext: i32, requestSourceKinds: i32) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_22::RemoveWebResourceRequestedFilterWithRequestSourceKinds");
+        Ok(())
+    }
+    fn PostWebMessageAsJsonWithAdditionalObjects(&self, ctx: &mut Ctx, webMessageAsJson: Option<String>, additionalObjects: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_23::PostWebMessageAsJsonWithAdditionalObjects");
+        Ok(())
+    }
+    fn add_NotificationReceived(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_24::add_NotificationReceived");
+        Ok(Default::default())
+    }
+    fn remove_NotificationReceived(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_24::remove_NotificationReceived");
+        Ok(())
+    }
+    fn add_SaveAsUIShowing(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_25::add_SaveAsUIShowing");
+        Ok(Default::default())
+    }
+    fn remove_SaveAsUIShowing(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_25::remove_SaveAsUIShowing");
+        Ok(())
+    }
+    fn ShowSaveAsUI(&self, ctx: &mut Ctx, handler: ObjRef) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_25::ShowSaveAsUI");
+        Ok(())
+    }
+    fn add_SaveFileSecurityCheckStarting(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_26::add_SaveFileSecurityCheckStarting");
+        Ok(Default::default())
+    }
+    fn remove_SaveFileSecurityCheckStarting(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_26::remove_SaveFileSecurityCheckStarting");
+        Ok(())
+    }
+    fn add_ScreenCaptureStarting(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_27::add_ScreenCaptureStarting");
+        Ok(Default::default())
+    }
+    fn remove_ScreenCaptureStarting(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_27::remove_ScreenCaptureStarting");
+        Ok(())
+    }
+    fn get_Find(&self, ctx: &mut Ctx) -> WvResult<ObjRef> {
+        ctx.fixme("ICoreWebView2_28::get_Find");
+        Ok(ctx.stub(59))
+    }
+    fn add_DedicatedWorkerCreated(&self, ctx: &mut Ctx, eventHandler: ObjRef) -> WvResult<EventRegistrationToken> {
+        ctx.fixme("ICoreWebView2_29::add_DedicatedWorkerCreated");
+        Ok(Default::default())
+    }
+    fn remove_DedicatedWorkerCreated(&self, ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        ctx.fixme("ICoreWebView2_29::remove_DedicatedWorkerCreated");
+        Ok(())
+    }
+}
+
+pub struct ICoreWebView2_29Obj<T: ICoreWebView2_29Impl>(pub T);
+
+impl<T: ICoreWebView2_29Impl> Dispatch for ICoreWebView2_29Obj<T> {
+    fn family(&self) -> u32 { 93 }
+    fn as_any(&self) -> &dyn Any { self }
+    fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
+        match method {
+            M_ICoreWebView2_get_Settings => {
+                match self.0.get_Settings(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_get_Source => {
+                match self.0.get_Source(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_Navigate => {
+                let a_uri = rd.str_opt();
+                match self.0.Navigate(ctx, a_uri) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_NavigateToString => {
+                let a_htmlContent = rd.str_opt();
+                match self.0.NavigateToString(ctx, a_htmlContent) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_add_NavigationStarting => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_NavigationStarting(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_remove_NavigationStarting => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_NavigationStarting(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_add_ContentLoading => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_ContentLoading(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_remove_ContentLoading => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_ContentLoading(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_add_SourceChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_SourceChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_remove_SourceChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_SourceChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_add_HistoryChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_HistoryChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_remove_HistoryChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_HistoryChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_add_NavigationCompleted => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_NavigationCompleted(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_remove_NavigationCompleted => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_NavigationCompleted(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_add_FrameNavigationStarting => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_FrameNavigationStarting(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_remove_FrameNavigationStarting => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_FrameNavigationStarting(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_add_FrameNavigationCompleted => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_FrameNavigationCompleted(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_remove_FrameNavigationCompleted => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_FrameNavigationCompleted(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_add_ScriptDialogOpening => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_ScriptDialogOpening(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_remove_ScriptDialogOpening => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_ScriptDialogOpening(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_add_PermissionRequested => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_PermissionRequested(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_remove_PermissionRequested => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_PermissionRequested(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_add_ProcessFailed => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_ProcessFailed(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_remove_ProcessFailed => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_ProcessFailed(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_AddScriptToExecuteOnDocumentCreated => {
+                let a_javaScript = rd.str_opt();
+                let a_handler = ctx.read_objref(rd);
+                match self.0.AddScriptToExecuteOnDocumentCreated(ctx, a_javaScript, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_RemoveScriptToExecuteOnDocumentCreated => {
+                let a_id = rd.str_opt();
+                match self.0.RemoveScriptToExecuteOnDocumentCreated(ctx, a_id) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_ExecuteScript => {
+                let a_javaScript = rd.str_opt();
+                let a_handler = ctx.read_objref(rd);
+                match self.0.ExecuteScript(ctx, a_javaScript, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_CapturePreview => {
+                let a_imageFormat = rd.u32().unwrap_or(0) as i32;
+                let a_imageStream = rd.stream();
+                let a_handler = ctx.read_objref(rd);
+                match self.0.CapturePreview(ctx, a_imageFormat, a_imageStream, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_Reload => {
+                match self.0.Reload(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_PostWebMessageAsJson => {
+                let a_webMessageAsJson = rd.str_opt();
+                match self.0.PostWebMessageAsJson(ctx, a_webMessageAsJson) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_PostWebMessageAsString => {
+                let a_webMessageAsString = rd.str_opt();
+                match self.0.PostWebMessageAsString(ctx, a_webMessageAsString) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_add_WebMessageReceived => {
+                let a_handler = ctx.read_objref(rd);
+                match self.0.add_WebMessageReceived(ctx, a_handler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_remove_WebMessageReceived => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_WebMessageReceived(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_CallDevToolsProtocolMethod => {
+                let a_methodName = rd.str_opt();
+                let a_parametersAsJson = rd.str_opt();
+                let a_handler = ctx.read_objref(rd);
+                match self.0.CallDevToolsProtocolMethod(ctx, a_methodName, a_parametersAsJson, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_get_BrowserProcessId => {
+                match self.0.get_BrowserProcessId(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_get_CanGoBack => {
+                match self.0.get_CanGoBack(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_get_CanGoForward => {
+                match self.0.get_CanGoForward(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_GoBack => {
+                match self.0.GoBack(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_GoForward => {
+                match self.0.GoForward(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_GetDevToolsProtocolEventReceiver => {
+                let a_eventName = rd.str_opt();
+                match self.0.GetDevToolsProtocolEventReceiver(ctx, a_eventName) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_Stop => {
+                match self.0.Stop(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_add_NewWindowRequested => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_NewWindowRequested(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_remove_NewWindowRequested => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_NewWindowRequested(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_add_DocumentTitleChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_DocumentTitleChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_remove_DocumentTitleChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_DocumentTitleChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_get_DocumentTitle => {
+                match self.0.get_DocumentTitle(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_RemoveHostObjectFromScript => {
+                let a_name = rd.str_opt();
+                match self.0.RemoveHostObjectFromScript(ctx, a_name) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_OpenDevToolsWindow => {
+                match self.0.OpenDevToolsWindow(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_add_ContainsFullScreenElementChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_ContainsFullScreenElementChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_remove_ContainsFullScreenElementChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_ContainsFullScreenElementChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_get_ContainsFullScreenElement => {
+                match self.0.get_ContainsFullScreenElement(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_add_WebResourceRequested => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_WebResourceRequested(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_remove_WebResourceRequested => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_WebResourceRequested(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_AddWebResourceRequestedFilter => {
+                let a_uri = rd.str_opt();
+                let a_resourceContext = rd.u32().unwrap_or(0) as i32;
+                match self.0.AddWebResourceRequestedFilter(ctx, a_uri, a_resourceContext) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_RemoveWebResourceRequestedFilter => {
+                let a_uri = rd.str_opt();
+                let a_resourceContext = rd.u32().unwrap_or(0) as i32;
+                match self.0.RemoveWebResourceRequestedFilter(ctx, a_uri, a_resourceContext) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_add_WindowCloseRequested => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_WindowCloseRequested(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_remove_WindowCloseRequested => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_WindowCloseRequested(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_2_add_WebResourceResponseReceived => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_WebResourceResponseReceived(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_2_remove_WebResourceResponseReceived => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_WebResourceResponseReceived(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_2_NavigateWithWebResourceRequest => {
+                let a_request = ctx.read_objref(rd);
+                match self.0.NavigateWithWebResourceRequest(ctx, a_request) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_2_add_DOMContentLoaded => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_DOMContentLoaded(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_2_remove_DOMContentLoaded => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_DOMContentLoaded(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_2_get_CookieManager => {
+                match self.0.get_CookieManager(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_2_get_Environment => {
+                match self.0.get_Environment(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_3_TrySuspend => {
+                let a_handler = ctx.read_objref(rd);
+                match self.0.TrySuspend(ctx, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_3_Resume => {
+                match self.0.Resume(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_3_get_IsSuspended => {
+                match self.0.get_IsSuspended(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_3_SetVirtualHostNameToFolderMapping => {
+                let a_hostName = rd.str_opt();
+                let a_folderPath = rd.str_opt();
+                let a_accessKind = rd.u32().unwrap_or(0) as i32;
+                match self.0.SetVirtualHostNameToFolderMapping(ctx, a_hostName, a_folderPath, a_accessKind) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_3_ClearVirtualHostNameToFolderMapping => {
+                let a_hostName = rd.str_opt();
+                match self.0.ClearVirtualHostNameToFolderMapping(ctx, a_hostName) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_4_add_FrameCreated => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_FrameCreated(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_4_remove_FrameCreated => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_FrameCreated(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_4_add_DownloadStarting => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_DownloadStarting(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_4_remove_DownloadStarting => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_DownloadStarting(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_5_add_ClientCertificateRequested => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_ClientCertificateRequested(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_5_remove_ClientCertificateRequested => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_ClientCertificateRequested(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_6_OpenTaskManagerWindow => {
+                match self.0.OpenTaskManagerWindow(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_7_PrintToPdf => {
+                let a_ResultFilePath = rd.str_opt();
+                let a_printSettings = ctx.read_objref(rd);
+                let a_handler = ctx.read_objref(rd);
+                match self.0.PrintToPdf(ctx, a_ResultFilePath, a_printSettings, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_8_add_IsMutedChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_IsMutedChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_8_remove_IsMutedChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_IsMutedChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_8_get_IsMuted => {
+                match self.0.get_IsMuted(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_8_put_IsMuted => {
+                let a_value = rd.u32().unwrap_or(0) != 0;
+                match self.0.put_IsMuted(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_8_add_IsDocumentPlayingAudioChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_IsDocumentPlayingAudioChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_8_remove_IsDocumentPlayingAudioChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_IsDocumentPlayingAudioChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_8_get_IsDocumentPlayingAudio => {
+                match self.0.get_IsDocumentPlayingAudio(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_9_add_IsDefaultDownloadDialogOpenChanged => {
+                let a_handler = ctx.read_objref(rd);
+                match self.0.add_IsDefaultDownloadDialogOpenChanged(ctx, a_handler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_9_remove_IsDefaultDownloadDialogOpenChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_IsDefaultDownloadDialogOpenChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_9_get_IsDefaultDownloadDialogOpen => {
+                match self.0.get_IsDefaultDownloadDialogOpen(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_9_OpenDefaultDownloadDialog => {
+                match self.0.OpenDefaultDownloadDialog(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_9_CloseDefaultDownloadDialog => {
+                match self.0.CloseDefaultDownloadDialog(ctx) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_9_get_DefaultDownloadDialogCornerAlignment => {
+                match self.0.get_DefaultDownloadDialogCornerAlignment(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_9_put_DefaultDownloadDialogCornerAlignment => {
+                let a_value = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_DefaultDownloadDialogCornerAlignment(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_9_get_DefaultDownloadDialogMargin => {
+                match self.0.get_DefaultDownloadDialogMargin(ctx) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_9_put_DefaultDownloadDialogMargin => {
+                let a_value = rd.pod::<POINT>();
+                match self.0.put_DefaultDownloadDialogMargin(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_10_add_BasicAuthenticationRequested => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_BasicAuthenticationRequested(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_10_remove_BasicAuthenticationRequested => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_BasicAuthenticationRequested(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_11_CallDevToolsProtocolMethodForSession => {
+                let a_sessionId = rd.str_opt();
+                let a_methodName = rd.str_opt();
+                let a_parametersAsJson = rd.str_opt();
+                let a_handler = ctx.read_objref(rd);
+                match self.0.CallDevToolsProtocolMethodForSession(ctx, a_sessionId, a_methodName, a_parametersAsJson, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_11_add_ContextMenuRequested => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_ContextMenuRequested(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_11_remove_ContextMenuRequested => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_ContextMenuRequested(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_12_add_StatusBarTextChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_StatusBarTextChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_12_remove_StatusBarTextChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_StatusBarTextChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_12_get_StatusBarText => {
+                match self.0.get_StatusBarText(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_13_get_Profile => {
+                match self.0.get_Profile(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_14_add_ServerCertificateErrorDetected => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_ServerCertificateErrorDetected(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_14_remove_ServerCertificateErrorDetected => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_ServerCertificateErrorDetected(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_14_ClearServerCertificateErrorActions => {
+                let a_handler = ctx.read_objref(rd);
+                match self.0.ClearServerCertificateErrorActions(ctx, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_15_add_FaviconChanged => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_FaviconChanged(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_15_remove_FaviconChanged => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_FaviconChanged(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_15_get_FaviconUri => {
+                match self.0.get_FaviconUri(ctx) { Ok(v) => { wr.put_str(Some(&v)); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_15_GetFavicon => {
+                let a_format = rd.u32().unwrap_or(0) as i32;
+                let a_completedHandler = ctx.read_objref(rd);
+                match self.0.GetFavicon(ctx, a_format, a_completedHandler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_16_Print => {
+                let a_printSettings = ctx.read_objref(rd);
+                let a_handler = ctx.read_objref(rd);
+                match self.0.Print(ctx, a_printSettings, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_16_ShowPrintUI => {
+                let a_printDialogKind = rd.u32().unwrap_or(0) as i32;
+                match self.0.ShowPrintUI(ctx, a_printDialogKind) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_16_PrintToPdfStream => {
+                let a_printSettings = ctx.read_objref(rd);
+                let a_handler = ctx.read_objref(rd);
+                match self.0.PrintToPdfStream(ctx, a_printSettings, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_17_PostSharedBufferToScript => {
+                let a_sharedBuffer = ctx.read_objref(rd);
+                let a_access = rd.u32().unwrap_or(0) as i32;
+                let a_additionalDataAsJson = rd.str_opt();
+                match self.0.PostSharedBufferToScript(ctx, a_sharedBuffer, a_access, a_additionalDataAsJson) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_18_add_LaunchingExternalUriScheme => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_LaunchingExternalUriScheme(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_18_remove_LaunchingExternalUriScheme => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_LaunchingExternalUriScheme(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_19_get_MemoryUsageTargetLevel => {
+                match self.0.get_MemoryUsageTargetLevel(ctx) { Ok(v) => { wr.put_u32(v as u32); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_19_put_MemoryUsageTargetLevel => {
+                let a_value = rd.u32().unwrap_or(0) as i32;
+                match self.0.put_MemoryUsageTargetLevel(ctx, a_value) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_20_get_FrameId => {
+                match self.0.get_FrameId(ctx) { Ok(v) => { wr.put_u32(v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_21_ExecuteScriptWithResult => {
+                let a_javaScript = rd.str_opt();
+                let a_handler = ctx.read_objref(rd);
+                match self.0.ExecuteScriptWithResult(ctx, a_javaScript, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_22_AddWebResourceRequestedFilterWithRequestSourceKinds => {
+                let a_uri = rd.str_opt();
+                let a_ResourceContext = rd.u32().unwrap_or(0) as i32;
+                let a_requestSourceKinds = rd.u32().unwrap_or(0) as i32;
+                match self.0.AddWebResourceRequestedFilterWithRequestSourceKinds(ctx, a_uri, a_ResourceContext, a_requestSourceKinds) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_22_RemoveWebResourceRequestedFilterWithRequestSourceKinds => {
+                let a_uri = rd.str_opt();
+                let a_ResourceContext = rd.u32().unwrap_or(0) as i32;
+                let a_requestSourceKinds = rd.u32().unwrap_or(0) as i32;
+                match self.0.RemoveWebResourceRequestedFilterWithRequestSourceKinds(ctx, a_uri, a_ResourceContext, a_requestSourceKinds) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_23_PostWebMessageAsJsonWithAdditionalObjects => {
+                let a_webMessageAsJson = rd.str_opt();
+                let a_additionalObjects = ctx.read_objref(rd);
+                match self.0.PostWebMessageAsJsonWithAdditionalObjects(ctx, a_webMessageAsJson, a_additionalObjects) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_24_add_NotificationReceived => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_NotificationReceived(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_24_remove_NotificationReceived => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_NotificationReceived(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_25_add_SaveAsUIShowing => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_SaveAsUIShowing(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_25_remove_SaveAsUIShowing => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_SaveAsUIShowing(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_25_ShowSaveAsUI => {
+                let a_handler = ctx.read_objref(rd);
+                match self.0.ShowSaveAsUI(ctx, a_handler) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_26_add_SaveFileSecurityCheckStarting => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_SaveFileSecurityCheckStarting(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_26_remove_SaveFileSecurityCheckStarting => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_SaveFileSecurityCheckStarting(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_27_add_ScreenCaptureStarting => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_ScreenCaptureStarting(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_27_remove_ScreenCaptureStarting => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_ScreenCaptureStarting(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            M_ICoreWebView2_28_get_Find => {
+                match self.0.get_Find(ctx) { Ok(v) => { ctx.write_objref(wr, &v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_29_add_DedicatedWorkerCreated => {
+                let a_eventHandler = ctx.read_objref(rd);
+                match self.0.add_DedicatedWorkerCreated(ctx, a_eventHandler) { Ok(v) => { wr.put_pod(&v); S_OK } Err(e) => e }
+            }
+            M_ICoreWebView2_29_remove_DedicatedWorkerCreated => {
+                let a_token = rd.pod::<EventRegistrationToken>();
+                match self.0.remove_DedicatedWorkerCreated(ctx, a_token) { Ok(()) => S_OK, Err(e) => e }
+            }
+            _ => E_NOTIMPL,
+        }
+    }
+}
+
+pub struct ICoreWebView2_29Stub;
+impl ICoreWebView2_29Impl for ICoreWebView2_29Stub {}
+
+/// Obiekt-zaślepka rodziny (domyślne implementacje: log + S_OK).
+pub fn make_stub(family: u32) -> Option<Rc<dyn Dispatch>> {
+    Some(match family {
+        0 => Rc::new(ICoreWebView2RegionRectCollectionViewObj(ICoreWebView2RegionRectCollectionViewStub)),
+        1 => Rc::new(ICoreWebView2StringCollectionObj(ICoreWebView2StringCollectionStub)),
+        2 => Rc::new(ICoreWebView2ClientCertificateCollectionObj(ICoreWebView2ClientCertificateCollectionStub)),
+        3 => Rc::new(ICoreWebView2CookieListObj(ICoreWebView2CookieListStub)),
+        4 => Rc::new(ICoreWebView2BasicAuthenticationRequestedEventArgsObj(ICoreWebView2BasicAuthenticationRequestedEventArgsStub)),
+        5 => Rc::new(ICoreWebView2BasicAuthenticationResponseObj(ICoreWebView2BasicAuthenticationResponseStub)),
+        6 => Rc::new(ICoreWebView2BrowserExtensionObj(ICoreWebView2BrowserExtensionStub)),
+        7 => Rc::new(ICoreWebView2CertificateObj(ICoreWebView2CertificateStub)),
+        8 => Rc::new(ICoreWebView2ClientCertificateObj(ICoreWebView2ClientCertificateStub)),
+        9 => Rc::new(ICoreWebView2ClientCertificateRequestedEventArgsObj(ICoreWebView2ClientCertificateRequestedEventArgsStub)),
+        10 => Rc::new(ICoreWebView2ContextMenuItemObj(ICoreWebView2ContextMenuItemStub)),
+        11 => Rc::new(ICoreWebView2ContextMenuTargetObj(ICoreWebView2ContextMenuTargetStub)),
+        12 => Rc::new(ICoreWebView2ContextMenuRequestedEventArgsObj(ICoreWebView2ContextMenuRequestedEventArgsStub)),
+        13 => Rc::new(ICoreWebView2CookieObj(ICoreWebView2CookieStub)),
+        14 => Rc::new(ICoreWebView2CookieManagerObj(ICoreWebView2CookieManagerStub)),
+        15 => Rc::new(ICoreWebView2DownloadOperationObj(ICoreWebView2DownloadOperationStub)),
+        16 => Rc::new(ICoreWebView2DownloadStartingEventArgsObj(ICoreWebView2DownloadStartingEventArgsStub)),
+        17 => Rc::new(ICoreWebView2ExecuteScriptResultObj(ICoreWebView2ExecuteScriptResultStub)),
+        18 => Rc::new(ICoreWebView2FrameInfo2Obj(ICoreWebView2FrameInfo2Stub)),
+        19 => Rc::new(ICoreWebView2HttpHeadersCollectionIteratorObj(ICoreWebView2HttpHeadersCollectionIteratorStub)),
+        20 => Rc::new(ICoreWebView2LaunchingExternalUriSchemeEventArgsObj(ICoreWebView2LaunchingExternalUriSchemeEventArgsStub)),
+        21 => Rc::new(ICoreWebView2MoveFocusRequestedEventArgsObj(ICoreWebView2MoveFocusRequestedEventArgsStub)),
+        22 => Rc::new(ICoreWebView2PermissionSettingCollectionViewObj(ICoreWebView2PermissionSettingCollectionViewStub)),
+        23 => Rc::new(ICoreWebView2PointerInfoObj(ICoreWebView2PointerInfoStub)),
+        24 => Rc::new(ICoreWebView2PrintSettings2Obj(ICoreWebView2PrintSettings2Stub)),
+        25 => Rc::new(ICoreWebView2ProcessExtendedInfoObj(ICoreWebView2ProcessExtendedInfoStub)),
+        26 => Rc::new(ICoreWebView2ProcessInfoObj(ICoreWebView2ProcessInfoStub)),
+        27 => Rc::new(ICoreWebView2ScriptDialogOpeningEventArgsObj(ICoreWebView2ScriptDialogOpeningEventArgsStub)),
+        28 => Rc::new(ICoreWebView2ScriptExceptionObj(ICoreWebView2ScriptExceptionStub)),
+        29 => Rc::new(ICoreWebView2ServerCertificateErrorDetectedEventArgsObj(ICoreWebView2ServerCertificateErrorDetectedEventArgsStub)),
+        30 => Rc::new(ICoreWebView2SharedBufferObj(ICoreWebView2SharedBufferStub)),
+        31 => Rc::new(ICoreWebView2WebResourceRequestObj(ICoreWebView2WebResourceRequestStub)),
+        32 => Rc::new(ICoreWebView2WebResourceResponseObj(ICoreWebView2WebResourceResponseStub)),
+        33 => Rc::new(ICoreWebView2WebResourceResponseViewObj(ICoreWebView2WebResourceResponseViewStub)),
+        34 => Rc::new(ICoreWebView2WindowFeaturesObj(ICoreWebView2WindowFeaturesStub)),
+        35 => Rc::new(ICoreWebView2ObjectCollectionObj(ICoreWebView2ObjectCollectionStub)),
+        36 => Rc::new(ICoreWebView2NotificationObj(ICoreWebView2NotificationStub)),
+        37 => Rc::new(ICoreWebView2NotificationReceivedEventArgsObj(ICoreWebView2NotificationReceivedEventArgsStub)),
+        38 => Rc::new(ICoreWebView2SaveAsUIShowingEventArgsObj(ICoreWebView2SaveAsUIShowingEventArgsStub)),
+        39 => Rc::new(ICoreWebView2AcceleratorKeyPressedEventArgs2Obj(ICoreWebView2AcceleratorKeyPressedEventArgs2Stub)),
+        40 => Rc::new(ICoreWebView2BrowserProcessExitedEventArgsObj(ICoreWebView2BrowserProcessExitedEventArgsStub)),
+        41 => Rc::new(ICoreWebView2CompositionController5Obj(ICoreWebView2CompositionController5Stub)),
+        42 => Rc::new(ICoreWebView2ContentLoadingEventArgsObj(ICoreWebView2ContentLoadingEventArgsStub)),
+        43 => Rc::new(ICoreWebView2ContextMenuItemCollectionObj(ICoreWebView2ContextMenuItemCollectionStub)),
+        44 => Rc::new(ICoreWebView2Controller4Obj(ICoreWebView2Controller4Stub)),
+        45 => Rc::new(ICoreWebView2ControllerOptions4Obj(ICoreWebView2ControllerOptions4Stub)),
+        46 => Rc::new(ICoreWebView2CrashReportObj(ICoreWebView2CrashReportStub)),
+        47 => Rc::new(ICoreWebView2DOMContentLoadedEventArgsObj(ICoreWebView2DOMContentLoadedEventArgsStub)),
+        48 => Rc::new(ICoreWebView2DedicatedWorkerObj(ICoreWebView2DedicatedWorkerStub)),
+        49 => Rc::new(ICoreWebView2DedicatedWorkerCreatedEventArgsObj(ICoreWebView2DedicatedWorkerCreatedEventArgsStub)),
+        50 => Rc::new(ICoreWebView2DeferralObj(ICoreWebView2DeferralStub)),
+        51 => Rc::new(ICoreWebView2DevToolsProtocolEventReceivedEventArgs2Obj(ICoreWebView2DevToolsProtocolEventReceivedEventArgs2Stub)),
+        52 => Rc::new(ICoreWebView2DevToolsProtocolEventReceiverObj(ICoreWebView2DevToolsProtocolEventReceiverStub)),
+        53 => Rc::new(ICoreWebView2DragStartingEventArgsObj(ICoreWebView2DragStartingEventArgsStub)),
+        54 => Rc::new(ICoreWebView2ProcessExtendedInfoCollectionObj(ICoreWebView2ProcessExtendedInfoCollectionStub)),
+        55 => Rc::new(ICoreWebView2Environment15Obj(ICoreWebView2Environment15Stub)),
+        56 => Rc::new(ICoreWebView2ProcessInfoCollectionObj(ICoreWebView2ProcessInfoCollectionStub)),
+        57 => Rc::new(ICoreWebView2FileObj(ICoreWebView2FileStub)),
+        58 => Rc::new(ICoreWebView2FileSystemHandleObj(ICoreWebView2FileSystemHandleStub)),
+        59 => Rc::new(ICoreWebView2FindObj(ICoreWebView2FindStub)),
+        60 => Rc::new(ICoreWebView2FindOptionsObj(ICoreWebView2FindOptionsStub)),
+        61 => Rc::new(ICoreWebView2Frame8Obj(ICoreWebView2Frame8Stub)),
+        62 => Rc::new(ICoreWebView2FrameCreatedEventArgsObj(ICoreWebView2FrameCreatedEventArgsStub)),
+        63 => Rc::new(ICoreWebView2FrameInfoCollectionObj(ICoreWebView2FrameInfoCollectionStub)),
+        64 => Rc::new(ICoreWebView2FrameInfoCollectionIteratorObj(ICoreWebView2FrameInfoCollectionIteratorStub)),
+        65 => Rc::new(ICoreWebView2HttpRequestHeadersObj(ICoreWebView2HttpRequestHeadersStub)),
+        66 => Rc::new(ICoreWebView2HttpResponseHeadersObj(ICoreWebView2HttpResponseHeadersStub)),
+        67 => Rc::new(ICoreWebView2NavigationCompletedEventArgs2Obj(ICoreWebView2NavigationCompletedEventArgs2Stub)),
+        68 => Rc::new(ICoreWebView2NavigationStartingEventArgs3Obj(ICoreWebView2NavigationStartingEventArgs3Stub)),
+        69 => Rc::new(ICoreWebView2NewWindowRequestedEventArgs3Obj(ICoreWebView2NewWindowRequestedEventArgs3Stub)),
+        70 => Rc::new(ICoreWebView2NonClientRegionChangedEventArgsObj(ICoreWebView2NonClientRegionChangedEventArgsStub)),
+        71 => Rc::new(ICoreWebView2PermissionRequestedEventArgs3Obj(ICoreWebView2PermissionRequestedEventArgs3Stub)),
+        72 => Rc::new(ICoreWebView2PermissionSettingObj(ICoreWebView2PermissionSettingStub)),
+        73 => Rc::new(ICoreWebView2ProcessFailedEventArgs4Obj(ICoreWebView2ProcessFailedEventArgs4Stub)),
+        74 => Rc::new(ICoreWebView2Profile9Obj(ICoreWebView2Profile9Stub)),
+        75 => Rc::new(ICoreWebView2BrowserExtensionListObj(ICoreWebView2BrowserExtensionListStub)),
+        76 => Rc::new(ICoreWebView2SaveFileSecurityCheckStartingEventArgsObj(ICoreWebView2SaveFileSecurityCheckStartingEventArgsStub)),
+        77 => Rc::new(ICoreWebView2ScreenCaptureStartingEventArgsObj(ICoreWebView2ScreenCaptureStartingEventArgsStub)),
+        78 => Rc::new(ICoreWebView2ServiceWorkerObj(ICoreWebView2ServiceWorkerStub)),
+        79 => Rc::new(ICoreWebView2ServiceWorkerActivatedEventArgsObj(ICoreWebView2ServiceWorkerActivatedEventArgsStub)),
+        80 => Rc::new(ICoreWebView2ServiceWorkerRegistrationCollectionViewObj(ICoreWebView2ServiceWorkerRegistrationCollectionViewStub)),
+        81 => Rc::new(ICoreWebView2ServiceWorkerManagerObj(ICoreWebView2ServiceWorkerManagerStub)),
+        82 => Rc::new(ICoreWebView2ServiceWorkerRegisteredEventArgsObj(ICoreWebView2ServiceWorkerRegisteredEventArgsStub)),
+        83 => Rc::new(ICoreWebView2ServiceWorkerRegistrationObj(ICoreWebView2ServiceWorkerRegistrationStub)),
+        84 => Rc::new(ICoreWebView2Settings9Obj(ICoreWebView2Settings9Stub)),
+        85 => Rc::new(ICoreWebView2SharedWorkerObj(ICoreWebView2SharedWorkerStub)),
+        86 => Rc::new(ICoreWebView2SharedWorkerCreatedEventArgsObj(ICoreWebView2SharedWorkerCreatedEventArgsStub)),
+        87 => Rc::new(ICoreWebView2SharedWorkerCollectionViewObj(ICoreWebView2SharedWorkerCollectionViewStub)),
+        88 => Rc::new(ICoreWebView2SharedWorkerManagerObj(ICoreWebView2SharedWorkerManagerStub)),
+        89 => Rc::new(ICoreWebView2SourceChangedEventArgsObj(ICoreWebView2SourceChangedEventArgsStub)),
+        90 => Rc::new(ICoreWebView2WebMessageReceivedEventArgs2Obj(ICoreWebView2WebMessageReceivedEventArgs2Stub)),
+        91 => Rc::new(ICoreWebView2WebResourceRequestedEventArgs2Obj(ICoreWebView2WebResourceRequestedEventArgs2Stub)),
+        92 => Rc::new(ICoreWebView2WebResourceResponseReceivedEventArgsObj(ICoreWebView2WebResourceResponseReceivedEventArgsStub)),
+        93 => Rc::new(ICoreWebView2_29Obj(ICoreWebView2_29Stub)),
+        _ => return None,
+    })
+}
+
+/// Obiekt aplikacji `ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: Option<&str>) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_str(result);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: Option<&str>) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_str(result);
+        ctx.invoke_async(&self.0, M_ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ExecuteScriptCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ExecuteScriptCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2ExecuteScriptCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: Option<&str>) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_str(result);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ExecuteScriptCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: Option<&str>) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_str(result);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ExecuteScriptCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2CapturePreviewCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2CapturePreviewCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2CapturePreviewCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2CapturePreviewCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2CapturePreviewCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2CallDevToolsProtocolMethodCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2CallDevToolsProtocolMethodCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2CallDevToolsProtocolMethodCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: Option<&str>) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_str(result);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2CallDevToolsProtocolMethodCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: Option<&str>) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_str(result);
+        ctx.invoke_async(&self.0, M_ICoreWebView2CallDevToolsProtocolMethodCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ContainsFullScreenElementChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ContainsFullScreenElementChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2ContainsFullScreenElementChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ContainsFullScreenElementChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ContainsFullScreenElementChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ContentLoadingEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ContentLoadingEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2ContentLoadingEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ContentLoadingEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ContentLoadingEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2DocumentTitleChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2DocumentTitleChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2DocumentTitleChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2DocumentTitleChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2DocumentTitleChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2HistoryChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2HistoryChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2HistoryChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2HistoryChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2HistoryChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2NavigationCompletedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2NavigationCompletedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2NavigationCompletedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2NavigationCompletedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2NavigationCompletedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2NavigationStartingEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2NavigationStartingEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2NavigationStartingEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2NavigationStartingEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2NavigationStartingEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2NewWindowRequestedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2NewWindowRequestedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2NewWindowRequestedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2NewWindowRequestedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2NewWindowRequestedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2PermissionRequestedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2PermissionRequestedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2PermissionRequestedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2PermissionRequestedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2PermissionRequestedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ProcessFailedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ProcessFailedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2ProcessFailedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ProcessFailedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ProcessFailedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ScriptDialogOpeningEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ScriptDialogOpeningEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2ScriptDialogOpeningEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ScriptDialogOpeningEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ScriptDialogOpeningEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2SourceChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2SourceChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2SourceChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2SourceChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2SourceChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2WebMessageReceivedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2WebMessageReceivedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2WebMessageReceivedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2WebMessageReceivedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2WebMessageReceivedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2WebResourceRequestedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2WebResourceRequestedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2WebResourceRequestedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2WebResourceRequestedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2WebResourceRequestedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2WindowCloseRequestedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2WindowCloseRequestedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2WindowCloseRequestedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2WindowCloseRequestedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2WindowCloseRequestedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2DOMContentLoadedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2DOMContentLoadedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2DOMContentLoadedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2DOMContentLoadedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2DOMContentLoadedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2WebResourceResponseReceivedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2WebResourceResponseReceivedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2WebResourceResponseReceivedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2WebResourceResponseReceivedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2WebResourceResponseReceivedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2TrySuspendCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2TrySuspendCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2TrySuspendCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: bool) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_u32(result as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2TrySuspendCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: bool) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_u32(result as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2TrySuspendCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2DownloadStartingEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2DownloadStartingEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2DownloadStartingEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2DownloadStartingEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2DownloadStartingEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2FrameCreatedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2FrameCreatedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2FrameCreatedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2FrameCreatedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2FrameCreatedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2IsDocumentPlayingAudioChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2IsDocumentPlayingAudioChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2IsDocumentPlayingAudioChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2IsDocumentPlayingAudioChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2IsDocumentPlayingAudioChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2IsMutedChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2IsMutedChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2IsMutedChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2IsMutedChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2IsMutedChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2IsDefaultDownloadDialogOpenChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ContextMenuRequestedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ContextMenuRequestedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2ContextMenuRequestedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ContextMenuRequestedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ContextMenuRequestedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2StatusBarTextChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2StatusBarTextChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2StatusBarTextChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2StatusBarTextChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2StatusBarTextChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2GetFaviconCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2GetFaviconCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2GetFaviconCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: Option<&[u8]>) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_stream(result);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2GetFaviconCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: Option<&[u8]>) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_stream(result);
+        ctx.invoke_async(&self.0, M_ICoreWebView2GetFaviconCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2FaviconChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2FaviconChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2FaviconChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2FaviconChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2FaviconChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2PrintCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2PrintCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2PrintCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: i32) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_u32(result as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2PrintCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: i32) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_u32(result as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2PrintCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2PrintToPdfStreamCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2PrintToPdfStreamCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2PrintToPdfStreamCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: Option<&[u8]>) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_stream(result);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2PrintToPdfStreamCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: Option<&[u8]>) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_stream(result);
+        ctx.invoke_async(&self.0, M_ICoreWebView2PrintToPdfStreamCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2CursorChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2CursorChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2CursorChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2CursorChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2CursorChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2NonClientRegionChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2NonClientRegionChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2NonClientRegionChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2NonClientRegionChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2NonClientRegionChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2AcceleratorKeyPressedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2AcceleratorKeyPressedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2AcceleratorKeyPressedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2AcceleratorKeyPressedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2AcceleratorKeyPressedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2FocusChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2FocusChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2FocusChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2FocusChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2FocusChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2MoveFocusRequestedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2MoveFocusRequestedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2MoveFocusRequestedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2MoveFocusRequestedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2MoveFocusRequestedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ZoomFactorChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ZoomFactorChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2ZoomFactorChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ZoomFactorChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ZoomFactorChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2RasterizationScaleChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2RasterizationScaleChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2RasterizationScaleChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2RasterizationScaleChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2RasterizationScaleChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2CreateCoreWebView2ControllerCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2CreateCoreWebView2ControllerCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2CreateCoreWebView2ControllerCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        ctx.invoke_async(&self.0, M_ICoreWebView2CreateCoreWebView2ControllerCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2NewBrowserVersionAvailableEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2NewBrowserVersionAvailableEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2NewBrowserVersionAvailableEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2NewBrowserVersionAvailableEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2NewBrowserVersionAvailableEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2BrowserExtensionRemoveCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2BrowserExtensionRemoveCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2BrowserExtensionRemoveCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2BrowserExtensionRemoveCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2BrowserExtensionRemoveCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2BrowserExtensionEnableCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2BrowserExtensionEnableCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2BrowserExtensionEnableCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2BrowserExtensionEnableCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2BrowserExtensionEnableCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2CustomItemSelectedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2CustomItemSelectedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2CustomItemSelectedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2CustomItemSelectedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2CustomItemSelectedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2GetCookiesCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2GetCookiesCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2GetCookiesCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2GetCookiesCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        ctx.invoke_async(&self.0, M_ICoreWebView2GetCookiesCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2BytesReceivedChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2BytesReceivedChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2BytesReceivedChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2BytesReceivedChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2BytesReceivedChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2EstimatedEndTimeChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2EstimatedEndTimeChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2EstimatedEndTimeChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EstimatedEndTimeChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2EstimatedEndTimeChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2StateChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2StateChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2StateChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2StateChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2StateChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2FrameDestroyedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2FrameDestroyedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2FrameDestroyedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2FrameDestroyedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2FrameDestroyedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2FrameNameChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2FrameNameChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2FrameNameChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2FrameNameChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2FrameNameChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2FrameContentLoadingEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2FrameContentLoadingEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2FrameContentLoadingEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2FrameContentLoadingEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2FrameContentLoadingEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2FrameDOMContentLoadedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2FrameDOMContentLoadedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2FrameDOMContentLoadedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2FrameDOMContentLoadedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2FrameDOMContentLoadedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2FrameNavigationCompletedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2FrameNavigationCompletedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2FrameNavigationCompletedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2FrameNavigationCompletedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2FrameNavigationCompletedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2FrameNavigationStartingEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2FrameNavigationStartingEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2FrameNavigationStartingEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2FrameNavigationStartingEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2FrameNavigationStartingEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2FrameWebMessageReceivedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2FrameWebMessageReceivedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2FrameWebMessageReceivedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2FrameWebMessageReceivedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2FrameWebMessageReceivedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ProfileDeletedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ProfileDeletedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2ProfileDeletedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ProfileDeletedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ProfileDeletedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2WebResourceResponseViewGetContentCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2WebResourceResponseViewGetContentCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: Option<&[u8]>) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_stream(result);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2WebResourceResponseViewGetContentCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: Option<&[u8]>) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_stream(result);
+        ctx.invoke_async(&self.0, M_ICoreWebView2WebResourceResponseViewGetContentCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2NotificationCloseRequestedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2NotificationCloseRequestedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2NotificationCloseRequestedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2NotificationCloseRequestedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2NotificationCloseRequestedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2EnvironmentOptions` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2EnvironmentOptionsApp(pub AppRef);
+
+impl ICoreWebView2EnvironmentOptionsApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn get_AdditionalBrowserArguments(&self, ctx: &mut Ctx) -> WvResult<String> {
+        let mut w = Writer::default();
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions_get_AdditionalBrowserArguments, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(rd.str_opt().unwrap_or_default())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn get_AdditionalBrowserArguments_async(&self, ctx: &mut Ctx) {
+        let mut w = Writer::default();
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions_get_AdditionalBrowserArguments, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn put_AdditionalBrowserArguments(&self, ctx: &mut Ctx, value: Option<&str>) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_str(value);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions_put_AdditionalBrowserArguments, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn put_AdditionalBrowserArguments_async(&self, ctx: &mut Ctx, value: Option<&str>) {
+        let mut w = Writer::default();
+        w.put_str(value);
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions_put_AdditionalBrowserArguments, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn get_Language(&self, ctx: &mut Ctx) -> WvResult<String> {
+        let mut w = Writer::default();
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions_get_Language, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(rd.str_opt().unwrap_or_default())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn get_Language_async(&self, ctx: &mut Ctx) {
+        let mut w = Writer::default();
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions_get_Language, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn put_Language(&self, ctx: &mut Ctx, value: Option<&str>) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_str(value);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions_put_Language, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn put_Language_async(&self, ctx: &mut Ctx, value: Option<&str>) {
+        let mut w = Writer::default();
+        w.put_str(value);
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions_put_Language, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn get_TargetCompatibleBrowserVersion(&self, ctx: &mut Ctx) -> WvResult<String> {
+        let mut w = Writer::default();
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions_get_TargetCompatibleBrowserVersion, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(rd.str_opt().unwrap_or_default())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn get_TargetCompatibleBrowserVersion_async(&self, ctx: &mut Ctx) {
+        let mut w = Writer::default();
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions_get_TargetCompatibleBrowserVersion, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn put_TargetCompatibleBrowserVersion(&self, ctx: &mut Ctx, value: Option<&str>) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_str(value);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions_put_TargetCompatibleBrowserVersion, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn put_TargetCompatibleBrowserVersion_async(&self, ctx: &mut Ctx, value: Option<&str>) {
+        let mut w = Writer::default();
+        w.put_str(value);
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions_put_TargetCompatibleBrowserVersion, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn get_AllowSingleSignOnUsingOSPrimaryAccount(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        let mut w = Writer::default();
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions_get_AllowSingleSignOnUsingOSPrimaryAccount, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(rd.u32().unwrap_or(0) != 0)
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn get_AllowSingleSignOnUsingOSPrimaryAccount_async(&self, ctx: &mut Ctx) {
+        let mut w = Writer::default();
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions_get_AllowSingleSignOnUsingOSPrimaryAccount, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn put_AllowSingleSignOnUsingOSPrimaryAccount(&self, ctx: &mut Ctx, allow: bool) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(allow as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions_put_AllowSingleSignOnUsingOSPrimaryAccount, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn put_AllowSingleSignOnUsingOSPrimaryAccount_async(&self, ctx: &mut Ctx, allow: bool) {
+        let mut w = Writer::default();
+        w.put_u32(allow as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions_put_AllowSingleSignOnUsingOSPrimaryAccount, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2CustomSchemeRegistration` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2CustomSchemeRegistrationApp(pub AppRef);
+
+impl ICoreWebView2CustomSchemeRegistrationApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn get_SchemeName(&self, ctx: &mut Ctx) -> WvResult<String> {
+        let mut w = Writer::default();
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2CustomSchemeRegistration_get_SchemeName, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(rd.str_opt().unwrap_or_default())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn get_SchemeName_async(&self, ctx: &mut Ctx) {
+        let mut w = Writer::default();
+        ctx.invoke_async(&self.0, M_ICoreWebView2CustomSchemeRegistration_get_SchemeName, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn get_TreatAsSecure(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        let mut w = Writer::default();
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2CustomSchemeRegistration_get_TreatAsSecure, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(rd.u32().unwrap_or(0) != 0)
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn get_TreatAsSecure_async(&self, ctx: &mut Ctx) {
+        let mut w = Writer::default();
+        ctx.invoke_async(&self.0, M_ICoreWebView2CustomSchemeRegistration_get_TreatAsSecure, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn put_TreatAsSecure(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(value as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2CustomSchemeRegistration_put_TreatAsSecure, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn put_TreatAsSecure_async(&self, ctx: &mut Ctx, value: bool) {
+        let mut w = Writer::default();
+        w.put_u32(value as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2CustomSchemeRegistration_put_TreatAsSecure, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn get_HasAuthorityComponent(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        let mut w = Writer::default();
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2CustomSchemeRegistration_get_HasAuthorityComponent, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(rd.u32().unwrap_or(0) != 0)
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn get_HasAuthorityComponent_async(&self, ctx: &mut Ctx) {
+        let mut w = Writer::default();
+        ctx.invoke_async(&self.0, M_ICoreWebView2CustomSchemeRegistration_get_HasAuthorityComponent, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn put_HasAuthorityComponent(&self, ctx: &mut Ctx, hasAuthorityComponent: bool) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(hasAuthorityComponent as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2CustomSchemeRegistration_put_HasAuthorityComponent, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn put_HasAuthorityComponent_async(&self, ctx: &mut Ctx, hasAuthorityComponent: bool) {
+        let mut w = Writer::default();
+        w.put_u32(hasAuthorityComponent as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2CustomSchemeRegistration_put_HasAuthorityComponent, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2DragStartingEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2DragStartingEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2DragStartingEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2DragStartingEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2DragStartingEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2DedicatedWorkerDedicatedWorkerCreatedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2DedicatedWorkerDedicatedWorkerCreatedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2DedicatedWorkerDedicatedWorkerCreatedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2DedicatedWorkerDedicatedWorkerCreatedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2DedicatedWorkerDedicatedWorkerCreatedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2DedicatedWorkerDestroyingEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2DedicatedWorkerDestroyingEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2DedicatedWorkerDestroyingEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2DedicatedWorkerDestroyingEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2DedicatedWorkerDestroyingEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2DedicatedWorkerWebMessageReceivedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2DedicatedWorkerWebMessageReceivedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2DedicatedWorkerWebMessageReceivedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2DedicatedWorkerWebMessageReceivedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2DedicatedWorkerWebMessageReceivedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2DevToolsProtocolEventReceivedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2DevToolsProtocolEventReceivedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2DevToolsProtocolEventReceivedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2DevToolsProtocolEventReceivedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2DevToolsProtocolEventReceivedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2GetProcessExtendedInfosCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2GetProcessExtendedInfosCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2GetProcessExtendedInfosCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2GetProcessExtendedInfosCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        ctx.invoke_async(&self.0, M_ICoreWebView2GetProcessExtendedInfosCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        ctx.invoke_async(&self.0, M_ICoreWebView2CreateCoreWebView2CompositionControllerCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2BrowserProcessExitedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2BrowserProcessExitedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2BrowserProcessExitedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2BrowserProcessExitedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2BrowserProcessExitedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ProcessInfosChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ProcessInfosChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2ProcessInfosChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ProcessInfosChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ProcessInfosChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2EnvironmentOptions2` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2EnvironmentOptions2App(pub AppRef);
+
+impl ICoreWebView2EnvironmentOptions2App {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn get_ExclusiveUserDataFolderAccess(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        let mut w = Writer::default();
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions2_get_ExclusiveUserDataFolderAccess, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(rd.u32().unwrap_or(0) != 0)
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn get_ExclusiveUserDataFolderAccess_async(&self, ctx: &mut Ctx) {
+        let mut w = Writer::default();
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions2_get_ExclusiveUserDataFolderAccess, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn put_ExclusiveUserDataFolderAccess(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(value as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions2_put_ExclusiveUserDataFolderAccess, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn put_ExclusiveUserDataFolderAccess_async(&self, ctx: &mut Ctx, value: bool) {
+        let mut w = Writer::default();
+        w.put_u32(value as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions2_put_ExclusiveUserDataFolderAccess, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2EnvironmentOptions3` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2EnvironmentOptions3App(pub AppRef);
+
+impl ICoreWebView2EnvironmentOptions3App {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn get_IsCustomCrashReportingEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        let mut w = Writer::default();
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions3_get_IsCustomCrashReportingEnabled, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(rd.u32().unwrap_or(0) != 0)
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn get_IsCustomCrashReportingEnabled_async(&self, ctx: &mut Ctx) {
+        let mut w = Writer::default();
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions3_get_IsCustomCrashReportingEnabled, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn put_IsCustomCrashReportingEnabled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(value as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions3_put_IsCustomCrashReportingEnabled, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn put_IsCustomCrashReportingEnabled_async(&self, ctx: &mut Ctx, value: bool) {
+        let mut w = Writer::default();
+        w.put_u32(value as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions3_put_IsCustomCrashReportingEnabled, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2EnvironmentOptions4` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2EnvironmentOptions4App(pub AppRef);
+
+impl ICoreWebView2EnvironmentOptions4App {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn GetCustomSchemeRegistrations(&self, ctx: &mut Ctx) -> WvResult<(u32, ObjRef)> {
+        let mut w = Writer::default();
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions4_GetCustomSchemeRegistrations, w)?;
+        let rd = &mut Reader(&reply);
+        Ok((rd.u32().unwrap_or(0), ctx.read_objref(rd)))
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn GetCustomSchemeRegistrations_async(&self, ctx: &mut Ctx) {
+        let mut w = Writer::default();
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions4_GetCustomSchemeRegistrations, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn SetCustomSchemeRegistrations(&self, ctx: &mut Ctx, count: u32, schemeRegistrations: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(count);
+        ctx.write_objref(&mut w, schemeRegistrations);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions4_SetCustomSchemeRegistrations, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn SetCustomSchemeRegistrations_async(&self, ctx: &mut Ctx, count: u32, schemeRegistrations: &ObjRef) {
+        let mut w = Writer::default();
+        w.put_u32(count);
+        ctx.write_objref(&mut w, schemeRegistrations);
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions4_SetCustomSchemeRegistrations, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2EnvironmentOptions5` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2EnvironmentOptions5App(pub AppRef);
+
+impl ICoreWebView2EnvironmentOptions5App {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn get_EnableTrackingPrevention(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        let mut w = Writer::default();
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions5_get_EnableTrackingPrevention, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(rd.u32().unwrap_or(0) != 0)
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn get_EnableTrackingPrevention_async(&self, ctx: &mut Ctx) {
+        let mut w = Writer::default();
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions5_get_EnableTrackingPrevention, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn put_EnableTrackingPrevention(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(value as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions5_put_EnableTrackingPrevention, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn put_EnableTrackingPrevention_async(&self, ctx: &mut Ctx, value: bool) {
+        let mut w = Writer::default();
+        w.put_u32(value as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions5_put_EnableTrackingPrevention, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2EnvironmentOptions6` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2EnvironmentOptions6App(pub AppRef);
+
+impl ICoreWebView2EnvironmentOptions6App {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn get_AreBrowserExtensionsEnabled(&self, ctx: &mut Ctx) -> WvResult<bool> {
+        let mut w = Writer::default();
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions6_get_AreBrowserExtensionsEnabled, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(rd.u32().unwrap_or(0) != 0)
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn get_AreBrowserExtensionsEnabled_async(&self, ctx: &mut Ctx) {
+        let mut w = Writer::default();
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions6_get_AreBrowserExtensionsEnabled, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn put_AreBrowserExtensionsEnabled(&self, ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(value as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions6_put_AreBrowserExtensionsEnabled, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn put_AreBrowserExtensionsEnabled_async(&self, ctx: &mut Ctx, value: bool) {
+        let mut w = Writer::default();
+        w.put_u32(value as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions6_put_AreBrowserExtensionsEnabled, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2EnvironmentOptions8` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2EnvironmentOptions8App(pub AppRef);
+
+impl ICoreWebView2EnvironmentOptions8App {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn get_ScrollBarStyle(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        let mut w = Writer::default();
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions8_get_ScrollBarStyle, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(rd.u32().unwrap_or(0) as i32)
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn get_ScrollBarStyle_async(&self, ctx: &mut Ctx) {
+        let mut w = Writer::default();
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions8_get_ScrollBarStyle, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn put_ScrollBarStyle(&self, ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(value as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions8_put_ScrollBarStyle, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn put_ScrollBarStyle_async(&self, ctx: &mut Ctx, value: i32) {
+        let mut w = Writer::default();
+        w.put_u32(value as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions8_put_ScrollBarStyle, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2EnvironmentOptions7` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2EnvironmentOptions7App(pub AppRef);
+
+impl ICoreWebView2EnvironmentOptions7App {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn get_ChannelSearchKind(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        let mut w = Writer::default();
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions7_get_ChannelSearchKind, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(rd.u32().unwrap_or(0) as i32)
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn get_ChannelSearchKind_async(&self, ctx: &mut Ctx) {
+        let mut w = Writer::default();
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions7_get_ChannelSearchKind, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn put_ChannelSearchKind(&self, ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(value as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions7_put_ChannelSearchKind, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn put_ChannelSearchKind_async(&self, ctx: &mut Ctx, value: i32) {
+        let mut w = Writer::default();
+        w.put_u32(value as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions7_put_ChannelSearchKind, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn get_ReleaseChannels(&self, ctx: &mut Ctx) -> WvResult<i32> {
+        let mut w = Writer::default();
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions7_get_ReleaseChannels, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(rd.u32().unwrap_or(0) as i32)
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn get_ReleaseChannels_async(&self, ctx: &mut Ctx) {
+        let mut w = Writer::default();
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions7_get_ReleaseChannels, w);
+    }
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn put_ReleaseChannels(&self, ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(value as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2EnvironmentOptions7_put_ReleaseChannels, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn put_ReleaseChannels_async(&self, ctx: &mut Ctx, value: i32) {
+        let mut w = Writer::default();
+        w.put_u32(value as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2EnvironmentOptions7_put_ReleaseChannels, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        ctx.invoke_async(&self.0, M_ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2FindStartCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2FindStartCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2FindStartCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2FindStartCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2FindStartCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2FindActiveMatchIndexChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2FindActiveMatchIndexChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2FindActiveMatchIndexChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2FindActiveMatchIndexChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2FindActiveMatchIndexChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2FindMatchCountChangedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2FindMatchCountChangedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2FindMatchCountChangedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2FindMatchCountChangedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2FindMatchCountChangedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2FramePermissionRequestedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2FramePermissionRequestedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2FramePermissionRequestedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2FramePermissionRequestedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2FramePermissionRequestedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2FrameScreenCaptureStartingEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2FrameScreenCaptureStartingEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2FrameScreenCaptureStartingEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2FrameScreenCaptureStartingEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2FrameScreenCaptureStartingEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2FrameChildFrameCreatedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2FrameChildFrameCreatedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2FrameChildFrameCreatedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2FrameChildFrameCreatedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2FrameChildFrameCreatedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2FrameDedicatedWorkerCreatedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2FrameDedicatedWorkerCreatedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2FrameDedicatedWorkerCreatedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2FrameDedicatedWorkerCreatedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2FrameDedicatedWorkerCreatedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ClearBrowsingDataCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ClearBrowsingDataCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2ClearBrowsingDataCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ClearBrowsingDataCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ClearBrowsingDataCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2SetPermissionStateCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2SetPermissionStateCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2SetPermissionStateCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2SetPermissionStateCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2SetPermissionStateCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        ctx.invoke_async(&self.0, M_ICoreWebView2GetNonDefaultPermissionSettingsCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ProfileAddBrowserExtensionCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ProfileAddBrowserExtensionCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2ProfileAddBrowserExtensionCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ProfileAddBrowserExtensionCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ProfileAddBrowserExtensionCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ProfileGetBrowserExtensionsCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ProfileGetBrowserExtensionsCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2ProfileGetBrowserExtensionsCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ProfileGetBrowserExtensionsCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ProfileGetBrowserExtensionsCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ServiceWorkerDestroyingEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ServiceWorkerDestroyingEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2ServiceWorkerDestroyingEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ServiceWorkerDestroyingEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ServiceWorkerDestroyingEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ServiceWorkerWebMessageReceivedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ServiceWorkerWebMessageReceivedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2ServiceWorkerWebMessageReceivedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ServiceWorkerWebMessageReceivedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ServiceWorkerWebMessageReceivedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2GetServiceWorkerRegistrationsCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2GetServiceWorkerRegistrationsCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2GetServiceWorkerRegistrationsCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2GetServiceWorkerRegistrationsCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        ctx.invoke_async(&self.0, M_ICoreWebView2GetServiceWorkerRegistrationsCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ServiceWorkerRegisteredEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ServiceWorkerRegisteredEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2ServiceWorkerRegisteredEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ServiceWorkerRegisteredEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ServiceWorkerRegisteredEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ServiceWorkerActivatedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ServiceWorkerActivatedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2ServiceWorkerActivatedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ServiceWorkerActivatedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ServiceWorkerActivatedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ServiceWorkerRegistrationUnregisteringEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ServiceWorkerRegistrationUnregisteringEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2ServiceWorkerRegistrationUnregisteringEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ServiceWorkerRegistrationUnregisteringEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ServiceWorkerRegistrationUnregisteringEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2SharedWorkerDestroyingEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2SharedWorkerDestroyingEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2SharedWorkerDestroyingEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2SharedWorkerDestroyingEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2SharedWorkerDestroyingEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2GetSharedWorkersCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2GetSharedWorkersCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2GetSharedWorkersCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2GetSharedWorkersCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        ctx.invoke_async(&self.0, M_ICoreWebView2GetSharedWorkersCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2SharedWorkerCreatedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2SharedWorkerCreatedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2SharedWorkerCreatedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2SharedWorkerCreatedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2SharedWorkerCreatedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2BasicAuthenticationRequestedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2BasicAuthenticationRequestedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2BasicAuthenticationRequestedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2BasicAuthenticationRequestedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2BasicAuthenticationRequestedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2ClearServerCertificateErrorActionsCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ClearServerCertificateErrorActionsCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ServerCertificateErrorDetectedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ServerCertificateErrorDetectedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2ServerCertificateErrorDetectedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ServerCertificateErrorDetectedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ServerCertificateErrorDetectedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2LaunchingExternalUriSchemeEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2LaunchingExternalUriSchemeEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2LaunchingExternalUriSchemeEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2LaunchingExternalUriSchemeEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2LaunchingExternalUriSchemeEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ExecuteScriptWithResultCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ExecuteScriptWithResultCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2ExecuteScriptWithResultCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ExecuteScriptWithResultCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: &ObjRef) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        ctx.write_objref(&mut w, result);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ExecuteScriptWithResultCompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ShowSaveAsUICompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ShowSaveAsUICompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2ShowSaveAsUICompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: i32) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_u32(result as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ShowSaveAsUICompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: i32) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_u32(result as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ShowSaveAsUICompletedHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2SaveAsUIShowingEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2SaveAsUIShowingEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2SaveAsUIShowingEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2SaveAsUIShowingEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2SaveAsUIShowingEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ScreenCaptureStartingEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ScreenCaptureStartingEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2ScreenCaptureStartingEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ScreenCaptureStartingEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ScreenCaptureStartingEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2SaveFileSecurityCheckStartingEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2SaveFileSecurityCheckStartingEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2SaveFileSecurityCheckStartingEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2SaveFileSecurityCheckStartingEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2SaveFileSecurityCheckStartingEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2NotificationReceivedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2NotificationReceivedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2NotificationReceivedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2NotificationReceivedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2NotificationReceivedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2DedicatedWorkerCreatedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2DedicatedWorkerCreatedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2DedicatedWorkerCreatedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2DedicatedWorkerCreatedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2DedicatedWorkerCreatedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2ClientCertificateRequestedEventHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2ClientCertificateRequestedEventHandlerApp(pub AppRef);
+
+impl ICoreWebView2ClientCertificateRequestedEventHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) -> WvResult<()> {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2ClientCertificateRequestedEventHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, sender: &ObjRef, args: &ObjRef) {
+        let mut w = Writer::default();
+        ctx.write_objref(&mut w, sender);
+        ctx.write_objref(&mut w, args);
+        ctx.invoke_async(&self.0, M_ICoreWebView2ClientCertificateRequestedEventHandler_Invoke, w);
+    }
+}
+
+/// Obiekt aplikacji `ICoreWebView2PrintToPdfCompletedHandler` (wywołania przez INVOKE).
+#[derive(Clone)]
+pub struct ICoreWebView2PrintToPdfCompletedHandlerApp(pub AppRef);
+
+impl ICoreWebView2PrintToPdfCompletedHandlerApp {
+    /// Synchroniczne (czeka na wynik, obsługując w tym czasie wywołania z DLL).
+    pub fn Invoke(&self, ctx: &mut Ctx, errorCode: i32, result: bool) -> WvResult<()> {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_u32(result as u32);
+        let reply = ctx.invoke(&self.0, M_ICoreWebView2PrintToPdfCompletedHandler_Invoke, w)?;
+        let rd = &mut Reader(&reply);
+        Ok(())
+    }
+    /// Asynchroniczne (bez czekania; kolejność zachowana).
+    pub fn Invoke_async(&self, ctx: &mut Ctx, errorCode: i32, result: bool) {
+        let mut w = Writer::default();
+        w.put_u32(errorCode as u32);
+        w.put_u32(result as u32);
+        ctx.invoke_async(&self.0, M_ICoreWebView2PrintToPdfCompletedHandler_Invoke, w);
+    }
+}

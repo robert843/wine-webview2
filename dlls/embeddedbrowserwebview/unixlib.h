@@ -27,6 +27,7 @@ typedef UINT64 helper_handle_t;
 
 struct helper_start_params
 {
+    UINT64 api_hash;            /* in: WV2_API_HASH */
     helper_handle_t handle;     /* out */
     UINT32 helper_pid;          /* out */
     UINT32 helper_version;      /* out */
