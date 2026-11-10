@@ -65,6 +65,189 @@ static CRITICAL_SECTION views_cs = { &views_cs_debug, -1, 0, 0, 0, 0 };
 static struct list views = LIST_INIT(views);
 static UINT32 next_view_id = 1;
 
+/*
+ * Event handler registrations (add_X / remove_X).
+ */
+
+struct handler_entry
+{
+    INT64 token;
+    IUnknown *handler;
+};
+
+struct handler_list
+{
+    struct handler_entry *entries;
+    unsigned int count, capacity;
+};
+
+static HRESULT handler_list_add(struct handler_list *list, IUnknown *handler, EventRegistrationToken *token)
+{
+    static LONG64 next_token;
+    struct handler_entry *entries;
+
+    if (!handler || !token) return E_POINTER;
+    if (list->count == list->capacity)
+    {
+        unsigned int capacity = max(4, list->capacity * 2);
+        if (!(entries = realloc(list->entries, capacity * sizeof(*entries)))) return E_OUTOFMEMORY;
+        list->entries = entries;
+        list->capacity = capacity;
+    }
+    IUnknown_AddRef(handler);
+    list->entries[list->count].handler = handler;
+    list->entries[list->count].token = token->value = InterlockedIncrement64(&next_token);
+    list->count++;
+    return S_OK;
+}
+
+static HRESULT handler_list_remove(struct handler_list *list, EventRegistrationToken token)
+{
+    unsigned int i;
+
+    for (i = 0; i < list->count; i++)
+    {
+        if (list->entries[i].token != token.value) continue;
+        IUnknown_Release(list->entries[i].handler);
+        memmove(&list->entries[i], &list->entries[i + 1], (list->count - i - 1) * sizeof(*list->entries));
+        list->count--;
+        break;
+    }
+    return S_OK;    /* WebView2 ignores unknown tokens */
+}
+
+/* Snapshot with references, so handlers may (un)register while being invoked. */
+static IUnknown **handler_list_snapshot(struct handler_list *list, unsigned int *count)
+{
+    IUnknown **ret;
+    unsigned int i;
+
+    *count = 0;
+    if (!list->count || !(ret = malloc(list->count * sizeof(*ret)))) return NULL;
+    for (i = 0; i < list->count; i++)
+    {
+        ret[i] = list->entries[i].handler;
+        IUnknown_AddRef(ret[i]);
+    }
+    *count = list->count;
+    return ret;
+}
+
+static void handler_list_clear(struct handler_list *list)
+{
+    unsigned int i;
+
+    for (i = 0; i < list->count; i++) IUnknown_Release(list->entries[i].handler);
+    free(list->entries);
+    memset(list, 0, sizeof(*list));
+}
+
+static WCHAR *strdupAtoW_n(const char *str, int len)
+{
+    int size = MultiByteToWideChar(CP_UTF8, 0, str, len, NULL, 0);
+    WCHAR *ret;
+
+    if (!(ret = malloc((size + 1) * sizeof(WCHAR)))) return NULL;
+    MultiByteToWideChar(CP_UTF8, 0, str, len, ret, size);
+    ret[size] = 0;
+    return ret;
+}
+
+static WCHAR *co_strdupW(const WCHAR *str)
+{
+    size_t size = (wcslen(str) + 1) * sizeof(WCHAR);
+    WCHAR *ret = CoTaskMemAlloc(size);
+    if (ret) memcpy(ret, str, size);
+    return ret;
+}
+
+/* Encodes str as a JSON string literal. */
+static WCHAR *json_quote(const WCHAR *str)
+{
+    size_t len = wcslen(str), pos = 0;
+    WCHAR *ret = malloc((len * 6 + 3) * sizeof(WCHAR));
+
+    if (!ret) return NULL;
+    ret[pos++] = '"';
+    for (; *str; str++)
+    {
+        switch (*str)
+        {
+        case '"':  ret[pos++] = '\\'; ret[pos++] = '"'; break;
+        case '\\': ret[pos++] = '\\'; ret[pos++] = '\\'; break;
+        case '\n': ret[pos++] = '\\'; ret[pos++] = 'n'; break;
+        case '\r': ret[pos++] = '\\'; ret[pos++] = 'r'; break;
+        case '\t': ret[pos++] = '\\'; ret[pos++] = 't'; break;
+        default:
+            if (*str < 0x20 || *str == 0x2028 || *str == 0x2029)
+                pos += swprintf(ret + pos, 7, L"\\u%04x", *str);
+            else
+                ret[pos++] = *str;
+        }
+    }
+    ret[pos++] = '"';
+    ret[pos] = 0;
+    return ret;
+}
+
+static int hex_digit(WCHAR c)
+{
+    if (c >= '0' && c <= '9') return c - '0';
+    if (c >= 'a' && c <= 'f') return c - 'a' + 10;
+    if (c >= 'A' && c <= 'F') return c - 'A' + 10;
+    return -1;
+}
+
+/* Decodes a JSON string literal (the whole input); returns NULL if json is not a string. */
+static WCHAR *json_unquote(const WCHAR *json)
+{
+    size_t len;
+    WCHAR *ret, *out;
+    int i, d;
+
+    while (*json == ' ' || *json == '\t' || *json == '\n' || *json == '\r') json++;
+    if (*json != '"') return NULL;
+    len = wcslen(json);
+    if (!(out = ret = CoTaskMemAlloc(len * sizeof(WCHAR)))) return NULL;
+    for (json++; *json && *json != '"'; json++)
+    {
+        if (*json != '\\') { *out++ = *json; continue; }
+        switch (*++json)
+        {
+        case 'b': *out++ = '\b'; break;
+        case 'f': *out++ = '\f'; break;
+        case 'n': *out++ = '\n'; break;
+        case 'r': *out++ = '\r'; break;
+        case 't': *out++ = '\t'; break;
+        case 'u':
+            *out = 0;
+            for (i = 0; i < 4; i++)
+            {
+                if ((d = hex_digit(json[1])) < 0) goto fail;
+                *out = *out * 16 + d;
+                json++;
+            }
+            out++;
+            break;
+        case 0: goto fail;
+        default: *out++ = *json; break;
+        }
+    }
+    if (*json != '"') goto fail;
+    *out = 0;
+    return ret;
+fail:
+    CoTaskMemFree(ret);
+    return NULL;
+}
+
+struct pending_script
+{
+    struct list entry;
+    UINT64 id;
+    ICoreWebView2ExecuteScriptCompletedHandler *handler;
+};
+
 struct view
 {
     struct list entry;
@@ -80,6 +263,10 @@ struct view
     ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *created_handler;
     ICoreWebView2Controller *controller;    /* weak */
     struct stub_object *webview;            /* strong, created lazily */
+    struct handler_list web_message_handlers;
+    struct list pending_scripts;            /* struct pending_script */
+    HCURSOR cursor;
+    BOOL tracking_mouse;
 
     /* current frame buffer announced by the helper */
     UINT32 frame_width, frame_height;
@@ -101,6 +288,7 @@ static void view_release(struct view *view)
     if (InterlockedDecrement(&view->ref)) return;
 
     TRACE("destroying view %u\n", view->id);
+    handler_list_clear(&view->web_message_handlers);
     EnterCriticalSection(&views_cs);
     list_remove(&view->entry);
     LeaveCriticalSection(&views_cs);
@@ -254,6 +442,104 @@ static void handle_frame_ready(struct view *view, const struct wv2_frame_ready *
     }
 }
 
+static void handle_web_message(struct view *view, const BYTE *payload, UINT32 size);
+static void handle_script_result(struct view *view, const BYTE *payload, UINT32 size);
+
+/* cef_cursor_type_t -> system cursor */
+static void set_view_cursor(struct view *view, UINT32 type)
+{
+    static const WORD cursors[] =
+    {
+        32512 /* IDC_ARROW */, 32515 /* IDC_CROSS */, 32649 /* IDC_HAND */, 32513 /* IDC_IBEAM */,
+        32514 /* IDC_WAIT */, 32651 /* IDC_HELP */,
+        32644, 32645, 32643, 32642, 32645, 32642, 32643, 32644,     /* E N NE NW S SE SW W resize */
+        32645, 32644, 32643, 32642, 32644, 32645,                   /* NS EW NESW NWSE column row */
+        32646, 32646, 32646, 32646, 32646, 32646, 32646, 32646, 32646, /* panning */
+        32646 /* move */, 32513 /* vertical text */, 32515 /* cell */, 32512 /* context menu */,
+        32512 /* alias */, 32650 /* progress (IDC_APPSTARTING) */, 32648 /* no drop */,
+        32512 /* copy */, 0 /* none */, 32648 /* not allowed */,
+    };
+    POINT pt;
+    WORD id = type < ARRAY_SIZE(cursors) ? cursors[type] : 32512;
+
+    view->cursor = id ? LoadCursorW(NULL, MAKEINTRESOURCEW(id)) : NULL;
+    if (view->hwnd && GetCursorPos(&pt) && WindowFromPoint(pt) == view->hwnd) SetCursor(view->cursor);
+}
+
+static UINT32 get_modifiers(WPARAM mouse_keys, BOOL mouse)
+{
+    UINT32 flags = 0;
+
+    if (GetKeyState(VK_SHIFT) & 0x8000) flags |= WV2_FLAG_SHIFT_DOWN;
+    if (GetKeyState(VK_CONTROL) & 0x8000) flags |= WV2_FLAG_CONTROL_DOWN;
+    if (GetKeyState(VK_MENU) & 0x8000) flags |= WV2_FLAG_ALT_DOWN;
+    if (GetKeyState(VK_CAPITAL) & 1) flags |= WV2_FLAG_CAPS_LOCK_ON;
+    if (GetKeyState(VK_NUMLOCK) & 1) flags |= WV2_FLAG_NUM_LOCK_ON;
+    if (mouse)
+    {
+        if (mouse_keys & MK_LBUTTON) flags |= WV2_FLAG_LEFT_BUTTON;
+        if (mouse_keys & MK_MBUTTON) flags |= WV2_FLAG_MIDDLE_BUTTON;
+        if (mouse_keys & MK_RBUTTON) flags |= WV2_FLAG_RIGHT_BUTTON;
+    }
+    return flags;
+}
+
+static void send_mouse(struct view *view, UINT32 kind, int x, int y, UINT32 button, UINT32 clicks,
+                       WPARAM keys, int dx, int dy)
+{
+    struct wv2_mouse mouse = {kind, x, y, button, clicks, get_modifiers(keys, TRUE), dx, dy};
+    helper_send(view, WV2_CMD_MOUSE, &mouse, sizeof(mouse));
+}
+
+/* Windows scan code (set 1) -> X11 keycode (evdev + 8); CEF derives KeyboardEvent.code from it. */
+static int scancode_to_x11(LPARAM lparam)
+{
+    static const struct { BYTE scan, evdev; } extended[] =
+    {
+        {0x1c, 96 /* KP enter */}, {0x1d, 97 /* right ctrl */}, {0x35, 98 /* KP divide */},
+        {0x37, 99 /* sysrq */}, {0x38, 100 /* right alt */}, {0x47, 102 /* home */}, {0x48, 103 /* up */},
+        {0x49, 104 /* page up */}, {0x4b, 105 /* left */}, {0x4d, 106 /* right */}, {0x4f, 107 /* end */},
+        {0x50, 108 /* down */}, {0x51, 109 /* page down */}, {0x52, 110 /* insert */},
+        {0x53, 111 /* delete */}, {0x5b, 125 /* left meta */}, {0x5c, 126 /* right meta */},
+        {0x5d, 127 /* menu */},
+    };
+    BYTE scan = (lparam >> 16) & 0xff;
+    unsigned int i;
+
+    if (!(lparam & (1 << 24))) return scan ? scan + 8 : 0;
+    for (i = 0; i < ARRAY_SIZE(extended); i++)
+        if (extended[i].scan == scan) return extended[i].evdev + 8;
+    return 0;
+}
+
+static void send_key(struct view *view, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    struct wv2_key key = {0};
+
+    key.modifiers = get_modifiers(0, FALSE);
+    key.windows_key_code = wparam;
+    key.native_key_code = scancode_to_x11(lparam);
+    switch (msg)
+    {
+    case WM_KEYDOWN:
+    case WM_SYSKEYDOWN:
+        key.kind = 0;   /* KEYEVENT_RAWKEYDOWN */
+        if (lparam & (1 << 30)) key.modifiers |= WV2_FLAG_IS_REPEAT;
+        break;
+    case WM_KEYUP:
+    case WM_SYSKEYUP:
+        key.kind = 2;   /* KEYEVENT_KEYUP */
+        break;
+    default:            /* WM_CHAR, WM_SYSCHAR */
+        key.kind = 3;   /* KEYEVENT_CHAR */
+        key.character = key.unmodified_character = wparam;
+        break;
+    }
+    if (msg == WM_SYSKEYDOWN || msg == WM_SYSKEYUP || msg == WM_SYSCHAR) key.is_system_key = 1;
+    if (wparam >= VK_NUMPAD0 && wparam <= VK_DIVIDE) key.modifiers |= WV2_FLAG_IS_KEY_PAD;
+    helper_send(view, WV2_CMD_KEY, &key, sizeof(key));
+}
+
 static void dispatch_event_cb(void *arg)
 {
     struct helper_event *event = arg;
@@ -291,6 +577,16 @@ static void dispatch_event_cb(void *arg)
     case WV2_EVT_LOAD_STATE:
         if (payload >= sizeof(struct wv2_flag))
             TRACE("view %u: %s\n", view->id, ((const struct wv2_flag *)event->payload)->value ? "loading" : "loaded");
+        break;
+    case WV2_EVT_WEB_MESSAGE:
+        handle_web_message(view, event->payload, payload);
+        break;
+    case WV2_EVT_CURSOR:
+        if (payload >= sizeof(struct wv2_flag))
+            set_view_cursor(view, ((const struct wv2_flag *)event->payload)->value);
+        break;
+    case WV2_EVT_SCRIPT_RESULT:
+        handle_script_result(view, event->payload, payload);
         break;
     case WV2_EVT_ERROR:
         ERR("view %u: helper error %s\n", view->id, debugstr_an((const char *)event->payload, payload));
@@ -418,6 +714,71 @@ static LRESULT CALLBACK host_wndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM 
         SetWindowLongPtrW(hwnd, GWLP_USERDATA, 0);
         break;
     }
+
+    if (!view || !view->created) return DefWindowProcW(hwnd, msg, wparam, lparam);
+
+    switch (msg)
+    {
+    case WM_MOUSEMOVE:
+        if (!view->tracking_mouse)
+        {
+            TRACKMOUSEEVENT tme = {sizeof(tme), TME_LEAVE, hwnd};
+            view->tracking_mouse = TrackMouseEvent(&tme);
+        }
+        send_mouse(view, WV2_MOUSE_MOVE, (short)LOWORD(lparam), (short)HIWORD(lparam), 0, 0, wparam, 0, 0);
+        return 0;
+    case WM_MOUSELEAVE:
+        view->tracking_mouse = FALSE;
+        send_mouse(view, WV2_MOUSE_LEAVE, 0, 0, 0, 0, 0, 0, 0);
+        return 0;
+    case WM_LBUTTONDOWN: case WM_LBUTTONDBLCLK:
+    case WM_MBUTTONDOWN: case WM_MBUTTONDBLCLK:
+    case WM_RBUTTONDOWN: case WM_RBUTTONDBLCLK:
+        if (GetFocus() != hwnd) SetFocus(hwnd);
+        SetCapture(hwnd);
+        send_mouse(view, WV2_MOUSE_DOWN, (short)LOWORD(lparam), (short)HIWORD(lparam),
+                   msg <= WM_LBUTTONDBLCLK ? 0 : msg <= WM_RBUTTONDBLCLK ? 2 : 1,
+                   (msg == WM_LBUTTONDBLCLK || msg == WM_RBUTTONDBLCLK || msg == WM_MBUTTONDBLCLK) ? 2 : 1,
+                   wparam, 0, 0);
+        return 0;
+    case WM_LBUTTONUP: case WM_MBUTTONUP: case WM_RBUTTONUP:
+        if (!(wparam & (MK_LBUTTON | MK_MBUTTON | MK_RBUTTON))) ReleaseCapture();
+        send_mouse(view, WV2_MOUSE_UP, (short)LOWORD(lparam), (short)HIWORD(lparam),
+                   msg == WM_LBUTTONUP ? 0 : msg == WM_RBUTTONUP ? 2 : 1, 1, wparam, 0, 0);
+        return 0;
+    case WM_MOUSEWHEEL:
+    case WM_MOUSEHWHEEL:
+    {
+        POINT pt = {(short)LOWORD(lparam), (short)HIWORD(lparam)};
+        int delta = GET_WHEEL_DELTA_WPARAM(wparam);
+        ScreenToClient(hwnd, &pt);
+        send_mouse(view, WV2_MOUSE_WHEEL, pt.x, pt.y, 0, 0, GET_KEYSTATE_WPARAM(wparam),
+                   msg == WM_MOUSEHWHEEL ? delta : 0, msg == WM_MOUSEWHEEL ? delta : 0);
+        return 0;
+    }
+    case WM_KEYDOWN: case WM_KEYUP: case WM_CHAR:
+        send_key(view, msg, wparam, lparam);
+        return 0;
+    case WM_SYSKEYDOWN: case WM_SYSKEYUP: case WM_SYSCHAR:
+        send_key(view, msg, wparam, lparam);
+        break;  /* keep Alt+F4, Alt+Space etc. working */
+    case WM_SETFOCUS:
+    case WM_KILLFOCUS:
+    {
+        struct wv2_flag flag = {msg == WM_SETFOCUS, 0};
+        helper_send(view, WV2_CMD_FOCUS, &flag, sizeof(flag));
+        return 0;
+    }
+    case WM_SETCURSOR:
+        if (LOWORD(lparam) == HTCLIENT)
+        {
+            SetCursor(view->cursor);
+            return TRUE;
+        }
+        break;
+    case WM_GETDLGCODE:
+        return DLGC_WANTALLKEYS | DLGC_WANTARROWS | DLGC_WANTCHARS | DLGC_WANTTAB;
+    }
     return DefWindowProcW(hwnd, msg, wparam, lparam);
 }
 
@@ -440,10 +801,25 @@ static struct view *view_from_webview(ICoreWebView2_29 *iface)
     return ((struct stub_object *)iface)->data;
 }
 
+static void complete_pending_scripts(struct view *view)
+{
+    struct pending_script *script, *next;
+
+    LIST_FOR_EACH_ENTRY_SAFE(script, next, &view->pending_scripts, struct pending_script, entry)
+    {
+        list_remove(&script->entry);
+        ICoreWebView2ExecuteScriptCompletedHandler_Invoke(script->handler, E_ABORT, NULL);
+        ICoreWebView2ExecuteScriptCompletedHandler_Release(script->handler);
+        free(script);
+    }
+}
+
 static void close_view(struct view *view)
 {
     if (view->closed) return;
     view->closed = TRUE;
+    complete_pending_scripts(view);
+    handler_list_clear(&view->web_message_handlers);
     helper_send(view, WV2_CMD_CLOSE_VIEW, NULL, 0);
     if (view->hwnd)
     {
@@ -551,6 +927,17 @@ static HRESULT STDMETHODCALLTYPE controller_put_ParentWindow(ICoreWebView2Contro
     return S_OK;
 }
 
+static HRESULT STDMETHODCALLTYPE controller_MoveFocus(ICoreWebView2Controller4 *iface,
+        COREWEBVIEW2_MOVE_FOCUS_REASON reason)
+{
+    struct view *view = view_from_controller(iface);
+
+    TRACE("iface %p, reason %d.\n", iface, reason);
+    if (view->closed) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
+    if (view->hwnd) SetFocus(view->hwnd);
+    return S_OK;
+}
+
 static HRESULT STDMETHODCALLTYPE controller_Close(ICoreWebView2Controller4 *iface)
 {
     struct view *view = view_from_controller(iface);
@@ -580,45 +967,33 @@ static HRESULT STDMETHODCALLTYPE webview_NavigateToString(ICoreWebView2_29 *ifac
     return helper_send_string(view, WV2_CMD_NAVIGATE_TO_STRING, NULL, 0, html);
 }
 
-struct script_result_ctx
-{
-    ICoreWebView2ExecuteScriptCompletedHandler *handler;
-};
-
-static void script_result_cb(void *arg)
-{
-    struct script_result_ctx *ctx = arg;
-
-    /* E3: real results come from the renderer; report "null" like a script without a value. */
-    ICoreWebView2ExecuteScriptCompletedHandler_Invoke(ctx->handler, S_OK, L"null");
-    ICoreWebView2ExecuteScriptCompletedHandler_Release(ctx->handler);
-    free(ctx);
-}
-
 static HRESULT STDMETHODCALLTYPE webview_ExecuteScript(ICoreWebView2_29 *iface, LPCWSTR script,
         ICoreWebView2ExecuteScriptCompletedHandler *handler)
 {
     static LONG64 next_id;
     struct view *view = view_from_webview(iface);
     struct wv2_script info = {InterlockedIncrement64(&next_id)};
-    struct script_result_ctx *ctx;
+    struct pending_script *pending = NULL;
     HRESULT hr;
 
     TRACE("iface %p, script %s, handler %p.\n", iface, debugstr_w(script), handler);
     if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
     if (!script) return E_INVALIDARG;
-    if (FAILED(hr = helper_send_string(view, WV2_CMD_EXECUTE_SCRIPT, &info, sizeof(info), script))) return hr;
-    if (handler && (ctx = malloc(sizeof(*ctx))))
+    if (handler && helper)
     {
-        ctx->handler = handler;
+        if (!(pending = malloc(sizeof(*pending)))) return E_OUTOFMEMORY;
+        pending->id = info.id;
+        pending->handler = handler;
         ICoreWebView2ExecuteScriptCompletedHandler_AddRef(handler);
-        if (!webview2_queue_async(script_result_cb, ctx))
-        {
-            ICoreWebView2ExecuteScriptCompletedHandler_Release(handler);
-            free(ctx);
-        }
+        list_add_tail(&view->pending_scripts, &pending->entry);
     }
-    return S_OK;
+    if (FAILED(hr = helper_send_string(view, WV2_CMD_EXECUTE_SCRIPT, &info, sizeof(info), script)) && pending)
+    {
+        list_remove(&pending->entry);
+        ICoreWebView2ExecuteScriptCompletedHandler_Release(handler);
+        free(pending);
+    }
+    return hr;
 }
 
 struct add_script_ctx
@@ -663,6 +1038,158 @@ static HRESULT STDMETHODCALLTYPE webview_AddScriptToExecuteOnDocumentCreated(ICo
     return S_OK;
 }
 
+static HRESULT STDMETHODCALLTYPE webview_add_WebMessageReceived(ICoreWebView2_29 *iface,
+        ICoreWebView2WebMessageReceivedEventHandler *handler, EventRegistrationToken *token)
+{
+    struct view *view = view_from_webview(iface);
+
+    TRACE("iface %p, handler %p, token %p.\n", iface, handler, token);
+    if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
+    return handler_list_add(&view->web_message_handlers, (IUnknown *)handler, token);
+}
+
+static HRESULT STDMETHODCALLTYPE webview_remove_WebMessageReceived(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct view *view = view_from_webview(iface);
+
+    TRACE("iface %p, token %s.\n", iface, wine_dbgstr_longlong(token.value));
+    if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
+    return handler_list_remove(&view->web_message_handlers, token);
+}
+
+static HRESULT STDMETHODCALLTYPE webview_PostWebMessageAsJson(ICoreWebView2_29 *iface, LPCWSTR json)
+{
+    struct view *view = view_from_webview(iface);
+
+    TRACE("iface %p, json %s.\n", iface, debugstr_w(json));
+    if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
+    if (!json) return E_INVALIDARG;
+    return helper_send_string(view, WV2_CMD_POST_WEB_MESSAGE, NULL, 0, json);
+}
+
+static HRESULT STDMETHODCALLTYPE webview_PostWebMessageAsString(ICoreWebView2_29 *iface, LPCWSTR str)
+{
+    struct view *view = view_from_webview(iface);
+    WCHAR *json;
+    HRESULT hr;
+
+    TRACE("iface %p, str %s.\n", iface, debugstr_w(str));
+    if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
+    if (!str) return E_INVALIDARG;
+    if (!(json = json_quote(str))) return E_OUTOFMEMORY;
+    hr = helper_send_string(view, WV2_CMD_POST_WEB_MESSAGE, NULL, 0, json);
+    free(json);
+    return hr;
+}
+
+/* ICoreWebView2WebMessageReceivedEventArgs */
+
+struct web_message
+{
+    WCHAR *source;
+    WCHAR *json;
+};
+
+static ICoreWebView2WebMessageReceivedEventArgs2Vtbl web_message_args_vtbl;
+static struct stub_family web_message_args_family;
+
+static struct web_message *web_message_from_args(ICoreWebView2WebMessageReceivedEventArgs2 *iface)
+{
+    return ((struct stub_object *)iface)->data;
+}
+
+static void web_message_args_destroy(struct stub_object *obj)
+{
+    struct web_message *msg = obj->data;
+
+    free(msg->source);
+    free(msg->json);
+    free(msg);
+}
+
+static HRESULT STDMETHODCALLTYPE web_message_args_get_Source(ICoreWebView2WebMessageReceivedEventArgs2 *iface,
+        LPWSTR *source)
+{
+    TRACE("iface %p, source %p.\n", iface, source);
+    if (!source) return E_POINTER;
+    return (*source = co_strdupW(web_message_from_args(iface)->source)) ? S_OK : E_OUTOFMEMORY;
+}
+
+static HRESULT STDMETHODCALLTYPE web_message_args_get_WebMessageAsJson(ICoreWebView2WebMessageReceivedEventArgs2 *iface,
+        LPWSTR *json)
+{
+    TRACE("iface %p, json %p.\n", iface, json);
+    if (!json) return E_POINTER;
+    return (*json = co_strdupW(web_message_from_args(iface)->json)) ? S_OK : E_OUTOFMEMORY;
+}
+
+static HRESULT STDMETHODCALLTYPE web_message_args_TryGetWebMessageAsString(ICoreWebView2WebMessageReceivedEventArgs2 *iface,
+        LPWSTR *str)
+{
+    TRACE("iface %p, str %p.\n", iface, str);
+    if (!str) return E_POINTER;
+    /* Succeeds only when the page posted a string. */
+    if (!(*str = json_unquote(web_message_from_args(iface)->json))) return E_INVALIDARG;
+    return S_OK;
+}
+
+static void handle_web_message(struct view *view, const BYTE *payload, UINT32 size)
+{
+    const struct wv2_web_message *info = (const void *)payload;
+    ICoreWebView2WebMessageReceivedEventHandler **handlers;
+    struct stub_object *args;
+    struct web_message *msg;
+    const char *source;
+    unsigned int i, count;
+
+    if (size < sizeof(*info) || size - sizeof(*info) < info->source_size || !view->webview) return;
+    source = (const char *)(info + 1);
+    if (!(msg = calloc(1, sizeof(*msg)))) return;
+    msg->source = strdupAtoW_n(source, info->source_size);
+    msg->json = strdupAtoW_n(source + info->source_size, size - sizeof(*info) - info->source_size);
+    if (!msg->source || !msg->json || !(args = stub_create(&web_message_args_family)))
+    {
+        free(msg->source);
+        free(msg->json);
+        free(msg);
+        return;
+    }
+    args->data = msg;
+    args->destroy = web_message_args_destroy;
+    TRACE("view %u: web message from %s: %s\n", view->id, debugstr_w(msg->source), debugstr_w(msg->json));
+
+    handlers = (ICoreWebView2WebMessageReceivedEventHandler **)handler_list_snapshot(&view->web_message_handlers, &count);
+    for (i = 0; i < count; i++)
+    {
+        ICoreWebView2WebMessageReceivedEventHandler_Invoke(handlers[i], (ICoreWebView2 *)view->webview,
+                (ICoreWebView2WebMessageReceivedEventArgs *)args);
+        ICoreWebView2WebMessageReceivedEventHandler_Release(handlers[i]);
+    }
+    free(handlers);
+    ICoreWebView2WebMessageReceivedEventArgs_Release((ICoreWebView2WebMessageReceivedEventArgs *)args);
+}
+
+static void handle_script_result(struct view *view, const BYTE *payload, UINT32 size)
+{
+    const struct wv2_script *info = (const void *)payload;
+    struct pending_script *script;
+    WCHAR *json;
+
+    if (size < sizeof(*info)) return;
+    LIST_FOR_EACH_ENTRY(script, &view->pending_scripts, struct pending_script, entry)
+    {
+        if (script->id != info->id) continue;
+        list_remove(&script->entry);
+        json = strdupAtoW_n((const char *)(info + 1), size - sizeof(*info));
+        TRACE("view %u: script %s result %s\n", view->id, wine_dbgstr_longlong(info->id), debugstr_w(json));
+        ICoreWebView2ExecuteScriptCompletedHandler_Invoke(script->handler, S_OK, json ? json : L"null");
+        ICoreWebView2ExecuteScriptCompletedHandler_Release(script->handler);
+        free(script);
+        free(json);
+        return;
+    }
+}
+
 /*
  * Controller creation.
  */
@@ -691,6 +1218,8 @@ HRESULT controller_create(HWND parent, ICoreWebView2CreateCoreWebView2Controller
         return E_OUTOFMEMORY;
     }
     view->ref = 1;      /* owned by the controller */
+    list_init(&view->pending_scripts);
+    view->cursor = LoadCursorW(NULL, (const WCHAR *)IDC_ARROW);
     view->parent = parent;
     view->async_hwnd = webview2_get_async_window();
     view->controller = (ICoreWebView2Controller *)controller;
@@ -740,6 +1269,7 @@ void controller_init(void)
 {
     WNDCLASSW cls = {0};
 
+    cls.style = CS_DBLCLKS;
     cls.lpfnWndProc = host_wndproc;
     cls.hInstance = webview2_instance;
     cls.hCursor = LoadCursorW(NULL, (const WCHAR *)IDC_ARROW);
@@ -755,6 +1285,7 @@ void controller_init(void)
     controller_vtbl.get_ParentWindow = controller_get_ParentWindow;
     controller_vtbl.put_ParentWindow = controller_put_ParentWindow;
     controller_vtbl.Close = controller_Close;
+    controller_vtbl.MoveFocus = controller_MoveFocus;
     controller_family = stub_family_ICoreWebView2Controller4;
     controller_family.vtbl = &controller_vtbl;
 
@@ -763,6 +1294,18 @@ void controller_init(void)
     webview_vtbl.NavigateToString = webview_NavigateToString;
     webview_vtbl.ExecuteScript = webview_ExecuteScript;
     webview_vtbl.AddScriptToExecuteOnDocumentCreated = webview_AddScriptToExecuteOnDocumentCreated;
+    webview_vtbl.add_WebMessageReceived = webview_add_WebMessageReceived;
+    webview_vtbl.remove_WebMessageReceived = webview_remove_WebMessageReceived;
+    webview_vtbl.PostWebMessageAsJson = webview_PostWebMessageAsJson;
+    webview_vtbl.PostWebMessageAsString = webview_PostWebMessageAsString;
     webview_family = stub_family_ICoreWebView2_29;
     webview_family.vtbl = &webview_vtbl;
+
+    web_message_args_vtbl = *(const ICoreWebView2WebMessageReceivedEventArgs2Vtbl *)
+            stub_family_ICoreWebView2WebMessageReceivedEventArgs2.vtbl;
+    web_message_args_vtbl.get_Source = web_message_args_get_Source;
+    web_message_args_vtbl.get_WebMessageAsJson = web_message_args_get_WebMessageAsJson;
+    web_message_args_vtbl.TryGetWebMessageAsString = web_message_args_TryGetWebMessageAsString;
+    web_message_args_family = stub_family_ICoreWebView2WebMessageReceivedEventArgs2;
+    web_message_args_family.vtbl = &web_message_args_vtbl;
 }

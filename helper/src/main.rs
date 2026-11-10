@@ -10,6 +10,7 @@
 
 mod ipc;
 mod protocol;
+mod renderer;
 
 use cef::args::Args;
 use cef::rc::Rc as _;
@@ -21,7 +22,10 @@ use std::collections::HashMap;
 use std::os::fd::AsRawFd;
 use std::path::PathBuf;
 use std::rc::Rc;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Mutex, OnceLock};
+
+/// Katalog plików ze skryptami startowymi (przekazywany rendererom przełącznikiem).
+static SCRIPTS_DIR: OnceLock<PathBuf> = OnceLock::new();
 
 // ======================================================================
 // Wspólne: zadania na wątku UI CEF
@@ -63,6 +67,7 @@ const DEFAULT_BACKGROUND: u32 = 0xFFFF_FFFF;
 
 struct View {
     browser: Option<Browser>,
+    doc_scripts: Vec<String>,
     width: u32,
     height: u32,
     frames: Option<FrameBuffer>,
@@ -122,6 +127,43 @@ wrap_client! {
 
         fn load_handler(&self) -> Option<LoadHandler> {
             Some(ViewLoadHandlerBuilder::new(self.client.clone()))
+        }
+
+        fn display_handler(&self) -> Option<DisplayHandler> {
+            Some(ViewDisplayHandlerBuilder::new(self.client.clone()))
+        }
+
+        fn on_process_message_received(
+            &self,
+            _browser: Option<&mut Browser>,
+            frame: Option<&mut Frame>,
+            _source_process: ProcessId,
+            message: Option<&mut ProcessMessage>,
+        ) -> ::std::os::raw::c_int {
+            let Some(message) = message else { return 0 };
+            let name = CefString::from(&message.name()).to_string();
+            let Some(args) = message.argument_list() else { return 0 };
+            match name.as_str() {
+                renderer::MSG_POST => {
+                    let json = CefString::from(&args.string(0)).to_string();
+                    let source = frame.map(|f| CefString::from(&f.url()).to_string()).unwrap_or_default();
+                    let payload = Writer::default()
+                        .u32(source.len() as u32)
+                        .u32(0)
+                        .bytes(source.as_bytes())
+                        .bytes(json.as_bytes())
+                        .0;
+                    send_event(EVT_WEB_MESSAGE, self.client.view, &payload);
+                    1
+                }
+                renderer::MSG_RESULT => {
+                    let id = CefString::from(&args.string(0)).to_string().parse::<u64>().unwrap_or(0);
+                    let json = CefString::from(&args.string(1)).to_string();
+                    send_event(EVT_SCRIPT_RESULT, self.client.view, &Writer::default().u64(id).bytes(json.as_bytes()).0);
+                    1
+                }
+                _ => 0,
+            }
         }
     }
 }
@@ -218,6 +260,26 @@ fn paint_view(st: &mut IpcState, view_id: u32, src: &[u8], width: u32, height: u
     false
 }
 
+wrap_display_handler! {
+    struct ViewDisplayHandlerBuilder {
+        client: ViewClient,
+    }
+
+    impl DisplayHandler {
+        fn on_cursor_change(
+            &self,
+            _browser: Option<&mut Browser>,
+            _cursor: ::std::os::raw::c_ulong,
+            type_: CursorType,
+            _custom_cursor_info: Option<&CursorInfo>,
+        ) -> ::std::os::raw::c_int {
+            let kind = *type_.as_ref() as u32;
+            send_event(EVT_CURSOR, self.client.view, &Writer::default().u32(kind).u32(0).0);
+            1
+        }
+    }
+}
+
 wrap_load_handler! {
     struct ViewLoadHandlerBuilder {
         client: ViewClient,
@@ -233,6 +295,20 @@ wrap_load_handler! {
         ) {
             send_event(EVT_LOAD_STATE, self.client.view, &Writer::default().u32((is_loading != 0) as u32).u32(0).0);
         }
+    }
+}
+
+/// Zapisuje skrypty startowe przeglądarki do pliku czytanego przez renderer (zapis atomowy).
+fn write_doc_scripts(dir: &std::path::Path, browser_id: i32, scripts: &[String]) {
+    let mut data = Vec::new();
+    for s in scripts {
+        data.extend_from_slice(&(s.len() as u32).to_le_bytes());
+        data.extend_from_slice(s.as_bytes());
+    }
+    let path = renderer::scripts_file(&dir.to_string_lossy(), browser_id);
+    let tmp = path.with_extension("tmp");
+    if let Err(e) = std::fs::write(&tmp, &data).and_then(|_| std::fs::rename(&tmp, &path)) {
+        eprintln!("helper: cannot write {}: {e}", path.display());
     }
 }
 
@@ -258,7 +334,7 @@ fn handle_command(msg: Message) {
         CMD_CREATE_VIEW => {
             let (w, h) = (r.u32().unwrap_or(1), r.u32().unwrap_or(1));
             with_state(|st| {
-                st.views.insert(msg.view, View { browser: None, width: w, height: h, frames: None, dropped: false })
+                st.views.insert(msg.view, View { browser: None, doc_scripts: Vec::new(), width: w, height: h, frames: None, dropped: false })
             });
             let window_info = WindowInfo { windowless_rendering_enabled: true as _, ..Default::default() };
             // WebView2: DefaultBackgroundColor = nieprzezroczysta biel (CEF OSR domyślnie: przezroczyste).
@@ -324,14 +400,40 @@ fn handle_command(msg: Message) {
             }
         }
         CMD_EXECUTE_SCRIPT => {
-            let _id = r.u64();
+            let id = r.u64().unwrap_or(0);
             let script = r.rest_str();
-            if let Some(frame) = view_browser(msg.view).and_then(|b| b.main_frame()) {
-                frame.execute_java_script(Some(&script.as_str().into()), Some(&"".into()), 0);
+            let frame = view_browser(msg.view).and_then(|b| b.main_frame());
+            let sent = frame.and_then(|frame| {
+                let mut m = process_message_create(Some(&renderer::MSG_EXEC.into()))?;
+                let list = m.argument_list()?;
+                list.set_string(0, Some(&id.to_string().as_str().into()));
+                list.set_string(1, Some(&script.as_str().into()));
+                frame.send_process_message(ProcessId::RENDERER, Some(&mut m));
+                Some(())
+            });
+            if sent.is_none() {
+                send_event(EVT_SCRIPT_RESULT, msg.view, &Writer::default().u64(id).bytes(b"null").0);
             }
         }
         CMD_ADD_DOCUMENT_SCRIPT => {
-            // E3: wstrzykiwanie w OnContextCreated procesu renderera.
+            let _id = r.u64();
+            let script = r.rest_str();
+            let target = with_state(|st| {
+                let v = st.views.get_mut(&msg.view)?;
+                v.doc_scripts.push(script);
+                Some((v.browser.as_ref()?.identifier(), v.doc_scripts.clone()))
+            })
+            .flatten();
+            if let (Some((browser_id, scripts)), Some(dir)) = (target, SCRIPTS_DIR.get()) {
+                write_doc_scripts(dir, browser_id, &scripts);
+            }
+        }
+        CMD_POST_WEB_MESSAGE => {
+            let json = r.rest_str();
+            if let Some(frame) = view_browser(msg.view).and_then(|b| b.main_frame()) {
+                let code = format!("window.chrome&&window.chrome.webview&&window.chrome.webview.__dispatch({json});");
+                frame.execute_java_script(Some(&code.as_str().into()), Some(&"".into()), 0);
+            }
         }
         CMD_FRAME_DONE => {
             let (generation, slot) = (r.u64().unwrap_or(0), r.u32().unwrap_or(u32::MAX) as usize);
@@ -349,6 +451,56 @@ fn handle_command(msg: Message) {
                 if let Some(host) = view_browser(msg.view).and_then(|b| b.host()) {
                     host.invalidate(PaintElementType::VIEW);
                 }
+            }
+        }
+        CMD_MOUSE => {
+            let Some(host) = view_browser(msg.view).and_then(|b| b.host()) else { return };
+            let (kind, x, y) = (r.u32().unwrap_or(0), r.i32().unwrap_or(0), r.i32().unwrap_or(0));
+            let (button, clicks, modifiers) = (r.u32().unwrap_or(0), r.u32().unwrap_or(1), r.u32().unwrap_or(0));
+            let (dx, dy) = (r.i32().unwrap_or(0), r.i32().unwrap_or(0));
+            let event = MouseEvent { x, y, modifiers };
+            let button = match button {
+                1 => MouseButtonType::MIDDLE,
+                2 => MouseButtonType::RIGHT,
+                _ => MouseButtonType::LEFT,
+            };
+            match kind {
+                MOUSE_MOVE => host.send_mouse_move_event(Some(&event), 0),
+                MOUSE_LEAVE => host.send_mouse_move_event(Some(&event), 1),
+                MOUSE_DOWN => host.send_mouse_click_event(Some(&event), button, 0, clicks as i32),
+                MOUSE_UP => host.send_mouse_click_event(Some(&event), button, 1, clicks as i32),
+                MOUSE_WHEEL => host.send_mouse_wheel_event(Some(&event), dx, dy),
+                _ => {}
+            }
+        }
+        CMD_KEY => {
+            let Some(host) = view_browser(msg.view).and_then(|b| b.host()) else { return };
+            let (kind, modifiers) = (r.u32().unwrap_or(0), r.u32().unwrap_or(0));
+            let (windows_key_code, native_key_code) = (r.i32().unwrap_or(0), r.i32().unwrap_or(0));
+            let is_system_key = r.u32().unwrap_or(0) as i32;
+            let (character, unmodified_character) = (r.u16().unwrap_or(0), r.u16().unwrap_or(0));
+            let type_ = match kind {
+                1 => KeyEventType::KEYDOWN,
+                2 => KeyEventType::KEYUP,
+                3 => KeyEventType::CHAR,
+                _ => KeyEventType::RAWKEYDOWN,
+            };
+            let event = KeyEvent {
+                type_,
+                modifiers,
+                windows_key_code,
+                native_key_code,
+                is_system_key,
+                character,
+                unmodified_character,
+                ..Default::default()
+            };
+            host.send_key_event(Some(&event));
+        }
+        CMD_FOCUS => {
+            let focus = r.u32().unwrap_or(0);
+            if let Some(host) = view_browser(msg.view).and_then(|b| b.host()) {
+                host.set_focus(focus as i32);
             }
         }
         CMD_SHUTDOWN => shutdown_ipc(),
@@ -515,6 +667,13 @@ wrap_app! {
                 mode => Some(ProcessHandlerBuilder::new(ProcessHandler { mode: mode.clone() })),
             }
         }
+
+        fn render_process_handler(&self) -> Option<RenderProcessHandler> {
+            match &self.app.mode {
+                Mode::Subprocess => Some(renderer::RendererBuilder::new(renderer::Renderer)),
+                _ => None,
+            }
+        }
     }
 }
 
@@ -529,6 +688,15 @@ wrap_browser_process_handler! {
     }
 
     impl BrowserProcessHandler {
+        fn on_before_child_process_launch(&self, command_line: Option<&mut CommandLine>) {
+            if let (Some(cl), Some(dir)) = (command_line, SCRIPTS_DIR.get()) {
+                cl.append_switch_with_value(
+                    Some(&renderer::SCRIPTS_DIR_SWITCH.into()),
+                    Some(&dir.to_string_lossy().as_ref().into()),
+                );
+            }
+        }
+
         fn on_context_initialized(&self) {
             match &self.handler.mode {
                 Mode::Ipc(chan) => {
@@ -629,6 +797,11 @@ fn main() -> std::process::ExitCode {
     let dir = cef_dir();
     let exe = std::env::current_exe().unwrap_or_default();
     let cache = std::env::temp_dir().join(format!("wine-webview2-helper-{}", std::process::id()));
+    if matches!(mode, Mode::Ipc(_)) {
+        let dir = cache.join("scripts");
+        let _ = std::fs::create_dir_all(&dir);
+        let _ = SCRIPTS_DIR.set(dir);
+    }
     let settings = Settings {
         no_sandbox: true as _,
         windowless_rendering_enabled: true as _,

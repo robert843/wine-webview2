@@ -2,7 +2,7 @@
 
 #![allow(dead_code)]
 
-pub const PROTOCOL_VERSION: u32 = 1;
+pub const PROTOCOL_VERSION: u32 = 3;
 pub const FRAME_SLOTS: u32 = 2;
 pub const MAX_MESSAGE: usize = 1024 * 1024;
 pub const HEADER_SIZE: usize = 16;
@@ -19,6 +19,10 @@ pub const CMD_EXECUTE_SCRIPT: u32 = 8;
 pub const CMD_ADD_DOCUMENT_SCRIPT: u32 = 9;
 pub const CMD_FRAME_DONE: u32 = 10;
 pub const CMD_SHUTDOWN: u32 = 11;
+pub const CMD_POST_WEB_MESSAGE: u32 = 12;
+pub const CMD_MOUSE: u32 = 13;
+pub const CMD_KEY: u32 = 14;
+pub const CMD_FOCUS: u32 = 15;
 
 // helper -> DLL
 pub const EVT_HELLO: u32 = 0x1001;
@@ -28,6 +32,14 @@ pub const EVT_FRAME_READY: u32 = 0x1004;
 pub const EVT_LOAD_STATE: u32 = 0x1005;
 pub const EVT_SCRIPT_RESULT: u32 = 0x1006;
 pub const EVT_ERROR: u32 = 0x1007;
+pub const EVT_WEB_MESSAGE: u32 = 0x1008;
+pub const EVT_CURSOR: u32 = 0x1009;
+
+pub const MOUSE_MOVE: u32 = 0;
+pub const MOUSE_DOWN: u32 = 1;
+pub const MOUSE_UP: u32 = 2;
+pub const MOUSE_WHEEL: u32 = 3;
+pub const MOUSE_LEAVE: u32 = 4;
 
 /// Prosty zapis pól little-endian do bufora komunikatu.
 #[derive(Default)]
@@ -65,6 +77,14 @@ impl<'a> Reader<'a> {
         let (a, b) = self.0.split_at_checked(8)?;
         self.0 = b;
         Some(u64::from_le_bytes(a.try_into().ok()?))
+    }
+    pub fn i32(&mut self) -> Option<i32> {
+        self.u32().map(|v| v as i32)
+    }
+    pub fn u16(&mut self) -> Option<u16> {
+        let (a, b) = self.0.split_at_checked(2)?;
+        self.0 = b;
+        Some(u16::from_le_bytes(a.try_into().ok()?))
     }
     pub fn rest_str(&self) -> String {
         String::from_utf8_lossy(self.0).into_owned()

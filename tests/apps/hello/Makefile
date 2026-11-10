@@ -7,7 +7,7 @@ CXXFLAGS = -std=c++17 -O1 -g -Icompat -I$(WEBVIEW_SRC)/core/include -I$(WV2_SDK)
            -mwindows -static
 LIBS = -ladvapi32 -lole32 -lshell32 -lshlwapi -luser32 -lversion -ldwmapi
 
-all: hello-builtin.exe hello-loader.exe WebView2Loader.dll
+all: hello-builtin.exe hello-loader.exe input.exe WebView2Loader.dll
 
 hello-builtin.exe: hello.cc
 	$(CXX) $(CXXFLAGS) -DWEBVIEW_MSWEBVIEW2_BUILTIN_IMPL=1 -o $@ $< $(LIBS)
@@ -20,3 +20,6 @@ WebView2Loader.dll: $(WV2_SDK)/build/native/x64/WebView2Loader.dll
 
 clean:
 	rm -f *.exe WebView2Loader.dll
+
+input.exe: input.cc
+	$(CXX) $(CXXFLAGS) -DWEBVIEW_MSWEBVIEW2_BUILTIN_IMPL=0 -DWEBVIEW_MSWEBVIEW2_EXPLICIT_LINK=1 -o $@ $< $(LIBS)
