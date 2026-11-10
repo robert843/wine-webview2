@@ -626,14 +626,23 @@ static DWORD WINAPI reader_thread(void *arg)
     struct helper_recv_params params = {helper};
     struct helper_event *event;
     struct view *view;
+    NTSTATUS status;
     UINT32 payload;
+    void *buffer;
 
-    if (!(params.buffer = malloc(WV2_MAX_MESSAGE))) return 1;
-    params.size = WV2_MAX_MESSAGE;
+    if (!(params.buffer = malloc(WV2_INLINE_MAX))) return 1;
+    params.size = WV2_INLINE_MAX;
 
-    while (!UNIX_CALL(helper_recv, &params))
+    while ((status = UNIX_CALL(helper_recv, &params)) == STATUS_SUCCESS || status == STATUS_BUFFER_TOO_SMALL)
     {
-        payload = min(params.header.size - sizeof(params.header), params.size);
+        payload = params.header.size - sizeof(params.header);
+        if (status == STATUS_BUFFER_TOO_SMALL)
+        {
+            if (!(buffer = realloc(params.buffer, payload))) break;
+            params.buffer = buffer;
+            params.size = payload;
+            continue;
+        }
         if (!(view = find_view(params.header.view)))
         {
             TRACE("event %#x for unknown view %u\n", params.header.type, params.header.view);

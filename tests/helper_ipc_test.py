@@ -13,10 +13,19 @@ import zlib
 
 CMD_HELLO, CMD_CREATE_VIEW, CMD_NAVIGATE_TO_STRING, CMD_FRAME_DONE, CMD_SHUTDOWN = 1, 2, 7, 10, 11
 EVT_HELLO, EVT_VIEW_CREATED, EVT_FRAME_BUFFER, EVT_FRAME_READY, EVT_LOAD_STATE = 0x1001, 0x1002, 0x1003, 0x1004, 0x1005
-VERSION = 4
+VERSION = 5
+
+
+INLINE_MAX = 64 * 1024
 
 
 def send(sock, ty, view, payload=b""):
+    if len(payload) > INLINE_MAX:  # memfd_test: duża treść w zapieczętowanym memfd
+        fd = os.memfd_create("test-msg", os.MFD_CLOEXEC)
+        os.write(fd, payload)
+        socket.send_fds(sock, [struct.pack("<IIII", ty, 16 + len(payload), view, 1)], [fd])
+        os.close(fd)
+        return
     sock.send(struct.pack("<IIII", ty, 16 + len(payload), view, 0) + payload)
 
 
@@ -52,7 +61,8 @@ def main():
     print("hello ok, helper pid", struct.unpack_from("<II", payload)[1])
 
     send(parent, CMD_CREATE_VIEW, 1, struct.pack("<IIII", 640, 400, 100, 0))
-    html = "<body style='background:#1b5e20;color:#fff;font:36px sans-serif'><h1>IPC ✔ zażółć</h1></body>"
+    html = ("<body style='background:#1b5e20;color:#fff;font:36px sans-serif'><h1>IPC ✔ zażółć</h1>"
+            + "<!--" + "x" * 200000 + "--></body>")  # > 64 KB: test memfd
     buf = None
     loaded = False
     frames = 0

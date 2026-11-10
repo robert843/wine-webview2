@@ -283,12 +283,7 @@ wrap_resource_request_handler! {
             let url = CefString::from(&request.url()).to_string();
             let method = CefString::from(&request.method()).to_string();
             let headers = headers_text(request);
-            let mut body = request_body(request);
-            let fixed = 40 + HEADER_SIZE + url.len() + method.len() + headers.len();
-            if fixed + body.len() > MAX_MESSAGE {
-                eprintln!("helper: request body of {url} truncated ({} bytes)", body.len());
-                body.truncate(MAX_MESSAGE.saturating_sub(fixed));
-            }
+            let body = request_body(request);
             self.req.state.lock().unwrap().callback = Some(SendCallback(callback.clone()));
             PENDING.lock().unwrap().get_or_insert_with(HashMap::new).insert(id, self.req.state.clone());
 

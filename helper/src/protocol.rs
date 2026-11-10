@@ -2,10 +2,12 @@
 
 #![allow(dead_code)]
 
-pub const PROTOCOL_VERSION: u32 = 4;
+pub const PROTOCOL_VERSION: u32 = 5;
 pub const FRAME_SLOTS: u32 = 2;
-/// Musi się zmieścić w buforze gniazda (net.core.wmem_default, zwykle 212992 B) — patrz protocol.h.
-pub const MAX_MESSAGE: usize = 128 * 1024;
+/// Treści większe niż INLINE_MAX idą w zapieczętowanym memfd (protocol.h: WV2_INLINE_MAX).
+pub const INLINE_MAX: usize = 64 * 1024;
+pub const MAX_PAYLOAD: usize = 256 * 1024 * 1024;
+pub const MSG_PAYLOAD_IN_FD: u32 = 0x1;
 pub const HEADER_SIZE: usize = 16;
 
 // DLL -> helper

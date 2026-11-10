@@ -36,7 +36,7 @@
 
 WINE_DEFAULT_DEBUG_CHANNEL(webview2);
 
-#define CONTENT_CHUNK (64 * 1024)    /* must stay below WV2_MAX_MESSAGE */
+#define CONTENT_CHUNK (1024 * 1024)  /* streaming granularity; large messages go through a memfd */
 
 static WCHAR *strdupW(const WCHAR *str)
 {

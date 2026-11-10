@@ -22,7 +22,8 @@
  * Transport: AF_UNIX SOCK_SEQPACKET socketpair (message boundaries preserved), helper end
  * passed as fd given by "--ipc-fd=N". One message = one wv2_msg_header + payload, all
  * integers little-endian (host order), strings UTF-8 without terminator (length = payload
- * size minus fixed part). File descriptors travel as SCM_RIGHTS ancillary data.
+ * size minus fixed part). File descriptors travel as SCM_RIGHTS ancillary data; large payloads
+ * travel in a memfd (see WV2_INLINE_MAX), so messages have no practical size limit.
  *
  * Handshake: DLL sends WV2_CMD_HELLO, helper answers WV2_EVT_HELLO with its version; on
  * mismatch the DLL closes the socket. Any change of a message layout bumps the version.
@@ -38,11 +39,15 @@
 #ifndef __WEBVIEW2_PROTOCOL_H
 #define __WEBVIEW2_PROTOCOL_H
 
-#define WV2_PROTOCOL_VERSION 4
+#define WV2_PROTOCOL_VERSION 5
 #define WV2_FRAME_SLOTS      2
 /* SOCK_SEQPACKET messages must fit the socket send buffer (net.core.wmem_default, usually
- * 212992 bytes), larger ones fail with EMSGSIZE. Bulk data is therefore sent in chunks. */
-#define WV2_MAX_MESSAGE      (128 * 1024)
+ * 212992 bytes). Payloads larger than WV2_INLINE_MAX therefore travel in a sealed memfd attached
+ * as the first SCM_RIGHTS descriptor, with WV2_MSG_PAYLOAD_IN_FD set and only the header in the
+ * datagram (header.size still counts header + payload). Same idea as Mojo's shared buffers. */
+#define WV2_INLINE_MAX       (64 * 1024)
+#define WV2_MAX_PAYLOAD      (256 * 1024 * 1024)
+#define WV2_MSG_PAYLOAD_IN_FD 0x1
 
 /* DLL -> helper */
 enum wv2_command
@@ -113,7 +118,7 @@ struct wv2_msg_header
     UINT32 type;
     UINT32 size;    /* whole message including this header */
     UINT32 view;    /* view id chosen by the DLL, 0 = global */
-    UINT32 reserved;
+    UINT32 flags;   /* WV2_MSG_* */
 };
 
 struct wv2_hello
@@ -165,8 +170,8 @@ struct wv2_key
 /*
  * WebResourceRequested: the helper pauses a request matching a filter and sends
  * WV2_EVT_RESOURCE_REQUEST; the DLL answers with WV2_CMD_RESOURCE_RESPONSE (handled = 0 lets the
- * request continue to the network), then any number of WV2_CMD_RESOURCE_DATA chunks and
- * WV2_CMD_RESOURCE_END. Headers are "Name: value\r\n" lines.
+ * request continue to the network), then any number of WV2_CMD_RESOURCE_DATA chunks (streaming,
+ * bounded memory) and WV2_CMD_RESOURCE_END. Headers are "Name: value\r\n" lines.
  */
 struct wv2_resource_filter
 {

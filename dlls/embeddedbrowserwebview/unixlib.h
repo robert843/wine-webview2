@@ -47,7 +47,8 @@ struct helper_send_params
 };
 
 /* Blocks until the next message from the helper. FRAME_BUFFER descriptors are mapped on the
- * unix side; the payload is copied to the caller's buffer (truncated to size). */
+ * unix side; the payload is copied to the caller's buffer. If it does not fit, returns
+ * STATUS_BUFFER_TOO_SMALL with header filled in and keeps the message for the next call. */
 struct helper_recv_params
 {
     helper_handle_t handle;

@@ -35,6 +35,7 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -69,7 +70,13 @@ struct helper
     pid_t pid;
     pthread_mutex_t lock;   /* protects buffers */
     struct frame_buffer buffers[MAX_FRAME_BUFFERS];
-    char msg[WV2_MAX_MESSAGE];  /* receive buffer, used only by the reader thread */
+    /* receive state, used only by the reader thread */
+    char msg[sizeof(struct wv2_msg_header) + WV2_INLINE_MAX];
+    char *big;                  /* payloads received through a memfd */
+    size_t big_size;
+    BOOL pending;               /* message received but not yet delivered (caller buffer too small) */
+    struct wv2_msg_header pending_header;
+    const char *pending_payload;
 };
 
 static struct helper *get_helper(helper_handle_t handle)
@@ -96,22 +103,63 @@ static const char *find_helper_path(char *buf, size_t size)
     return "/usr/lib/wine-webview2/wine-webview2-helper";
 }
 
+/* Puts a large payload into a sealed memfd. */
+static int create_payload_fd(const void *data, size_t size)
+{
+    const char *ptr = data;
+    ssize_t ret;
+    int fd;
+
+    if ((fd = memfd_create("wine-webview2-msg", MFD_CLOEXEC | MFD_ALLOW_SEALING)) < 0)
+    {
+        ERR("memfd_create failed: %s\n", strerror(errno));
+        return -1;
+    }
+    while (size)
+    {
+        if ((ret = write(fd, ptr, size)) < 0)
+        {
+            if (errno == EINTR) continue;
+            ERR("write to memfd failed: %s\n", strerror(errno));
+            close(fd);
+            return -1;
+        }
+        ptr += ret;
+        size -= ret;
+    }
+    fcntl(fd, F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_GROW | F_SEAL_WRITE | F_SEAL_SEAL);
+    return fd;
+}
+
 static NTSTATUS send_message(struct helper *helper, UINT32 type, UINT32 view, const void *data, UINT32 size)
 {
     struct wv2_msg_header header = {type, sizeof(header) + size, view, 0};
     struct iovec iov[2] = {{&header, sizeof(header)}, {(void *)data, size}};
+    char control[CMSG_SPACE(sizeof(int))];
     struct msghdr msg = {0};
+    struct cmsghdr *cmsg;
+    int fd = -1;
     ssize_t ret;
 
-    if (header.size > WV2_MAX_MESSAGE)
-    {
-        FIXME("message %u of %u bytes exceeds the protocol limit\n", type, header.size);
-        return STATUS_BUFFER_OVERFLOW;
-    }
+    if (size > WV2_MAX_PAYLOAD) return STATUS_BUFFER_OVERFLOW;
     msg.msg_iov = iov;
     msg.msg_iovlen = size ? 2 : 1;
+    if (size > WV2_INLINE_MAX)
+    {
+        if ((fd = create_payload_fd(data, size)) < 0) return STATUS_NO_MEMORY;
+        header.flags |= WV2_MSG_PAYLOAD_IN_FD;
+        msg.msg_iovlen = 1;
+        msg.msg_control = control;
+        msg.msg_controllen = sizeof(control);
+        cmsg = CMSG_FIRSTHDR(&msg);
+        cmsg->cmsg_level = SOL_SOCKET;
+        cmsg->cmsg_type = SCM_RIGHTS;
+        cmsg->cmsg_len = CMSG_LEN(sizeof(int));
+        memcpy(CMSG_DATA(cmsg), &fd, sizeof(int));
+    }
     do ret = sendmsg(helper->fd, &msg, MSG_NOSIGNAL);
     while (ret < 0 && errno == EINTR);
+    if (fd != -1) close(fd);
     if (ret < 0)
     {
         WARN("sendmsg failed: %s\n", strerror(errno));
@@ -120,13 +168,42 @@ static NTSTATUS send_message(struct helper *helper, UINT32 type, UINT32 view, co
     return STATUS_SUCCESS;
 }
 
-/* Receives one message into helper->msg; returns the received descriptor (or -1) in *fd. */
-static NTSTATUS recv_message(struct helper *helper, struct wv2_msg_header **header, int *fd)
+static BOOL read_payload_fd(struct helper *helper, int fd, size_t size)
 {
-    char control[CMSG_SPACE(sizeof(int))];
+    size_t done = 0;
+    struct stat st;
+    ssize_t ret;
+    char *buf;
+
+    if (fstat(fd, &st) < 0 || st.st_size < size) return FALSE;
+    if (size > helper->big_size)
+    {
+        if (!(buf = realloc(helper->big, size))) return FALSE;
+        helper->big = buf;
+        helper->big_size = size;
+    }
+    while (done < size)
+    {
+        if ((ret = pread(fd, helper->big + done, size - done, done)) <= 0)
+        {
+            if (ret < 0 && errno == EINTR) continue;
+            return FALSE;
+        }
+        done += ret;
+    }
+    return TRUE;
+}
+
+/* Receives one message. The payload points into helper->msg or helper->big and stays valid
+ * until the next call; *fd is an attached descriptor other than a payload memfd (or -1). */
+static NTSTATUS recv_message(struct helper *helper, struct wv2_msg_header **header,
+                             const char **payload, int *fd)
+{
+    char control[CMSG_SPACE(2 * sizeof(int))];
     struct iovec iov = {helper->msg, sizeof(helper->msg)};
     struct msghdr msg = {0};
     struct cmsghdr *cmsg;
+    int fds[2] = {-1, -1}, count = 0, n, i;
     ssize_t ret;
 
     *fd = -1;
@@ -143,17 +220,45 @@ static NTSTATUS recv_message(struct helper *helper, struct wv2_msg_header **head
         return STATUS_PIPE_BROKEN;
     }
     for (cmsg = CMSG_FIRSTHDR(&msg); cmsg; cmsg = CMSG_NXTHDR(&msg, cmsg))
-        if (cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SCM_RIGHTS)
-            memcpy(fd, CMSG_DATA(cmsg), sizeof(int));
+    {
+        if (cmsg->cmsg_level != SOL_SOCKET || cmsg->cmsg_type != SCM_RIGHTS) continue;
+        n = (cmsg->cmsg_len - CMSG_LEN(0)) / sizeof(int);
+        for (i = 0; i < n; i++)
+        {
+            int received;
+            memcpy(&received, CMSG_DATA(cmsg) + i * sizeof(int), sizeof(int));
+            if (count < 2) fds[count++] = received;
+            else close(received);
+        }
+    }
 
     *header = (struct wv2_msg_header *)helper->msg;
-    if (ret < sizeof(**header) || (*header)->size != ret || (msg.msg_flags & MSG_TRUNC))
+    if (ret < sizeof(**header) || (msg.msg_flags & (MSG_TRUNC | MSG_CTRUNC)) || (*header)->size < sizeof(**header))
+        goto malformed;
+
+    if ((*header)->flags & WV2_MSG_PAYLOAD_IN_FD)
     {
-        ERR("malformed message (%zd bytes, flags %#x)\n", ret, msg.msg_flags);
-        if (*fd != -1) close(*fd);
-        return STATUS_INVALID_NETWORK_RESPONSE;
+        size_t size = (*header)->size - sizeof(**header);
+
+        if (ret != sizeof(**header) || fds[0] == -1 || size > WV2_MAX_PAYLOAD || !read_payload_fd(helper, fds[0], size))
+            goto malformed;
+        close(fds[0]);
+        *payload = helper->big;
+        *fd = fds[1];
+    }
+    else
+    {
+        if ((*header)->size != ret) goto malformed;
+        *payload = helper->msg + sizeof(**header);
+        *fd = fds[0];
+        if (fds[1] != -1) close(fds[1]);
     }
     return STATUS_SUCCESS;
+
+malformed:
+    ERR("malformed message (%zd bytes, flags %#x)\n", ret, msg.msg_flags);
+    for (i = 0; i < count; i++) close(fds[i]);
+    return STATUS_INVALID_NETWORK_RESPONSE;
 }
 
 static void install_frame_buffer(struct helper *helper, UINT32 view, const struct wv2_frame_buffer *info, int fd)
@@ -211,6 +316,7 @@ static void close_helper(struct helper *helper)
     for (i = 0; i < MAX_FRAME_BUFFERS; i++)
         if (helper->buffers[i].base) munmap(helper->buffers[i].base, helper->buffers[i].size);
     pthread_mutex_destroy(&helper->lock);
+    free(helper->big);
     free(helper);
 }
 
@@ -219,6 +325,7 @@ static NTSTATUS helper_start(void *args)
     struct helper_start_params *params = args;
     posix_spawn_file_actions_t actions;
     struct wv2_msg_header *header;
+    const char *payload;
     struct wv2_hello hello = {WV2_PROTOCOL_VERSION, getpid()};
     char path_buf[PATH_MAX], fd_arg[32];
     const char *path = find_helper_path(path_buf, sizeof(path_buf));
@@ -254,7 +361,7 @@ static NTSTATUS helper_start(void *args)
     }
 
     if ((status = send_message(helper, WV2_CMD_HELLO, 0, &hello, sizeof(hello))) ||
-        (status = recv_message(helper, &header, &fd)))
+        (status = recv_message(helper, &header, &payload, &fd)))
     {
         ERR("handshake with helper failed: %#x\n", (int)status);
         close_helper(helper);
@@ -262,7 +369,7 @@ static NTSTATUS helper_start(void *args)
     }
     if (fd != -1) close(fd);
     if (header->type != WV2_EVT_HELLO || header->size < sizeof(*header) + sizeof(hello) ||
-        ((struct wv2_hello *)(header + 1))->version != WV2_PROTOCOL_VERSION)
+        ((const struct wv2_hello *)payload)->version != WV2_PROTOCOL_VERSION)
     {
         ERR("helper protocol mismatch (type %#x)\n", header->type);
         close_helper(helper);
@@ -271,7 +378,7 @@ static NTSTATUS helper_start(void *args)
 
     params->handle = (ULONG_PTR)helper;
     params->helper_pid = helper->pid;
-    params->helper_version = ((struct wv2_hello *)(header + 1))->version;
+    params->helper_version = ((const struct wv2_hello *)payload)->version;
     TRACE("helper pid %d ready, protocol %u\n", (int)helper->pid, params->helper_version);
     return STATUS_SUCCESS;
 }
@@ -299,20 +406,29 @@ static NTSTATUS helper_recv(void *args)
     struct helper_recv_params *params = args;
     struct helper *helper = get_helper(params->handle);
     struct wv2_msg_header *header;
-    UINT32 payload;
+    const char *payload;
+    UINT32 size;
     NTSTATUS status;
     int fd;
 
-    if ((status = recv_message(helper, &header, &fd))) return status;
+    if (!helper->pending)
+    {
+        if ((status = recv_message(helper, &header, &payload, &fd))) return status;
+        size = header->size - sizeof(*header);
+        if (header->type == WV2_EVT_FRAME_BUFFER && size >= sizeof(struct wv2_frame_buffer))
+            install_frame_buffer(helper, header->view, (const struct wv2_frame_buffer *)payload, fd);
+        else if (fd != -1)
+            close(fd);
+        helper->pending = TRUE;
+        helper->pending_header = *header;
+        helper->pending_payload = payload;
+    }
 
-    payload = header->size - sizeof(*header);
-    if (header->type == WV2_EVT_FRAME_BUFFER && payload >= sizeof(struct wv2_frame_buffer))
-        install_frame_buffer(helper, header->view, (struct wv2_frame_buffer *)(header + 1), fd);
-    else if (fd != -1)
-        close(fd);
-
-    params->header = *header;
-    memcpy(params->buffer, header + 1, min(payload, params->size));
+    params->header = helper->pending_header;
+    size = params->header.size - sizeof(params->header);
+    if (size > params->size) return STATUS_BUFFER_TOO_SMALL;   /* caller grows its buffer and retries */
+    memcpy(params->buffer, helper->pending_payload, size);
+    helper->pending = FALSE;
     return STATUS_SUCCESS;
 }
 
