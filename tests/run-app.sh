@@ -9,12 +9,22 @@
 #   WINEDEBUG    — domyślnie +webview2 (TRACE i FIXME naszego kanału)
 #   WV2_LOG      — plik logu (domyślnie build/logs/<program>.log)
 #   WINE_WEBVIEW2_HELPER — natywny pomocnik (domyślnie build/runtime/wine-webview2-helper)
+#   WV2_VISIBLE  — 1 = okna na pulpicie użytkownika; domyślnie niewidoczny ekran Xvfb (WV2_DISPLAY, :99),
+#                  żeby testy nie migały oknami (zrzuty: DISPLAY=:99 import -window …)
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 WINE=${WINE:-$ROOT/../wine-webview2-ref/wine-build/wine}
 export WINEPREFIX=${WINEPREFIX:-$HOME/.local/share/wine-webview2/prefix}
 export WINEDEBUG=${WINEDEBUG:-+webview2}
+
+if [ "${WV2_VISIBLE:-0}" != 1 ]; then
+    export DISPLAY=${WV2_DISPLAY:-:99}
+    if ! xdpyinfo -display "$DISPLAY" >/dev/null 2>&1; then
+        Xvfb "$DISPLAY" -screen 0 1600x1000x24 -nolisten tcp >/dev/null 2>&1 &
+        for _ in $(seq 1 50); do xdpyinfo -display "$DISPLAY" >/dev/null 2>&1 && break; sleep 0.1; done
+    fi
+fi
 
 exe=$1; shift
 name=$(basename "$exe" .exe)

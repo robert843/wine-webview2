@@ -89,6 +89,7 @@ static LRESULT CALLBACK wndproc(HWND h, UINT msg, WPARAM wp, LPARAM lp) {
 int WINAPI WinMain(HINSTANCE inst, HINSTANCE, LPSTR, int) {
     CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
     WNDCLASSW wc = {}; wc.lpfnWndProc = wndproc; wc.hInstance = inst; wc.lpszClassName = L"navtest";
+    wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
     RegisterClassW(&wc);
     hwnd = CreateWindowW(L"navtest", L"wine-webview2 navtest", WS_OVERLAPPEDWINDOW | WS_VISIBLE,
                          100, 100, 640, 480, nullptr, nullptr, inst, nullptr);
