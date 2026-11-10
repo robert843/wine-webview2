@@ -21,12 +21,14 @@
 
 /* Version reported to applications. The third component must not be lower than the SDK
  * build an application was compiled against, otherwise the loader rejects the runtime. */
-#define WEBVIEW2_VERSION_MAJOR 143
+/* Major = Chromium version of the bundled CEF, so the user agent and the runtime version agree. */
+#define WEBVIEW2_VERSION_MAJOR 156
 #define WEBVIEW2_VERSION_MINOR 0
 #define WEBVIEW2_VERSION_BUILD 9999
 #define WEBVIEW2_VERSION_PATCH 0
-#define WEBVIEW2_VERSION_STR   "143.0.9999.0"
-#define WEBVIEW2_VERSION_WSTR  L"143.0.9999.0"
+#define WEBVIEW2_VERSION_STR   "156.0.9999.0"
+#define WEBVIEW2_VERSION_WSTR  L"156.0.9999.0"
+#define WEBVIEW2_VERSION_MAJOR_WSTR L"156"
 
 #ifndef RC_INVOKED
 
@@ -53,6 +55,11 @@ HRESULT resource_create_response(IStream *content, int status, LPCWSTR reason, L
                                  ICoreWebView2WebResourceResponse **response);
 void resource_dispatch_request(UINT32 view, ICoreWebView2 *webview, IUnknown **handlers, unsigned int count,
                                const BYTE *payload, UINT32 size);
+
+/* settings.c */
+void settings_init(void);
+ICoreWebView2Settings *settings_create(UINT32 view);
+UINT32 settings_get_flags(ICoreWebView2Settings *settings);
 
 /* navigation.c */
 struct navigation_info

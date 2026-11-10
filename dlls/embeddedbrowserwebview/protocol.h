@@ -39,7 +39,7 @@
 #ifndef __WEBVIEW2_PROTOCOL_H
 #define __WEBVIEW2_PROTOCOL_H
 
-#define WV2_PROTOCOL_VERSION 6
+#define WV2_PROTOCOL_VERSION 7
 #define WV2_FRAME_SLOTS      2
 /* SOCK_SEQPACKET messages must fit the socket send buffer (net.core.wmem_default, usually
  * 212992 bytes). Payloads larger than WV2_INLINE_MAX therefore travel in a sealed memfd attached
@@ -77,7 +77,19 @@ enum wv2_command
     WV2_CMD_RELOAD,                 /* (no payload) */
     WV2_CMD_STOP,                   /* (no payload) */
     WV2_CMD_OPEN_DEVTOOLS,          /* (no payload) */
+    WV2_CMD_SET_BACKGROUND,         /* wv2_flag: ARGB (alpha 0 = transparent) */
+    WV2_CMD_SET_USER_AGENT,         /* UTF-8 user agent (empty = default) */
+    WV2_CMD_SET_SETTINGS,           /* wv2_flag: WV2_SETTING_* bits, applied from the next document */
 };
+
+#define WV2_SETTING_SCRIPT          0x0001
+#define WV2_SETTING_WEB_MESSAGE     0x0002
+#define WV2_SETTING_SCRIPT_DIALOGS  0x0004
+#define WV2_SETTING_CONTEXT_MENUS   0x0008
+#define WV2_SETTING_DEVTOOLS        0x0010
+#define WV2_SETTING_ZOOM            0x0020
+#define WV2_SETTING_ACCELERATORS    0x0040
+#define WV2_SETTINGS_DEFAULT        0x007f
 
 /* helper -> DLL */
 enum wv2_event
@@ -143,7 +155,7 @@ struct wv2_view_size
     UINT32 width;
     UINT32 height;
     UINT32 scale_percent;   /* device scale factor * 100 */
-    UINT32 reserved;
+    UINT32 background;      /* ARGB, CREATE_VIEW only (alpha 0 = transparent) */
 };
 
 struct wv2_flag

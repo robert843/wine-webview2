@@ -66,6 +66,31 @@ fn post_ui(f: impl FnOnce() + Send + 'static) {
 /// ARGB, jak COREWEBVIEW2_COLOR domyślnie (biały, nieprzezroczysty).
 const DEFAULT_BACKGROUND: u32 = 0xFFFF_FFFF;
 
+/// Domyślny User-Agent jak w WebView2 na Windows (aplikacje i strony sprawdzają platformę;
+/// pod Wine program ma widzieć Windows). Wersja = wersja Chromium w CEF.
+const DEFAULT_USER_AGENT: &str =
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0";
+
+/// Wywołanie metody DevTools na przeglądarce (bez otwierania DevTools).
+fn devtools(browser: &Browser, method: &str, params: &str) {
+    static NEXT_ID: std::sync::atomic::AtomicI32 = std::sync::atomic::AtomicI32::new(1);
+    let id = NEXT_ID.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+    let msg = format!("{{\"id\":{id},\"method\":\"{method}\",\"params\":{params}}}");
+    if let Some(host) = browser.host() {
+        if host.send_dev_tools_message(Some(msg.as_bytes())) == 0 {
+            eprintln!("helper: devtools {method} failed");
+        }
+    }
+}
+
+fn set_user_agent(browser: &Browser, ua: &str) {
+    let ua = if ua.is_empty() { DEFAULT_USER_AGENT } else { ua };
+    let params = format!("{{\"userAgent\":{},\"platform\":\"Win32\"}}", renderer::json_string(ua));
+    devtools(browser, "Emulation.setUserAgentOverride", &params);
+}
+
+
+
 struct View {
     browser: Option<Browser>,
     doc_scripts: Vec<String>,
@@ -479,6 +504,11 @@ fn handle_command(msg: Message) {
     match msg.ty {
         CMD_CREATE_VIEW => {
             let (w, h) = (r.u32().unwrap_or(1), r.u32().unwrap_or(1));
+            let _scale = r.u32();
+            let _background = r.u32();
+            // Zawsze przezroczyste: w OSR przezroczystość ustala się tylko przy tworzeniu, więc
+            // DefaultBackgroundColor nakłada DLL pod klatką (kolor albo zawartość rodzica).
+            let background = 0u32;
             with_state(|st| {
                 st.views.insert(msg.view, View { browser: None, doc_scripts: Vec::new(), last_source: String::new(), pending_completion: None, width: w, height: h, frames: None, dropped: false })
             });
@@ -486,7 +516,7 @@ fn handle_command(msg: Message) {
             // WebView2: DefaultBackgroundColor = nieprzezroczysta biel (CEF OSR domyślnie: przezroczyste).
             let settings = BrowserSettings {
                 windowless_frame_rate: 60,
-                background_color: DEFAULT_BACKGROUND,
+                background_color: background,
                 ..Default::default()
             };
             let mut client = ViewClientBuilder::new(ViewClient { view: msg.view });
@@ -502,6 +532,9 @@ fn handle_command(msg: Message) {
             if browser.is_none() {
                 send_event(EVT_ERROR, msg.view, b"cannot create browser");
                 return;
+            }
+            if let Some(b) = browser.as_ref() {
+                set_user_agent(b, "");
             }
             with_state(|st| {
                 if let Some(v) = st.views.get_mut(&msg.view) {
@@ -680,6 +713,25 @@ fn handle_command(msg: Message) {
                 let window_info = WindowInfo::default();
                 let settings = BrowserSettings::default();
                 host.show_dev_tools(Some(&window_info), None, Some(&settings), None);
+            }
+        }
+        CMD_SET_BACKGROUND => {
+            // Kolor nakłada DLL (przeglądarka renderuje z przezroczystym tłem); nic do zrobienia.
+            let _ = r.u32();
+        }
+        CMD_SET_USER_AGENT => {
+            let ua = r.rest_str();
+            if let Some(b) = view_browser(msg.view) {
+                set_user_agent(&b, &ua);
+            }
+        }
+        CMD_SET_SETTINGS => {
+            let flags = r.u32().unwrap_or(SETTINGS_DEFAULT);
+            if let (Some(b), Some(dir)) = (view_browser(msg.view), SCRIPTS_DIR.get()) {
+                let path = renderer::settings_file(&dir.to_string_lossy(), b.identifier());
+                if let Err(e) = std::fs::write(&path, flags.to_le_bytes()) {
+                    eprintln!("helper: cannot write {}: {e}", path.display());
+                }
             }
         }
         CMD_SHUTDOWN => shutdown_ipc(),

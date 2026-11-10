@@ -2,7 +2,7 @@
 
 #![allow(dead_code)]
 
-pub const PROTOCOL_VERSION: u32 = 6;
+pub const PROTOCOL_VERSION: u32 = 7;
 pub const FRAME_SLOTS: u32 = 2;
 /// Treści większe niż INLINE_MAX idą w zapieczętowanym memfd (protocol.h: WV2_INLINE_MAX).
 pub const INLINE_MAX: usize = 64 * 1024;
@@ -36,6 +36,12 @@ pub const CMD_GO_FORWARD: u32 = 22;
 pub const CMD_RELOAD: u32 = 23;
 pub const CMD_STOP: u32 = 24;
 pub const CMD_OPEN_DEVTOOLS: u32 = 25;
+pub const CMD_SET_BACKGROUND: u32 = 26;
+pub const CMD_SET_USER_AGENT: u32 = 27;
+pub const CMD_SET_SETTINGS: u32 = 28;
+
+pub const SETTING_WEB_MESSAGE: u32 = 0x0002;
+pub const SETTINGS_DEFAULT: u32 = 0x007f;
 
 // helper -> DLL
 pub const EVT_HELLO: u32 = 0x1001;

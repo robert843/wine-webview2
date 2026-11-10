@@ -40,6 +40,18 @@ const BOOTSTRAP: &str = r#"(function () {
   Object.defineProperty(window.chrome, "webview", { value: webview, enumerable: true });
 })();"#;
 
+pub fn settings_file(dir: &str, browser_id: i32) -> PathBuf {
+    PathBuf::from(dir).join(format!("{browser_id}.settings"))
+}
+
+/// Flagi WV2_SETTING_* zapisane przez proces przeglądarki (brak pliku = domyślne).
+fn read_settings(dir: &str, browser_id: i32) -> u32 {
+    std::fs::read(settings_file(dir, browser_id))
+        .ok()
+        .and_then(|d| d.get(..4).map(|b| u32::from_le_bytes(b.try_into().unwrap())))
+        .unwrap_or(crate::protocol::SETTINGS_DEFAULT)
+}
+
 pub fn scripts_file(dir: &str, browser_id: i32) -> PathBuf {
     PathBuf::from(dir).join(format!("{browser_id}.scripts"))
 }
@@ -153,15 +165,19 @@ wrap_render_process_handler! {
         ) {
             let (Some(browser), Some(context)) = (browser, context) else { return };
             let Some(global) = context.global() else { return };
-            let mut handler = PostHandlerBuilder::new(PostHandler);
-            let mut func = v8_value_create_function(Some(&"__wv2_post".into()), Some(&mut handler));
-            global.set_value_bykey(Some(&"__wv2_post".into()), func.as_mut(), V8Propertyattribute::default());
-            if let Err(e) = eval(context, BOOTSTRAP) {
-                eprintln!("helper(renderer): bootstrap failed: {e}");
-            }
             let dir = command_line_get_global()
                 .map(|cl| CefString::from(&cl.switch_value(Some(&SCRIPTS_DIR_SWITCH.into()))).to_string())
                 .unwrap_or_default();
+            let settings = if dir.is_empty() { crate::protocol::SETTINGS_DEFAULT } else { read_settings(&dir, browser.identifier()) };
+            // IsWebMessageEnabled = FALSE: brak window.chrome.webview (jak w WebView2).
+            if settings & crate::protocol::SETTING_WEB_MESSAGE != 0 {
+                let mut handler = PostHandlerBuilder::new(PostHandler);
+                let mut func = v8_value_create_function(Some(&"__wv2_post".into()), Some(&mut handler));
+                global.set_value_bykey(Some(&"__wv2_post".into()), func.as_mut(), V8Propertyattribute::default());
+                if let Err(e) = eval(context, BOOTSTRAP) {
+                    eprintln!("helper(renderer): bootstrap failed: {e}");
+                }
+            }
             if dir.is_empty() {
                 return;
             }

@@ -29,6 +29,7 @@
 #include "winternl.h"
 #include "wingdi.h"
 #include "winuser.h"
+#include "uxtheme.h"
 #include "objbase.h"
 #include "webview2.h"
 #include "stubs.h"
@@ -280,6 +281,8 @@ struct view
     struct handler_list events[EVENT_COUNT];
     WCHAR *source;
     WCHAR *title;
+    ICoreWebView2Settings *settings;        /* strong, created lazily */
+    COREWEBVIEW2_COLOR background;
     BOOL can_go_back, can_go_forward;
     struct list pending_scripts;            /* struct pending_script */
     HCURSOR cursor;
@@ -853,6 +856,46 @@ void helper_ensure_started(void)
 
 static const WCHAR host_class_name[] = L"WineWebView2Host";
 
+/* The helper renders with a transparent background; DefaultBackgroundColor goes below the
+ * premultiplied BGRA frame here: the colour itself, or the parent's content when transparent
+ * (WebView2 uses DirectComposition for the latter; same visible result for child windows). */
+static void paint_view(struct view *view, HDC hdc, const RECT *rect)
+{
+    BLENDFUNCTION blend = {AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
+    int width = rect->right - rect->left, height = rect->bottom - rect->top;
+    HDC mem = CreateCompatibleDC(hdc);
+    HBITMAP bitmap = CreateCompatibleBitmap(hdc, width, height), old;
+    RECT local = {0, 0, width, height};
+
+    old = SelectObject(mem, bitmap);
+    if (view->background.A)
+    {
+        HBRUSH brush = CreateSolidBrush(RGB(view->background.R, view->background.G, view->background.B));
+        FillRect(mem, &local, brush);
+        DeleteObject(brush);
+    }
+    else
+    {
+        SetViewportOrgEx(mem, -rect->left, -rect->top, NULL);
+        DrawThemeParentBackground(view->hwnd, mem, (RECT *)rect);
+        SetViewportOrgEx(mem, 0, 0, NULL);
+    }
+    if (!view->dc)
+    {
+        BitBlt(hdc, rect->left, rect->top, width, height, mem, 0, 0, SRCCOPY);
+        goto done;
+    }
+    width = max(0, min(width, (int)view->dib_width - rect->left));
+    height = max(0, min(height, (int)view->dib_height - rect->top));
+    if (width && height)
+        GdiAlphaBlend(mem, 0, 0, width, height, view->dc, rect->left, rect->top, width, height, blend);
+    BitBlt(hdc, rect->left, rect->top, local.right, local.bottom, mem, 0, 0, SRCCOPY);
+done:
+    SelectObject(mem, old);
+    DeleteObject(bitmap);
+    DeleteDC(mem);
+}
+
 static LRESULT CALLBACK host_wndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
     struct view *view = (struct view *)GetWindowLongPtrW(hwnd, GWLP_USERDATA);
@@ -865,11 +908,7 @@ static LRESULT CALLBACK host_wndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM 
         return 1;
     case WM_PAINT:
         hdc = BeginPaint(hwnd, &ps);
-        if (view && view->dc)
-        {
-            BitBlt(hdc, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right - ps.rcPaint.left,
-                   ps.rcPaint.bottom - ps.rcPaint.top, view->dc, ps.rcPaint.left, ps.rcPaint.top, SRCCOPY);
-        }
+        if (view) paint_view(view, hdc, &ps.rcPaint);
         else FillRect(hdc, &ps.rcPaint, GetStockObject(WHITE_BRUSH));
         EndPaint(hwnd, &ps);
         return 0;
@@ -999,6 +1038,11 @@ static void close_view(struct view *view)
         ICoreWebView2_Release((ICoreWebView2 *)view->webview);
         view->webview = NULL;
     }
+    if (view->settings)
+    {
+        ICoreWebView2Settings_Release(view->settings);
+        view->settings = NULL;
+    }
     /* Drop the reference owned by the view; may destroy the controller (and release the view). */
     ICoreWebView2Controller_Release(view->controller);
 }
@@ -1093,6 +1137,39 @@ static HRESULT STDMETHODCALLTYPE controller_put_ParentWindow(ICoreWebView2Contro
     if (view->closed) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
     view->parent = parent;
     if (view->hwnd) SetParent(view->hwnd, parent);
+    return S_OK;
+}
+
+static UINT32 color_to_argb(COREWEBVIEW2_COLOR color)
+{
+    return (UINT32)color.A << 24 | (UINT32)color.R << 16 | (UINT32)color.G << 8 | color.B;
+}
+
+static HRESULT STDMETHODCALLTYPE controller_get_DefaultBackgroundColor(ICoreWebView2Controller4 *iface,
+        COREWEBVIEW2_COLOR *color)
+{
+    struct view *view = view_from_controller(iface);
+
+    TRACE("iface %p, color %p.\n", iface, color);
+    if (!color) return E_POINTER;
+    *color = view->background;
+    return S_OK;
+}
+
+static HRESULT STDMETHODCALLTYPE controller_put_DefaultBackgroundColor(ICoreWebView2Controller4 *iface,
+        COREWEBVIEW2_COLOR color)
+{
+    struct view *view = view_from_controller(iface);
+    struct wv2_flag msg = {0};
+
+    TRACE("iface %p, color ARGB %02x%02x%02x%02x.\n", iface, color.A, color.R, color.G, color.B);
+    if (view->closed) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
+    /* WebView2 only supports fully opaque or fully transparent backgrounds. */
+    if (color.A != 0 && color.A != 255) return E_INVALIDARG;
+    view->background = color;
+    msg.value = color_to_argb(color);
+    if (view->created) helper_send(view, WV2_CMD_SET_BACKGROUND, &msg, sizeof(msg));
+    if (view->hwnd) InvalidateRect(view->hwnd, NULL, FALSE);   /* composited in paint_view() */
     return S_OK;
 }
 
@@ -1391,7 +1468,28 @@ DEFINE_SIMPLE_COMMAND(GoBack, WV2_CMD_GO_BACK)
 DEFINE_SIMPLE_COMMAND(GoForward, WV2_CMD_GO_FORWARD)
 DEFINE_SIMPLE_COMMAND(Reload, WV2_CMD_RELOAD)
 DEFINE_SIMPLE_COMMAND(Stop, WV2_CMD_STOP)
-DEFINE_SIMPLE_COMMAND(OpenDevToolsWindow, WV2_CMD_OPEN_DEVTOOLS)
+static HRESULT STDMETHODCALLTYPE webview_OpenDevToolsWindow(ICoreWebView2_29 *iface)
+{
+    struct view *view = view_from_webview(iface);
+
+    TRACE("iface %p.\n", iface);
+    if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
+    if (view->settings && !(settings_get_flags(view->settings) & WV2_SETTING_DEVTOOLS)) return S_OK;
+    return helper_send(view, WV2_CMD_OPEN_DEVTOOLS, NULL, 0);
+}
+
+static HRESULT STDMETHODCALLTYPE webview_get_Settings(ICoreWebView2_29 *iface, ICoreWebView2Settings **settings)
+{
+    struct view *view = view_from_webview(iface);
+
+    TRACE("iface %p, settings %p.\n", iface, settings);
+    if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
+    if (!settings) return E_POINTER;
+    if (!view->settings && !(view->settings = settings_create(view->id))) return E_OUTOFMEMORY;
+    *settings = view->settings;
+    ICoreWebView2Settings_AddRef(*settings);
+    return S_OK;
+}
 
 /* ICoreWebView2WebMessageReceivedEventArgs */
 
@@ -1505,6 +1603,25 @@ static void handle_script_result(struct view *view, const BYTE *payload, UINT32 
  * Controller creation.
  */
 
+/* WEBVIEW2_DEFAULT_BACKGROUND_COLOR: hex AARRGGBB (or RRGGBB), read at controller creation. */
+static COREWEBVIEW2_COLOR default_background_color(void)
+{
+    COREWEBVIEW2_COLOR color = {255, 255, 255, 255};
+    WCHAR buf[16], *end;
+    UINT32 value;
+
+    if (!GetEnvironmentVariableW(L"WEBVIEW2_DEFAULT_BACKGROUND_COLOR", buf, ARRAY_SIZE(buf))) return color;
+    value = wcstoul(buf, &end, 16);
+    if (*end) return color;
+    if (wcslen(buf) <= 6) value |= 0xff000000;
+    color.A = value >> 24;
+    color.R = value >> 16;
+    color.G = value >> 8;
+    color.B = value;
+    if (color.A != 255) color.A = 0;
+    return color;
+}
+
 static void controller_created_skeleton_cb(void *arg)
 {
     struct view *view = arg;
@@ -1531,6 +1648,7 @@ HRESULT controller_create(HWND parent, ICoreWebView2CreateCoreWebView2Controller
     view->ref = 1;      /* owned by the controller */
     list_init(&view->pending_scripts);
     view->cursor = LoadCursorW(NULL, (const WCHAR *)IDC_ARROW);
+    view->background = default_background_color();
     view->parent = parent;
     view->async_hwnd = webview2_get_async_window();
     /* Like the real runtime, the view keeps the controller alive until Close() (applications such
@@ -1564,6 +1682,7 @@ HRESULT controller_create(HWND parent, ICoreWebView2CreateCoreWebView2Controller
     {
         size.width = max(1, view->bounds.right - view->bounds.left);
         size.height = max(1, view->bounds.bottom - view->bounds.top);
+        size.background = color_to_argb(view->background);
         if (SUCCEEDED(helper_send(view, WV2_CMD_CREATE_VIEW, &size, sizeof(size))))
         {
             return S_OK;    /* handler runs on WV2_EVT_VIEW_CREATED */
@@ -1597,6 +1716,8 @@ void controller_init(void)
     controller_vtbl.put_ParentWindow = controller_put_ParentWindow;
     controller_vtbl.Close = controller_Close;
     controller_vtbl.MoveFocus = controller_MoveFocus;
+    controller_vtbl.get_DefaultBackgroundColor = controller_get_DefaultBackgroundColor;
+    controller_vtbl.put_DefaultBackgroundColor = controller_put_DefaultBackgroundColor;
     controller_family = stub_family_ICoreWebView2Controller4;
     controller_family.vtbl = &controller_vtbl;
 
@@ -1638,6 +1759,7 @@ void controller_init(void)
     webview_vtbl.Reload = webview_Reload;
     webview_vtbl.Stop = webview_Stop;
     webview_vtbl.OpenDevToolsWindow = webview_OpenDevToolsWindow;
+    webview_vtbl.get_Settings = webview_get_Settings;
     webview_family = stub_family_ICoreWebView2_29;
     webview_family.vtbl = &webview_vtbl;
 
