@@ -69,6 +69,9 @@ const DEFAULT_BACKGROUND: u32 = 0xFFFF_FFFF;
 struct View {
     browser: Option<Browser>,
     doc_scripts: Vec<String>,
+    last_source: String,
+    /// Zakończenie nawigacji czekające na OnLoadingStateChange(false): (http_status, net_error).
+    pending_completion: Option<(i32, i32)>,
     width: u32,
     height: u32,
     frames: Option<FrameBuffer>,
@@ -286,6 +289,28 @@ wrap_display_handler! {
             0
         }
 
+        fn on_address_change(
+            &self,
+            _browser: Option<&mut Browser>,
+            frame: Option<&mut Frame>,
+            url: Option<&CefString>,
+        ) {
+            if frame.map(|f| f.is_main() != 0) != Some(true) {
+                return;
+            }
+            // Nowe dokumenty zgłasza on_load_start; tu zostają nawigacje w obrębie dokumentu
+            // (pushState, kotwice) — wtedy URL różni się od ostatnio zgłoszonego.
+            let url = url.map(|u| u.to_string()).unwrap_or_default();
+            if set_last_source(self.client.view, &url) {
+                send_event(EVT_SOURCE_CHANGED, self.client.view, url.as_bytes());
+            }
+        }
+
+        fn on_title_change(&self, _browser: Option<&mut Browser>, title: Option<&CefString>) {
+            let title = title.map(|t| t.to_string()).unwrap_or_default();
+            send_event(EVT_TITLE_CHANGED, self.client.view, title.as_bytes());
+        }
+
         fn on_cursor_change(
             &self,
             _browser: Option<&mut Browser>,
@@ -310,10 +335,61 @@ wrap_load_handler! {
             &self,
             _browser: Option<&mut Browser>,
             is_loading: ::std::os::raw::c_int,
-            _can_go_back: ::std::os::raw::c_int,
-            _can_go_forward: ::std::os::raw::c_int,
+            can_go_back: ::std::os::raw::c_int,
+            can_go_forward: ::std::os::raw::c_int,
         ) {
-            send_event(EVT_LOAD_STATE, self.client.view, &Writer::default().u32((is_loading != 0) as u32).u32(0).0);
+            let view = self.client.view;
+            send_event(EVT_LOAD_STATE, view, &Writer::default().u32((is_loading != 0) as u32).u32(0).0);
+            if is_loading == 0 {
+                // Dopiero teraz stan historii jest pewny; potem wstrzymane NavigationCompleted.
+                send_history(view, can_go_back != 0, can_go_forward != 0);
+                if let Some((status, error)) = with_state(|st| st.views.get_mut(&view)?.pending_completion.take()).flatten() {
+                    send_navigation_completed(view, status, error);
+                }
+            }
+        }
+
+        fn on_load_start(
+            &self,
+            browser: Option<&mut Browser>,
+            frame: Option<&mut Frame>,
+            _transition_type: TransitionType,
+        ) {
+            let Some(frame) = frame.filter(|f| f.is_main() != 0) else { return };
+            // Kolejność WebView2: SourceChanged -> ContentLoading -> HistoryChanged.
+            let view = self.client.view;
+            let id = resources::current_navigation(view);
+            let url = CefString::from(&frame.url()).to_string();
+            set_last_source(view, &url);
+            send_event(EVT_SOURCE_CHANGED, view, url.as_bytes());
+            send_event(EVT_CONTENT_LOADING, view, &Writer::default().u64(id).u32(0).u32(0).0);
+            let _ = browser;
+        }
+
+        fn on_load_end(
+            &self,
+            browser: Option<&mut Browser>,
+            frame: Option<&mut Frame>,
+            http_status_code: ::std::os::raw::c_int,
+        ) {
+            if frame.map(|f| f.is_main() != 0) != Some(true) {
+                return;
+            }
+            finish_navigation(self.client.view, browser, http_status_code, 0);
+        }
+
+        fn on_load_error(
+            &self,
+            browser: Option<&mut Browser>,
+            frame: Option<&mut Frame>,
+            error_code: Errorcode,
+            _error_text: Option<&CefString>,
+            _failed_url: Option<&CefString>,
+        ) {
+            if frame.map(|f| f.is_main() != 0) != Some(true) {
+                return;
+            }
+            finish_navigation(self.client.view, browser, 0, *error_code.as_ref() as i32);
         }
     }
 }
@@ -330,6 +406,56 @@ fn write_doc_scripts(dir: &std::path::Path, browser_id: i32, scripts: &[String])
     if let Err(e) = std::fs::write(&tmp, &data).and_then(|_| std::fs::rename(&tmp, &path)) {
         eprintln!("helper: cannot write {}: {e}", path.display());
     }
+}
+
+fn send_history(view: u32, back: bool, forward: bool) {
+    let id = resources::current_navigation(view);
+    send_event(EVT_HISTORY_CHANGED, view, &Writer::default().u64(id).u32(back as u32).u32(forward as u32).0);
+}
+
+/// Koniec ładowania ramki głównej: jeśli przeglądarka wciąż „ładuje”, czekamy na
+/// OnLoadingStateChange(false) (pewny stan historii), inaczej zgłaszamy od razu.
+fn finish_navigation(view: u32, browser: Option<&mut Browser>, http_status: i32, net_error: i32) {
+    let loading = browser.as_ref().map(|b| b.is_loading() != 0).unwrap_or(false);
+    if loading {
+        with_state(|st| {
+            if let Some(v) = st.views.get_mut(&view) {
+                v.pending_completion = Some((http_status, net_error));
+            }
+        });
+    } else {
+        if let Some(b) = browser {
+            send_history(view, b.can_go_back() != 0, b.can_go_forward() != 0);
+        }
+        send_navigation_completed(view, http_status, net_error);
+    }
+}
+
+/// Zapamiętuje URL ramki głównej; true, jeśli się zmienił.
+fn set_last_source(view: u32, url: &str) -> bool {
+    with_state(|st| {
+        let v = st.views.get_mut(&view)?;
+        if v.last_source == url {
+            return Some(false);
+        }
+        v.last_source = url.to_string();
+        Some(true)
+    })
+    .flatten()
+    .unwrap_or(false)
+}
+
+fn send_navigation_completed(view: u32, http_status: i32, net_error: i32) {
+    let Some(id) = resources::complete_navigation(view) else { return };
+    let success = net_error == 0 && (http_status == 0 || http_status < 400);
+    let payload = Writer::default()
+        .u64(id)
+        .u32(success as u32)
+        .u32(http_status.max(0) as u32)
+        .i32(net_error)
+        .u32(0)
+        .0;
+    send_event(EVT_NAVIGATION_COMPLETED, view, &payload);
 }
 
 fn view_browser(view: u32) -> Option<Browser> {
@@ -354,7 +480,7 @@ fn handle_command(msg: Message) {
         CMD_CREATE_VIEW => {
             let (w, h) = (r.u32().unwrap_or(1), r.u32().unwrap_or(1));
             with_state(|st| {
-                st.views.insert(msg.view, View { browser: None, doc_scripts: Vec::new(), width: w, height: h, frames: None, dropped: false })
+                st.views.insert(msg.view, View { browser: None, doc_scripts: Vec::new(), last_source: String::new(), pending_completion: None, width: w, height: h, frames: None, dropped: false })
             });
             let window_info = WindowInfo { windowless_rendering_enabled: true as _, ..Default::default() };
             // WebView2: DefaultBackgroundColor = nieprzezroczysta biel (CEF OSR domyślnie: przezroczyste).
@@ -367,7 +493,8 @@ fn handle_command(msg: Message) {
             let browser = browser_host_create_browser_sync(
                 Some(&window_info),
                 Some(&mut client),
-                Some(&"about:blank".into()),
+                // Pusty URL = bez początkowej nawigacji (WebView2 nie zgłasza zdarzeń przed Navigate).
+                Some(&"".into()),
                 Some(&settings),
                 None,
                 None,
@@ -537,6 +664,24 @@ fn handle_command(msg: Message) {
         CMD_RESOURCE_RESPONSE => resources::handle_response(&mut r),
         CMD_RESOURCE_DATA => resources::handle_data(&mut r),
         CMD_RESOURCE_END => resources::handle_end(&mut r),
+        CMD_GO_BACK | CMD_GO_FORWARD | CMD_RELOAD | CMD_STOP => {
+            if let Some(b) = view_browser(msg.view) {
+                match msg.ty {
+                    CMD_GO_BACK => b.go_back(),
+                    CMD_GO_FORWARD => b.go_forward(),
+                    CMD_RELOAD => b.reload(),
+                    _ => b.stop_load(),
+                }
+            }
+        }
+        CMD_OPEN_DEVTOOLS => {
+            // Natywne okno DevTools (Chrome style) obok aplikacji.
+            if let Some(host) = view_browser(msg.view).and_then(|b| b.host()) {
+                let window_info = WindowInfo::default();
+                let settings = BrowserSettings::default();
+                host.show_dev_tools(Some(&window_info), None, Some(&settings), None);
+            }
+        }
         CMD_SHUTDOWN => shutdown_ipc(),
         other => eprintln!("helper: unknown command {other:#x}"),
     }

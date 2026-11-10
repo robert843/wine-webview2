@@ -241,6 +241,18 @@ fail:
     return NULL;
 }
 
+enum view_event
+{
+    EVENT_NAVIGATION_STARTING,
+    EVENT_CONTENT_LOADING,
+    EVENT_SOURCE_CHANGED,
+    EVENT_HISTORY_CHANGED,
+    EVENT_DOM_CONTENT_LOADED,
+    EVENT_NAVIGATION_COMPLETED,
+    EVENT_DOCUMENT_TITLE_CHANGED,
+    EVENT_COUNT
+};
+
 struct pending_script
 {
     struct list entry;
@@ -265,6 +277,10 @@ struct view
     struct stub_object *webview;            /* strong, created lazily */
     struct handler_list web_message_handlers;
     struct handler_list web_resource_handlers;
+    struct handler_list events[EVENT_COUNT];
+    WCHAR *source;
+    WCHAR *title;
+    BOOL can_go_back, can_go_forward;
     struct list pending_scripts;            /* struct pending_script */
     HCURSOR cursor;
     BOOL tracking_mouse;
@@ -286,11 +302,16 @@ static void view_addref(struct view *view)
 
 static void view_release(struct view *view)
 {
+    unsigned int i;
+
     if (InterlockedDecrement(&view->ref)) return;
 
     TRACE("destroying view %u\n", view->id);
     handler_list_clear(&view->web_message_handlers);
     handler_list_clear(&view->web_resource_handlers);
+    for (i = 0; i < EVENT_COUNT; i++) handler_list_clear(&view->events[i]);
+    free(view->source);
+    free(view->title);
     EnterCriticalSection(&views_cs);
     list_remove(&view->entry);
     LeaveCriticalSection(&views_cs);
@@ -455,6 +476,110 @@ static void handle_frame_ready(struct view *view, const struct wv2_frame_ready *
 static void handle_web_message(struct view *view, const BYTE *payload, UINT32 size);
 static void handle_script_result(struct view *view, const BYTE *payload, UINT32 size);
 
+/* All ICoreWebView2*EventHandler share this layout: Invoke(sender, args). */
+typedef struct
+{
+    const struct
+    {
+        HRESULT (STDMETHODCALLTYPE *QueryInterface)(void *, REFIID, void **);
+        ULONG (STDMETHODCALLTYPE *AddRef)(void *);
+        ULONG (STDMETHODCALLTYPE *Release)(void *);
+        HRESULT (STDMETHODCALLTYPE *Invoke)(void *, void *sender, void *args);
+    } *lpVtbl;
+} generic_event_handler;
+
+static void raise_event(struct view *view, enum view_event event, IUnknown *args)
+{
+    unsigned int i, count;
+    IUnknown **handlers;
+
+    if (!view->webview) return;
+    handlers = handler_list_snapshot(&view->events[event], &count);
+    for (i = 0; i < count; i++)
+    {
+        generic_event_handler *handler = (generic_event_handler *)handlers[i];
+        handler->lpVtbl->Invoke(handler, view->webview, args);
+        IUnknown_Release(handlers[i]);
+    }
+    free(handlers);
+}
+
+static void raise_navigation_event(struct view *view, enum view_event event, enum navigation_args_kind kind,
+                                   const struct navigation_info *info, const WCHAR *uri)
+{
+    IUnknown *args = navigation_create_args(kind, info, uri);
+
+    if (!args) return;
+    raise_event(view, event, args);
+    if (event == EVENT_NAVIGATION_STARTING && navigation_args_cancelled(args))
+    {
+        FIXME("view %u: navigation %s cancelled after it started, stopping the load\n", view->id,
+              wine_dbgstr_longlong(info->id));
+        helper_send(view, WV2_CMD_STOP, NULL, 0);
+    }
+    IUnknown_Release(args);
+}
+
+static void handle_navigation_event(struct view *view, UINT32 type, const BYTE *payload, UINT32 size)
+{
+    const struct wv2_navigation *nav = (const void *)payload;
+    const struct wv2_navigation_completed *done = (const void *)payload;
+    struct navigation_info info = {0};
+    WCHAR *str;
+
+    switch (type)
+    {
+    case WV2_EVT_NAVIGATION_STARTING:
+        if (size < sizeof(*nav)) return;
+        info.id = nav->id;
+        info.user_initiated = nav->a;
+        info.redirected = nav->b;
+        str = strdupAtoW_n((const char *)(nav + 1), size - sizeof(*nav));
+        TRACE("view %u: NavigationStarting %s %s\n", view->id, wine_dbgstr_longlong(info.id), debugstr_w(str));
+        raise_navigation_event(view, EVENT_NAVIGATION_STARTING, NAVIGATION_ARGS_STARTING, &info, str);
+        free(str);
+        break;
+    case WV2_EVT_SOURCE_CHANGED:
+        if (!(str = strdupAtoW_n((const char *)payload, size))) return;
+        info.new_document = !view->source || wcscmp(view->source, str);
+        free(view->source);
+        view->source = str;
+        TRACE("view %u: SourceChanged %s\n", view->id, debugstr_w(str));
+        raise_navigation_event(view, EVENT_SOURCE_CHANGED, NAVIGATION_ARGS_SOURCE_CHANGED, &info, NULL);
+        break;
+    case WV2_EVT_CONTENT_LOADING:
+        if (size < sizeof(*nav)) return;
+        info.id = nav->id;
+        info.error_page = nav->a;
+        raise_navigation_event(view, EVENT_CONTENT_LOADING, NAVIGATION_ARGS_CONTENT_LOADING, &info, NULL);
+        break;
+    case WV2_EVT_HISTORY_CHANGED:
+        if (size < sizeof(*nav)) return;
+        view->can_go_back = nav->a;
+        view->can_go_forward = nav->b;
+        raise_event(view, EVENT_HISTORY_CHANGED, NULL);
+        break;
+    case WV2_EVT_NAVIGATION_COMPLETED:
+        if (size < sizeof(*done)) return;
+        info.id = done->id;
+        info.success = done->success;
+        info.http_status = done->http_status;
+        info.web_error = done->success ? COREWEBVIEW2_WEB_ERROR_STATUS_UNKNOWN : navigation_web_error(done->net_error);
+        TRACE("view %u: NavigationCompleted %s success %d, status %d, net error %d\n", view->id,
+              wine_dbgstr_longlong(info.id), info.success, info.http_status, done->net_error);
+        if (done->success)
+            raise_navigation_event(view, EVENT_DOM_CONTENT_LOADED, NAVIGATION_ARGS_DOM_CONTENT_LOADED, &info, NULL);
+        raise_navigation_event(view, EVENT_NAVIGATION_COMPLETED, NAVIGATION_ARGS_COMPLETED, &info, NULL);
+        break;
+    case WV2_EVT_TITLE_CHANGED:
+        if (!(str = strdupAtoW_n((const char *)payload, size))) return;
+        free(view->title);
+        view->title = str;
+        raise_event(view, EVENT_DOCUMENT_TITLE_CHANGED, NULL);
+        break;
+    }
+}
+
 /* cef_cursor_type_t -> system cursor */
 static void set_view_cursor(struct view *view, UINT32 type)
 {
@@ -590,6 +715,14 @@ static void dispatch_event_cb(void *arg)
         break;
     case WV2_EVT_WEB_MESSAGE:
         handle_web_message(view, event->payload, payload);
+        break;
+    case WV2_EVT_NAVIGATION_STARTING:
+    case WV2_EVT_SOURCE_CHANGED:
+    case WV2_EVT_CONTENT_LOADING:
+    case WV2_EVT_HISTORY_CHANGED:
+    case WV2_EVT_NAVIGATION_COMPLETED:
+    case WV2_EVT_TITLE_CHANGED:
+        handle_navigation_event(view, event->header.type, event->payload, payload);
         break;
     case WV2_EVT_CURSOR:
         if (payload >= sizeof(struct wv2_flag))
@@ -846,11 +979,14 @@ static void complete_pending_scripts(struct view *view)
 
 static void close_view(struct view *view)
 {
+    unsigned int i;
+
     if (view->closed) return;
     view->closed = TRUE;
     complete_pending_scripts(view);
     handler_list_clear(&view->web_message_handlers);
     handler_list_clear(&view->web_resource_handlers);
+    for (i = 0; i < EVENT_COUNT; i++) handler_list_clear(&view->events[i]);
     helper_send(view, WV2_CMD_CLOSE_VIEW, NULL, 0);
     if (view->hwnd)
     {
@@ -1171,6 +1307,92 @@ static HRESULT STDMETHODCALLTYPE webview_RemoveWebResourceRequestedFilterWithReq
     return send_resource_filter(view_from_webview(iface), WV2_CMD_REMOVE_RESOURCE_FILTER, uri, context);
 }
 
+#define DEFINE_EVENT(name, event, handler_type) \
+static HRESULT STDMETHODCALLTYPE webview_add_##name(ICoreWebView2_29 *iface, handler_type *handler, \
+        EventRegistrationToken *token) \
+{ \
+    struct view *view = view_from_webview(iface); \
+    TRACE("iface %p, handler %p, token %p.\n", iface, handler, token); \
+    if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE); \
+    return handler_list_add(&view->events[event], (IUnknown *)handler, token); \
+} \
+static HRESULT STDMETHODCALLTYPE webview_remove_##name(ICoreWebView2_29 *iface, EventRegistrationToken token) \
+{ \
+    struct view *view = view_from_webview(iface); \
+    TRACE("iface %p, token %s.\n", iface, wine_dbgstr_longlong(token.value)); \
+    if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE); \
+    return handler_list_remove(&view->events[event], token); \
+}
+
+DEFINE_EVENT(NavigationStarting, EVENT_NAVIGATION_STARTING, ICoreWebView2NavigationStartingEventHandler)
+DEFINE_EVENT(ContentLoading, EVENT_CONTENT_LOADING, ICoreWebView2ContentLoadingEventHandler)
+DEFINE_EVENT(SourceChanged, EVENT_SOURCE_CHANGED, ICoreWebView2SourceChangedEventHandler)
+DEFINE_EVENT(HistoryChanged, EVENT_HISTORY_CHANGED, ICoreWebView2HistoryChangedEventHandler)
+DEFINE_EVENT(DOMContentLoaded, EVENT_DOM_CONTENT_LOADED, ICoreWebView2DOMContentLoadedEventHandler)
+DEFINE_EVENT(NavigationCompleted, EVENT_NAVIGATION_COMPLETED, ICoreWebView2NavigationCompletedEventHandler)
+DEFINE_EVENT(DocumentTitleChanged, EVENT_DOCUMENT_TITLE_CHANGED, ICoreWebView2DocumentTitleChangedEventHandler)
+
+static HRESULT return_string(const WCHAR *str, LPWSTR *out)
+{
+    if (!out) return E_POINTER;
+    return (*out = co_strdupW(str ? str : L"")) ? S_OK : E_OUTOFMEMORY;
+}
+
+static HRESULT STDMETHODCALLTYPE webview_get_Source(ICoreWebView2_29 *iface, LPWSTR *uri)
+{
+    struct view *view = view_from_webview(iface);
+
+    TRACE("iface %p, uri %p.\n", iface, uri);
+    if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
+    return return_string(view->source ? view->source : L"about:blank", uri);
+}
+
+static HRESULT STDMETHODCALLTYPE webview_get_DocumentTitle(ICoreWebView2_29 *iface, LPWSTR *title)
+{
+    struct view *view = view_from_webview(iface);
+
+    TRACE("iface %p, title %p.\n", iface, title);
+    if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
+    return return_string(view->title, title);
+}
+
+static HRESULT STDMETHODCALLTYPE webview_get_CanGoBack(ICoreWebView2_29 *iface, BOOL *value)
+{
+    struct view *view = view_from_webview(iface);
+
+    TRACE("iface %p, value %p.\n", iface, value);
+    if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
+    if (!value) return E_POINTER;
+    *value = view->can_go_back;
+    return S_OK;
+}
+
+static HRESULT STDMETHODCALLTYPE webview_get_CanGoForward(ICoreWebView2_29 *iface, BOOL *value)
+{
+    struct view *view = view_from_webview(iface);
+
+    TRACE("iface %p, value %p.\n", iface, value);
+    if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE);
+    if (!value) return E_POINTER;
+    *value = view->can_go_forward;
+    return S_OK;
+}
+
+#define DEFINE_SIMPLE_COMMAND(name, command) \
+static HRESULT STDMETHODCALLTYPE webview_##name(ICoreWebView2_29 *iface) \
+{ \
+    struct view *view = view_from_webview(iface); \
+    TRACE("iface %p.\n", iface); \
+    if (!view) return HRESULT_FROM_WIN32(ERROR_INVALID_STATE); \
+    return helper_send(view, command, NULL, 0); \
+}
+
+DEFINE_SIMPLE_COMMAND(GoBack, WV2_CMD_GO_BACK)
+DEFINE_SIMPLE_COMMAND(GoForward, WV2_CMD_GO_FORWARD)
+DEFINE_SIMPLE_COMMAND(Reload, WV2_CMD_RELOAD)
+DEFINE_SIMPLE_COMMAND(Stop, WV2_CMD_STOP)
+DEFINE_SIMPLE_COMMAND(OpenDevToolsWindow, WV2_CMD_OPEN_DEVTOOLS)
+
 /* ICoreWebView2WebMessageReceivedEventArgs */
 
 struct web_message
@@ -1393,6 +1615,29 @@ void controller_init(void)
     webview_vtbl.RemoveWebResourceRequestedFilter = webview_RemoveWebResourceRequestedFilter;
     webview_vtbl.AddWebResourceRequestedFilterWithRequestSourceKinds = webview_AddWebResourceRequestedFilterWithRequestSourceKinds;
     webview_vtbl.RemoveWebResourceRequestedFilterWithRequestSourceKinds = webview_RemoveWebResourceRequestedFilterWithRequestSourceKinds;
+    webview_vtbl.add_NavigationStarting = webview_add_NavigationStarting;
+    webview_vtbl.remove_NavigationStarting = webview_remove_NavigationStarting;
+    webview_vtbl.add_ContentLoading = webview_add_ContentLoading;
+    webview_vtbl.remove_ContentLoading = webview_remove_ContentLoading;
+    webview_vtbl.add_SourceChanged = webview_add_SourceChanged;
+    webview_vtbl.remove_SourceChanged = webview_remove_SourceChanged;
+    webview_vtbl.add_HistoryChanged = webview_add_HistoryChanged;
+    webview_vtbl.remove_HistoryChanged = webview_remove_HistoryChanged;
+    webview_vtbl.add_DOMContentLoaded = webview_add_DOMContentLoaded;
+    webview_vtbl.remove_DOMContentLoaded = webview_remove_DOMContentLoaded;
+    webview_vtbl.add_NavigationCompleted = webview_add_NavigationCompleted;
+    webview_vtbl.remove_NavigationCompleted = webview_remove_NavigationCompleted;
+    webview_vtbl.add_DocumentTitleChanged = webview_add_DocumentTitleChanged;
+    webview_vtbl.remove_DocumentTitleChanged = webview_remove_DocumentTitleChanged;
+    webview_vtbl.get_Source = webview_get_Source;
+    webview_vtbl.get_DocumentTitle = webview_get_DocumentTitle;
+    webview_vtbl.get_CanGoBack = webview_get_CanGoBack;
+    webview_vtbl.get_CanGoForward = webview_get_CanGoForward;
+    webview_vtbl.GoBack = webview_GoBack;
+    webview_vtbl.GoForward = webview_GoForward;
+    webview_vtbl.Reload = webview_Reload;
+    webview_vtbl.Stop = webview_Stop;
+    webview_vtbl.OpenDevToolsWindow = webview_OpenDevToolsWindow;
     webview_family = stub_family_ICoreWebView2_29;
     webview_family.vtbl = &webview_vtbl;
 

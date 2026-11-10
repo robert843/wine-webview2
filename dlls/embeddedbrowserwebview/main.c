@@ -155,6 +155,7 @@ static void init_overrides(void)
 
     controller_init();
     resource_init();
+    navigation_init();
 }
 
 /*

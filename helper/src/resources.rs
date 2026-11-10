@@ -23,6 +23,39 @@ static NEXT_ID: AtomicU64 = AtomicU64::new(1);
 
 const CONTEXT_ALL: u32 = 0;
 
+/// Bieżąca nawigacja ramki głównej per widok: (id, zakończona).
+static NAVIGATIONS: Mutex<Option<HashMap<u32, (u64, bool)>>> = Mutex::new(None);
+static NEXT_NAVIGATION: AtomicU64 = AtomicU64::new(1);
+
+pub fn send_event(ty: u32, view: u32, payload: &[u8]) {
+    if let Some(sender) = SENDER.get() {
+        if let Err(e) = sender.send(ty, view, payload, None) {
+            eprintln!("helper: send failed: {e}");
+        }
+    }
+}
+
+pub fn begin_navigation(view: u32) -> u64 {
+    let id = NEXT_NAVIGATION.fetch_add(1, Ordering::Relaxed);
+    NAVIGATIONS.lock().unwrap().get_or_insert_with(HashMap::new).insert(view, (id, false));
+    id
+}
+
+pub fn current_navigation(view: u32) -> u64 {
+    NAVIGATIONS.lock().unwrap().as_ref().and_then(|n| n.get(&view)).map(|n| n.0).unwrap_or(0)
+}
+
+/// Oznacza bieżącą nawigację jako zakończoną; None, jeśli już była zakończona.
+pub fn complete_navigation(view: u32) -> Option<u64> {
+    let mut n = NAVIGATIONS.lock().unwrap();
+    let entry = n.as_mut()?.get_mut(&view)?;
+    if entry.1 {
+        return None;
+    }
+    entry.1 = true;
+    Some(entry.0)
+}
+
 pub fn set_sender(chan: Channel) {
     let _ = SENDER.set(chan);
 }
@@ -234,6 +267,30 @@ wrap_request_handler! {
     }
 
     impl RequestHandler {
+        fn on_before_browse(
+            &self,
+            _browser: Option<&mut Browser>,
+            frame: Option<&mut Frame>,
+            request: Option<&mut Request>,
+            user_gesture: ::std::os::raw::c_int,
+            is_redirect: ::std::os::raw::c_int,
+        ) -> ::std::os::raw::c_int {
+            let (Some(frame), Some(request)) = (frame, request) else { return 0 };
+            if frame.is_main() == 0 {
+                return 0;
+            }
+            let id = begin_navigation(self.handler.view);
+            let url = CefString::from(&request.url()).to_string();
+            let payload = Writer::default()
+                .u64(id)
+                .u32((user_gesture != 0) as u32)
+                .u32((is_redirect != 0) as u32)
+                .bytes(url.as_bytes())
+                .0;
+            send_event(EVT_NAVIGATION_STARTING, self.handler.view, &payload);
+            0
+        }
+
         fn resource_request_handler(
             &self,
             _browser: Option<&mut Browser>,

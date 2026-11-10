@@ -39,7 +39,7 @@
 #ifndef __WEBVIEW2_PROTOCOL_H
 #define __WEBVIEW2_PROTOCOL_H
 
-#define WV2_PROTOCOL_VERSION 5
+#define WV2_PROTOCOL_VERSION 6
 #define WV2_FRAME_SLOTS      2
 /* SOCK_SEQPACKET messages must fit the socket send buffer (net.core.wmem_default, usually
  * 212992 bytes). Payloads larger than WV2_INLINE_MAX therefore travel in a sealed memfd attached
@@ -72,6 +72,11 @@ enum wv2_command
     WV2_CMD_RESOURCE_RESPONSE,      /* wv2_resource_response + UTF-8 reason + UTF-8 headers */
     WV2_CMD_RESOURCE_DATA,          /* wv2_resource_id + content bytes */
     WV2_CMD_RESOURCE_END,           /* wv2_resource_id */
+    WV2_CMD_GO_BACK,                /* (no payload) */
+    WV2_CMD_GO_FORWARD,             /* (no payload) */
+    WV2_CMD_RELOAD,                 /* (no payload) */
+    WV2_CMD_STOP,                   /* (no payload) */
+    WV2_CMD_OPEN_DEVTOOLS,          /* (no payload) */
 };
 
 /* helper -> DLL */
@@ -87,6 +92,12 @@ enum wv2_event
     WV2_EVT_WEB_MESSAGE,            /* wv2_web_message + UTF-8 source URL + UTF-8 JSON */
     WV2_EVT_CURSOR,                 /* wv2_flag: cef_cursor_type_t */
     WV2_EVT_RESOURCE_REQUEST,       /* wv2_resource_request + URL + method + headers + body */
+    WV2_EVT_NAVIGATION_STARTING,    /* wv2_navigation (a = user initiated, b = redirect) + UTF-8 URL */
+    WV2_EVT_SOURCE_CHANGED,         /* UTF-8 URL of the main frame */
+    WV2_EVT_CONTENT_LOADING,        /* wv2_navigation (a = error page) */
+    WV2_EVT_NAVIGATION_COMPLETED,   /* wv2_navigation_completed */
+    WV2_EVT_TITLE_CHANGED,          /* UTF-8 title */
+    WV2_EVT_HISTORY_CHANGED,        /* wv2_navigation (a = can go back, b = can go forward) */
 };
 
 enum wv2_mouse_kind
@@ -203,6 +214,23 @@ struct wv2_resource_response
     UINT32 reason_size;
     UINT32 headers_size;
     UINT64 content_size;
+};
+
+/* Main frame navigation, ids chosen by the helper. */
+struct wv2_navigation
+{
+    UINT64 id;
+    UINT32 a;
+    UINT32 b;
+};
+
+struct wv2_navigation_completed
+{
+    UINT64 id;
+    UINT32 success;
+    UINT32 http_status;
+    INT32  net_error;       /* Chromium net error code (cef_errorcode_t), 0 = none */
+    UINT32 reserved;
 };
 
 struct wv2_web_message
