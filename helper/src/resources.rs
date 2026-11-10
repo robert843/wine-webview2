@@ -2,12 +2,11 @@
 //!
 //! Przebieg (wątek IO CEF):
 //!   resource_request_handler — czy URL/kontekst pasuje do filtrów widoku → nasz handler
-//!   on_before_resource_load  — EVT_RESOURCE_REQUEST do DLL, żądanie wstrzymane (CONTINUE_ASYNC)
-//!   (DLL: CMD_RESOURCE_RESPONSE [+ DATA…] + END, obsługiwane na wątku UI) → callback.cont()
+//!   on_before_resource_load  — żądanie wstrzymane (CONTINUE_ASYNC), handlery aplikacji na wątku UI
+//!   (webresource.rs; po decyzji albo Complete() deferrala) → callback.cont()
 //!   resource_handler         — odpowiedź aplikacji albo None (żądanie idzie do sieci, jak w WebView2)
 
 use crate::ipc::Channel;
-use crate::protocol::*;
 use cef::rc::Rc as _;
 use cef::*;
 use std::collections::HashMap;
@@ -130,18 +129,17 @@ fn web_resource_context(request: &Request) -> u32 {
 }
 
 #[derive(Default)]
-struct AppResponse {
-    status: i32,
-    reason: String,
-    headers: Vec<(String, String)>,
-    content: Vec<u8>,
+pub struct AppResponse {
+    pub status: i32,
+    pub reason: String,
+    pub headers: Vec<(String, String)>,
+    pub content: Vec<u8>,
 }
 
 #[derive(Default)]
 struct RequestState {
     callback: Option<SendCallback>,
     response: Option<AppResponse>,     // gotowa odpowiedź aplikacji
-    building: Option<AppResponse>,     // w trakcie odbierania DATA
 }
 
 /// Callback CEF jest bezpieczny wątkowo (refcount atomowy, cont() z dowolnego wątku).
@@ -195,63 +193,16 @@ fn request_body(request: &Request) -> Vec<u8> {
     body
 }
 
-fn parse_headers(text: &str) -> Vec<(String, String)> {
-    text.split("\r\n")
-        .filter_map(|l| l.split_once(':'))
-        .map(|(n, v)| (n.trim().to_string(), v.trim().to_string()))
-        .filter(|(n, _)| !n.is_empty())
-        .collect()
-}
 
 // ---------- polecenia z DLL (wątek UI) ----------
 
-fn finish(id: u64, response: Option<AppResponse>) {
+pub fn finish(id: u64, response: Option<AppResponse>) {
     let Some(state) = PENDING.lock().unwrap().as_mut().and_then(|p| p.remove(&id)) else { return };
     let mut st = state.lock().unwrap();
     st.response = response;
     if let Some(cb) = st.callback.take() {
         cb.0.cont();
     }
-}
-
-pub fn handle_response(r: &mut Reader) {
-    let (Some(id), Some(handled), Some(status)) = (r.u64(), r.u32(), r.u32()) else { return };
-    let (reason_size, headers_size) = (r.u32().unwrap_or(0) as usize, r.u32().unwrap_or(0) as usize);
-    let content_size = r.u64().unwrap_or(0) as usize;
-    if handled == 0 {
-        finish(id, None);
-        return;
-    }
-    let reason = String::from_utf8_lossy(r.take(reason_size).unwrap_or_default()).into_owned();
-    let headers = parse_headers(&String::from_utf8_lossy(r.take(headers_size).unwrap_or_default()));
-    let resp = AppResponse { status: status as i32, reason, headers, content: Vec::with_capacity(content_size) };
-    if let Some(state) = PENDING.lock().unwrap().as_ref().and_then(|p| p.get(&id)) {
-        state.lock().unwrap().building = Some(resp);
-    }
-}
-
-pub fn handle_data(r: &mut Reader) {
-    let Some(id) = r.u64() else { return };
-    if let Some(state) = PENDING.lock().unwrap().as_ref().and_then(|p| p.get(&id)) {
-        if let Some(resp) = state.lock().unwrap().building.as_mut() {
-            resp.content.extend_from_slice(r.rest());
-        }
-    }
-}
-
-pub fn handle_end(r: &mut Reader) {
-    let Some(id) = r.u64() else { return };
-    let resp = PENDING
-        .lock()
-        .unwrap()
-        .as_ref()
-        .and_then(|p| p.get(&id))
-        .and_then(|s| s.lock().unwrap().building.take());
-    // Diagnostyka: zapis treści odpowiedzi aplikacji.
-    if let (Some(dir), Some(r)) = (std::env::var_os("WINE_WEBVIEW2_DUMP_DIR"), resp.as_ref()) {
-        let _ = std::fs::write(std::path::Path::new(&dir).join(format!("{id}.bin")), &r.content);
-    }
-    finish(id, resp);
 }
 
 // ---------- handlery CEF (wątek IO) ----------
@@ -281,14 +232,12 @@ wrap_request_handler! {
             }
             let id = begin_navigation(self.handler.view);
             let url = CefString::from(&request.url()).to_string();
-            let payload = Writer::default()
-                .u64(id)
-                .u32((user_gesture != 0) as u32)
-                .u32((is_redirect != 0) as u32)
-                .bytes(url.as_bytes())
-                .0;
-            send_event(EVT_NAVIGATION_STARTING, self.handler.view, &payload);
-            0
+            // Synchronicznie: decyzja aplikacji (Cancel) zapada, zanim żądanie wyjdzie.
+            let cancel = crate::webview::on_navigation_starting(self.handler.view, id, user_gesture != 0, is_redirect != 0, &url);
+            if cancel {
+                complete_navigation(self.handler.view);
+            }
+            cancel as i32
         }
 
         fn resource_request_handler(
@@ -333,7 +282,7 @@ wrap_resource_request_handler! {
             request: Option<&mut Request>,
             callback: Option<&mut Callback>,
         ) -> ReturnValue {
-            let (Some(request), Some(callback), Some(sender)) = (request, callback, SENDER.get()) else {
+            let (Some(request), Some(callback)) = (request, callback) else {
                 return ReturnValue::CONTINUE;
             };
             let id = NEXT_ID.fetch_add(1, Ordering::Relaxed);
@@ -344,25 +293,9 @@ wrap_resource_request_handler! {
             self.req.state.lock().unwrap().callback = Some(SendCallback(callback.clone()));
             PENDING.lock().unwrap().get_or_insert_with(HashMap::new).insert(id, self.req.state.clone());
 
-            let payload = Writer::default()
-                .u64(id)
-                .u32(web_resource_context(request))
-                .u32(url.len() as u32)
-                .u32(method.len() as u32)
-                .u32(headers.len() as u32)
-                .u32(body.len() as u32)
-                .u32(0)
-                .bytes(url.as_bytes())
-                .bytes(method.as_bytes())
-                .bytes(headers.as_bytes())
-                .bytes(&body)
-                .0;
-            if let Err(e) = sender.send(EVT_RESOURCE_REQUEST, self.req.view, &payload, None) {
-                eprintln!("helper: cannot send resource request: {e}");
-                PENDING.lock().unwrap().as_mut().map(|p| p.remove(&id));
-                self.req.state.lock().unwrap().callback = None;
-                return ReturnValue::CONTINUE;
-            }
+            // Handlery aplikacji wołamy na wątku UI (webresource.rs); żądanie czeka.
+            let (view, context) = (self.req.view, web_resource_context(request));
+            crate::post_ui(move || crate::webresource::handle_request(view, id, context, url, method, headers, body));
             ReturnValue::CONTINUE_ASYNC
         }
 

@@ -380,6 +380,8 @@ struct app_object
     IUnknown *obj;
     HWND home;                      /* async window of the thread that passed the object */
     LONG sent;                      /* references sent to the helper */
+    LONG pending_invokes;           /* invoke jobs queued but not run yet */
+    LONG deferred_release;          /* release counts waiting for those jobs */
     struct rb_entry id_entry;
     struct rb_entry ptr_entry;
 };
@@ -515,6 +517,8 @@ static HRESULT call(UINT64 object, UINT32 method, struct wv2_buffer *args, struc
     list_add_tail(&pending_calls, &pending.entry);
     LeaveCriticalSection(&proxy_cs);
 
+    TRACE("call %s: object %s, method %u, %Iu bytes\n", wine_dbgstr_longlong(header.call_id),
+          wine_dbgstr_longlong(object), method, msg.size - sizeof(header));
     if (FAILED(hr = webview2_send(0, WV2_CMD_CALL, msg.data, msg.size)))
     {
         EnterCriticalSection(&proxy_cs);
@@ -527,6 +531,7 @@ static HRESULT call(UINT64 object, UINT32 method, struct wv2_buffer *args, struc
          * cannot deadlock; INVOKEs queued meanwhile run once we return to the message loop. */
         WaitForSingleObject(pending.event, INFINITE);
         hr = pending.hr;
+        TRACE("call %s done: %#lx\n", wine_dbgstr_longlong(header.call_id), hr);
         ret->data = ret->owned = pending.reply;
         ret->size = pending.reply_size;
     }
@@ -588,10 +593,24 @@ void proxy_connection_lost(void)
 struct invoke_job
 {
     struct wv2_call call;
+    UINT64 app_id;
     IUnknown *obj;
     UINT32 size;
     BYTE args[];
 };
+
+/* Applies a release from the helper; returns the object to Release when it is gone (proxy_cs held). */
+static IUnknown *apply_app_release(struct app_object *app, LONG count)
+{
+    IUnknown *obj;
+
+    if ((app->sent -= count) > 0) return NULL;
+    rb_remove(&apps_by_id, &app->id_entry);
+    rb_remove(&apps_by_ptr, &app->ptr_entry);
+    obj = app->obj;
+    free(app);
+    return obj;
+}
 
 static void invoke_cb(void *arg)
 {
@@ -600,6 +619,9 @@ static void invoke_cb(void *arg)
     struct wv2_buffer out = {0};
     struct wv2_reply reply = {job->call.call_id};
     HRESULT hr;
+
+    struct rb_entry *entry;
+    IUnknown *released = NULL;
 
     wv2_put_bytes(&out, &reply, sizeof(reply));
     hr = proxy_invoke_app(job->obj, job->call.method, &args, &out);
@@ -610,7 +632,23 @@ static void invoke_cb(void *arg)
         webview2_send(0, WV2_CMD_INVOKE_REPLY, out.data, out.size);
     }
     free(out.data);
+
+    /* Like the real runtime, drop our reference right after the last invoke, in the same step:
+     * applications (e.g. webview/webview) keep handlers on the stack while waiting for them. */
+    EnterCriticalSection(&proxy_cs);
+    if ((entry = rb_get(&apps_by_id, &job->app_id)))
+    {
+        struct app_object *app = RB_ENTRY_VALUE(entry, struct app_object, id_entry);
+        if (!--app->pending_invokes && app->deferred_release)
+        {
+            LONG count = app->deferred_release;
+            app->deferred_release = 0;
+            released = apply_app_release(app, count);
+        }
+    }
+    LeaveCriticalSection(&proxy_cs);
     IUnknown_Release(job->obj);
+    if (released) IUnknown_Release(released);
     free(job);
 }
 
@@ -623,12 +661,15 @@ void proxy_handle_invoke(const BYTE *payload, UINT32 size)
     HWND home = NULL;
 
     if (size < sizeof(*call)) return;
+    TRACE("invoke %s: app %s, method %u, flags %#x\n", wine_dbgstr_longlong(call->call_id),
+          wine_dbgstr_longlong(call->object), call->method, call->flags);
     EnterCriticalSection(&proxy_cs);
     if ((entry = rb_get(&apps_by_id, &call->object)))
     {
         struct app_object *app = RB_ENTRY_VALUE(entry, struct app_object, id_entry);
         obj = app->obj;
         home = app->home;
+        app->pending_invokes++;
         IUnknown_AddRef(obj);
     }
     LeaveCriticalSection(&proxy_cs);
@@ -642,6 +683,7 @@ void proxy_handle_invoke(const BYTE *payload, UINT32 size)
         return;
     }
     job->call = *call;
+    job->app_id = call->object;
     job->obj = obj;
     job->size = size - sizeof(*call);
     memcpy(job->args, call + 1, job->size);
@@ -666,16 +708,7 @@ static void release_app_cb(void *arg)
 
     EnterCriticalSection(&proxy_cs);
     if ((entry = rb_get(&apps_by_id, &job->id)))
-    {
-        struct app_object *app = RB_ENTRY_VALUE(entry, struct app_object, id_entry);
-        if ((app->sent -= job->count) <= 0)
-        {
-            rb_remove(&apps_by_id, &app->id_entry);
-            rb_remove(&apps_by_ptr, &app->ptr_entry);
-            obj = app->obj;
-            free(app);
-        }
-    }
+        obj = apply_app_release(RB_ENTRY_VALUE(entry, struct app_object, id_entry), job->count);
     LeaveCriticalSection(&proxy_cs);
     if (obj) IUnknown_Release(obj);
     free(job);
@@ -688,11 +721,23 @@ void proxy_handle_release_app(const BYTE *payload, UINT32 size)
     struct rb_entry *entry;
     HWND home = NULL;
 
-    if (size < sizeof(*release) || !(job = malloc(sizeof(*job)))) return;
+    if (size < sizeof(*release)) return;
+    EnterCriticalSection(&proxy_cs);
+    if ((entry = rb_get(&apps_by_id, &release->id)))
+    {
+        struct app_object *app = RB_ENTRY_VALUE(entry, struct app_object, id_entry);
+        if (app->pending_invokes)
+        {
+            /* Applied right after the queued invoke(s) run, see invoke_cb(). */
+            app->deferred_release += release->count;
+            LeaveCriticalSection(&proxy_cs);
+            return;
+        }
+        home = app->home;
+    }
+    LeaveCriticalSection(&proxy_cs);
+    if (!(job = malloc(sizeof(*job)))) return;
     job->id = release->id;
     job->count = release->count;
-    EnterCriticalSection(&proxy_cs);
-    if ((entry = rb_get(&apps_by_id, &job->id))) home = RB_ENTRY_VALUE(entry, struct app_object, id_entry)->home;
-    LeaveCriticalSection(&proxy_cs);
     if (!webview2_queue_async_to(home, release_app_cb, job)) release_app_cb(job);
 }

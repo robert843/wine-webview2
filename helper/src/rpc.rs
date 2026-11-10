@@ -25,7 +25,8 @@ pub const E_INVALIDARG: i32 = 0x8007_0057_u32 as i32;
 pub const E_INVALID_STATE: i32 = 0x8007_139f_u32 as i32; // HRESULT_FROM_WIN32(ERROR_INVALID_STATE)
 
 pub const CALL_ASYNC: u32 = 0x1;
-pub const ROOT_CREATE_SETTINGS: u32 = 0x8000_0001;
+pub const ROOT_CREATE_ENVIRONMENT: u32 = 0x8000_0002;
+pub const ROOT_CREATE_CONTROLLER: u32 = 0x8000_0003;
 
 const OBJREF_NULL: u32 = 0;
 const OBJREF_RUNTIME: u32 = 1;
@@ -290,6 +291,9 @@ impl Ctx {
         });
         let mut msg = Writer::default().u64(call_id).u64(app.id).u32(method).u32(flags);
         msg.0.extend_from_slice(&args.0);
+        if std::env::var_os("WINE_WEBVIEW2_DEBUG_RPC").is_some() {
+            eprintln!("helper: invoke {call_id} app {} method {method} flags {flags}", app.id);
+        }
         crate::resources::send_event(EVT_INVOKE, 0, &msg.0);
         call_id
     }

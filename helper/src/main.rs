@@ -15,6 +15,8 @@ mod renderer;
 mod resources;
 mod rpc;
 mod settings;
+mod webresource;
+mod webview;
 
 use cef::args::Args;
 use cef::rc::Rc as _;
@@ -57,7 +59,7 @@ wrap_task! {
     }
 }
 
-fn post_ui(f: impl FnOnce() + Send + 'static) {
+pub fn post_ui(f: impl FnOnce() + Send + 'static) {
     let mut task = TaskBuilder::new(ClosureTask { f: Arc::new(Mutex::new(Some(Box::new(f)))) });
     post_task(ThreadId::UI, Some(&mut task));
 }
@@ -130,7 +132,7 @@ fn send_event(ty: u32, view: u32, payload: &[u8]) {
     });
 }
 
-fn base64(data: &[u8]) -> String {
+pub fn base64(data: &[u8]) -> String {
     const T: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     let mut out = String::with_capacity(data.len().div_ceil(3) * 4);
     for c in data.chunks(3) {
@@ -184,19 +186,13 @@ wrap_client! {
                 renderer::MSG_POST => {
                     let json = CefString::from(&args.string(0)).to_string();
                     let source = frame.map(|f| CefString::from(&f.url()).to_string()).unwrap_or_default();
-                    let payload = Writer::default()
-                        .u32(source.len() as u32)
-                        .u32(0)
-                        .bytes(source.as_bytes())
-                        .bytes(json.as_bytes())
-                        .0;
-                    send_event(EVT_WEB_MESSAGE, self.client.view, &payload);
+                    webview::on_web_message(self.client.view, &source, &json);
                     1
                 }
                 renderer::MSG_RESULT => {
                     let id = CefString::from(&args.string(0)).to_string().parse::<u64>().unwrap_or(0);
                     let json = CefString::from(&args.string(1)).to_string();
-                    send_event(EVT_SCRIPT_RESULT, self.client.view, &Writer::default().u64(id).bytes(json.as_bytes()).0);
+                    webview::on_script_result(self.client.view, id, &json);
                     1
                 }
                 _ => 0,
@@ -331,13 +327,13 @@ wrap_display_handler! {
             // (pushState, kotwice) — wtedy URL różni się od ostatnio zgłoszonego.
             let url = url.map(|u| u.to_string()).unwrap_or_default();
             if set_last_source(self.client.view, &url) {
-                send_event(EVT_SOURCE_CHANGED, self.client.view, url.as_bytes());
+                webview::on_source_changed(self.client.view, &url);
             }
         }
 
         fn on_title_change(&self, _browser: Option<&mut Browser>, title: Option<&CefString>) {
             let title = title.map(|t| t.to_string()).unwrap_or_default();
-            send_event(EVT_TITLE_CHANGED, self.client.view, title.as_bytes());
+            webview::on_title_changed(self.client.view, &title);
         }
 
         fn on_cursor_change(
@@ -390,8 +386,8 @@ wrap_load_handler! {
             let id = resources::current_navigation(view);
             let url = CefString::from(&frame.url()).to_string();
             set_last_source(view, &url);
-            send_event(EVT_SOURCE_CHANGED, view, url.as_bytes());
-            send_event(EVT_CONTENT_LOADING, view, &Writer::default().u64(id).u32(0).u32(0).0);
+            webview::on_source_changed(view, &url);
+            webview::on_content_loading(view, id);
             let _ = browser;
         }
 
@@ -438,8 +434,7 @@ fn write_doc_scripts(dir: &std::path::Path, browser_id: i32, scripts: &[String])
 }
 
 fn send_history(view: u32, back: bool, forward: bool) {
-    let id = resources::current_navigation(view);
-    send_event(EVT_HISTORY_CHANGED, view, &Writer::default().u64(id).u32(back as u32).u32(forward as u32).0);
+    webview::on_history_changed(view, back, forward);
 }
 
 /// Koniec ładowania ramki głównej: jeśli przeglądarka wciąż „ładuje”, czekamy na
@@ -477,14 +472,7 @@ fn set_last_source(view: u32, url: &str) -> bool {
 fn send_navigation_completed(view: u32, http_status: i32, net_error: i32) {
     let Some(id) = resources::complete_navigation(view) else { return };
     let success = net_error == 0 && (http_status == 0 || http_status < 400);
-    let payload = Writer::default()
-        .u64(id)
-        .u32(success as u32)
-        .u32(http_status.max(0) as u32)
-        .i32(net_error)
-        .u32(0)
-        .0;
-    send_event(EVT_NAVIGATION_COMPLETED, view, &payload);
+    webview::on_navigation_completed(view, id, success, http_status.max(0), net_error);
 }
 
 /// Flagi ustawień widoku (z obiektu Settings): zapis dla renderera, stan dla DevTools.
@@ -511,11 +499,23 @@ pub fn apply_user_agent(view: u32, ua: &str) {
 /// Korzeń (obiekt 0) ogólnych wywołań.
 fn root_call(ctx: &mut rpc::Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
     match method {
-        rpc::ROOT_CREATE_SETTINGS => {
-            let view = rd.u32().unwrap_or(0);
-            let obj = rpc::ObjRef::Runtime(std::rc::Rc::new(api_gen::ICoreWebView2Settings9Obj(settings::Settings::new(view))));
-            ctx.write_objref(wr, &obj);
+        rpc::ROOT_CREATE_ENVIRONMENT => {
+            let user_data_dir = rd.str_opt().unwrap_or_default();
+            let _options = ctx.read_objref(rd);
+            let env = webview::Environment { user_data_dir };
+            ctx.write_objref(wr, &rpc::ObjRef::Runtime(std::rc::Rc::new(api_gen::ICoreWebView2Environment15Obj(env))));
             rpc::S_OK
+        }
+        rpc::ROOT_CREATE_CONTROLLER => {
+            let _env = ctx.read_objref(rd);
+            let (view, width, height) = (rd.u32().unwrap_or(0), rd.u32().unwrap_or(1), rd.u32().unwrap_or(1));
+            match webview::create_controller(view, width, height) {
+                Ok(controller) => {
+                    ctx.write_objref(wr, &controller);
+                    rpc::S_OK
+                }
+                Err(e) => e,
+            }
         }
         _ => {
             eprintln!("helper: unknown root method {method:#x}");
@@ -539,59 +539,139 @@ fn shutdown_ipc() {
     quit_message_loop();
 }
 
-/// Obsługa jednego polecenia na wątku UI CEF.
+// ======================================================================
+// Operacje na przeglądarce dla obiektów serwera (webview.rs)
+// ======================================================================
+
+/// Tworzy przeglądarkę CEF widoku (wołane z ROOT_CREATE_CONTROLLER).
+pub fn create_browser(view: u32, width: u32, height: u32) -> bool {
+    with_state(|st| {
+        st.views.insert(view, View {
+            browser: None,
+            doc_scripts: Vec::new(),
+            settings: SETTINGS_DEFAULT,
+            last_source: String::new(),
+            pending_completion: None,
+            width: width.max(1),
+            height: height.max(1),
+            frames: None,
+            dropped: false,
+        })
+    });
+    let window_info = WindowInfo { windowless_rendering_enabled: true as _, ..Default::default() };
+    // Zawsze przezroczyste: w OSR przezroczystość ustala się tylko przy tworzeniu, więc
+    // DefaultBackgroundColor nakłada DLL pod klatką (kolor albo zawartość rodzica).
+    let settings = BrowserSettings { windowless_frame_rate: 60, background_color: 0, ..Default::default() };
+    let mut client = ViewClientBuilder::new(ViewClient { view });
+    let browser = browser_host_create_browser_sync(
+        Some(&window_info),
+        Some(&mut client),
+        // Pusty URL = bez początkowej nawigacji (WebView2 nie zgłasza zdarzeń przed Navigate).
+        Some(&"".into()),
+        Some(&settings),
+        None,
+        None,
+    );
+    let Some(browser) = browser else {
+        with_state(|st| st.views.remove(&view));
+        return false;
+    };
+    set_user_agent(&browser, "");
+    with_state(|st| {
+        if let Some(v) = st.views.get_mut(&view) {
+            v.browser = Some(browser);
+        }
+    });
+    true
+}
+
+pub fn close_browser(view: u32) {
+    if let Some(v) = with_state(|st| st.views.remove(&view)).flatten() {
+        if let Some(host) = v.browser.and_then(|b| b.host()) {
+            host.close_browser(1);
+        }
+    }
+}
+
+/// Nawigacje z API startują osobnym zadaniem UI: CEF woła OnBeforeBrowse wewnątrz load_url,
+/// a NavigationStarting (synchroniczne, z Cancel) nie może się wykonać w trakcie wywołania z DLL.
+/// Tak jest też w WebView2 — zdarzenie przychodzi po powrocie z Navigate().
+pub fn navigate(view: u32, url: &str) {
+    let url = url.to_string();
+    post_ui(move || {
+        if let Some(frame) = view_browser(view).and_then(|b| b.main_frame()) {
+            frame.load_url(Some(&url.as_str().into()));
+        }
+    });
+}
+
+pub enum BrowserCommand {
+    Back,
+    Forward,
+    Reload,
+    Stop,
+}
+
+pub fn browser_command(view: u32, cmd: BrowserCommand) {
+    post_ui(move || {
+        if let Some(b) = view_browser(view) {
+            match cmd {
+                BrowserCommand::Back => b.go_back(),
+                BrowserCommand::Forward => b.go_forward(),
+                BrowserCommand::Reload => b.reload(),
+                BrowserCommand::Stop => b.stop_load(),
+            }
+        }
+    });
+}
+
+/// Natywne okno DevTools (Chrome style) obok aplikacji; AreDevToolsEnabled = FALSE blokuje.
+pub fn open_devtools(view: u32) {
+    let allowed = with_state(|st| st.views.get(&view).map(|v| v.settings & SETTING_DEVTOOLS != 0)).flatten().unwrap_or(true);
+    if let Some(host) = view_browser(view).and_then(|b| b.host()).filter(|_| allowed) {
+        host.show_dev_tools(Some(&WindowInfo::default()), None, Some(&BrowserSettings::default()), None);
+    }
+}
+
+/// Wysyła skrypt do renderera; false, gdy nie ma ramki głównej.
+pub fn execute_script(view: u32, id: u64, script: &str) -> bool {
+    let frame = view_browser(view).and_then(|b| b.main_frame());
+    frame
+        .and_then(|frame| {
+            let mut m = process_message_create(Some(&renderer::MSG_EXEC.into()))?;
+            let list = m.argument_list()?;
+            list.set_string(0, Some(&id.to_string().as_str().into()));
+            list.set_string(1, Some(&script.into()));
+            frame.send_process_message(ProcessId::RENDERER, Some(&mut m));
+            Some(())
+        })
+        .is_some()
+}
+
+pub fn set_doc_scripts(view: u32, scripts: Vec<String>) {
+    let browser_id = with_state(|st| {
+        let v = st.views.get_mut(&view)?;
+        v.doc_scripts = scripts.clone();
+        Some(v.browser.as_ref()?.identifier())
+    })
+    .flatten();
+    if let (Some(browser_id), Some(dir)) = (browser_id, SCRIPTS_DIR.get()) {
+        write_doc_scripts(dir, browser_id, &scripts);
+    }
+}
+
+pub fn post_web_message(view: u32, json: &str) {
+    if let Some(frame) = view_browser(view).and_then(|b| b.main_frame()) {
+        let code = format!("window.chrome&&window.chrome.webview&&window.chrome.webview.__dispatch({json});");
+        frame.execute_java_script(Some(&code.as_str().into()), Some(&"".into()), 0);
+    }
+}
+
+/// Polecenia hosta (okno, klatki, wejście) — na wątku UI CEF.
 fn handle_command(msg: Message) {
     let mut r = Reader(&msg.payload);
     match msg.ty {
-        CMD_CREATE_VIEW => {
-            let (w, h) = (r.u32().unwrap_or(1), r.u32().unwrap_or(1));
-            let _scale = r.u32();
-            let _background = r.u32();
-            // Zawsze przezroczyste: w OSR przezroczystość ustala się tylko przy tworzeniu, więc
-            // DefaultBackgroundColor nakłada DLL pod klatką (kolor albo zawartość rodzica).
-            let background = 0u32;
-            with_state(|st| {
-                st.views.insert(msg.view, View { browser: None, doc_scripts: Vec::new(), settings: SETTINGS_DEFAULT, last_source: String::new(), pending_completion: None, width: w, height: h, frames: None, dropped: false })
-            });
-            let window_info = WindowInfo { windowless_rendering_enabled: true as _, ..Default::default() };
-            // WebView2: DefaultBackgroundColor = nieprzezroczysta biel (CEF OSR domyślnie: przezroczyste).
-            let settings = BrowserSettings {
-                windowless_frame_rate: 60,
-                background_color: background,
-                ..Default::default()
-            };
-            let mut client = ViewClientBuilder::new(ViewClient { view: msg.view });
-            let browser = browser_host_create_browser_sync(
-                Some(&window_info),
-                Some(&mut client),
-                // Pusty URL = bez początkowej nawigacji (WebView2 nie zgłasza zdarzeń przed Navigate).
-                Some(&"".into()),
-                Some(&settings),
-                None,
-                None,
-            );
-            if browser.is_none() {
-                send_event(EVT_ERROR, msg.view, b"cannot create browser");
-                return;
-            }
-            if let Some(b) = browser.as_ref() {
-                set_user_agent(b, "");
-            }
-            with_state(|st| {
-                if let Some(v) = st.views.get_mut(&msg.view) {
-                    v.browser = browser;
-                }
-            });
-            send_event(EVT_VIEW_CREATED, msg.view, &[]);
-        }
-        CMD_CLOSE_VIEW => {
-            resources::remove_view(msg.view);
-            if let Some(view) = with_state(|st| st.views.remove(&msg.view)).flatten() {
-                if let Some(host) = view.browser.and_then(|b| b.host()) {
-                    host.close_browser(1);
-                }
-            }
-        }
+        CMD_CLOSE_VIEW => webview::close_view(msg.view),
         CMD_RESIZE => {
             let (w, h) = (r.u32().unwrap_or(1), r.u32().unwrap_or(1));
             with_state(|st| {
@@ -608,53 +688,6 @@ fn handle_command(msg: Message) {
             let visible = r.u32().unwrap_or(1) != 0;
             if let Some(host) = view_browser(msg.view).and_then(|b| b.host()) {
                 host.was_hidden((!visible) as i32);
-            }
-        }
-        CMD_NAVIGATE | CMD_NAVIGATE_TO_STRING => {
-            let text = r.rest_str();
-            let url = if msg.ty == CMD_NAVIGATE {
-                text
-            } else {
-                format!("data:text/html;charset=utf-8;base64,{}", base64(text.as_bytes()))
-            };
-            if let Some(frame) = view_browser(msg.view).and_then(|b| b.main_frame()) {
-                frame.load_url(Some(&url.as_str().into()));
-            }
-        }
-        CMD_EXECUTE_SCRIPT => {
-            let id = r.u64().unwrap_or(0);
-            let script = r.rest_str();
-            let frame = view_browser(msg.view).and_then(|b| b.main_frame());
-            let sent = frame.and_then(|frame| {
-                let mut m = process_message_create(Some(&renderer::MSG_EXEC.into()))?;
-                let list = m.argument_list()?;
-                list.set_string(0, Some(&id.to_string().as_str().into()));
-                list.set_string(1, Some(&script.as_str().into()));
-                frame.send_process_message(ProcessId::RENDERER, Some(&mut m));
-                Some(())
-            });
-            if sent.is_none() {
-                send_event(EVT_SCRIPT_RESULT, msg.view, &Writer::default().u64(id).bytes(b"null").0);
-            }
-        }
-        CMD_ADD_DOCUMENT_SCRIPT => {
-            let _id = r.u64();
-            let script = r.rest_str();
-            let target = with_state(|st| {
-                let v = st.views.get_mut(&msg.view)?;
-                v.doc_scripts.push(script);
-                Some((v.browser.as_ref()?.identifier(), v.doc_scripts.clone()))
-            })
-            .flatten();
-            if let (Some((browser_id, scripts)), Some(dir)) = (target, SCRIPTS_DIR.get()) {
-                write_doc_scripts(dir, browser_id, &scripts);
-            }
-        }
-        CMD_POST_WEB_MESSAGE => {
-            let json = r.rest_str();
-            if let Some(frame) = view_browser(msg.view).and_then(|b| b.main_frame()) {
-                let code = format!("window.chrome&&window.chrome.webview&&window.chrome.webview.__dispatch({json});");
-                frame.execute_java_script(Some(&code.as_str().into()), Some(&"".into()), 0);
             }
         }
         CMD_FRAME_DONE => {
@@ -723,57 +756,6 @@ fn handle_command(msg: Message) {
             let focus = r.u32().unwrap_or(0);
             if let Some(host) = view_browser(msg.view).and_then(|b| b.host()) {
                 host.set_focus(focus as i32);
-            }
-        }
-        CMD_ADD_RESOURCE_FILTER | CMD_REMOVE_RESOURCE_FILTER => {
-            let context = r.u32().unwrap_or(0);
-            let _ = r.u32();
-            let pattern = r.rest_str();
-            if msg.ty == CMD_ADD_RESOURCE_FILTER {
-                resources::add_filter(msg.view, pattern, context);
-            } else {
-                resources::remove_filter(msg.view, &pattern, context);
-            }
-        }
-        CMD_RESOURCE_RESPONSE => resources::handle_response(&mut r),
-        CMD_RESOURCE_DATA => resources::handle_data(&mut r),
-        CMD_RESOURCE_END => resources::handle_end(&mut r),
-        CMD_GO_BACK | CMD_GO_FORWARD | CMD_RELOAD | CMD_STOP => {
-            if let Some(b) = view_browser(msg.view) {
-                match msg.ty {
-                    CMD_GO_BACK => b.go_back(),
-                    CMD_GO_FORWARD => b.go_forward(),
-                    CMD_RELOAD => b.reload(),
-                    _ => b.stop_load(),
-                }
-            }
-        }
-        CMD_OPEN_DEVTOOLS => {
-            // Natywne okno DevTools (Chrome style) obok aplikacji; AreDevToolsEnabled = FALSE blokuje.
-            let allowed = with_state(|st| st.views.get(&msg.view).map(|v| v.settings & SETTING_DEVTOOLS != 0)).flatten().unwrap_or(true);
-            if let Some(host) = view_browser(msg.view).and_then(|b| b.host()).filter(|_| allowed) {
-                let window_info = WindowInfo::default();
-                let settings = BrowserSettings::default();
-                host.show_dev_tools(Some(&window_info), None, Some(&settings), None);
-            }
-        }
-        CMD_SET_BACKGROUND => {
-            // Kolor nakłada DLL (przeglądarka renderuje z przezroczystym tłem); nic do zrobienia.
-            let _ = r.u32();
-        }
-        CMD_SET_USER_AGENT => {
-            let ua = r.rest_str();
-            if let Some(b) = view_browser(msg.view) {
-                set_user_agent(&b, &ua);
-            }
-        }
-        CMD_SET_SETTINGS => {
-            let flags = r.u32().unwrap_or(SETTINGS_DEFAULT);
-            if let (Some(b), Some(dir)) = (view_browser(msg.view), SCRIPTS_DIR.get()) {
-                let path = renderer::settings_file(&dir.to_string_lossy(), b.identifier());
-                if let Err(e) = std::fs::write(&path, flags.to_le_bytes()) {
-                    eprintln!("helper: cannot write {}: {e}", path.display());
-                }
             }
         }
         CMD_SHUTDOWN => shutdown_ipc(),

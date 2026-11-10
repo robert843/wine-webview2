@@ -44,45 +44,11 @@ HWND webview2_get_async_window(void);
 
 /* controller.c */
 void controller_init(void);
-void helper_ensure_started(void);
-HRESULT controller_create(HWND parent, ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler);
-/* Sends a protocol command for a view (any thread). */
+BOOL helper_ensure_started(void);
+HRESULT controller_create(IUnknown *environment, HWND parent,
+                          ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler);
+/* Sends a protocol message (any thread); view 0 for generic calls. */
 HRESULT webview2_send(UINT32 view, UINT32 type, const void *data, UINT32 size);
-
-/* resource.c */
-void resource_init(void);
-HRESULT resource_create_response(IStream *content, int status, LPCWSTR reason, LPCWSTR headers,
-                                 ICoreWebView2WebResourceResponse **response);
-void resource_dispatch_request(UINT32 view, ICoreWebView2 *webview, IUnknown **handlers, unsigned int count,
-                               const BYTE *payload, UINT32 size);
-
-/* navigation.c */
-struct navigation_info
-{
-    UINT64 id;
-    BOOL user_initiated;
-    BOOL redirected;
-    BOOL cancel;
-    BOOL error_page;
-    BOOL new_document;
-    BOOL success;
-    int http_status;
-    COREWEBVIEW2_WEB_ERROR_STATUS web_error;
-};
-
-enum navigation_args_kind
-{
-    NAVIGATION_ARGS_STARTING,
-    NAVIGATION_ARGS_CONTENT_LOADING,
-    NAVIGATION_ARGS_SOURCE_CHANGED,
-    NAVIGATION_ARGS_DOM_CONTENT_LOADED,
-    NAVIGATION_ARGS_COMPLETED,
-};
-
-void navigation_init(void);
-IUnknown *navigation_create_args(enum navigation_args_kind kind, const struct navigation_info *info, const WCHAR *uri);
-BOOL navigation_args_cancelled(IUnknown *args);
-COREWEBVIEW2_WEB_ERROR_STATUS navigation_web_error(int net_error);
 
 #endif /* RC_INVOKED */
 

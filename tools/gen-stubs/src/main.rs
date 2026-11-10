@@ -307,6 +307,8 @@ fn main() {
         let app_ifaces: Vec<&Iface> =
             ifaces.iter().filter(|i| implemented_by_app(&i.name) && i.name != "IUnknown").collect();
         proxy::generate(&ifaces, &out_flags, &leaves, &app_ifaces, outdir, rust_file);
+        // Architektura v8: obiekty żyją w pomocniku, zaślepki C (stubs.c) nie są już potrzebne.
+        return;
     }
 
     let mut c = String::new();

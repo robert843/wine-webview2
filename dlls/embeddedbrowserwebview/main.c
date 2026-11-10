@@ -28,8 +28,10 @@
 #include "objbase.h"
 #include "initguid.h"
 #include "webview2.h"
-#include "stubs.h"
 #include "webview2_private.h"
+#include "protocol.h"
+#include "proxy.h"
+#include "proxy_gen.h"
 
 #include "wine/debug.h"
 
@@ -103,18 +105,17 @@ BOOL webview2_queue_async(void (*func)(void *arg), void *arg)
 }
 
 /*
- * Hand-written overrides of generated stubs. During the skeleton phase only the calls needed
- * to get an application from environment creation to a usable ICoreWebView2 are implemented;
- * everything else is logged by the generated stubs.
+ * Environment: a proxy of the helper's environment object; only controller creation is done by
+ * the host here (it needs the parent window).
  */
 
 static ICoreWebView2Environment15Vtbl environment_vtbl;
-static struct stub_family environment_family;
+
 static HRESULT STDMETHODCALLTYPE environment_CreateCoreWebView2Controller(ICoreWebView2Environment15 *iface,
         HWND parent, ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler)
 {
     TRACE("iface %p, parent %p, handler %p.\n", iface, parent, handler);
-    return controller_create(parent, handler);
+    return controller_create((IUnknown *)iface, parent, handler);
 }
 
 static HRESULT STDMETHODCALLTYPE environment_CreateCoreWebView2ControllerWithOptions(ICoreWebView2Environment15 *iface,
@@ -122,40 +123,17 @@ static HRESULT STDMETHODCALLTYPE environment_CreateCoreWebView2ControllerWithOpt
         ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler)
 {
     FIXME("iface %p, parent %p, options %p, handler %p, options ignored.\n", iface, parent, options, handler);
-    return controller_create(parent, handler);
-}
-
-static HRESULT STDMETHODCALLTYPE environment_get_BrowserVersionString(ICoreWebView2Environment15 *iface,
-        LPWSTR *version)
-{
-    TRACE("iface %p, version %p.\n", iface, version);
-    if (!version) return E_POINTER;
-    if (!(*version = CoTaskMemAlloc(sizeof(WEBVIEW2_VERSION_WSTR)))) return E_OUTOFMEMORY;
-    memcpy(*version, WEBVIEW2_VERSION_WSTR, sizeof(WEBVIEW2_VERSION_WSTR));
-    return S_OK;
-}
-
-static HRESULT STDMETHODCALLTYPE environment_CreateWebResourceResponse(ICoreWebView2Environment15 *iface,
-        IStream *content, int status, LPCWSTR reason, LPCWSTR headers, ICoreWebView2WebResourceResponse **response)
-{
-    TRACE("iface %p, content %p, status %d, reason %s, headers %s, response %p.\n", iface, content, status,
-          debugstr_w(reason), debugstr_w(headers), response);
-    return resource_create_response(content, status, reason, headers, response);
+    return controller_create((IUnknown *)iface, parent, handler);
 }
 
 static void init_overrides(void)
 {
-    environment_vtbl = *(const ICoreWebView2Environment15Vtbl *)stub_family_ICoreWebView2Environment15.vtbl;
+    environment_vtbl = *(const ICoreWebView2Environment15Vtbl *)proxy_get_vtbl(FAMILY_ICoreWebView2Environment15);
     environment_vtbl.CreateCoreWebView2Controller = environment_CreateCoreWebView2Controller;
     environment_vtbl.CreateCoreWebView2ControllerWithOptions = environment_CreateCoreWebView2ControllerWithOptions;
-    environment_vtbl.get_BrowserVersionString = environment_get_BrowserVersionString;
-    environment_vtbl.CreateWebResourceResponse = environment_CreateWebResourceResponse;
-    environment_family = stub_family_ICoreWebView2Environment15;
-    environment_family.vtbl = &environment_vtbl;
+    proxy_set_host_vtbl(FAMILY_ICoreWebView2Environment15, &environment_vtbl);
 
     controller_init();
-    resource_init();
-    navigation_init();
 }
 
 /*
@@ -166,6 +144,7 @@ struct environment_created_ctx
 {
     ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler *handler;
     ICoreWebView2Environment *environment;
+    HRESULT hr;
 };
 
 static void environment_created_cb(void *arg)
@@ -173,11 +152,11 @@ static void environment_created_cb(void *arg)
     struct environment_created_ctx *ctx = arg;
     HRESULT hr;
 
-    TRACE("invoking environment completed handler %p, environment %p\n", ctx->handler, ctx->environment);
-    hr = ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler_Invoke(ctx->handler, S_OK, ctx->environment);
+    TRACE("invoking environment completed handler %p, hr %#lx, environment %p\n", ctx->handler, ctx->hr, ctx->environment);
+    hr = ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler_Invoke(ctx->handler, ctx->hr, ctx->environment);
     TRACE("handler returned %#lx\n", hr);
     ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler_Release(ctx->handler);
-    ICoreWebView2Environment_Release(ctx->environment);
+    if (ctx->environment) ICoreWebView2Environment_Release(ctx->environment);
     free(ctx);
 }
 
@@ -230,20 +209,29 @@ HRESULT WINAPI CreateWebViewEnvironmentWithOptionsInternal(BOOLEAN check_running
     GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_PIN,
                        (const WCHAR *)CreateWebViewEnvironmentWithOptionsInternal, &module);
 
-    helper_ensure_started();
-
     if (!(ctx = calloc(1, sizeof(*ctx)))) return E_OUTOFMEMORY;
-    if (!(ctx->environment = stub_create(&environment_family)))
+    if (!helper_ensure_started()) ctx->hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
+    else
     {
-        free(ctx);
-        return E_OUTOFMEMORY;
+        struct wv2_buffer args = {0};
+        struct wv2_reader ret;
+
+        wv2_put_str(&args, user_data_dir);
+        wv2_put_iface(&args, options);
+        if (SUCCEEDED(ctx->hr = proxy_call_root(WV2_ROOT_CREATE_ENVIRONMENT, &args, &ret)))
+        {
+            ctx->environment = (ICoreWebView2Environment *)wv2_get_iface(&ret);
+            if (!ctx->environment) ctx->hr = E_FAIL;
+        }
+        wv2_reader_free(&ret);
     }
+    if (FAILED(ctx->hr)) ERR("cannot create the environment: %#lx\n", ctx->hr);
     ctx->handler = handler;
     ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler_AddRef(handler);
     if (!webview2_queue_async(environment_created_cb, ctx))
     {
         ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler_Release(handler);
-        ICoreWebView2Environment_Release(ctx->environment);
+        if (ctx->environment) ICoreWebView2Environment_Release(ctx->environment);
         free(ctx);
         return E_FAIL;
     }

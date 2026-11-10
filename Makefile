@@ -23,7 +23,7 @@ CEF_DIR      = $(CEF_PATH)/$(CEF_VERSION)/cef_linux_x86_64
 
 B   = build
 DLL = dlls/embeddedbrowserwebview
-SRCS = main.c controller.c resource.c navigation.c proxy.c proxy_gen.c stubs.c
+SRCS = main.c controller.c proxy.c proxy_gen.c
 
 INCLUDES = -I$(B) -I$(DLL) -I$(WINE_BUILD)/include -I$(WINE_SRC)/include -I$(WINE_SRC)/include/msvcrt
 CFLAGS   = -O2 -g -Wall -fno-strict-aliasing -D_UCRT -D__WINESRC__ -D__WINE_PE_BUILD \

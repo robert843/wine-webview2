@@ -123,7 +123,8 @@ enum wv2_event
  * WV2_ROOT_* methods. Value encoding: integers LE, strings u32 length + UTF-8 (0xffffffff =
  * NULL), structures raw, streams u32 length + bytes, interfaces wv2_objref. */
 #define WV2_CALL_ASYNC              0x1     /* EVT_INVOKE: no reply expected */
-#define WV2_ROOT_CREATE_SETTINGS    0x80000001u /* (u32 view) -> settings */
+#define WV2_ROOT_CREATE_ENVIRONMENT 0x80000002u /* (str user_data_dir, objref options) -> environment */
+#define WV2_ROOT_CREATE_CONTROLLER  0x80000003u /* (objref env, u32 view, u32 width, u32 height) -> controller */
 
 enum wv2_objref_kind
 {
