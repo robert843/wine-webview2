@@ -39,6 +39,26 @@ static void probe() {
                 s->put_IsWebMessageEnabled(FALSE); s->Release();
                 step = 2; webview->NavigateToString(page);
             } else {
+                // DevTools: wywołanie metody + odbiornik zdarzenia konsoli
+                webview->CallDevToolsProtocolMethod(L"Browser.getVersion", L"{}",
+                    new Handler<ICoreWebView2CallDevToolsProtocolMethodCompletedHandler, HRESULT, LPCWSTR>([](HRESULT hr, LPCWSTR json) {
+                        log("cdp Browser.getVersion hr=%#lx result=%.160ls", hr, json ? json : L"(null)");
+                        return S_OK; }));
+                ICoreWebView2DevToolsProtocolEventReceiver *rcv = nullptr;
+                webview->GetDevToolsProtocolEventReceiver(L"Runtime.consoleAPICalled", &rcv);
+                if (rcv) {
+                    EventRegistrationToken t;
+                    rcv->add_DevToolsProtocolEventReceived(new Handler<ICoreWebView2DevToolsProtocolEventReceivedEventHandler, ICoreWebView2 *, ICoreWebView2DevToolsProtocolEventReceivedEventArgs *>(
+                        [](ICoreWebView2 *, ICoreWebView2DevToolsProtocolEventReceivedEventArgs *a) {
+                            LPWSTR p = nullptr; a->get_ParameterObjectAsJson(&p);
+                            log("cdp event Runtime.consoleAPICalled: %.120ls", p ? p : L"");
+                            CoTaskMemFree(p); return S_OK; }), &t);
+                    webview->CallDevToolsProtocolMethod(L"Runtime.enable", L"{}",
+                        new Handler<ICoreWebView2CallDevToolsProtocolMethodCompletedHandler, HRESULT, LPCWSTR>([](HRESULT hr, LPCWSTR) {
+                            log("cdp Runtime.enable hr=%#lx", hr);
+                            webview->ExecuteScript(L"console.log('cdp-test')", nullptr);
+                            return S_OK; }));
+                }
                 SetTimer(hwnd, 1, 5000, [](HWND h, UINT, UINT_PTR, DWORD) { PostMessageW(h, WM_CLOSE, 0, 0); });
             }
             return S_OK; }));

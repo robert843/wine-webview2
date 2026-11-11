@@ -128,6 +128,8 @@ pub struct WebView {
     can_go_forward: Cell<bool>,
     settings: RefCell<Option<ObjRef>>,
     pending_scripts: RefCell<HashMap<u64, AppRef>>,
+    pending_devtools: RefCell<HashMap<i32, AppRef>>,
+    devtools_receivers: RefCell<Vec<Rc<ICoreWebView2DevToolsProtocolEventReceiverObj<DevToolsReceiver>>>>,
     next_id: Cell<u64>,
     doc_scripts: RefCell<Vec<(u64, String)>>,
 }
@@ -143,6 +145,8 @@ impl WebView {
             can_go_forward: Cell::new(false),
             settings: RefCell::new(None),
             pending_scripts: RefCell::new(HashMap::new()),
+            pending_devtools: RefCell::new(HashMap::new()),
+            devtools_receivers: RefCell::new(Vec::new()),
             next_id: Cell::new(1),
             doc_scripts: RefCell::new(Vec::new()),
         }
@@ -317,6 +321,32 @@ impl ICoreWebView2_29Impl for WebView {
         Ok(())
     }
 
+    fn CallDevToolsProtocolMethod(&self, ctx: &mut Ctx, method: Option<String>, params: Option<String>,
+                                  handler: ObjRef) -> WvResult<()> {
+        let method = method.ok_or(E_INVALIDARG)?;
+        let id = crate::next_devtools_id();
+        if let Some(app) = handler.app() {
+            self.pending_devtools.borrow_mut().insert(id, app.clone());
+        }
+        if !crate::devtools_call(self.view, id, &method, params.as_deref().unwrap_or("{}")) {
+            if let Some(app) = self.pending_devtools.borrow_mut().remove(&id) {
+                ICoreWebView2CallDevToolsProtocolMethodCompletedHandlerApp(app).Invoke_async(ctx, crate::rpc::E_FAIL, Some("{}"));
+            }
+        }
+        Ok(())
+    }
+
+    fn GetDevToolsProtocolEventReceiver(&self, _ctx: &mut Ctx, event: Option<String>) -> WvResult<ObjRef> {
+        let event = event.ok_or(E_INVALIDARG)?;
+        let mut list = self.devtools_receivers.borrow_mut();
+        if let Some(r) = list.iter().find(|r| r.0.event == event) {
+            return Ok(ObjRef::Runtime(r.clone()));
+        }
+        let r = Rc::new(ICoreWebView2DevToolsProtocolEventReceiverObj(DevToolsReceiver { event, handlers: EventList::default() }));
+        list.push(r.clone());
+        Ok(ObjRef::Runtime(r))
+    }
+
     fn AddWebResourceRequestedFilter(&self, _ctx: &mut Ctx, uri: Option<String>, context: i32) -> WvResult<()> {
         crate::resources::add_filter(self.view, uri.ok_or(E_INVALIDARG)?, context as u32);
         Ok(())
@@ -343,6 +373,33 @@ impl ICoreWebView2_29Impl for WebView {
 // ===================================================================
 // Argumenty zdarzeń
 // ===================================================================
+
+pub struct DevToolsReceiver {
+    event: String,
+    handlers: EventList,
+}
+
+impl ICoreWebView2DevToolsProtocolEventReceiverImpl for DevToolsReceiver {
+    fn add_DevToolsProtocolEventReceived(&self, _ctx: &mut Ctx, handler: ObjRef) -> WvResult<EventRegistrationToken> {
+        self.handlers.add(handler)
+    }
+    fn remove_DevToolsProtocolEventReceived(&self, _ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        self.handlers.remove(token)
+    }
+}
+
+pub struct DevToolsEventArgs {
+    params: String,
+}
+
+impl ICoreWebView2DevToolsProtocolEventReceivedEventArgs2Impl for DevToolsEventArgs {
+    fn get_ParameterObjectAsJson(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.params.clone())
+    }
+    fn get_SessionId(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(String::new())
+    }
+}
 
 pub struct NavigationStartingArgs {
     uri: String,
@@ -599,6 +656,27 @@ pub fn on_script_result(view: u32, id: u64, json: &str) {
     with_webview(view, |wv, _| {
         if let Some(app) = wv.pending_scripts.borrow_mut().remove(&id) {
             ICoreWebView2ExecuteScriptCompletedHandlerApp(app).Invoke_async(&mut Ctx, S_OK, Some(json));
+        }
+    });
+}
+
+pub fn on_devtools_result(view: u32, id: i32, success: bool, json: &str) {
+    with_webview(view, |wv, _| {
+        if let Some(app) = wv.pending_devtools.borrow_mut().remove(&id) {
+            let hr = if success { S_OK } else { crate::rpc::E_FAIL };
+            ICoreWebView2CallDevToolsProtocolMethodCompletedHandlerApp(app).Invoke_async(&mut Ctx, hr, Some(json));
+        }
+    });
+}
+
+pub fn on_devtools_event(view: u32, method: &str, params: &str) {
+    with_webview(view, |wv, sender| {
+        let receivers: Vec<_> = wv.devtools_receivers.borrow().iter().filter(|r| r.0.event == method).cloned().collect();
+        for r in receivers {
+            let args = rc(ICoreWebView2DevToolsProtocolEventReceivedEventArgs2Obj(DevToolsEventArgs { params: params.into() }));
+            for h in r.0.handlers.snapshot() {
+                ICoreWebView2DevToolsProtocolEventReceivedEventHandlerApp(h).Invoke_async(&mut Ctx, &sender, &args);
+            }
         }
     });
 }

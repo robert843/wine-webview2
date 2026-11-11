@@ -76,14 +76,64 @@ const DEFAULT_BACKGROUND: u32 = 0xFFFF_FFFF;
 pub const DEFAULT_USER_AGENT: &str =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0";
 
-/// Wywołanie metody DevTools na przeglądarce (bez otwierania DevTools).
-fn devtools(browser: &Browser, method: &str, params: &str) {
-    static NEXT_ID: std::sync::atomic::AtomicI32 = std::sync::atomic::AtomicI32::new(1);
-    let id = NEXT_ID.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
-    let msg = format!("{{\"id\":{id},\"method\":\"{method}\",\"params\":{params}}}");
-    if let Some(host) = browser.host() {
-        if host.send_dev_tools_message(Some(msg.as_bytes())) == 0 {
-            eprintln!("helper: devtools {method} failed");
+/// Wywołanie metody DevTools na przeglądarce (bez otwierania DevTools); zwraca id wiadomości.
+static NEXT_DEVTOOLS_ID: std::sync::atomic::AtomicI32 = std::sync::atomic::AtomicI32::new(1);
+
+pub fn next_devtools_id() -> i32 {
+    NEXT_DEVTOOLS_ID.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+}
+
+fn devtools(browser: &Browser, method: &str, params: &str) -> Option<i32> {
+    devtools_with_id(browser, next_devtools_id(), method, params)
+}
+
+/// CEF potrafi odpowiedzieć synchronicznie (wewnątrz send_dev_tools_message) — oczekujący musi
+/// być zarejestrowany przed wysłaniem, stąd id podawane z zewnątrz.
+fn devtools_with_id(browser: &Browser, id: i32, method: &str, params: &str) -> Option<i32> {
+    let msg = format!("{{\"id\":{id},\"method\":{},\"params\":{params}}}", renderer::json_string(method));
+    let host = browser.host()?;
+    if host.send_dev_tools_message(Some(msg.as_bytes())) == 0 {
+        eprintln!("helper: devtools {method} failed");
+        return None;
+    }
+    Some(id)
+}
+
+/// CallDevToolsProtocolMethod z id nadanym wcześniej (wynik -> webview::on_devtools_result).
+pub fn devtools_call(view: u32, id: i32, method: &str, params: &str) -> bool {
+    let params = if params.trim().is_empty() { "{}" } else { params };
+    view_browser(view).and_then(|b| devtools_with_id(&b, id, method, params)).is_some()
+}
+
+#[derive(Clone)]
+struct DevToolsObserver {
+    view: u32,
+}
+
+wrap_dev_tools_message_observer! {
+    struct DevToolsObserverBuilder {
+        observer: DevToolsObserver,
+    }
+
+    impl DevToolsMessageObserver {
+        fn on_dev_tools_method_result(
+            &self,
+            _browser: Option<&mut Browser>,
+            message_id: ::std::os::raw::c_int,
+            success: ::std::os::raw::c_int,
+            result: Option<&[u8]>,
+        ) {
+            let json = String::from_utf8_lossy(result.unwrap_or(b"{}")).into_owned();
+            if std::env::var_os("WINE_WEBVIEW2_DEBUG_RPC").is_some() {
+                eprintln!("helper: devtools result {message_id} success {success}: {json:.120}");
+            }
+            webview::on_devtools_result(self.observer.view, message_id, success != 0, &json);
+        }
+
+        fn on_dev_tools_event(&self, _browser: Option<&mut Browser>, method: Option<&CefString>, params: Option<&[u8]>) {
+            let method = method.map(|m| m.to_string()).unwrap_or_default();
+            let json = String::from_utf8_lossy(params.unwrap_or(b"{}")).into_owned();
+            webview::on_devtools_event(self.observer.view, &method, &json);
         }
     }
 }
@@ -98,6 +148,7 @@ fn set_user_agent(browser: &Browser, ua: &str) {
 
 struct View {
     browser: Option<Browser>,
+    devtools_observer: Option<Registration>,
     doc_scripts: Vec<String>,
     settings: u32,
     last_source: String,
@@ -548,6 +599,7 @@ pub fn create_browser(view: u32, width: u32, height: u32) -> bool {
     with_state(|st| {
         st.views.insert(view, View {
             browser: None,
+            devtools_observer: None,
             doc_scripts: Vec::new(),
             settings: SETTINGS_DEFAULT,
             last_source: String::new(),
@@ -577,9 +629,14 @@ pub fn create_browser(view: u32, width: u32, height: u32) -> bool {
         return false;
     };
     set_user_agent(&browser, "");
+    let registration = browser.host().and_then(|h| {
+        let mut observer = DevToolsObserverBuilder::new(DevToolsObserver { view });
+        h.add_dev_tools_message_observer(Some(&mut observer))
+    });
     with_state(|st| {
         if let Some(v) = st.views.get_mut(&view) {
             v.browser = Some(browser);
+            v.devtools_observer = registration;
         }
     });
     true

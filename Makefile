@@ -55,7 +55,7 @@ runtime:
 	@mkdir -p $(B)/runtime
 	for f in $(CEF_DIR)/*.so $(CEF_DIR)/*.so.1 $(CEF_DIR)/*.pak $(CEF_DIR)/*.dat $(CEF_DIR)/*.bin \
 	         $(CEF_DIR)/*.json $(CEF_DIR)/locales; do ln -sfn $$f $(B)/runtime/; done
-	cp helper/target/release/wine-webview2-helper $(B)/runtime/
+	cp helper/target/release/wine-webview2-helper $(B)/runtime/.wine-webview2-helper.new && mv -f $(B)/runtime/.wine-webview2-helper.new $(B)/runtime/wine-webview2-helper
 
 $(B)/webview2.h: include/webview2.idl
 	@mkdir -p $(B)
