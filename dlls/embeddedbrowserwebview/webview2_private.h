@@ -47,6 +47,14 @@ void controller_init(void);
 BOOL helper_ensure_started(const WCHAR *user_data_dir);
 HRESULT controller_create(IUnknown *environment, HWND parent, IUnknown *options,
                           ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler);
+/* hostobject.c */
+struct host_objects;
+struct wv2_buffer;
+HRESULT host_objects_add(struct host_objects **objects, const WCHAR *name, VARIANT *object);
+HRESULT host_objects_remove(struct host_objects *objects, const WCHAR *name);
+void host_objects_free(struct host_objects *objects);
+void host_objects_call(struct host_objects *objects, const void *payload, UINT32 size, struct wv2_buffer *reply);
+
 /* Sends a protocol message (any thread); view 0 for generic calls. */
 HRESULT webview2_send(UINT32 view, UINT32 type, const void *data, UINT32 size);
 

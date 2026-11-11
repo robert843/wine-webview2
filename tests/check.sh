@@ -100,6 +100,11 @@ check filetest "$A/filetest/filetest.exe" 90 "0" \
     'still alive' \
     '^done'
 
+check hosttest "$A/hosttest/hosttest.exe" 90 "0" \
+    'AddHostObjectToScript hr=0' \
+    'result add=5;name=calc;renamed=renamed;chain=11;childname=child;echo=\[1,"two",true,null,2.5\];nameof=child;fail=boom;missing=Element not found: Missing;nothere=Element not found: nothere' \
+    '^done'
+
 # Browser data persists in the user data folder: the second run sees the first one's data.
 check persisttest-1 "$A/persisttest/persisttest.exe" 90 "0" \
     'default: script -> hr=0 "n=1 cookie=false"' \

@@ -38,13 +38,14 @@ Downloads (`DownloadStarting`, `DownloadOperation` with progress, pause, resume 
 Browser data (cookies, local storage, cache) is kept in the application's user data folder
 (`<folder>\EBWebView`), like with Microsoft's runtime; named profiles and InPrivate mode
 (`ControllerOptions`). `AcceleratorKeyPressed`, `SetBoundsAndZoomFactor`, status bar text, favicon,
-`IsMuted`.
+`IsMuted`. `AddHostObjectToScript`: the application's `IDispatch` objects in
+`chrome.webview.hostObjects` (asynchronous proxies; `hostObjects.sync` not yet).
 
 Copy and paste works in both directions with Windows and Linux applications (CEF and Wine share
 the system clipboard).
 
 Not yet: IME, drag and drop, DPI scaling, `ContextMenuRequested` (custom menus),
-`AddHostObjectToScript`, composition mode (`CompositionController`).
+synchronous host object proxies, composition mode (`CompositionController`).
 
 ## Requirements
 

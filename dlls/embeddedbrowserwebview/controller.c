@@ -104,6 +104,9 @@ struct view
     UINT32 accel_count;
     INT64 next_token;
     BOOL skip_char;         /* the app handled the key down: drop its WM_CHAR too */
+
+    IUnknown *webview;      /* ICoreWebView2 proxy kept for the view's host data */
+    struct host_objects *host_objects;
 };
 
 static void view_addref(struct view *view)
@@ -116,6 +119,7 @@ static void view_release(struct view *view)
     if (InterlockedDecrement(&view->ref)) return;
 
     TRACE("destroying view %u\n", view->id);
+    host_objects_free(view->host_objects);
     EnterCriticalSection(&views_cs);
     list_remove(&view->entry);
     LeaveCriticalSection(&views_cs);
@@ -764,6 +768,15 @@ static void show_permission_prompt(struct view *view, const void *payload, UINT3
     helper_send(view, WV2_CMD_PERMISSION_REPLY, &reply, sizeof(reply));
 }
 
+static void host_object_call(struct view *view, const void *payload, UINT32 size)
+{
+    struct wv2_buffer reply = {0};
+
+    host_objects_call(view->host_objects, payload, size, &reply);
+    helper_send(view, WV2_CMD_HOST_OBJECT_REPLY, reply.data, reply.size);
+    free(reply.data);
+}
+
 /* <input type=file>: the common file dialogs of the application's Windows, Windows paths back. */
 static void show_file_dialog(struct view *view, const void *payload, UINT32 size)
 {
@@ -960,6 +973,9 @@ static void dispatch_event_cb(void *arg)
         break;
     case WV2_EVT_SCRIPT_DIALOG:
         show_script_dialog(view, event->payload, payload);
+        break;
+    case WV2_EVT_HOST_OBJECT_CALL:
+        host_object_call(view, event->payload, payload);
         break;
     case WV2_EVT_FILE_DIALOG:
         show_file_dialog(view, event->payload, payload);
@@ -1328,6 +1344,24 @@ static HRESULT STDMETHODCALLTYPE webview_SetVirtualHostNameToFolderMapping(ICore
     return hr;
 }
 
+static HRESULT STDMETHODCALLTYPE webview_AddHostObjectToScript(ICoreWebView2_29 *iface, LPCWSTR name, VARIANT *object)
+{
+    struct view *view = proxy_get_host_data((IUnknown *)iface);
+
+    TRACE("iface %p, name %s, object %p.\n", iface, debugstr_w(name), object);
+    if (!view) return E_UNEXPECTED;
+    return host_objects_add(&view->host_objects, name, object);
+}
+
+static HRESULT STDMETHODCALLTYPE webview_RemoveHostObjectFromScript(ICoreWebView2_29 *iface, LPCWSTR name)
+{
+    struct view *view = proxy_get_host_data((IUnknown *)iface);
+
+    TRACE("iface %p, name %s.\n", iface, debugstr_w(name));
+    if (!view) return E_UNEXPECTED;
+    return host_objects_remove(view->host_objects, name);
+}
+
 static HRESULT STDMETHODCALLTYPE webview_get_BrowserProcessId(ICoreWebView2_29 *iface, UINT32 *pid)
 {
     TRACE("iface %p, pid %p.\n", iface, pid);
@@ -1400,6 +1434,12 @@ static void close_view(struct view *view)
     {
         DestroyWindow(view->hwnd);
         view->hwnd = NULL;
+    }
+    if (view->webview)
+    {
+        IUnknown *webview = view->webview;
+        view->webview = NULL;
+        IUnknown_Release(webview);
     }
     view->controller = NULL;
     if (controller) IUnknown_Release(controller);   /* may destroy the proxy and release the view */
@@ -1648,6 +1688,12 @@ HRESULT controller_create(IUnknown *environment, HWND parent, IUnknown *options,
     if (view->controller)
     {
         proxy_set_host_data(view->controller, view, controller_host_destroy);
+        if (SUCCEEDED(ICoreWebView2Controller_get_CoreWebView2((ICoreWebView2Controller *)view->controller,
+                                                              (ICoreWebView2 **)&view->webview)))
+        {
+            view_addref(view);
+            proxy_set_host_data(view->webview, view, controller_host_destroy);
+        }
         ctx->controller = view->controller;
         IUnknown_AddRef(ctx->controller);
     }
@@ -1694,6 +1740,8 @@ void controller_init(void)
 
     webview_vtbl = *(const ICoreWebView2_29Vtbl *)proxy_get_vtbl(FAMILY_ICoreWebView2_29);
     webview_vtbl.get_BrowserProcessId = webview_get_BrowserProcessId;
+    webview_vtbl.AddHostObjectToScript = webview_AddHostObjectToScript;
+    webview_vtbl.RemoveHostObjectFromScript = webview_RemoveHostObjectFromScript;
     proxy_SetVirtualHostNameToFolderMapping = webview_vtbl.SetVirtualHostNameToFolderMapping;
     webview_vtbl.SetVirtualHostNameToFolderMapping = webview_SetVirtualHostNameToFolderMapping;
     proxy_set_host_vtbl(FAMILY_ICoreWebView2_29, &webview_vtbl);

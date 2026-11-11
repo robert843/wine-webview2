@@ -2,7 +2,7 @@
 
 #![allow(dead_code)]
 
-pub const PROTOCOL_VERSION: u32 = 9;
+pub const PROTOCOL_VERSION: u32 = 10;
 pub const FRAME_SLOTS: u32 = 2;
 /// Payloads larger than this go in a sealed memfd (protocol.h: WV2_INLINE_MAX).
 pub const INLINE_MAX: usize = 64 * 1024;
@@ -46,6 +46,7 @@ pub const CMD_SCRIPT_DIALOG_REPLY: u32 = 32;
 pub const CMD_CONTEXT_MENU_REPLY: u32 = 33;
 pub const CMD_PERMISSION_REPLY: u32 = 34;
 pub const CMD_FILE_DIALOG_REPLY: u32 = 35;
+pub const CMD_HOST_OBJECT_REPLY: u32 = 36;
 
 pub const SETTING_SCRIPT: u32 = 0x0001;
 pub const SETTING_WEB_MESSAGE: u32 = 0x0002;
@@ -80,6 +81,7 @@ pub const EVT_SCRIPT_DIALOG: u32 = 0x1014;
 pub const EVT_CONTEXT_MENU: u32 = 0x1015;
 pub const EVT_PERMISSION_PROMPT: u32 = 0x1016;
 pub const EVT_FILE_DIALOG: u32 = 0x1017;
+pub const EVT_HOST_OBJECT_CALL: u32 = 0x1018;
 
 pub const MOUSE_MOVE: u32 = 0;
 pub const MOUSE_DOWN: u32 = 1;
@@ -107,6 +109,14 @@ impl Writer {
         self.0.extend_from_slice(b);
         self
     }
+    pub fn f64(mut self, v: f64) -> Self {
+        self.0.extend_from_slice(&v.to_le_bytes());
+        self
+    }
+    /// u32 length + UTF-8 (the DLL's wv2_get_str).
+    pub fn str(self, s: &str) -> Self {
+        self.u32(s.len() as u32).bytes(s.as_bytes())
+    }
 }
 
 pub struct Reader<'a>(pub &'a [u8]);
@@ -130,6 +140,17 @@ impl<'a> Reader<'a> {
         self.0 = b;
         Some(u16::from_le_bytes(a.try_into().ok()?))
     }
+    pub fn f64(&mut self) -> Option<f64> {
+        self.u64().map(f64::from_bits)
+    }
+    /// u32 length + UTF-8 (the DLL's wv2_put_str); 0xffffffff = NULL string, read as empty.
+    pub fn str(&mut self) -> Option<String> {
+        let len = self.u32()?;
+        if len == u32::MAX {
+            return Some(String::new());
+        }
+        self.take(len as usize).map(|b| String::from_utf8_lossy(b).into_owned())
+    }
     pub fn take(&mut self, n: usize) -> Option<&'a [u8]> {
         let (a, b) = self.0.split_at_checked(n)?;
         self.0 = b;
@@ -148,3 +169,18 @@ pub struct Message {
     pub view: u32,
     pub payload: Vec<u8>,
 }
+
+/// Values of host object calls (protocol.h, WV2_VALUE_*).
+pub const VALUE_UNDEFINED: u32 = 0;
+pub const VALUE_NULL: u32 = 1;
+pub const VALUE_BOOL: u32 = 2;
+pub const VALUE_INT: u32 = 3;
+pub const VALUE_DOUBLE: u32 = 4;
+pub const VALUE_STRING: u32 = 5;
+pub const VALUE_OBJECT: u32 = 6;
+pub const VALUE_ARRAY: u32 = 7;
+/// Host object operations (WV2_HOST_*).
+pub const HOST_GET: u32 = 0;
+pub const HOST_SET: u32 = 1;
+pub const HOST_CALL: u32 = 2;
+pub const HOST_RELEASE: u32 = 3;

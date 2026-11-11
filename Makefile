@@ -46,12 +46,12 @@ CEF_DIR      = $(CEF_PATH)/$(CEF_VERSION)/cef_linux_x86_64
 
 B   = build
 DLL = dlls/embeddedbrowserwebview
-SRCS = main.c controller.c proxy.c proxy_gen.c
+SRCS = main.c controller.c hostobject.c proxy.c proxy_gen.c
 
 INCLUDES = -I$(B) -I$(DLL) $(WINE_INCS) $(WINE_MSVCRT)
 CFLAGS   = -O2 -g -Wall -fno-strict-aliasing -D_UCRT -D__WINESRC__ -D__WINE_PE_BUILD \
            -Wno-unused-function
-LIBS     = -lole32 -lshell32 -lcomdlg32 -luser32 -lgdi32 -lshlwapi -luxtheme -lkernel32 -luuid -lucrtbase -lntdll
+LIBS     = -lole32 -loleaut32 -lshell32 -lcomdlg32 -luser32 -lgdi32 -lshlwapi -luxtheme -lkernel32 -luuid -lucrtbase -lntdll
 
 UNIX_CFLAGS = -O2 -g -Wall -fPIC -fno-strict-aliasing -fvisibility=hidden -DWINE_UNIX_LIB -D__WINESRC__ \
               -I$(DLL) $(WINE_INCS)

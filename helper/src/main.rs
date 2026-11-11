@@ -379,6 +379,10 @@ wrap_client! {
                     webview::on_window_close(self.client.view());
                     1
                 }
+                renderer::MSG_HOST => {
+                    host_object_call(self.client.view(), frame, &args);
+                    1
+                }
                 _ => 0,
             }
         }
@@ -702,6 +706,150 @@ fn file_dialog_reply(id: u64, windows_paths: Vec<String>) {
         }
     }
     callback.cont(Some(&mut list));
+}
+
+// ======================================================================
+// Host objects (AddHostObjectToScript): renderer <-> DLL
+// ======================================================================
+
+thread_local! {
+    /// Calls waiting for CMD_HOST_OBJECT_REPLY: call id -> (view, renderer request id).
+    static HOST_CALLS: RefCell<HashMap<u64, (u32, i32)>> = RefCell::new(HashMap::new());
+    static NEXT_HOST_CALL: std::cell::Cell<u64> = const { std::cell::Cell::new(1) };
+}
+
+/// One CEF list entry -> WV2_VALUE_* (object references and undefined are {"o": id} / {"u": 1}).
+fn host_value_to_wire(w: Writer, list: &ListValue, i: usize, depth: u32) -> Writer {
+    let ty = list.get_type(i);
+    if ty == ValueType::NULL {
+        w.u32(VALUE_NULL)
+    } else if ty == ValueType::BOOL {
+        w.u32(VALUE_BOOL).u32((list.bool(i) != 0) as u32)
+    } else if ty == ValueType::INT {
+        w.u32(VALUE_INT).i32(list.int(i))
+    } else if ty == ValueType::DOUBLE {
+        w.u32(VALUE_DOUBLE).f64(list.double(i))
+    } else if ty == ValueType::STRING {
+        w.u32(VALUE_STRING).str(&CefString::from(&list.string(i)).to_string())
+    } else if ty == ValueType::LIST && depth < 32 {
+        let Some(items) = list.list(i) else { return w.u32(VALUE_UNDEFINED) };
+        let mut w = w.u32(VALUE_ARRAY).u32(items.size() as u32);
+        for j in 0..items.size() {
+            w = host_value_to_wire(w, &items, j, depth + 1);
+        }
+        w
+    } else if ty == ValueType::DICTIONARY {
+        match list.dictionary(i) {
+            Some(d) if d.has_key(Some(&"o".into())) != 0 => w.u32(VALUE_OBJECT).u32(d.int(Some(&"o".into())) as u32),
+            _ => w.u32(VALUE_UNDEFINED),
+        }
+    } else {
+        w.u32(VALUE_UNDEFINED)
+    }
+}
+
+/// WV2_VALUE_* -> entry `i` of a CEF list.
+fn host_value_from_wire(rd: &mut Reader, list: &ListValue, i: usize, depth: u32) {
+    let marker = |key: &str, value: i32| {
+        if let Some(d) = dictionary_value_create() {
+            d.set_int(Some(&key.into()), value);
+            list.set_dictionary(i, Some(&mut d.clone()));
+        }
+    };
+    match rd.u32() {
+        Some(VALUE_NULL) => {
+            list.set_null(i);
+        }
+        Some(VALUE_BOOL) => {
+            list.set_bool(i, rd.u32().unwrap_or(0) as i32);
+        }
+        Some(VALUE_INT) => {
+            list.set_int(i, rd.i32().unwrap_or(0));
+        }
+        Some(VALUE_DOUBLE) => {
+            list.set_double(i, rd.f64().unwrap_or(0.0));
+        }
+        Some(VALUE_STRING) => {
+            list.set_string(i, Some(&rd.str().unwrap_or_default().as_str().into()));
+        }
+        Some(VALUE_OBJECT) => marker("o", rd.u32().unwrap_or(0) as i32),
+        Some(VALUE_ARRAY) if depth < 32 => {
+            let count = rd.u32().unwrap_or(0).min(1_000_000) as usize;
+            if let Some(items) = list_value_create() {
+                items.set_size(count);
+                for j in 0..count {
+                    host_value_from_wire(rd, &items, j, depth + 1);
+                }
+                list.set_list(i, Some(&mut items.clone()));
+            }
+        }
+        _ => marker("u", 1),
+    }
+}
+
+fn send_host_result(view: u32, frame: Option<Frame>, request: i32, ok: bool, fill: impl FnOnce(&ListValue)) {
+    let Some(frame) = frame.or_else(|| view_browser(view).and_then(|b| b.main_frame())) else { return };
+    let Some(mut msg) = process_message_create(Some(&renderer::MSG_HOST_RESULT.into())) else { return };
+    if let Some(list) = msg.argument_list() {
+        list.set_size(3);
+        list.set_int(0, request);
+        list.set_bool(1, ok as i32);
+        fill(&list);
+    }
+    frame.send_process_message(ProcessId::RENDERER, Some(&mut msg));
+}
+
+/// "wv2.host" [request, op, root, name, path list, args list] from a document.
+fn host_object_call(view: u32, frame: Option<&mut Frame>, args: &ListValue) {
+    let request = args.int(0);
+    // Like AddHostObjectToScript: the top-level document only (iframes need Frame.AddHostObjectToScriptWithOrigins).
+    if let Some(f) = frame.filter(|f| f.is_main() == 0) {
+        send_host_result(view, Some(f.clone()), request, false, |l| {
+            l.set_string(2, Some(&"Host objects are not available in this frame".into()));
+        });
+        return;
+    }
+    let (op, root) = (args.int(1) as u32, args.int(2) as u32);
+    let id = NEXT_HOST_CALL.with(|n| {
+        let id = n.get();
+        n.set(id + 1);
+        id
+    });
+    let mut w = Writer::default().u64(id).u32(op).u32(root);
+    if root == 0 {
+        w = w.str(&CefString::from(&args.string(3)).to_string());
+    }
+    let path = args.list(4);
+    let count = path.as_ref().map(|p| p.size()).unwrap_or(0);
+    w = w.u32(count as u32);
+    for i in 0..count {
+        w = w.str(&path.as_ref().map(|p| CefString::from(&p.string(i)).to_string()).unwrap_or_default());
+    }
+    let call_args = args.list(5);
+    let argc = call_args.as_ref().map(|a| a.size()).unwrap_or(0);
+    w = w.u32(argc as u32);
+    if let Some(call_args) = &call_args {
+        for i in 0..argc {
+            w = host_value_to_wire(w, call_args, i, 0);
+        }
+    }
+    if op != HOST_RELEASE {
+        HOST_CALLS.with(|c| c.borrow_mut().insert(id, (view, request)));
+    }
+    send_event(EVT_HOST_OBJECT_CALL, view, &w.0);
+}
+
+fn host_object_reply(payload: &[u8]) {
+    let mut rd = Reader(payload);
+    let (Some(id), Some(ok)) = (rd.u64(), rd.u32()) else { return };
+    let Some((view, request)) = HOST_CALLS.with(|c| c.borrow_mut().remove(&id)) else { return };
+    send_host_result(view, None, request, ok != 0, |list| {
+        if ok != 0 {
+            host_value_from_wire(&mut rd, list, 2, 0);
+        } else {
+            list.set_string(2, Some(&rd.str().unwrap_or_default().as_str().into()));
+        }
+    });
 }
 
 // ======================================================================
@@ -2178,6 +2326,7 @@ fn handle_command(msg: Message) {
             let text = r.take(len as usize).map(|t| String::from_utf8_lossy(t).into_owned()).unwrap_or_default();
             dialog_reply(id, accepted, &text);
         }
+        CMD_HOST_OBJECT_REPLY => host_object_reply(&msg.payload),
         CMD_FILE_DIALOG_REPLY => {
             let (id, count) = (r.u64().unwrap_or(0), r.u32().unwrap_or(0));
             let mut chosen = Vec::new();

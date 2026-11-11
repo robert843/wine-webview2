@@ -39,7 +39,7 @@
 #ifndef __WEBVIEW2_PROTOCOL_H
 #define __WEBVIEW2_PROTOCOL_H
 
-#define WV2_PROTOCOL_VERSION 9
+#define WV2_PROTOCOL_VERSION 10
 #define WV2_FRAME_SLOTS      2
 /* SOCK_SEQPACKET messages must fit the socket send buffer (net.core.wmem_default, usually
  * 212992 bytes). Payloads larger than WV2_INLINE_MAX therefore travel in a sealed memfd attached
@@ -87,6 +87,7 @@ enum wv2_command
     WV2_CMD_CONTEXT_MENU_REPLY,     /* wv2_context_menu_reply */
     WV2_CMD_PERMISSION_REPLY,       /* wv2_permission_reply */
     WV2_CMD_FILE_DIALOG_REPLY,      /* u64 id, u32 count, count x string: chosen Windows paths */
+    WV2_CMD_HOST_OBJECT_REPLY,      /* u64 id, u32 ok, value (result) or string (error message) */
 };
 
 #define WV2_SETTING_SCRIPT          0x0001
@@ -126,6 +127,9 @@ enum wv2_event
     WV2_EVT_FILE_DIALOG,            /* u64 id, u32 mode (WV2_FILE_DIALOG_*), string title, string default
                                        Windows path, u32 count, count x (string description, string pattern);
                                        strings are u32 length + UTF-8 */
+    WV2_EVT_HOST_OBJECT_CALL,       /* u64 id, u32 op (WV2_HOST_*), u32 root (0 = named host object,
+                                       else object id), [string name], u32 count, count x string path,
+                                       u32 argc, argc x value */
 };
 
 /* Default context menu: CEF builds it, the host shows it as a native menu at (x, y) in view
@@ -151,6 +155,23 @@ struct wv2_context_menu_item
     UINT32 flags;           /* WV2_MENU_* */
     UINT32 label_len;       /* UTF-8 label follows */
 };
+
+/* Host objects (AddHostObjectToScript): `path` names the member, walked from the root object;
+ * GET reads the last member, SET writes args[0] to it, CALL invokes it, RELEASE drops object
+ * `root`. Values: u32 tag + data. */
+#define WV2_HOST_GET        0
+#define WV2_HOST_SET        1
+#define WV2_HOST_CALL       2
+#define WV2_HOST_RELEASE    3
+
+#define WV2_VALUE_UNDEFINED 0   /* no data */
+#define WV2_VALUE_NULL      1   /* no data */
+#define WV2_VALUE_BOOL      2   /* u32 */
+#define WV2_VALUE_INT       3   /* u32 (int32) */
+#define WV2_VALUE_DOUBLE    4   /* f64 */
+#define WV2_VALUE_STRING    5   /* string */
+#define WV2_VALUE_OBJECT    6   /* u32 object id (IDispatch kept by the host) */
+#define WV2_VALUE_ARRAY     7   /* u32 count + count x value */
 
 #define WV2_FILE_DIALOG_OPEN          0
 #define WV2_FILE_DIALOG_OPEN_MULTIPLE 1
