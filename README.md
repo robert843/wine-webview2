@@ -27,12 +27,13 @@ Implemented: environment and controller creation, navigation and its events, `Ex
 (`postMessage`, `WebMessageReceived`), `WebResourceRequested` and virtual host mappings, settings
 (user agent, dev tools, script dialogs, …), transparent backgrounds, DevTools Protocol
 (`CallDevToolsProtocolMethod`, event receivers), popups (`NewWindowRequested` with `window.opener`),
-`WindowCloseRequested`, JavaScript dialogs, mouse/keyboard/cursor input, `<select>` popups.
+`WindowCloseRequested`, JavaScript dialogs, mouse/keyboard/cursor input, `<select>` popups, the default
+context menu (native menu, `AreDefaultContextMenusEnabled`).
 
 Copy and paste works in both directions with Windows and Linux applications (CEF and Wine share
 the system clipboard).
 
-Not yet: IME, drag and drop, file chooser, DPI scaling, context menus,
+Not yet: IME, drag and drop, file chooser, DPI scaling, `ContextMenuRequested` (custom menus),
 downloads, profiles, `AddHostObjectToScript`, composition mode (`CompositionController`).
 
 ## Requirements

@@ -84,6 +84,7 @@ enum wv2_command
     WV2_CMD_INVOKE_REPLY,           /* wv2_reply + [out] values of an EVT_INVOKE */
     WV2_CMD_RELEASE,                /* wv2_release: proxies of a runtime object are gone */
     WV2_CMD_SCRIPT_DIALOG_REPLY,    /* wv2_script_dialog_reply + UTF-8 prompt text */
+    WV2_CMD_CONTEXT_MENU_REPLY,     /* wv2_context_menu_reply */
 };
 
 #define WV2_SETTING_SCRIPT          0x0001
@@ -118,6 +119,38 @@ enum wv2_event
     WV2_EVT_INVOKE,                 /* wv2_call on an application object + arguments */
     WV2_EVT_RELEASE_APP,            /* wv2_release: the helper dropped an application object */
     WV2_EVT_SCRIPT_DIALOG,          /* wv2_script_dialog + UTF-8 uri, message, default text */
+    WV2_EVT_CONTEXT_MENU,           /* wv2_context_menu + count x (wv2_context_menu_item + UTF-8 label) */
+};
+
+/* Default context menu: CEF builds it, the host shows it as a native menu at (x, y) in view
+ * coordinates and answers with the chosen command (0 = dismissed). */
+struct wv2_context_menu
+{
+    UINT64 id;
+    INT32 x;
+    INT32 y;
+    UINT32 count;
+    UINT32 reserved;
+};
+
+#define WV2_MENU_ITEM_COMMAND   0
+#define WV2_MENU_ITEM_SEPARATOR 1
+#define WV2_MENU_ENABLED        0x1
+#define WV2_MENU_CHECKED        0x2
+
+struct wv2_context_menu_item
+{
+    UINT32 type;            /* WV2_MENU_ITEM_* */
+    INT32 command;
+    UINT32 flags;           /* WV2_MENU_* */
+    UINT32 label_len;       /* UTF-8 label follows */
+};
+
+struct wv2_context_menu_reply
+{
+    UINT64 id;
+    INT32 command;
+    UINT32 reserved;
 };
 
 /* Default JavaScript dialog (AreDefaultScriptDialogsEnabled = TRUE), shown by the host. */

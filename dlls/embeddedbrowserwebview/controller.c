@@ -520,6 +520,48 @@ done:
     free(uri);
 }
 
+/* Default context menu built by CEF, shown as a native popup menu at the click position. */
+static void show_context_menu(struct view *view, const void *payload, UINT32 size)
+{
+    const struct wv2_context_menu *menu = payload;
+    const char *p = (const char *)(menu + 1), *end = (const char *)payload + size;
+    struct wv2_context_menu_reply reply = {0};
+    HMENU popup;
+    POINT pt;
+    UINT32 i;
+
+    if (size < sizeof(*menu)) return;
+    reply.id = menu->id;
+    if ((popup = CreatePopupMenu()))
+    {
+        for (i = 0; i < menu->count; i++)
+        {
+            const struct wv2_context_menu_item *item = (const void *)p;
+            WCHAR *label;
+
+            if (end - p < sizeof(*item) || end - p - sizeof(*item) < item->label_len) break;
+            p += sizeof(*item);
+            if (item->type == WV2_MENU_ITEM_SEPARATOR)
+                AppendMenuW(popup, MF_SEPARATOR, 0, NULL);
+            else if ((label = utf8_to_wide(p, item->label_len)))
+            {
+                AppendMenuW(popup, MF_STRING | (item->flags & WV2_MENU_ENABLED ? 0 : MF_GRAYED)
+                            | (item->flags & WV2_MENU_CHECKED ? MF_CHECKED : 0), item->command, label);
+                free(label);
+            }
+            p += item->label_len;
+        }
+        pt.x = menu->x;
+        pt.y = menu->y;
+        ClientToScreen(view->hwnd, &pt);
+        reply.command = TrackPopupMenu(popup, TPM_RETURNCMD | TPM_RIGHTBUTTON | TPM_NONOTIFY,
+                                       pt.x, pt.y, 0, view->hwnd, NULL);
+        DestroyMenu(popup);
+    }
+    TRACE("view %u: context menu %s -> command %d\n", view->id, wine_dbgstr_longlong(menu->id), reply.command);
+    helper_send(view, WV2_CMD_CONTEXT_MENU_REPLY, &reply, sizeof(reply));
+}
+
 static void dispatch_event_cb(void *arg)
 {
     struct helper_event *event = arg;
@@ -557,6 +599,9 @@ static void dispatch_event_cb(void *arg)
         break;
     case WV2_EVT_SCRIPT_DIALOG:
         show_script_dialog(view, event->payload, payload);
+        break;
+    case WV2_EVT_CONTEXT_MENU:
+        show_context_menu(view, event->payload, payload);
         break;
     case WV2_EVT_ERROR:
         ERR("view %u: helper error %s\n", view->id, debugstr_an((const char *)event->payload, payload));

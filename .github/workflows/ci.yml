@@ -85,7 +85,7 @@ jobs:
           unzip -q "$RUNNER_TEMP/sdk.nupkg" -d "$RUNNER_TEMP/sdk"
           git clone -q https://github.com/webview/webview.git "$RUNNER_TEMP/webview"
           git -C "$RUNNER_TEMP/webview" checkout -q "$WEBVIEW_REV"
-          for t in navtest bgtest popuptest; do make -C tests/apps/$t WV2_SDK="$RUNNER_TEMP/sdk"; done
+          for t in navtest bgtest popuptest menutest; do make -C tests/apps/$t WV2_SDK="$RUNNER_TEMP/sdk"; done
           make -C tests/apps/hello WV2_SDK="$RUNNER_TEMP/sdk" WEBVIEW_SRC="$RUNNER_TEMP/webview"
 
       - name: Prepare the test prefix

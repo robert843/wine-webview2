@@ -61,6 +61,12 @@ check popuptest "$A/popuptest/popuptest.exe" 120 "0" \
     "prompt\('default prompt', 'text'\) -> hr=0 \"text\"" \
     '^done'
 
+check menutest "$A/menutest/menutest.exe" 90 "0" \
+    'context menu: .*=117; .*=26501;' \
+    'script -> hr=0 "0-10"' \
+    'context menu: none' \
+    '^done'
+
 # hello runs until closed: the timeout ending it is expected.
 check hello "$A/hello/hello-loader.exe" 40 "0 124" \
     'bind called with \["ping"\]'

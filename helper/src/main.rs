@@ -315,6 +315,10 @@ wrap_client! {
             Some(ViewDialogHandlerBuilder::new(self.client.clone()))
         }
 
+        fn context_menu_handler(&self) -> Option<ContextMenuHandler> {
+            Some(ViewMenuHandlerBuilder::new(self.client.clone()))
+        }
+
         fn on_process_message_received(
             &self,
             _browser: Option<&mut Browser>,
@@ -1271,6 +1275,131 @@ wrap_jsdialog_handler! {
 }
 
 // ======================================================================
+// Default context menu
+// ======================================================================
+
+/// "Inspect" (WebView2 adds it when DevTools are enabled); CEF's own "View source" is dropped.
+const MENU_ID_INSPECT: i32 = 26501;
+
+thread_local! {
+    /// Context menus shown by the DLL, waiting for CMD_CONTEXT_MENU_REPLY.
+    static MENUS: RefCell<HashMap<u64, RunContextMenuCallback>> = RefCell::new(HashMap::new());
+    static NEXT_MENU: std::cell::Cell<u64> = const { std::cell::Cell::new(1) };
+}
+
+fn view_settings(view: u32) -> u32 {
+    with_state(|st| st.views.get(&view).map(|v| v.settings)).flatten().unwrap_or(SETTINGS_DEFAULT)
+}
+
+wrap_context_menu_handler! {
+    struct ViewMenuHandlerBuilder {
+        client: ViewClient,
+    }
+
+    impl ContextMenuHandler {
+        fn on_before_context_menu(
+            &self,
+            _browser: Option<&mut Browser>,
+            _frame: Option<&mut Frame>,
+            _params: Option<&mut ContextMenuParams>,
+            model: Option<&mut MenuModel>,
+        ) {
+            let Some(model) = model else { return };
+            let settings = view_settings(self.client.view());
+            if settings & SETTING_CONTEXT_MENUS == 0 {
+                model.clear();
+                return;
+            }
+            model.remove(MenuId::VIEW_SOURCE.get_raw() as i32);
+            if settings & SETTING_DEVTOOLS != 0 {
+                if model.count() > 0 {
+                    model.add_separator();
+                }
+                model.add_item(MENU_ID_INSPECT, Some(&"&Inspect".into()));
+            }
+        }
+
+        fn run_context_menu(
+            &self,
+            _browser: Option<&mut Browser>,
+            _frame: Option<&mut Frame>,
+            params: Option<&mut ContextMenuParams>,
+            model: Option<&mut MenuModel>,
+            callback: Option<&mut RunContextMenuCallback>,
+        ) -> ::std::os::raw::c_int {
+            // Off-screen rendering: CEF does not draw menus; the DLL shows a native one.
+            let (Some(params), Some(model), Some(callback)) = (params, model, callback) else { return 0 };
+            let mut items = Writer::default();
+            let mut count = 0u32;
+            for i in 0..model.count() {
+                let kind = model.type_at(i);
+                if kind == MenuItemType::SEPARATOR {
+                    items = items.u32(1).i32(0).u32(0).u32(0);
+                } else if kind == MenuItemType::COMMAND || kind == MenuItemType::CHECK {
+                    let label = CefString::from(&model.label_at(i)).to_string();
+                    let flags = (model.is_enabled_at(i) != 0) as u32 | ((model.is_checked_at(i) != 0) as u32) << 1;
+                    items = items
+                        .u32(0)
+                        .i32(model.command_id_at(i))
+                        .u32(flags)
+                        .u32(label.len() as u32)
+                        .bytes(label.as_bytes());
+                } else {
+                    continue; // submenus and radio groups are not in the default menu
+                }
+                count += 1;
+            }
+            if count == 0 {
+                callback.cancel();
+                return 1;
+            }
+            let id = NEXT_MENU.with(|n| {
+                let id = n.get();
+                n.set(id + 1);
+                id
+            });
+            MENUS.with(|m| m.borrow_mut().insert(id, callback.clone()));
+            let payload = Writer::default()
+                .u64(id)
+                .i32(params.xcoord())
+                .i32(params.ycoord())
+                .u32(count)
+                .u32(0)
+                .bytes(&items.0);
+            send_event(EVT_CONTEXT_MENU, self.client.view(), &payload.0);
+            1
+        }
+
+        fn on_context_menu_command(
+            &self,
+            browser: Option<&mut Browser>,
+            _frame: Option<&mut Frame>,
+            params: Option<&mut ContextMenuParams>,
+            command_id: ::std::os::raw::c_int,
+            _event_flags: EventFlags,
+        ) -> ::std::os::raw::c_int {
+            if command_id != MENU_ID_INSPECT {
+                return 0;
+            }
+            let (Some(host), Some(params)) = (browser.and_then(|b| b.host()), params) else { return 1 };
+            let point = Point { x: params.xcoord(), y: params.ycoord() };
+            host.show_dev_tools(Some(&WindowInfo::default()), None, Some(&BrowserSettings::default()), Some(&point));
+            1
+        }
+    }
+}
+
+fn context_menu_reply(id: u64, command: i32) {
+    if let Some(callback) = MENUS.with(|m| m.borrow_mut().remove(&id)) {
+        if command > 0 {
+            callback.cont(command, EventFlags::default());
+        } else {
+            callback.cancel();
+        }
+    }
+}
+
+// ======================================================================
 // Browser operations for server objects (webview.rs)
 // ======================================================================
 
@@ -1487,6 +1616,10 @@ fn handle_command(msg: Message) {
             let (id, accepted, len) = (r.u64().unwrap_or(0), r.u32().unwrap_or(0) != 0, r.u32().unwrap_or(0));
             let text = r.take(len as usize).map(|t| String::from_utf8_lossy(t).into_owned()).unwrap_or_default();
             dialog_reply(id, accepted, &text);
+        }
+        CMD_CONTEXT_MENU_REPLY => {
+            let (id, command) = (r.u64().unwrap_or(0), r.i32().unwrap_or(0));
+            context_menu_reply(id, command);
         }
         CMD_SHUTDOWN => shutdown_ipc(),
         other => eprintln!("helper: unknown command {other:#x}"),
