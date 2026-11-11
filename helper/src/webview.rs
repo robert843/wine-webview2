@@ -205,7 +205,6 @@ impl ICoreWebView2Controller4Impl for Controller {
         self.zoom_changed.remove(token)
     }
 
-    // FIXME: DPI scaling - the value is kept but the page is not scaled yet.
     fn get_RasterizationScale(&self, _ctx: &mut Ctx) -> WvResult<f64> {
         Ok(self.scale.get())
     }
@@ -217,6 +216,7 @@ impl ICoreWebView2Controller4Impl for Controller {
             return Ok(());
         }
         self.scale.set(scale);
+        crate::set_view_scale(self.view, scale);
         let sender = CONTROLLERS.with(|c| c.borrow().get(&self.view).cloned()).map(|c| ObjRef::Runtime(c)).unwrap_or_default();
         for h in self.scale_changed.snapshot() {
             ICoreWebView2RasterizationScaleChangedEventHandlerApp(h).Invoke_async(ctx, &sender, &ObjRef::Null);

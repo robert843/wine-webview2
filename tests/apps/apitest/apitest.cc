@@ -158,7 +158,17 @@ static void step(int n) {
         log("IsMuted=%d", muted);
         w8->Release();
         later(500, 11); break; }
-    case 11: log("done"); PostMessageW(hwnd, WM_CLOSE, 0, 0); break;
+    case 11: {
+        // RasterizationScale 2 on top of ZoomFactor 1.5: devicePixelRatio 3, CSS width 640 / 3.
+        ICoreWebView2Controller3 *c3;
+        controller->QueryInterface(IID_ICoreWebView2Controller3, (void **)&c3);
+        double scale = 0; c3->get_RasterizationScale(&scale);
+        log("RasterizationScale %.2f", scale);
+        c3->put_RasterizationScale(2.0);
+        c3->Release();
+        later(1000, 12); break; }
+    case 12: run(L"'dpr=' + devicePixelRatio + ' width=' + innerWidth", 0); later(getenv("APITEST_HOLD") ? 6000 : 1, 13); break;
+    case 13: log("done"); PostMessageW(hwnd, WM_CLOSE, 0, 0); break;
     }
 }
 

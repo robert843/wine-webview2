@@ -84,6 +84,7 @@ check apitest "$A/apitest/apitest.exe" 90 "0" \
     'StatusBarTextChanged https://example.test/hover' \
     'IsMuted=1' \
     '^IsMutedChanged' \
+    '-> "dpr=3 width=213"' \
     '^done'
 
 check dltest "$A/dltest/dltest.exe" 90 "0" \

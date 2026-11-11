@@ -167,6 +167,8 @@ struct View {
     pending_completion: Option<(i32, i32)>,
     width: u32,
     height: u32,
+    /// RasterizationScale: device pixels per DIP (width/height are device pixels).
+    scale: f64,
     frames: Option<FrameBuffer>,
     dropped: bool,
     user_agent: String,
@@ -180,6 +182,7 @@ struct View {
 impl View {
     fn new(width: u32, height: u32) -> Self {
         View {
+            scale: 1.0,
             browser: None,
             devtools_observer: None,
             doc_scripts: Vec::new(),
@@ -208,8 +211,36 @@ struct WidgetPopup {
 }
 
 /// Composites popup pixels onto a copy of the view frame (clipped to the view).
-fn compose_widget(w: &WidgetPopup) -> Option<Vec<u8>> {
-    let r = w.rect.as_ref()?;
+/// The view size in DIPs (CEF's coordinates): device pixels / RasterizationScale.
+fn view_size_dip(view: u32) -> (i32, i32) {
+    let (w, h, scale) = with_state(|st| st.views.get(&view).map(|v| (v.width, v.height, v.scale)))
+        .flatten()
+        .unwrap_or((1, 1, 1.0));
+    (((w as f64 / scale).ceil() as i32).max(1), ((h as f64 / scale).ceil() as i32).max(1))
+}
+
+fn view_scale(view: u32) -> f64 {
+    with_state(|st| st.views.get(&view).map(|v| v.scale)).flatten().unwrap_or(1.0)
+}
+
+/// RasterizationScale changed: CEF re-renders at the new device scale.
+pub fn set_view_scale(view: u32, scale: f64) {
+    with_state(|st| {
+        if let Some(v) = st.views.get_mut(&view) {
+            v.scale = scale;
+        }
+    });
+    if let Some(host) = view_browser(view).and_then(|b| b.host()) {
+        host.notify_screen_info_changed();
+        host.was_resized();
+    }
+}
+
+fn compose_widget(w: &WidgetPopup, scale: f64) -> Option<Vec<u8>> {
+    // The popup rectangle is in DIPs, both buffers in device pixels.
+    let dip = w.rect.as_ref()?;
+    let px = |v: i32| (v as f64 * scale).round() as i32;
+    let r = &Rect { x: px(dip.x), y: px(dip.y), width: px(dip.width), height: px(dip.height) };
     let (vw, vh) = w.view_size;
     let (pw, ph) = w.size;
     if w.view.len() != (vw * vh * 4) as usize || w.pixels.len() != (pw * ph * 4) as usize {
@@ -397,13 +428,18 @@ wrap_render_handler! {
     impl RenderHandler {
         fn view_rect(&self, _browser: Option<&mut Browser>, rect: Option<&mut Rect>) {
             let Some(rect) = rect else { return };
-            let (w, h) = with_state(|st| st.views.get(&self.client.view()).map(|v| (v.width, v.height)))
-                .flatten()
-                .unwrap_or((1, 1));
-            rect.x = 0;
-            rect.y = 0;
-            rect.width = w.max(1) as i32;
-            rect.height = h.max(1) as i32;
+            let (w, h) = view_size_dip(self.client.view());
+            *rect = Rect { x: 0, y: 0, width: w, height: h };
+        }
+
+        fn screen_info(&self, _browser: Option<&mut Browser>, info: Option<&mut ScreenInfo>) -> ::std::os::raw::c_int {
+            let Some(info) = info else { return 0 };
+            let view = self.client.view();
+            let (w, h) = view_size_dip(view);
+            info.device_scale_factor = view_scale(view) as f32;
+            info.rect = Rect { x: 0, y: 0, width: w, height: h };
+            info.available_rect = info.rect.clone();
+            1
         }
 
         fn on_popup_show(&self, browser: Option<&mut Browser>, show: ::std::os::raw::c_int) {
@@ -443,7 +479,9 @@ wrap_render_handler! {
             let src = unsafe { std::slice::from_raw_parts(buffer, (width * height * 4) as usize) };
             let view = self.client.view();
             let composed = with_state(|st| {
-                let w = st.views.get_mut(&view)?.widget.as_mut()?;
+                let v = st.views.get_mut(&view)?;
+                let scale = v.scale;
+                let w = v.widget.as_mut()?;
                 if type_ == PaintElementType::POPUP {
                     w.pixels.clear();
                     w.pixels.extend_from_slice(src);
@@ -453,7 +491,7 @@ wrap_render_handler! {
                     w.view.extend_from_slice(src);
                     w.view_size = (width, height);
                 }
-                compose_widget(w).map(|buf| (buf, w.view_size))
+                compose_widget(w, scale).map(|buf| (buf, w.view_size))
             })
             .flatten();
             if let Some((buf, (vw, vh))) = composed {
@@ -1980,8 +2018,8 @@ wrap_context_menu_handler! {
             MENUS.with(|m| m.borrow_mut().insert(id, callback.clone()));
             let payload = Writer::default()
                 .u64(id)
-                .i32(params.xcoord())
-                .i32(params.ycoord())
+                .i32((params.xcoord() as f64 * view_scale(self.client.view())).round() as i32)
+                .i32((params.ycoord() as f64 * view_scale(self.client.view())).round() as i32)
                 .u32(count)
                 .u32(0)
                 .bytes(&items.0);
@@ -2275,6 +2313,9 @@ fn handle_command(msg: Message) {
             let (kind, x, y) = (r.u32().unwrap_or(0), r.i32().unwrap_or(0), r.i32().unwrap_or(0));
             let (button, clicks, modifiers) = (r.u32().unwrap_or(0), r.u32().unwrap_or(1), r.u32().unwrap_or(0));
             let (dx, dy) = (r.i32().unwrap_or(0), r.i32().unwrap_or(0));
+            // Device pixels from the host window -> DIPs.
+            let scale = view_scale(msg.view);
+            let (x, y) = ((x as f64 / scale).floor() as i32, (y as f64 / scale).floor() as i32);
             let event = MouseEvent { x, y, modifiers };
             let button = match button {
                 1 => MouseButtonType::MIDDLE,

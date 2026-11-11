@@ -1627,6 +1627,7 @@ HRESULT controller_create(IUnknown *environment, HWND parent, IUnknown *options,
                           ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler)
 {
     ICoreWebView2ControllerOptions3 *options3;
+    UINT dpi;
     int tries;
     struct controller_created_ctx *ctx;
     struct wv2_buffer args = {0};
@@ -1688,6 +1689,10 @@ HRESULT controller_create(IUnknown *environment, HWND parent, IUnknown *options,
     if (view->controller)
     {
         proxy_set_host_data(view->controller, view, controller_host_destroy);
+        /* Like WebView2: render at the window's DPI (Wine's DPI setting, 96 for DPI-unaware apps). */
+        if ((dpi = GetDpiForWindow(parent)) && dpi != USER_DEFAULT_SCREEN_DPI)
+            ICoreWebView2Controller3_put_RasterizationScale((ICoreWebView2Controller3 *)view->controller,
+                                                            dpi / (double)USER_DEFAULT_SCREEN_DPI);
         if (SUCCEEDED(ICoreWebView2Controller_get_CoreWebView2((ICoreWebView2Controller *)view->controller,
                                                               (ICoreWebView2 **)&view->webview)))
         {
