@@ -1,7 +1,8 @@
 name: CI
 
 # Pull requests: build + tests. Push to master (merged PR): build + tests + release.
-# Version bump from commit messages since the last tag: #major, #minor, #none (no release),
+# Version bump from commit messages since the last tag: #major, #minor; #none in the pushed
+# commit skips the release;
 # otherwise patch. The first release is 0.1.0.
 on:
   pull_request:
@@ -38,7 +39,9 @@ jobs:
           else
             log=$(git log --format=%B "$last..HEAD")
             IFS=. read -r major minor patch <<< "${last#v}"
-            if grep -q '#none' <<< "$log"; then next=
+            # "#none" only in the pushed commit itself: an earlier docs-only commit must not
+            # suppress the release of everything after it.
+            if git log -1 --format=%B HEAD | grep -q '#none'; then next=
             elif grep -q '#major' <<< "$log"; then next=$((major + 1)).0.0
             elif grep -q '#minor' <<< "$log"; then next=$major.$((minor + 1)).0
             else next=$major.$minor.$((patch + 1)); fi
