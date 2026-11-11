@@ -753,6 +753,8 @@ fn file_dialog_reply(id: u64, windows_paths: Vec<String>) {
 thread_local! {
     /// Calls waiting for CMD_HOST_OBJECT_REPLY: call id -> (view, renderer request id).
     static HOST_CALLS: RefCell<HashMap<u64, (u32, i32)>> = RefCell::new(HashMap::new());
+    /// Synchronous calls (hostObjects.sync): call id -> (view, the renderer connection waiting).
+    static HOST_SYNC_CALLS: RefCell<HashMap<u64, (u32, std::sync::mpsc::Sender<Vec<u8>>)>> = RefCell::new(HashMap::new());
     static NEXT_HOST_CALL: std::cell::Cell<u64> = const { std::cell::Cell::new(1) };
 }
 
@@ -877,9 +879,91 @@ fn host_object_call(view: u32, frame: Option<&mut Frame>, args: &ListValue) {
     send_event(EVT_HOST_OBJECT_CALL, view, &w.0);
 }
 
+/// Synchronous host object calls: the renderer blocks on a unix socket of this process (its own
+/// message loop is stopped, so the answer cannot come as a process message). `<dir>/host.sock`,
+/// passed to renderers with --wv2-host-socket. Frames: u32 length + data; request = u32 browser
+/// id, u32 main frame, then the WV2_EVT_HOST_OBJECT_CALL fields after the call id; reply = u32 ok,
+/// value | error message.
+pub fn start_host_socket(dir: &std::path::Path) -> Option<PathBuf> {
+    use std::io::{Read, Write};
+    let path = dir.join("host.sock");
+    let _ = std::fs::remove_file(&path);
+    let listener = match std::os::unix::net::UnixListener::bind(&path) {
+        Ok(l) => l,
+        Err(e) => {
+            eprintln!("helper: cannot listen on {}: {e}", path.display());
+            return None;
+        }
+    };
+    std::thread::spawn(move || {
+        for stream in listener.incoming().flatten() {
+            std::thread::spawn(move || {
+                let mut stream = stream;
+                loop {
+                    let mut len = [0u8; 4];
+                    if stream.read_exact(&mut len).is_err() {
+                        return;
+                    }
+                    let len = u32::from_le_bytes(len) as usize;
+                    if len > WV2_MAX_HOST_REQUEST {
+                        return;
+                    }
+                    let mut request = vec![0u8; len];
+                    if stream.read_exact(&mut request).is_err() {
+                        return;
+                    }
+                    let (tx, rx) = std::sync::mpsc::channel();
+                    post_ui(move || host_sync_request(request, tx));
+                    // No answer (view closed, helper ending): an error for the script.
+                    let reply = rx.recv().unwrap_or_else(|_| {
+                        Writer::default().u32(0).str("The host object is gone").0
+                    });
+                    let frame = [&(reply.len() as u32).to_le_bytes()[..], &reply].concat();
+                    if stream.write_all(&frame).is_err() {
+                        return;
+                    }
+                }
+            });
+        }
+    });
+    Some(path)
+}
+
+const WV2_MAX_HOST_REQUEST: usize = 64 * 1024 * 1024;
+
+fn host_sync_request(request: Vec<u8>, tx: std::sync::mpsc::Sender<Vec<u8>>) {
+    let mut rd = Reader(&request);
+    let (browser_id, main_frame) = (rd.i32().unwrap_or(0), rd.u32().unwrap_or(0) != 0);
+    let view = with_state(|st| {
+        st.views.iter().find(|(_, v)| v.browser.as_ref().is_some_and(|b| b.identifier() == browser_id)).map(|(id, _)| *id)
+    })
+    .flatten();
+    let Some(view) = view.filter(|_| main_frame) else {
+        let _ = tx.send(Writer::default().u32(0).str("Host objects are not available in this frame").0);
+        return;
+    };
+    let id = NEXT_HOST_CALL.with(|n| {
+        let id = n.get();
+        n.set(id + 1);
+        id
+    });
+    HOST_SYNC_CALLS.with(|c| c.borrow_mut().insert(id, (view, tx)));
+    send_event(EVT_HOST_OBJECT_CALL, view, &Writer::default().u64(id).bytes(rd.rest()).0);
+}
+
+/// The view is gone: waiting synchronous calls get an error instead of blocking forever.
+fn drop_host_sync_calls(view: u32) {
+    HOST_SYNC_CALLS.with(|c| c.borrow_mut().retain(|_, (v, _)| *v != view));
+}
+
 fn host_object_reply(payload: &[u8]) {
     let mut rd = Reader(payload);
-    let (Some(id), Some(ok)) = (rd.u64(), rd.u32()) else { return };
+    let Some(id) = rd.u64() else { return };
+    if let Some((_, tx)) = HOST_SYNC_CALLS.with(|c| c.borrow_mut().remove(&id)) {
+        let _ = tx.send(rd.rest().to_vec());
+        return;
+    }
+    let Some(ok) = rd.u32() else { return };
     let Some((view, request)) = HOST_CALLS.with(|c| c.borrow_mut().remove(&id)) else { return };
     send_host_result(view, None, request, ok != 0, |list| {
         if ok != 0 {
@@ -1400,6 +1484,7 @@ fn view_browser(view: u32) -> Option<Browser> {
 static SHUTTING_DOWN: AtomicBool = AtomicBool::new(false);
 /// Per-process CEF profile and cache, removed on exit (also by the shutdown watchdog).
 static CACHE_DIR: OnceLock<PathBuf> = OnceLock::new();
+static HOST_SOCKET: OnceLock<PathBuf> = OnceLock::new();
 
 /// Cache directories of helpers that were killed (SIGTERM to the whole process group, e.g. Steam's
 /// "Stop" or a timeout) and could not clean up. A live helper holds an flock on its directory's
@@ -2187,6 +2272,7 @@ pub fn create_browser(view: u32, width: u32, height: u32, profile: &str, in_priv
 }
 
 pub fn close_browser(view: u32) {
+    drop_host_sync_calls(view);
     if let Some(v) = with_state(|st| st.views.remove(&view)).flatten() {
         if let Some(host) = v.browser.and_then(|b| b.host()) {
             host.close_browser(1);
@@ -2591,10 +2677,17 @@ wrap_browser_process_handler! {
 
     impl BrowserProcessHandler {
         fn on_before_child_process_launch(&self, command_line: Option<&mut CommandLine>) {
-            if let (Some(cl), Some(dir)) = (command_line, SCRIPTS_DIR.get()) {
+            let Some(cl) = command_line else { return };
+            if let Some(dir) = SCRIPTS_DIR.get() {
                 cl.append_switch_with_value(
                     Some(&renderer::SCRIPTS_DIR_SWITCH.into()),
                     Some(&dir.to_string_lossy().as_ref().into()),
+                );
+            }
+            if let Some(socket) = HOST_SOCKET.get() {
+                cl.append_switch_with_value(
+                    Some(&renderer::HOST_SOCKET_SWITCH.into()),
+                    Some(&socket.to_string_lossy().as_ref().into()),
                 );
             }
         }
@@ -2711,6 +2804,9 @@ fn main() -> std::process::ExitCode {
     if matches!(mode, Mode::Ipc(_)) {
         let dir = cache.join("scripts");
         let _ = std::fs::create_dir_all(&dir);
+        if let Some(socket) = start_host_socket(&cache) {
+            let _ = HOST_SOCKET.set(socket);
+        }
         let _ = SCRIPTS_DIR.set(dir);
     }
     // Persistent data in the user data folder when we have one, otherwise in the temporary directory.

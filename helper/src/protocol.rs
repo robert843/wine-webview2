@@ -179,8 +179,10 @@ pub const VALUE_DOUBLE: u32 = 4;
 pub const VALUE_STRING: u32 = 5;
 pub const VALUE_OBJECT: u32 = 6;
 pub const VALUE_ARRAY: u32 = 7;
+pub const VALUE_METHOD: u32 = 8;
 /// Host object operations (WV2_HOST_*).
 pub const HOST_GET: u32 = 0;
 pub const HOST_SET: u32 = 1;
 pub const HOST_CALL: u32 = 2;
 pub const HOST_RELEASE: u32 = 3;
+pub const HOST_FLAG_METHODS: u32 = 0x100;

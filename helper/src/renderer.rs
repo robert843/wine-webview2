@@ -22,9 +22,11 @@ pub const MSG_CLOSE: &str = "wv2.close";
 pub const MSG_HOST: &str = "wv2.host";
 pub const MSG_HOST_RESULT: &str = "wv2.hostresult";
 pub const SCRIPTS_DIR_SWITCH: &str = "wv2-scripts-dir";
+/// Unix socket of the browser process for synchronous host object calls (main.rs start_host_socket).
+pub const HOST_SOCKET_SWITCH: &str = "wv2-host-socket";
 
-/// Installs window.chrome.webview on top of the native __wv2_post and __wv2_host functions, which
-/// it then deletes.
+/// Installs window.chrome.webview on top of the native __wv2_post, __wv2_host and __wv2_host_sync
+/// functions, which it then deletes.
 ///
 /// hostObjects: every member access gives a proxy for a path of names below a root (a named host
 /// object or an object id from the host). Calling it invokes the method, awaiting it (`then`) reads
@@ -32,9 +34,10 @@ pub const SCRIPTS_DIR_SWITCH: &str = "wv2-scripts-dir";
 /// that are objects come back as {o: id} and become new proxies; {u: 1} is undefined.
 const BOOTSTRAP: &str = r#"(function () {
   if (window.chrome && window.chrome.webview) return;
-  var post = window.__wv2_post, hostCall = window.__wv2_host;
+  var post = window.__wv2_post, hostCall = window.__wv2_host, hostCallSync = window.__wv2_host_sync;
   delete window.__wv2_post;
   delete window.__wv2_host;
+  delete window.__wv2_host_sync;
   var target = new EventTarget();
   var pending = new Map();
   var REF = Symbol("wv2 host object");
@@ -61,11 +64,47 @@ const BOOTSTRAP: &str = r#"(function () {
       pending.set(id, { resolve: resolve, reject: reject });
     });
   }
+  // Synchronous proxies: members are read on access; methods come back as {m: 1} -> functions.
+  function syncCall(op, root, name, path, args) {
+    var r = hostCallSync(op, root, name, path, args.map(encode));
+    if (!r[0]) throw new Error(r[1]);
+    return r[1];
+  }
+  function syncDecode(v, root, name, path) {
+    if (Array.isArray(v)) return v.map(function (x) { return syncDecode(x); });
+    if (v !== null && typeof v === "object") {
+      if ("o" in v) return syncRemote(v.o, "", []);
+      if ("m" in v && path) return function () { return syncDecode(syncCall(2, root, name, path, Array.prototype.slice.call(arguments))); };
+      return undefined;
+    }
+    return v;
+  }
+  function syncRemote(root, name, path) {
+    return new Proxy(function () {}, {
+      get: function (t, prop) {
+        if (prop === REF) return { root: root, name: name, path: path };
+        if (typeof prop === "symbol" || prop === "then" || prop === "toJSON") return undefined;
+        if (prop === "async") return function () { return remote(root, name, path); };
+        var member = path.concat([prop]);
+        return syncDecode(syncCall(0x100, root, name, member, []), root, name, member);
+      },
+      set: function (t, prop, value) {
+        if (typeof prop === "symbol") return false;
+        syncCall(1, root, name, path.concat([prop]), [value]);
+        return true;
+      },
+      apply: function (t, self, args) {
+        if (!path.length) throw new TypeError("host object is not a function");
+        return syncDecode(syncCall(2, root, name, path, Array.prototype.slice.call(args)));
+      }
+    });
+  }
   function remote(root, name, path) {
     return new Proxy(function () {}, {
       get: function (t, prop) {
         if (prop === REF) return { root: root, name: name, path: path };
         if (typeof prop === "symbol") return undefined;
+        if (prop === "sync" && !path.length) return function () { return Promise.resolve(syncRemote(root, name, path)); };
         if (prop === "then") {
           if (!path.length) return undefined;  // objects are not thenable: awaiting gives the proxy
           var p = call(0, root, name, path, []);
@@ -87,11 +126,17 @@ const BOOTSTRAP: &str = r#"(function () {
   var options = { forceLocalProperties: ["then", "toJSON", "Symbol(Symbol.toPrimitive)", "Symbol(Symbol.toStringTag)"],
                   log: function () {}, shouldSerializeDates: false, defaultSyncProxy: false,
                   forceAsyncMethodMatches: [/Async$/], ignoreMemberNotFoundError: false, shouldPassTypedArraysAsArrays: false };
+  var syncObjects = new Proxy({}, {
+    get: function (t, prop) {
+      if (typeof prop === "symbol") return undefined;
+      return syncRemote(0, prop, []);
+    }
+  });
   var hostObjects = new Proxy({}, {
     get: function (t, prop) {
       if (typeof prop === "symbol") return undefined;
       if (prop === "options") return options;
-      if (prop === "sync") throw new Error("chrome.webview.hostObjects.sync is not supported yet, use the asynchronous proxies");
+      if (prop === "sync") return syncObjects;
       if (prop === "cleanupSome") return function () {};
       return remote(0, prop, []);
     }
@@ -302,6 +347,184 @@ fn list_to_v8(list: &ListValue, i: usize, depth: u32) -> Option<V8Value> {
     }
 }
 
+/// Script value -> WV2_VALUE_* wire format (as the browser process sends it to the DLL).
+fn v8_to_wire(value: Option<&V8Value>, out: &mut Vec<u8>, depth: u32) {
+    use crate::protocol::*;
+    let tag = |out: &mut Vec<u8>, t: u32| out.extend_from_slice(&t.to_le_bytes());
+    let Some(v) = value.filter(|v| v.is_undefined() == 0) else { return tag(out, VALUE_UNDEFINED) };
+    if v.is_null() != 0 {
+        tag(out, VALUE_NULL);
+    } else if v.is_bool() != 0 {
+        tag(out, VALUE_BOOL);
+        tag(out, v.bool_value() as u32);
+    } else if v.is_int() != 0 {
+        tag(out, VALUE_INT);
+        out.extend_from_slice(&v.int_value().to_le_bytes());
+    } else if v.is_double() != 0 || v.is_uint() != 0 {
+        tag(out, VALUE_DOUBLE);
+        out.extend_from_slice(&v.double_value().to_le_bytes());
+    } else if v.is_string() != 0 {
+        let s = CefString::from(&v.string_value()).to_string();
+        tag(out, VALUE_STRING);
+        tag(out, s.len() as u32);
+        out.extend_from_slice(s.as_bytes());
+    } else if v.is_array() != 0 && depth < 32 {
+        let n = v.array_length().max(0);
+        tag(out, VALUE_ARRAY);
+        tag(out, n as u32);
+        for j in 0..n {
+            v8_to_wire(v.value_byindex(j).as_ref(), out, depth + 1);
+        }
+    } else if let Some(id) = v.value_bykey(Some(&"__wv2obj".into())).filter(|id| id.is_int() != 0 || id.is_uint() != 0) {
+        tag(out, VALUE_OBJECT);
+        tag(out, id.int_value() as u32);
+    } else {
+        tag(out, VALUE_UNDEFINED);
+    }
+}
+
+/// WV2_VALUE_* -> script value; objects and methods become {o: id} / {m: 1} for the JS side.
+fn wire_to_v8(rd: &mut crate::protocol::Reader, depth: u32) -> Option<V8Value> {
+    use crate::protocol::*;
+    let marker = |key: &str, value: i32| {
+        let object = v8_value_create_object(None, None)?;
+        let mut v = v8_value_create_int(value);
+        object.set_value_bykey(Some(&key.into()), v.as_mut(), V8Propertyattribute::default());
+        Some(object)
+    };
+    match rd.u32()? {
+        VALUE_NULL => v8_value_create_null(),
+        VALUE_BOOL => v8_value_create_bool(rd.u32()? as i32),
+        VALUE_INT => v8_value_create_int(rd.i32()?),
+        VALUE_DOUBLE => v8_value_create_double(rd.f64()?),
+        VALUE_STRING => v8_value_create_string(Some(&rd.str()?.as_str().into())),
+        VALUE_OBJECT => marker("o", rd.u32()? as i32),
+        VALUE_METHOD => marker("m", 1),
+        VALUE_ARRAY if depth < 32 => {
+            let n = rd.u32()?.min(1_000_000) as i32;
+            let array = v8_value_create_array(n)?;
+            for j in 0..n {
+                let mut item = wire_to_v8(rd, depth + 1);
+                array.set_value_byindex(j, item.as_mut());
+            }
+            Some(array)
+        }
+        _ => v8_value_create_undefined(),
+    }
+}
+
+static HOST_STREAM: std::sync::Mutex<Option<std::os::unix::net::UnixStream>> = std::sync::Mutex::new(None);
+
+/// One synchronous round trip to the browser process (blocks this renderer, like WebView2's sync proxies).
+fn host_call_sync(request: &[u8]) -> Result<Vec<u8>, String> {
+    use std::io::{Read, Write};
+    let mut guard = HOST_STREAM.lock().unwrap_or_else(|e| e.into_inner());
+    if guard.is_none() {
+        let path = command_line_get_global()
+            .map(|cl| CefString::from(&cl.switch_value(Some(&HOST_SOCKET_SWITCH.into()))).to_string())
+            .unwrap_or_default();
+        if path.is_empty() {
+            return Err("synchronous host objects are not available".into());
+        }
+        *guard = Some(std::os::unix::net::UnixStream::connect(&path).map_err(|e| e.to_string())?);
+    }
+    let stream = guard.as_mut().unwrap();
+    let result = (|| {
+        stream.write_all(&[&(request.len() as u32).to_le_bytes()[..], request].concat())?;
+        let mut len = [0u8; 4];
+        stream.read_exact(&mut len)?;
+        let mut reply = vec![0u8; u32::from_le_bytes(len) as usize];
+        stream.read_exact(&mut reply)?;
+        Ok::<_, std::io::Error>(reply)
+    })();
+    result.map_err(|e| {
+        *guard = None;
+        e.to_string()
+    })
+}
+
+/// __wv2_host_sync(op, root, name, path, args) -> [ok, value | error message].
+#[derive(Clone)]
+struct HostSyncHandler;
+
+wrap_v8_handler! {
+    struct HostSyncHandlerBuilder {
+        handler: HostSyncHandler,
+    }
+
+    impl V8Handler {
+        fn execute(
+            &self,
+            _name: Option<&CefString>,
+            _object: Option<&mut V8Value>,
+            arguments: Option<&[Option<V8Value>]>,
+            retval: Option<&mut Option<V8Value>>,
+            exception: Option<&mut CefString>,
+        ) -> ::std::os::raw::c_int {
+            let args = arguments.unwrap_or(&[]);
+            let arg = |i: usize| args.get(i).cloned().flatten();
+            let context = v8_context_get_current_context();
+            let (Some(browser), Some(frame)) = (context.as_ref().and_then(|c| c.browser()), context.as_ref().and_then(|c| c.frame())) else {
+                if let Some(e) = exception {
+                    *e = "hostObjects: no frame".into();
+                }
+                return 1;
+            };
+            let mut request = Vec::new();
+            let mut put = |v: u32| request.extend_from_slice(&v.to_le_bytes());
+            put(browser.identifier() as u32);
+            put(frame.is_main() as u32);
+            put(arg(0).map(|v| v.int_value()).unwrap_or(0) as u32);
+            let root = arg(1).map(|v| v.int_value()).unwrap_or(0) as u32;
+            put(root);
+            let string = |request: &mut Vec<u8>, s: &str| {
+                request.extend_from_slice(&(s.len() as u32).to_le_bytes());
+                request.extend_from_slice(s.as_bytes());
+            };
+            if root == 0 {
+                let name = arg(2).filter(|v| v.is_string() != 0).map(|v| CefString::from(&v.string_value()).to_string());
+                string(&mut request, &name.unwrap_or_default());
+            }
+            let path = arg(3).filter(|v| v.is_array() != 0);
+            let count = path.as_ref().map(|p| p.array_length().max(0)).unwrap_or(0);
+            request.extend_from_slice(&(count as u32).to_le_bytes());
+            for i in 0..count {
+                let item = path.as_ref().and_then(|p| p.value_byindex(i)).filter(|v| v.is_string() != 0);
+                string(&mut request, &item.map(|v| CefString::from(&v.string_value()).to_string()).unwrap_or_default());
+            }
+            let call_args = arg(4).filter(|v| v.is_array() != 0);
+            let argc = call_args.as_ref().map(|a| a.array_length().max(0)).unwrap_or(0);
+            request.extend_from_slice(&(argc as u32).to_le_bytes());
+            for i in 0..argc {
+                v8_to_wire(call_args.as_ref().and_then(|a| a.value_byindex(i)).as_ref(), &mut request, 0);
+            }
+            let reply = match host_call_sync(&request) {
+                Ok(reply) => reply,
+                Err(e) => {
+                    if let Some(x) = exception {
+                        *x = format!("hostObjects.sync: {e}").as_str().into();
+                    }
+                    return 1;
+                }
+            };
+            let mut rd = crate::protocol::Reader(&reply);
+            let ok = rd.u32().unwrap_or(0) != 0;
+            let value = if ok { wire_to_v8(&mut rd, 0) } else { v8_value_create_string(Some(&rd.str().unwrap_or_default().as_str().into())) };
+            let result = v8_value_create_array(2);
+            if let Some(result) = &result {
+                let mut ok_value = v8_value_create_bool(ok as i32);
+                result.set_value_byindex(0, ok_value.as_mut());
+                let mut value = value;
+                result.set_value_byindex(1, value.as_mut());
+            }
+            if let Some(r) = retval {
+                *r = result;
+            }
+            1
+        }
+    }
+}
+
 /// __wv2_host(op, root, name, path, args) -> request id; the result arrives as "wv2.hostresult".
 #[derive(Clone)]
 struct HostHandler;
@@ -431,6 +654,9 @@ wrap_render_process_handler! {
                 let mut handler = HostHandlerBuilder::new(HostHandler);
                 let mut func = v8_value_create_function(Some(&"__wv2_host".into()), Some(&mut handler));
                 global.set_value_bykey(Some(&"__wv2_host".into()), func.as_mut(), V8Propertyattribute::default());
+                let mut handler = HostSyncHandlerBuilder::new(HostSyncHandler);
+                let mut func = v8_value_create_function(Some(&"__wv2_host_sync".into()), Some(&mut handler));
+                global.set_value_bykey(Some(&"__wv2_host_sync".into()), func.as_mut(), V8Propertyattribute::default());
                 if let Err(e) = eval(context, BOOTSTRAP) {
                     eprintln!("helper(renderer): bootstrap failed: {e}");
                 }

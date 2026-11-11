@@ -337,6 +337,36 @@ static HRESULT walk(IDispatch *root, WCHAR **path, UINT32 count, IDispatch **out
     return S_OK;
 }
 
+/* Synchronous proxies read members on access and need to know which ones are methods: from the
+ * type information when there is some, else a property read that fails as for a method. */
+static BOOL is_method(IDispatch *dispatch, DISPID id)
+{
+    ITypeInfo *info;
+    TYPEATTR *attr;
+    FUNCDESC *func;
+    UINT count = 0, i;
+    BOOL found = FALSE, method = FALSE;
+
+    if (FAILED(IDispatch_GetTypeInfoCount(dispatch, &count)) || !count) return FALSE;
+    if (FAILED(IDispatch_GetTypeInfo(dispatch, 0, LOCALE_USER_DEFAULT, &info))) return FALSE;
+    if (SUCCEEDED(ITypeInfo_GetTypeAttr(info, &attr)))
+    {
+        for (i = 0; i < attr->cFuncs && !found; i++)
+        {
+            if (FAILED(ITypeInfo_GetFuncDesc(info, i, &func))) continue;
+            if (func->memid == id)
+            {
+                found = TRUE;
+                method = func->invkind == INVOKE_FUNC;
+            }
+            ITypeInfo_ReleaseFuncDesc(info, func);
+        }
+        ITypeInfo_ReleaseTypeAttr(info, attr);
+    }
+    ITypeInfo_Release(info);
+    return method;
+}
+
 /* Runs one WV2_EVT_HOST_OBJECT_CALL and builds the WV2_CMD_HOST_OBJECT_REPLY. */
 void host_objects_call(struct host_objects *table, const void *payload, UINT32 size, struct wv2_buffer *reply)
 {
@@ -348,6 +378,7 @@ void host_objects_call(struct host_objects *table, const void *payload, UINT32 s
     EXCEPINFO info = {0};
     DISPID id, put_id = DISPID_PROPERTYPUT;
     UINT32 op, root_id, count, argc = 0, i;
+    BOOL detect_methods, method = FALSE;
     struct host_objects empty = {0};
     UINT64 call_id;
     HRESULT hr = S_OK;
@@ -356,6 +387,8 @@ void host_objects_call(struct host_objects *table, const void *payload, UINT32 s
     VariantInit(&result);
     call_id = wv2_get_u64(&rd);
     op = wv2_get_u32(&rd);
+    detect_methods = !!(op & WV2_HOST_FLAG_METHODS);
+    op &= ~WV2_HOST_FLAG_METHODS;
     root_id = wv2_get_u32(&rd);
     if (!root_id) name = wv2_get_str(&rd);
     count = wv2_get_u32(&rd);
@@ -410,7 +443,17 @@ void host_objects_call(struct host_objects *table, const void *payload, UINT32 s
     {
     case WV2_HOST_GET:
         params.cArgs = 0;
+        if (detect_methods && is_method(target, id))
+        {
+            method = TRUE;
+            break;
+        }
         hr = IDispatch_Invoke(target, id, &IID_NULL, LOCALE_USER_DEFAULT, DISPATCH_PROPERTYGET, &params, &result, &info, NULL);
+        if (detect_methods && (hr == DISP_E_MEMBERNOTFOUND || hr == DISP_E_BADPARAMCOUNT || hr == DISP_E_PARAMNOTOPTIONAL))
+        {
+            method = TRUE;
+            hr = S_OK;
+        }
         break;
     case WV2_HOST_SET:
         params.cArgs = min(argc, 1);
@@ -431,7 +474,8 @@ void host_objects_call(struct host_objects *table, const void *payload, UINT32 s
 done:
     wv2_put_u64(reply, call_id);
     wv2_put_u32(reply, SUCCEEDED(hr));
-    if (SUCCEEDED(hr)) write_value(table, reply, &result, 0);
+    if (SUCCEEDED(hr) && method) wv2_put_u32(reply, WV2_VALUE_METHOD);
+    else if (SUCCEEDED(hr)) write_value(table, reply, &result, 0);
     else
     {
         message = error_message(hr, &info, failed);

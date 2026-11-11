@@ -1,6 +1,6 @@
 // Test: AddHostObjectToScript. A small IDispatch object called from script through
 // chrome.webview.hostObjects: methods, property get/set, nested objects, arrays, objects passed
-// back, exceptions and unknown names. The script reports through postMessage.
+// back, exceptions and unknown names; the same through synchronous proxies (hostObjects.sync). The script reports through postMessage.
 #include <windows.h>
 #include <oleauto.h>
 #include <cstdio>
@@ -50,6 +50,9 @@ struct Calc : IDispatch {
                                      EXCEPINFO *info, UINT *) override {
         if (GetCurrentThreadId() != ui_thread) log("called on the wrong thread");
         VARIANT tmp; VariantInit(&tmp);
+        // Methods only as methods (like .NET's IDispatch): a property read of one fails.
+        bool method = id == 1 || id == 4 || id == 5 || id == 6;
+        if (method && !(flags & DISPATCH_METHOD)) return DISP_E_MEMBERNOTFOUND;
         switch (id) {
         case 1: { // Add(a, b): arguments arrive in reverse order
             if (p->cArgs != 2) return DISP_E_BADPARAMCOUNT;
@@ -102,6 +105,16 @@ static const wchar_t script[] =
     L"  try { await calc.Fail(); r.push('fail=none'); } catch (e) { r.push('fail=' + e.message); }"
     L"  try { await calc.Missing(); r.push('missing=none'); } catch (e) { r.push('missing=' + e.message); }"
     L"  try { await chrome.webview.hostObjects.nothere.Foo(); } catch (e) { r.push('nothere=' + e.message); }"
+    L"  const s = chrome.webview.hostObjects.sync.calc;"
+    L"  r.push('sync.add=' + s.Add(4, 5));"
+    L"  r.push('sync.name=' + s.Name);"
+    L"  s.Name = 'syncset';"
+    L"  r.push('sync.renamed=' + s.Name);"
+    L"  r.push('sync.child=' + s.Child.Name);"
+    L"  r.push('sync.echo=' + JSON.stringify(s.Echo(['a', 1])));"
+    L"  try { s.Fail(); r.push('sync.fail=none'); } catch (e) { r.push('sync.fail=' + e.message); }"
+    L"  const viaAsync = await chrome.webview.hostObjects.calc.sync();"
+    L"  r.push('tosync=' + viaAsync.Add(1, 1));"
     L"  chrome.webview.postMessage(r.join(';'));"
     L"})().catch(e => chrome.webview.postMessage('error ' + e));";
 

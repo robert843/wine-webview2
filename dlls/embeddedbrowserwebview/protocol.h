@@ -163,6 +163,7 @@ struct wv2_context_menu_item
 #define WV2_HOST_SET        1
 #define WV2_HOST_CALL       2
 #define WV2_HOST_RELEASE    3
+#define WV2_HOST_FLAG_METHODS 0x100 /* GET of a method gives WV2_VALUE_METHOD (synchronous proxies) */
 
 #define WV2_VALUE_UNDEFINED 0   /* no data */
 #define WV2_VALUE_NULL      1   /* no data */
@@ -172,6 +173,7 @@ struct wv2_context_menu_item
 #define WV2_VALUE_STRING    5   /* string */
 #define WV2_VALUE_OBJECT    6   /* u32 object id (IDispatch kept by the host) */
 #define WV2_VALUE_ARRAY     7   /* u32 count + count x value */
+#define WV2_VALUE_METHOD    8   /* no data: the member is a method */
 
 #define WV2_FILE_DIALOG_OPEN          0
 #define WV2_FILE_DIALOG_OPEN_MULTIPLE 1

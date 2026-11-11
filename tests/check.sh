@@ -103,7 +103,7 @@ check filetest "$A/filetest/filetest.exe" 90 "0" \
 
 check hosttest "$A/hosttest/hosttest.exe" 90 "0" \
     'AddHostObjectToScript hr=0' \
-    'result add=5;name=calc;renamed=renamed;chain=11;childname=child;echo=\[1,"two",true,null,2.5\];nameof=child;fail=boom;missing=Element not found: Missing;nothere=Element not found: nothere' \
+    'result add=5;name=calc;renamed=renamed;chain=11;childname=child;echo=\[1,"two",true,null,2.5\];nameof=child;fail=boom;missing=Element not found: Missing;nothere=Element not found: nothere;sync.add=9;sync.name=renamed;sync.renamed=syncset;sync.child=child;sync.echo=\["a",1\];sync.fail=boom;tosync=2' \
     '^done'
 
 # Browser data persists in the user data folder: the second run sees the first one's data.
