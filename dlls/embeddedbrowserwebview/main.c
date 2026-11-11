@@ -26,6 +26,8 @@
 #include "winbase.h"
 #include "winuser.h"
 #include "objbase.h"
+#include "shlobj.h"
+#include "knownfolders.h"
 #include "initguid.h"
 #include "webview2.h"
 #include "webview2_private.h"
@@ -191,6 +193,51 @@ static void trace_options(IUnknown *options)
 
 /* The loader passes a one-byte bool as the first argument; the upper bits of the register are
  * garbage, hence BOOLEAN and not BOOL. */
+/* The helper works with unix paths: tell it where the drives point, as lines "C:<unix path>". */
+static void put_drive_map(struct wv2_buffer *args)
+{
+    WCHAR root[] = L"A:\\", *map, *line;
+    DWORD drives = GetLogicalDrives();
+    size_t size = 0, used = 0;
+    char *unix_name;
+    int i, len;
+
+    map = NULL;
+    for (i = 0; i < 26; i++)
+    {
+        if (!(drives & (1u << i))) continue;
+        root[0] = 'A' + i;
+        if (!(unix_name = wine_get_unix_file_name(root))) continue;
+        len = MultiByteToWideChar(CP_UNIXCP, 0, unix_name, -1, NULL, 0);
+        if (used + len + 3 > size)
+        {
+            size = max(size * 2, used + len + 256);
+            if (!(line = realloc(map, size * sizeof(WCHAR)))) { HeapFree(GetProcessHeap(), 0, unix_name); break; }
+            map = line;
+        }
+        map[used++] = root[0];
+        map[used++] = ':';
+        MultiByteToWideChar(CP_UNIXCP, 0, unix_name, -1, map + used, len);
+        used += len - 1;
+        map[used++] = '\n';
+        HeapFree(GetProcessHeap(), 0, unix_name);
+    }
+    if (map) map[used] = 0;
+    wv2_put_str(args, map ? map : L"");
+    free(map);
+}
+
+static void put_download_folder(struct wv2_buffer *args)
+{
+    WCHAR *path = NULL;
+
+    if (SUCCEEDED(SHGetKnownFolderPath(&FOLDERID_Downloads, KF_FLAG_CREATE, NULL, &path)))
+        wv2_put_str(args, path);
+    else
+        wv2_put_str(args, L"");
+    CoTaskMemFree(path);
+}
+
 HRESULT WINAPI CreateWebViewEnvironmentWithOptionsInternal(BOOLEAN check_running_instance,
         UINT32 runtime_type, const WCHAR *user_data_dir, IUnknown *options,
         ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler *handler)
@@ -226,6 +273,8 @@ HRESULT WINAPI CreateWebViewEnvironmentWithOptionsInternal(BOOLEAN check_running
         }
         wv2_put_str(&args, user_data_dir);
         wv2_put_iface(&args, options);
+        put_drive_map(&args);
+        put_download_folder(&args);
         if (SUCCEEDED(ctx->hr = proxy_call_root(WV2_ROOT_CREATE_ENVIRONMENT, &args, &ret)))
         {
             ctx->environment = (ICoreWebView2Environment *)wv2_get_iface(&ret);

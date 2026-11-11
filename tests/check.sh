@@ -77,6 +77,14 @@ check apitest "$A/apitest/apitest.exe" 90 "0" \
     '^GotFocus' \
     '^done'
 
+check dltest "$A/dltest/dltest.exe" 90 "0" \
+    'DownloadStarting mode=1 blob=1 mime=text/plain state=0 path=C:.*\\first.txt' \
+    'completed custom=1 default=0 content=hello download' \
+    'PermissionRequested kind=7' \
+    'cancelled file exists=0' \
+    'completed custom=0 default=1 content=deferred' \
+    '^done'
+
 # hello runs until closed: the timeout ending it is expected.
 check hello "$A/hello/hello-loader.exe" 40 "0 124" \
     'bind called with \["ping"\]'

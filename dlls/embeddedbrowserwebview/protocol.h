@@ -39,7 +39,7 @@
 #ifndef __WEBVIEW2_PROTOCOL_H
 #define __WEBVIEW2_PROTOCOL_H
 
-#define WV2_PROTOCOL_VERSION 8
+#define WV2_PROTOCOL_VERSION 9
 #define WV2_FRAME_SLOTS      2
 /* SOCK_SEQPACKET messages must fit the socket send buffer (net.core.wmem_default, usually
  * 212992 bytes). Payloads larger than WV2_INLINE_MAX therefore travel in a sealed memfd attached
@@ -85,6 +85,7 @@ enum wv2_command
     WV2_CMD_RELEASE,                /* wv2_release: proxies of a runtime object are gone */
     WV2_CMD_SCRIPT_DIALOG_REPLY,    /* wv2_script_dialog_reply + UTF-8 prompt text */
     WV2_CMD_CONTEXT_MENU_REPLY,     /* wv2_context_menu_reply */
+    WV2_CMD_PERMISSION_REPLY,       /* wv2_permission_reply */
 };
 
 #define WV2_SETTING_SCRIPT          0x0001
@@ -120,6 +121,7 @@ enum wv2_event
     WV2_EVT_RELEASE_APP,            /* wv2_release: the helper dropped an application object */
     WV2_EVT_SCRIPT_DIALOG,          /* wv2_script_dialog + UTF-8 uri, message, default text */
     WV2_EVT_CONTEXT_MENU,           /* wv2_context_menu + count x (wv2_context_menu_item + UTF-8 label) */
+    WV2_EVT_PERMISSION_PROMPT,      /* wv2_permission_prompt + UTF-8 origin */
 };
 
 /* Default context menu: CEF builds it, the host shows it as a native menu at (x, y) in view
@@ -144,6 +146,21 @@ struct wv2_context_menu_item
     INT32 command;
     UINT32 flags;           /* WV2_MENU_* */
     UINT32 label_len;       /* UTF-8 label follows */
+};
+
+/* Default permission prompt (PermissionRequested left the state at DEFAULT), shown by the host. */
+struct wv2_permission_prompt
+{
+    UINT64 id;
+    UINT32 kind;            /* COREWEBVIEW2_PERMISSION_KIND */
+    UINT32 origin_len;
+};
+
+struct wv2_permission_reply
+{
+    UINT64 id;
+    UINT32 allow;
+    UINT32 reserved;
 };
 
 struct wv2_context_menu_reply

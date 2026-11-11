@@ -2,7 +2,7 @@
 
 #![allow(dead_code)]
 
-pub const PROTOCOL_VERSION: u32 = 8;
+pub const PROTOCOL_VERSION: u32 = 9;
 pub const FRAME_SLOTS: u32 = 2;
 /// Payloads larger than this go in a sealed memfd (protocol.h: WV2_INLINE_MAX).
 pub const INLINE_MAX: usize = 64 * 1024;
@@ -44,6 +44,7 @@ pub const CMD_INVOKE_REPLY: u32 = 30;
 pub const CMD_RELEASE: u32 = 31;
 pub const CMD_SCRIPT_DIALOG_REPLY: u32 = 32;
 pub const CMD_CONTEXT_MENU_REPLY: u32 = 33;
+pub const CMD_PERMISSION_REPLY: u32 = 34;
 
 pub const SETTING_SCRIPT: u32 = 0x0001;
 pub const SETTING_WEB_MESSAGE: u32 = 0x0002;
@@ -76,6 +77,7 @@ pub const EVT_INVOKE: u32 = 0x1012;
 pub const EVT_RELEASE_APP: u32 = 0x1013;
 pub const EVT_SCRIPT_DIALOG: u32 = 0x1014;
 pub const EVT_CONTEXT_MENU: u32 = 0x1015;
+pub const EVT_PERMISSION_PROMPT: u32 = 0x1016;
 
 pub const MOUSE_MOVE: u32 = 0;
 pub const MOUSE_DOWN: u32 = 1;

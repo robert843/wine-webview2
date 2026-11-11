@@ -520,6 +520,44 @@ done:
     free(uri);
 }
 
+/* Default permission prompt: WebView2 shows its own bubble; here a native Yes/No box. */
+static void show_permission_prompt(struct view *view, const void *payload, UINT32 size)
+{
+    static const WCHAR *descriptions[] =
+    {
+        L"use an unknown permission",
+        L"use your microphone",
+        L"use your camera",
+        L"know your location",
+        L"show notifications",
+        L"use your device's motion sensors",
+        L"see text and images copied to the clipboard",
+        L"download multiple files",
+        L"edit files on your device",
+        L"play media automatically",
+        L"use fonts installed on your device",
+        L"use MIDI devices",
+        L"open and place windows on your screens",
+        L"store data persistently",
+    };
+    const struct wv2_permission_prompt *prompt = payload;
+    struct wv2_permission_reply reply = {0};
+    HWND owner = GetAncestor(view->parent, GA_ROOT);
+    WCHAR *origin, text[512];
+
+    if (size < sizeof(*prompt) || size - sizeof(*prompt) < prompt->origin_len) return;
+    reply.id = prompt->id;
+    if ((origin = utf8_to_wide((const char *)(prompt + 1), prompt->origin_len)))
+    {
+        swprintf(text, ARRAY_SIZE(text), L"%s wants to %s.\n\nAllow?", origin,
+                 descriptions[prompt->kind < ARRAY_SIZE(descriptions) ? prompt->kind : 0]);
+        TRACE("view %u: permission kind %u for %s\n", view->id, prompt->kind, debugstr_w(origin));
+        reply.allow = MessageBoxW(owner, text, origin, MB_YESNO | MB_ICONQUESTION) == IDYES;
+        free(origin);
+    }
+    helper_send(view, WV2_CMD_PERMISSION_REPLY, &reply, sizeof(reply));
+}
+
 /* Default context menu built by CEF, shown as a native popup menu at the click position. */
 static void show_context_menu(struct view *view, const void *payload, UINT32 size)
 {
@@ -599,6 +637,9 @@ static void dispatch_event_cb(void *arg)
         break;
     case WV2_EVT_SCRIPT_DIALOG:
         show_script_dialog(view, event->payload, payload);
+        break;
+    case WV2_EVT_PERMISSION_PROMPT:
+        show_permission_prompt(view, event->payload, payload);
         break;
     case WV2_EVT_CONTEXT_MENU:
         show_context_menu(view, event->payload, payload);

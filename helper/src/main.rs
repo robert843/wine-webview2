@@ -19,6 +19,7 @@ macro_rules! eprintln {
 }
 
 mod ipc;
+mod paths;
 mod protocol;
 mod api_gen;
 mod renderer;
@@ -323,6 +324,14 @@ wrap_client! {
             Some(ViewMenuHandlerBuilder::new(self.client.clone()))
         }
 
+        fn download_handler(&self) -> Option<DownloadHandler> {
+            Some(ViewDownloadHandlerBuilder::new(self.client.clone()))
+        }
+
+        fn permission_handler(&self) -> Option<PermissionHandler> {
+            Some(ViewPermissionHandlerBuilder::new(self.client.clone()))
+        }
+
         fn on_process_message_received(
             &self,
             _browser: Option<&mut Browser>,
@@ -569,6 +578,190 @@ wrap_display_handler! {
     }
 }
 
+/// CEF_PERMISSION_TYPE_* bit -> COREWEBVIEW2_PERMISSION_KIND.
+fn permission_kinds(mask: u32) -> Vec<i32> {
+    const MAP: &[(u32, i32)] = &[
+        (4096, 1),      // MIC_STREAM -> MICROPHONE
+        (4, 2),         // CAMERA_STREAM -> CAMERA
+        (2, 2),         // CAMERA_PAN_TILT_ZOOM -> CAMERA
+        (256, 3),       // GEOLOCATION
+        (32768, 4),     // NOTIFICATIONS
+        (268435456, 5), // SENSORS -> OTHER_SENSORS
+        (16, 6),        // CLIPBOARD -> CLIPBOARD_READ
+        (16384, 7),     // MULTIPLE_DOWNLOADS -> MULTIPLE_AUTOMATIC_DOWNLOADS
+        (16777216, 8),  // FILE_SYSTEM_ACCESS -> FILE_READ_WRITE
+        (128, 10),      // LOCAL_FONTS
+        (8192, 11),     // MIDI_SYSEX -> MIDI_SYSTEM_EXCLUSIVE_MESSAGES
+        (8388608, 12),  // WINDOW_MANAGEMENT
+        (64, 13),       // DISK_QUOTA -> PERSISTENT_STORAGE
+    ];
+    let mut kinds = Vec::new();
+    let mut rest = mask;
+    for &(bit, kind) in MAP {
+        if mask & bit != 0 {
+            rest &= !bit;
+            if !kinds.contains(&kind) {
+                kinds.push(kind);
+            }
+        }
+    }
+    if rest != 0 {
+        kinds.push(0); // UNKNOWN_PERMISSION
+    }
+    kinds
+}
+
+thread_local! {
+    /// Default permission prompts awaiting the DLL reply (CMD_PERMISSION_REPLY).
+    static PERMISSION_PROMPTS: RefCell<HashMap<u64, Box<dyn FnOnce(bool)>>> = RefCell::new(HashMap::new());
+    static NEXT_PROMPT: std::cell::Cell<u64> = const { std::cell::Cell::new(1) };
+}
+
+/// Native Yes/No box in the application (the DLL); `done` gets the answer.
+pub fn show_permission_prompt(view: u32, origin: &str, kind: i32, done: Box<dyn FnOnce(bool)>) {
+    let id = NEXT_PROMPT.with(|n| {
+        let id = n.get();
+        n.set(id + 1);
+        id
+    });
+    PERMISSION_PROMPTS.with(|p| p.borrow_mut().insert(id, done));
+    let payload = Writer::default().u64(id).u32(kind as u32).u32(origin.len() as u32).bytes(origin.as_bytes());
+    send_event(EVT_PERMISSION_PROMPT, view, &payload.0);
+}
+
+fn permission_reply(id: u64, allow: bool) {
+    if let Some(done) = PERMISSION_PROMPTS.with(|p| p.borrow_mut().remove(&id)) {
+        done(allow);
+    }
+}
+
+wrap_permission_handler! {
+    struct ViewPermissionHandlerBuilder {
+        client: ViewClient,
+    }
+
+    impl PermissionHandler {
+        fn on_request_media_access_permission(
+            &self,
+            _browser: Option<&mut Browser>,
+            _frame: Option<&mut Frame>,
+            requesting_origin: Option<&CefString>,
+            requested_permissions: u32,
+            callback: Option<&mut MediaAccessCallback>,
+        ) -> ::std::os::raw::c_int {
+            const AUDIO: u32 = 1;
+            const VIDEO: u32 = 2;
+            // Screen capture (DESKTOP_*) is ScreenCaptureStarting in WebView2: not yet, CEF denies it.
+            let Some(callback) = callback else { return 0 };
+            if requested_permissions & !(AUDIO | VIDEO) != 0 {
+                return 0;
+            }
+            let mut kinds = Vec::new();
+            if requested_permissions & AUDIO != 0 {
+                kinds.push(1);
+            }
+            if requested_permissions & VIDEO != 0 {
+                kinds.push(2);
+            }
+            let origin = requesting_origin.map(|o| o.to_string()).unwrap_or_default();
+            let (view, callback) = (self.client.view(), callback.clone());
+            post_ui(move || {
+                webview::on_permission_requested(view, &origin, kinds, Box::new(move |allow| {
+                    if allow {
+                        callback.cont(requested_permissions);
+                    } else {
+                        callback.cancel();
+                    }
+                }));
+            });
+            1
+        }
+
+        fn on_show_permission_prompt(
+            &self,
+            _browser: Option<&mut Browser>,
+            _prompt_id: u64,
+            requesting_origin: Option<&CefString>,
+            requested_permissions: u32,
+            callback: Option<&mut PermissionPromptCallback>,
+        ) -> ::std::os::raw::c_int {
+            let Some(callback) = callback else { return 0 };
+            let origin = requesting_origin.map(|o| o.to_string()).unwrap_or_default();
+            let kinds = permission_kinds(requested_permissions);
+            let (view, callback) = (self.client.view(), callback.clone());
+            post_ui(move || {
+                webview::on_permission_requested(view, &origin, kinds, Box::new(move |allow| {
+                    callback.cont(if allow { PermissionRequestResult::ACCEPT } else { PermissionRequestResult::DENY });
+                }));
+            });
+            1
+        }
+    }
+}
+
+wrap_download_handler! {
+    struct ViewDownloadHandlerBuilder {
+        client: ViewClient,
+    }
+
+    impl DownloadHandler {
+        fn can_download(
+            &self,
+            _browser: Option<&mut Browser>,
+            _url: Option<&CefString>,
+            _request_method: Option<&CefString>,
+        ) -> ::std::os::raw::c_int {
+            1
+        }
+
+        fn on_before_download(
+            &self,
+            _browser: Option<&mut Browser>,
+            item: Option<&mut DownloadItem>,
+            suggested_name: Option<&CefString>,
+            callback: Option<&mut BeforeDownloadCallback>,
+        ) -> ::std::os::raw::c_int {
+            let (Some(item), Some(callback)) = (item, callback) else { return 0 };
+            let info = webview::DownloadInfo {
+                id: item.id(),
+                uri: CefString::from(&item.url()).to_string(),
+                mime: CefString::from(&item.mime_type()).to_string(),
+                disposition: CefString::from(&item.content_disposition()).to_string(),
+                total: item.total_bytes(),
+                suggested: suggested_name.map(|n| n.to_string()).unwrap_or_default(),
+            };
+            webview::on_download_starting(self.client.view(), info, callback.clone());
+            1
+        }
+
+        fn on_download_updated(
+            &self,
+            _browser: Option<&mut Browser>,
+            item: Option<&mut DownloadItem>,
+            callback: Option<&mut DownloadItemCallback>,
+        ) {
+            let (Some(item), Some(callback)) = (item, callback) else { return };
+            let state = if item.is_complete() != 0 {
+                webview::DownloadState::Completed
+            } else if item.is_canceled() != 0 || item.is_interrupted() != 0 {
+                webview::DownloadState::Interrupted(item.interrupt_reason().get_raw())
+            } else if item.is_paused() != 0 {
+                webview::DownloadState::Paused
+            } else {
+                webview::DownloadState::InProgress
+            };
+            let update = webview::DownloadUpdate {
+                state,
+                received: item.received_bytes(),
+                total: item.total_bytes(),
+                speed: item.current_speed(),
+                full_path: CefString::from(&item.full_path()).to_string(),
+            };
+            webview::on_download_updated(item.id(), update, callback.clone());
+        }
+    }
+}
+
 wrap_load_handler! {
     struct ViewLoadHandlerBuilder {
         client: ViewClient,
@@ -742,6 +935,8 @@ fn root_call(ctx: &mut rpc::Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) 
         rpc::ROOT_CREATE_ENVIRONMENT => {
             let user_data_dir = rd.str_opt().unwrap_or_default();
             let _options = ctx.read_objref(rd);
+            paths::set_drive_map(&rd.str_opt().unwrap_or_default());
+            webview::set_default_download_folder(&rd.str_opt().unwrap_or_default());
             webview::set_user_data_dir(&user_data_dir);
             let env = webview::Environment { user_data_dir };
             ctx.write_objref(wr, &rpc::ObjRef::Runtime(std::rc::Rc::new(api_gen::ICoreWebView2Environment15Obj(env))));
@@ -1666,6 +1861,10 @@ fn handle_command(msg: Message) {
             let (id, accepted, len) = (r.u64().unwrap_or(0), r.u32().unwrap_or(0) != 0, r.u32().unwrap_or(0));
             let text = r.take(len as usize).map(|t| String::from_utf8_lossy(t).into_owned()).unwrap_or_default();
             dialog_reply(id, accepted, &text);
+        }
+        CMD_PERMISSION_REPLY => {
+            let (id, allow) = (r.u64().unwrap_or(0), r.u32().unwrap_or(0) != 0);
+            permission_reply(id, allow);
         }
         CMD_CONTEXT_MENU_REPLY => {
             let (id, command) = (r.u64().unwrap_or(0), r.i32().unwrap_or(0));

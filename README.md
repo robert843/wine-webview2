@@ -32,12 +32,14 @@ context menu (native menu, `AreDefaultContextMenusEnabled`).
 Controller focus events (`GotFocus`, `LostFocus`, `MoveFocusRequested`), `ZoomFactor`, full screen
 (`ContainsFullScreenElementChanged`), the profile (`PreferredColorScheme`, clearing browsing data),
 controller options and the environment's `UserDataFolder`.
+Downloads (`DownloadStarting`, `DownloadOperation` with progress, pause, resume and cancel, the profile's
+`DefaultDownloadFolderPath`) and `PermissionRequested` (with a native Yes/No prompt as the default UI).
 
 Copy and paste works in both directions with Windows and Linux applications (CEF and Wine share
 the system clipboard).
 
 Not yet: IME, drag and drop, file chooser, DPI scaling, `ContextMenuRequested` (custom menus),
-downloads, named and InPrivate profiles, `AddHostObjectToScript`, composition mode (`CompositionController`).
+named and InPrivate profiles, `AddHostObjectToScript`, composition mode (`CompositionController`).
 
 ## Requirements
 

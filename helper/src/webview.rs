@@ -55,8 +55,10 @@ enum Ev {
     WindowCloseRequested,
     ScriptDialogOpening,
     ContainsFullScreenElementChanged,
+    DownloadStarting,
+    PermissionRequested,
 }
-const EV_COUNT: usize = 13;
+const EV_COUNT: usize = 15;
 
 fn rc<T: Dispatch + 'static>(obj: T) -> ObjRef {
     ObjRef::Runtime(Rc::new(obj))
@@ -73,6 +75,17 @@ pub struct Environment {
 thread_local! {
     /// User data folder of the (last created) environment, for profile paths.
     static USER_DATA_DIR: RefCell<String> = RefCell::new(String::new());
+}
+
+thread_local! {
+    /// Default download folder (Windows path) of the profile; the DLL sends the user's Downloads.
+    static DOWNLOAD_FOLDER: RefCell<String> = RefCell::new(String::new());
+}
+
+pub fn set_default_download_folder(dir: &str) {
+    if !dir.is_empty() {
+        DOWNLOAD_FOLDER.with(|d| *d.borrow_mut() = dir.to_string());
+    }
 }
 
 pub fn set_user_data_dir(dir: &str) {
@@ -345,7 +358,6 @@ impl ICoreWebView2ControllerOptions4Impl for ControllerOptions {
 pub struct Profile {
     view: u32,
     color_scheme: Cell<i32>,
-    download_folder: RefCell<String>,
     tracking_level: Cell<i32>,
     password_autosave: Cell<bool>,
     general_autofill: Cell<bool>,
@@ -363,10 +375,14 @@ impl ICoreWebView2Profile9Impl for Profile {
         Ok(USER_DATA_DIR.with(|d| format!("{}\\EBWebView\\Default", d.borrow().trim_end_matches('\\'))))
     }
     fn get_DefaultDownloadFolderPath(&self, _ctx: &mut Ctx) -> WvResult<String> {
-        Ok(self.download_folder.borrow().clone())
+        Ok(DOWNLOAD_FOLDER.with(|d| d.borrow().clone()))
     }
     fn put_DefaultDownloadFolderPath(&self, _ctx: &mut Ctx, value: Option<String>) -> WvResult<()> {
-        *self.download_folder.borrow_mut() = value.ok_or(E_INVALIDARG)?;
+        let value = value.ok_or(E_INVALIDARG)?;
+        if crate::paths::to_unix(&value).is_none() {
+            return Err(E_INVALIDARG);
+        }
+        DOWNLOAD_FOLDER.with(|d| *d.borrow_mut() = value);
         Ok(())
     }
     fn get_PreferredColorScheme(&self, _ctx: &mut Ctx) -> WvResult<i32> {
@@ -654,6 +670,8 @@ impl ICoreWebView2_29Impl for WebView {
         add_WindowCloseRequested, remove_WindowCloseRequested, WindowCloseRequested;
         add_ScriptDialogOpening, remove_ScriptDialogOpening, ScriptDialogOpening;
         add_ContainsFullScreenElementChanged, remove_ContainsFullScreenElementChanged, ContainsFullScreenElementChanged;
+        add_DownloadStarting, remove_DownloadStarting, DownloadStarting;
+        add_PermissionRequested, remove_PermissionRequested, PermissionRequested;
     }
 
     fn get_ContainsFullScreenElement(&self, _ctx: &mut Ctx) -> WvResult<bool> {
@@ -666,7 +684,6 @@ impl ICoreWebView2_29Impl for WebView {
             rc(ICoreWebView2Profile9Obj(Profile {
                 view: self.view,
                 color_scheme: Cell::new(0),
-                download_folder: RefCell::new(String::new()),
                 tracking_level: Cell::new(2), // BALANCED
                 password_autosave: Cell::new(false),
                 general_autofill: Cell::new(true),
@@ -1483,4 +1500,516 @@ pub fn on_fullscreen_changed(view: u32, fullscreen: bool) {
                          ICoreWebView2ContainsFullScreenElementChangedEventHandlerApp, ObjRef::Null);
         }
     });
+}
+
+// ===================================================================
+// Downloads (DownloadStarting, DownloadOperation)
+// ===================================================================
+
+pub struct DownloadInfo {
+    pub id: u32,
+    pub uri: String,
+    pub mime: String,
+    pub disposition: String,
+    pub total: i64,
+    pub suggested: String,
+}
+
+#[derive(Clone, Copy, PartialEq)]
+pub enum DownloadState {
+    InProgress,
+    Paused,
+    Completed,
+    /// CEF interrupt reason (Chromium numbering).
+    Interrupted(u32),
+}
+
+pub struct DownloadUpdate {
+    pub state: DownloadState,
+    pub received: i64,
+    pub total: i64,
+    /// Bytes per second.
+    pub speed: i64,
+    pub full_path: String,
+}
+
+const DOWNLOAD_STATE_IN_PROGRESS: i32 = 0;
+const DOWNLOAD_STATE_INTERRUPTED: i32 = 1;
+const DOWNLOAD_STATE_COMPLETED: i32 = 2;
+const INTERRUPT_REASON_USER_PAUSED: i32 = 28;
+
+/// Chromium's DownloadInterruptReason -> COREWEBVIEW2_DOWNLOAD_INTERRUPT_REASON.
+fn interrupt_reason(cef: u32) -> i32 {
+    match cef {
+        0 => 0,
+        1 => 1,
+        2 => 2,
+        3 => 3,
+        5 => 4,
+        6 => 5,
+        7 => 6,
+        10 => 7,
+        11 => 8,
+        12 => 9,
+        13 => 10,
+        14 => 11,
+        15 => 1,
+        20..=24 => cef as i32 - 8, // NETWORK_*: 12..16
+        30 => 17,
+        31 => 18,
+        33 => 19,
+        34 => 20,
+        35 => 21,
+        36 => 22,
+        37 => 15,
+        38 => 24,
+        39 => 25,
+        40 => 26,
+        41 => 27,
+        50 => 29,
+        _ => 1,
+    }
+}
+
+/// Requested before CEF gave us the item's callback (first OnDownloadUpdated).
+#[derive(Clone, Copy, PartialEq)]
+enum DownloadAction {
+    None,
+    Cancel,
+    Pause,
+    Resume,
+}
+
+pub struct DownloadOperation {
+    uri: String,
+    mime: String,
+    disposition: String,
+    total: Cell<i64>,
+    received: Cell<i64>,
+    state: Cell<i32>,
+    reason: Cell<i32>,
+    end_time: RefCell<String>,
+    /// Windows path of the file.
+    path: RefCell<String>,
+    bytes_changed: EventList,
+    end_time_changed: EventList,
+    state_changed: EventList,
+    control: RefCell<Option<cef::DownloadItemCallback>>,
+    pending: Cell<DownloadAction>,
+}
+
+type DownloadObj = ICoreWebView2DownloadOperationObj<DownloadOperation>;
+
+thread_local! {
+    static DOWNLOADS: RefCell<HashMap<u32, Rc<DownloadObj>>> = RefCell::new(HashMap::new());
+}
+
+impl DownloadOperation {
+    fn act(&self, action: DownloadAction) {
+        use cef::ImplDownloadItemCallback;
+        match self.control.borrow().as_ref() {
+            Some(c) => match action {
+                DownloadAction::Cancel => c.cancel(),
+                DownloadAction::Pause => c.pause(),
+                DownloadAction::Resume => c.resume(),
+                DownloadAction::None => {}
+            },
+            None => self.pending.set(action),
+        }
+    }
+}
+
+impl ICoreWebView2DownloadOperationImpl for DownloadOperation {
+    fn add_BytesReceivedChanged(&self, _ctx: &mut Ctx, handler: ObjRef) -> WvResult<EventRegistrationToken> {
+        self.bytes_changed.add(handler)
+    }
+    fn remove_BytesReceivedChanged(&self, _ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        self.bytes_changed.remove(token)
+    }
+    fn add_EstimatedEndTimeChanged(&self, _ctx: &mut Ctx, handler: ObjRef) -> WvResult<EventRegistrationToken> {
+        self.end_time_changed.add(handler)
+    }
+    fn remove_EstimatedEndTimeChanged(&self, _ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        self.end_time_changed.remove(token)
+    }
+    fn add_StateChanged(&self, _ctx: &mut Ctx, handler: ObjRef) -> WvResult<EventRegistrationToken> {
+        self.state_changed.add(handler)
+    }
+    fn remove_StateChanged(&self, _ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        self.state_changed.remove(token)
+    }
+    fn get_Uri(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.uri.clone())
+    }
+    fn get_ContentDisposition(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.disposition.clone())
+    }
+    fn get_MimeType(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.mime.clone())
+    }
+    fn get_TotalBytesToReceive(&self, _ctx: &mut Ctx) -> WvResult<i64> {
+        Ok(self.total.get())
+    }
+    fn get_BytesReceived(&self, _ctx: &mut Ctx) -> WvResult<i64> {
+        Ok(self.received.get())
+    }
+    fn get_EstimatedEndTime(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.end_time.borrow().clone())
+    }
+    fn get_ResultFilePath(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.path.borrow().clone())
+    }
+    fn get_State(&self, _ctx: &mut Ctx) -> WvResult<i32> {
+        Ok(self.state.get())
+    }
+    fn get_InterruptReason(&self, _ctx: &mut Ctx) -> WvResult<i32> {
+        Ok(self.reason.get())
+    }
+    fn Cancel(&self, _ctx: &mut Ctx) -> WvResult<()> {
+        if self.state.get() != DOWNLOAD_STATE_COMPLETED {
+            self.act(DownloadAction::Cancel);
+        }
+        Ok(())
+    }
+    fn Pause(&self, _ctx: &mut Ctx) -> WvResult<()> {
+        if self.state.get() == DOWNLOAD_STATE_IN_PROGRESS {
+            self.act(DownloadAction::Pause);
+        }
+        Ok(())
+    }
+    fn Resume(&self, _ctx: &mut Ctx) -> WvResult<()> {
+        if self.reason.get() == INTERRUPT_REASON_USER_PAUSED {
+            self.act(DownloadAction::Resume);
+        }
+        Ok(())
+    }
+    fn get_CanResume(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.reason.get() == INTERRUPT_REASON_USER_PAUSED)
+    }
+}
+
+pub struct DownloadStartingArgs {
+    operation: ObjRef,
+    cancel: Cell<bool>,
+    path: RefCell<String>,
+    handled: Cell<bool>,
+    deferral: Rc<DeferralSlot>,
+}
+
+impl ICoreWebView2DownloadStartingEventArgsImpl for DownloadStartingArgs {
+    fn get_DownloadOperation(&self, _ctx: &mut Ctx) -> WvResult<ObjRef> {
+        Ok(self.operation.clone())
+    }
+    fn get_Cancel(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.cancel.get())
+    }
+    fn put_Cancel(&self, _ctx: &mut Ctx, cancel: bool) -> WvResult<()> {
+        self.cancel.set(cancel);
+        Ok(())
+    }
+    fn get_ResultFilePath(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.path.borrow().clone())
+    }
+    fn put_ResultFilePath(&self, _ctx: &mut Ctx, path: Option<String>) -> WvResult<()> {
+        let path = path.ok_or(E_INVALIDARG)?;
+        if crate::paths::to_unix(&path).is_none() {
+            return Err(E_INVALIDARG);
+        }
+        *self.path.borrow_mut() = path;
+        Ok(())
+    }
+    fn get_Handled(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.handled.get())
+    }
+    fn put_Handled(&self, _ctx: &mut Ctx, handled: bool) -> WvResult<()> {
+        // Only hides the download UI in WebView2; there is none here.
+        self.handled.set(handled);
+        Ok(())
+    }
+    fn GetDeferral(&self, _ctx: &mut Ctx) -> WvResult<ObjRef> {
+        Ok(self.deferral.get())
+    }
+}
+
+/// "name.ext" in `dir`, or "name (1).ext", ... if it exists (like Chromium).
+fn unique_download_path(dir: &std::path::Path, name: &str) -> std::path::PathBuf {
+    let name = if name.is_empty() { "download" } else { name };
+    let candidate = dir.join(name);
+    if !candidate.exists() {
+        return candidate;
+    }
+    let (stem, ext) = match name.rfind('.') {
+        Some(i) if i > 0 => (&name[..i], &name[i..]),
+        _ => (name, ""),
+    };
+    (1..1000)
+        .map(|n| dir.join(format!("{stem} ({n}){ext}")))
+        .find(|p| !p.exists())
+        .unwrap_or(candidate)
+}
+
+/// Synchronous from OnBeforeDownload: DownloadStarting, then CEF continues to the chosen path.
+pub fn on_download_starting(view: u32, info: DownloadInfo, callback: cef::BeforeDownloadCallback) {
+    let folder = DOWNLOAD_FOLDER.with(|d| d.borrow().clone());
+    // Keep the folder as the app knows it (C:\users\...\Downloads), even if it links elsewhere.
+    let default_path = crate::paths::to_unix(&folder)
+        .and_then(|dir| unique_download_path(&dir, &info.suggested).file_name().map(|n| n.to_string_lossy().into_owned()))
+        .map(|name| format!("{}\\{name}", folder.trim_end_matches('\\')))
+        .unwrap_or_default();
+    let operation = Rc::new(ICoreWebView2DownloadOperationObj(DownloadOperation {
+        uri: info.uri,
+        mime: info.mime,
+        disposition: info.disposition,
+        total: Cell::new(info.total.max(-1)),
+        received: Cell::new(0),
+        state: Cell::new(DOWNLOAD_STATE_IN_PROGRESS),
+        reason: Cell::new(0),
+        end_time: RefCell::new(String::new()),
+        path: RefCell::new(default_path.clone()),
+        bytes_changed: EventList::default(),
+        end_time_changed: EventList::default(),
+        state_changed: EventList::default(),
+        control: RefCell::new(None),
+        pending: Cell::new(DownloadAction::None),
+    }));
+    let args = Rc::new(ICoreWebView2DownloadStartingEventArgsObj(DownloadStartingArgs {
+        operation: ObjRef::Runtime(operation.clone()),
+        cancel: Cell::new(false),
+        path: RefCell::new(default_path),
+        handled: Cell::new(false),
+        deferral: DeferralSlot::new(),
+    }));
+    let id = info.id;
+    let finish = {
+        let (args, operation) = (args.clone(), operation.clone());
+        move || {
+            use cef::ImplBeforeDownloadCallback;
+            if args.0.cancel.get() {
+                // Dropping the callback without cont() cancels the download.
+                return;
+            }
+            let windows = args.0.path.borrow().clone();
+            let Some(unix) = crate::paths::to_unix(&windows) else {
+                eprintln!("helper: download path {windows:?} has no unix equivalent, cancelled");
+                return;
+            };
+            if let Some(dir) = unix.parent() {
+                let _ = std::fs::create_dir_all(dir);
+            }
+            *operation.0.path.borrow_mut() = windows;
+            DOWNLOADS.with(|d| d.borrow_mut().insert(id, operation));
+            callback.cont(Some(&unix.to_string_lossy().as_ref().into()), 0);
+        }
+    };
+    let handlers = with_webview(view, |wv, _| wv.ev(Ev::DownloadStarting).snapshot()).unwrap_or_default();
+    if handlers.is_empty() {
+        finish();
+        return;
+    }
+    with_webview(view, |_, sender| {
+        let args_ref = ObjRef::Runtime(args.clone());
+        for h in handlers {
+            if let Err(e) = ICoreWebView2DownloadStartingEventHandlerApp(h).Invoke(&mut Ctx, &sender, &args_ref) {
+                eprintln!("helper: DownloadStarting handler failed: {e:#x}");
+            }
+        }
+    });
+    if args.0.deferral.settle(Box::new(finish.clone())) {
+        finish();
+    }
+}
+
+/// ISO 8601 UTC ("2026-11-11T05:23:22Z") of a unix timestamp.
+fn iso8601(secs: i64) -> String {
+    let (days, rem) = (secs.div_euclid(86400), secs.rem_euclid(86400));
+    // Civil date from days since 1970-01-01 (Howard Hinnant's algorithm).
+    let z = days + 719468;
+    let era = z.div_euclid(146097);
+    let doe = z - era * 146097;
+    let yoe = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365;
+    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+    let mp = (5 * doy + 2) / 153;
+    let day = doy - (153 * mp + 2) / 5 + 1;
+    let month = if mp < 10 { mp + 3 } else { mp - 9 };
+    let year = yoe + era * 400 + (month <= 2) as i64;
+    format!("{year:04}-{month:02}-{day:02}T{:02}:{:02}:{:02}Z", rem / 3600, rem / 60 % 60, rem % 60)
+}
+
+pub fn on_download_updated(id: u32, update: DownloadUpdate, callback: cef::DownloadItemCallback) {
+    let Some(op) = DOWNLOADS.with(|d| d.borrow().get(&id).cloned()) else { return };
+    let o = &op.0;
+    if o.control.borrow().is_none() {
+        *o.control.borrow_mut() = Some(callback);
+        let pending = o.pending.replace(DownloadAction::None);
+        o.act(pending);
+    }
+    // CEF reports the unix path; convert only if it differs from the requested one (renamed).
+    let full_path = std::path::Path::new(&update.full_path);
+    if !update.full_path.is_empty() && crate::paths::to_unix(&o.path.borrow()).as_deref() != Some(full_path) {
+        *o.path.borrow_mut() = crate::paths::to_windows(full_path);
+    }
+    if update.total > 0 {
+        o.total.set(update.total);
+    }
+    let (state, reason) = match update.state {
+        DownloadState::InProgress => (DOWNLOAD_STATE_IN_PROGRESS, 0),
+        DownloadState::Paused => (DOWNLOAD_STATE_INTERRUPTED, INTERRUPT_REASON_USER_PAUSED),
+        DownloadState::Completed => (DOWNLOAD_STATE_COMPLETED, 0),
+        DownloadState::Interrupted(r) => (DOWNLOAD_STATE_INTERRUPTED, interrupt_reason(r)),
+    };
+    let sender = ObjRef::Runtime(op.clone());
+    if o.received.replace(update.received) != update.received {
+        for h in o.bytes_changed.snapshot() {
+            ICoreWebView2BytesReceivedChangedEventHandlerApp(h).Invoke_async(&mut Ctx, &sender, &ObjRef::Null);
+        }
+    }
+    let end_time = if state == DOWNLOAD_STATE_IN_PROGRESS && update.speed > 0 && o.total.get() > 0 {
+        let now = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_secs() as i64).unwrap_or(0);
+        iso8601(now + (o.total.get() - update.received).max(0) / update.speed)
+    } else {
+        o.end_time.borrow().clone()
+    };
+    if *o.end_time.borrow() != end_time {
+        *o.end_time.borrow_mut() = end_time;
+        for h in o.end_time_changed.snapshot() {
+            ICoreWebView2EstimatedEndTimeChangedEventHandlerApp(h).Invoke_async(&mut Ctx, &sender, &ObjRef::Null);
+        }
+    }
+    let state_changed = o.state.replace(state) != state;
+    let reason_changed = o.reason.replace(reason) != reason;
+    if state_changed || reason_changed {
+        for h in o.state_changed.snapshot() {
+            ICoreWebView2StateChangedEventHandlerApp(h).Invoke_async(&mut Ctx, &sender, &ObjRef::Null);
+        }
+    }
+    if state == DOWNLOAD_STATE_COMPLETED || (state == DOWNLOAD_STATE_INTERRUPTED && reason != INTERRUPT_REASON_USER_PAUSED) {
+        DOWNLOADS.with(|d| d.borrow_mut().remove(&id));
+    }
+}
+
+// ===================================================================
+// PermissionRequested
+// ===================================================================
+
+const PERMISSION_STATE_DEFAULT: i32 = 0;
+const PERMISSION_STATE_ALLOW: i32 = 1;
+const PERMISSION_STATE_DENY: i32 = 2;
+
+thread_local! {
+    /// Answers the user gave in the default prompt, kept for the session: (origin, kind) -> allowed.
+    static PERMISSION_ANSWERS: RefCell<HashMap<(String, i32), bool>> = RefCell::new(HashMap::new());
+}
+
+pub struct PermissionArgs {
+    uri: String,
+    kind: i32,
+    state: Cell<i32>,
+    handled: Cell<bool>,
+    saves_in_profile: Cell<bool>,
+    deferral: Rc<DeferralSlot>,
+}
+
+impl ICoreWebView2PermissionRequestedEventArgs3Impl for PermissionArgs {
+    fn get_Uri(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.uri.clone())
+    }
+    fn get_PermissionKind(&self, _ctx: &mut Ctx) -> WvResult<i32> {
+        Ok(self.kind)
+    }
+    fn get_IsUserInitiated(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(false) // CEF does not say
+    }
+    fn get_State(&self, _ctx: &mut Ctx) -> WvResult<i32> {
+        Ok(self.state.get())
+    }
+    fn put_State(&self, _ctx: &mut Ctx, state: i32) -> WvResult<()> {
+        if !(PERMISSION_STATE_DEFAULT..=PERMISSION_STATE_DENY).contains(&state) {
+            return Err(E_INVALIDARG);
+        }
+        self.state.set(state);
+        Ok(())
+    }
+    fn GetDeferral(&self, _ctx: &mut Ctx) -> WvResult<ObjRef> {
+        Ok(self.deferral.get())
+    }
+    fn get_Handled(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.handled.get())
+    }
+    fn put_Handled(&self, _ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        self.handled.set(value);
+        Ok(())
+    }
+    fn get_SavesInProfile(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.saves_in_profile.get())
+    }
+    fn put_SavesInProfile(&self, _ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        self.saves_in_profile.set(value);
+        Ok(())
+    }
+}
+
+/// One permission kind: event, then (state DEFAULT) the remembered answer or the default prompt.
+fn decide_permission(view: u32, origin: String, kind: i32, done: Box<dyn FnOnce(bool)>) {
+    let args = Rc::new(ICoreWebView2PermissionRequestedEventArgs3Obj(PermissionArgs {
+        uri: origin.clone(),
+        kind,
+        state: Cell::new(PERMISSION_STATE_DEFAULT),
+        handled: Cell::new(false),
+        saves_in_profile: Cell::new(true),
+        deferral: DeferralSlot::new(),
+    }));
+    with_webview(view, |wv, sender| {
+        let args_ref = ObjRef::Runtime(args.clone());
+        for h in wv.ev(Ev::PermissionRequested).snapshot() {
+            if let Err(e) = ICoreWebView2PermissionRequestedEventHandlerApp(h).Invoke(&mut Ctx, &sender, &args_ref) {
+                eprintln!("helper: PermissionRequested handler failed: {e:#x}");
+            }
+        }
+    });
+    let finish = {
+        let args = args.clone();
+        move || match args.0.state.get() {
+            PERMISSION_STATE_ALLOW => done(true),
+            PERMISSION_STATE_DENY => done(false),
+            _ => {
+                let key = (origin.clone(), kind);
+                if let Some(allow) = PERMISSION_ANSWERS.with(|a| a.borrow().get(&key).copied()) {
+                    return done(allow);
+                }
+                crate::show_permission_prompt(view, &origin, kind, Box::new(move |allow| {
+                    PERMISSION_ANSWERS.with(|a| a.borrow_mut().insert(key, allow));
+                    done(allow);
+                }));
+            }
+        }
+    };
+    let deferred: Rc<RefCell<Option<Box<dyn FnOnce()>>>> = Rc::new(RefCell::new(Some(Box::new(finish))));
+    let later = deferred.clone();
+    if args.0.deferral.settle(Box::new(move || {
+        if let Some(f) = later.borrow_mut().take() {
+            f()
+        }
+    })) {
+        if let Some(f) = deferred.borrow_mut().take() {
+            f()
+        }
+    }
+}
+
+/// All `kinds` must be allowed (CEF may ask for several in one prompt); one event per kind.
+pub fn on_permission_requested(view: u32, origin: &str, kinds: Vec<i32>, done: Box<dyn FnOnce(bool)>) {
+    fn next(view: u32, origin: String, mut kinds: Vec<i32>, done: Box<dyn FnOnce(bool)>) {
+        let Some(kind) = kinds.pop() else { return done(true) };
+        let o = origin.clone();
+        decide_permission(view, o, kind, Box::new(move |allow| {
+            if allow {
+                next(view, origin, kinds, done)
+            } else {
+                done(false)
+            }
+        }));
+    }
+    let mut kinds = kinds;
+    kinds.reverse();
+    next(view, origin.to_string(), kinds, done);
 }

@@ -5,3 +5,4 @@
 /helper/target/
 /tests/apps/apisample/out/
 /tests/apps/*/x86/
+/tests/apps/dltest/dl/
