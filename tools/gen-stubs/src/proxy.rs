@@ -1,9 +1,9 @@
 //! Generator v2: ogólny pośrednik COM (docs/architektura-proxy.md).
 //!
 //! Wyjście:
-//!   <c_dir>/proxy_gen.h, proxy_gen.c — identyfikatory metod/rodzin, vtable pośredników (CALL),
+//!   <c_dir>/proxy_gen.h, proxy_gen.c - identyfikatory metod/rodzin, vtable pośredników (CALL),
 //!                                      dyspozytor wywołań na obiektach aplikacji (INVOKE)
-//!   <rust_file> (api_gen.rs)          — te same identyfikatory, trait na rodzinę z domyślną
+//!   <rust_file> (api_gen.rs)          - te same identyfikatory, trait na rodzinę z domyślną
 //!                                      implementacją (log + S_OK), dyspozytor, klienci obiektów aplikacji
 
 use crate::{die, Iface, Method};
@@ -180,7 +180,7 @@ pub fn generate(ifaces: &[Iface], out_flags: &HashMap<(String, String), Vec<bool
 
     // ======================= C =======================
     let mut h = String::new();
-    writeln!(h, "/* Wygenerowane przez tools/gen-stubs (proxy) — NIE EDYTOWAĆ ręcznie. */").unwrap();
+    writeln!(h, "/* Wygenerowane przez tools/gen-stubs (proxy) - NIE EDYTOWAĆ ręcznie. */").unwrap();
     writeln!(h, "#ifndef __WEBVIEW2_PROXY_GEN_H\n#define __WEBVIEW2_PROXY_GEN_H\n").unwrap();
     writeln!(h, "#define WV2_API_HASH 0x{api_hash:016x}ull").unwrap();
     writeln!(h, "#define WV2_FAMILY_COUNT {}\n", leaves.len()).unwrap();
@@ -202,7 +202,7 @@ pub fn generate(ifaces: &[Iface], out_flags: &HashMap<(String, String), Vec<bool
     writeln!(h, "\n#endif /* __WEBVIEW2_PROXY_GEN_H */").unwrap();
 
     let mut c = String::new();
-    writeln!(c, "/* Wygenerowane przez tools/gen-stubs (proxy) — NIE EDYTOWAĆ ręcznie. */\n").unwrap();
+    writeln!(c, "/* Wygenerowane przez tools/gen-stubs (proxy) - NIE EDYTOWAĆ ręcznie. */\n").unwrap();
     c.push_str("#include <stdarg.h>\n#include <stdlib.h>\n\n#define COBJMACROS\n#include \"windef.h\"\n#include \"winbase.h\"\n#include \"objbase.h\"\n#include \"webview2.h\"\n#include \"proxy.h\"\n#include \"proxy_gen.h\"\n\n#include \"wine/debug.h\"\n\nWINE_DEFAULT_DEBUG_CHANNEL(webview2);\n");
 
     for l in leaves {
@@ -258,7 +258,7 @@ pub fn generate(ifaces: &[Iface], out_flags: &HashMap<(String, String), Vec<bool
 
     // ======================= Rust =======================
     let mut r = String::new();
-    writeln!(r, "//! Wygenerowane przez tools/gen-stubs (proxy) — NIE EDYTOWAĆ ręcznie.").unwrap();
+    writeln!(r, "//! Wygenerowane przez tools/gen-stubs (proxy) - NIE EDYTOWAĆ ręcznie.").unwrap();
     writeln!(r, "#![allow(non_snake_case, non_camel_case_types, non_upper_case_globals, dead_code, unused_variables, unused_mut, clippy::all)]\n").unwrap();
     writeln!(r, "use crate::rpc::{{Ctx, Dispatch, ObjRef, AppRef, WvResult, S_OK, E_NOTIMPL}};").unwrap();
     writeln!(r, "use crate::protocol::{{Reader, Writer}};\nuse std::any::Any;\nuse std::rc::Rc;\n").unwrap();

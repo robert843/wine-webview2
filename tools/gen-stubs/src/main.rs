@@ -205,7 +205,7 @@ fn parse_idl(idl: &str) -> HashMap<String, Vec<(String, Vec<bool>)>> {
     out
 }
 
-/// Interfejsy implementowane przez APLIKACJĘ (nie przez runtime) — nie generujemy dla nich obiektów.
+/// Interfejsy implementowane przez APLIKACJĘ (nie przez runtime) - nie generujemy dla nich obiektów.
 fn implemented_by_app(name: &str) -> bool {
     name.ends_with("Handler")
         || name.starts_with("ICoreWebView2EnvironmentOptions")
@@ -315,7 +315,7 @@ fn main() {
     let mut h = String::new();
     let total_methods: usize = leaves.iter().map(|l| l.groups.iter().map(|g| g.methods.len()).sum::<usize>()).sum();
 
-    writeln!(h, "/* Wygenerowane przez tools/gen-stubs — NIE EDYTOWAĆ ręcznie. */").unwrap();
+    writeln!(h, "/* Wygenerowane przez tools/gen-stubs - NIE EDYTOWAĆ ręcznie. */").unwrap();
     writeln!(h, "#ifndef __WEBVIEW2_STUBS_H\n#define __WEBVIEW2_STUBS_H\n").unwrap();
     writeln!(h, "struct stub_family\n{{\n    const char *name;\n    const void *vtbl;\n    const IID *const *iids;\n}};\n").unwrap();
     writeln!(h, "/* Wspólny układ obiektu-zaślepki; `data` do użytku ręcznie napisanych nadpisań metod. */").unwrap();
@@ -323,7 +323,7 @@ fn main() {
     writeln!(h, "/* Tworzy obiekt-zaślepkę rodziny; zwraca wskaźnik na interfejs (ref = 1) albo NULL. */").unwrap();
     writeln!(h, "void *stub_create(const struct stub_family *family);\n").unwrap();
 
-    writeln!(c, "/*\n * Szkielet logujący WebView2 — wygenerowany przez tools/gen-stubs, NIE EDYTOWAĆ ręcznie.").unwrap();
+    writeln!(c, "/*\n * Szkielet logujący WebView2 - wygenerowany przez tools/gen-stubs, NIE EDYTOWAĆ ręcznie.").unwrap();
     writeln!(c, " * Rodzin: {}, metod (z IUnknown): {}.\n *", leaves.len(), total_methods).unwrap();
     writeln!(c, " * Każda metoda loguje FIXME i zwraca S_OK z wyzerowanymi parametrami wyjściowymi.").unwrap();
     writeln!(c, " */\n").unwrap();

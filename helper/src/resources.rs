@@ -1,10 +1,10 @@
 //! WebResourceRequested: przechwytywanie żądań pasujących do filtrów aplikacji.
 //!
 //! Przebieg (wątek IO CEF):
-//!   resource_request_handler — czy URL/kontekst pasuje do filtrów widoku → nasz handler
-//!   on_before_resource_load  — żądanie wstrzymane (CONTINUE_ASYNC), handlery aplikacji na wątku UI
+//!   resource_request_handler - czy URL/kontekst pasuje do filtrów widoku → nasz handler
+//!   on_before_resource_load  - żądanie wstrzymane (CONTINUE_ASYNC), handlery aplikacji na wątku UI
 //!   (webresource.rs; po decyzji albo Complete() deferrala) → callback.cont()
-//!   resource_handler         — odpowiedź aplikacji albo None (żądanie idzie do sieci, jak w WebView2)
+//!   resource_handler         - odpowiedź aplikacji albo None (żądanie idzie do sieci, jak w WebView2)
 
 use crate::ipc::Channel;
 use cef::rc::Rc as _;
@@ -75,7 +75,7 @@ pub fn remove_filter(view: u32, pattern: &str, context: u32) {
 
 // ---------- Settings.UserAgent ----------
 // Emulation.setUserAgentOverride (DevTools) obejmuje tylko ramkę główną; ramki z innych witryn
-// (osobne procesy renderera) wysyłałyby domyślny UA — np. logowanie FFXIV odrzuca wtedy formularz.
+// (osobne procesy renderera) wysyłałyby domyślny UA - np. logowanie FFXIV odrzuca wtedy formularz.
 // Dlatego własny UA wstawiamy też w nagłówek każdego żądania widoku (jak WebView2).
 static USER_AGENTS: Mutex<Option<HashMap<u32, String>>> = Mutex::new(None);
 
@@ -153,7 +153,7 @@ fn virtual_host_file(view: u32, url: &str) -> Option<Option<std::path::PathBuf>>
     for part in percent_decode(path).split(['/', '\\']) {
         match part {
             "" | "." => {}
-            ".." => return Some(None), // poza folder — odmowa
+            ".." => return Some(None), // poza folder - odmowa
             p => file.push(p),
         }
     }
@@ -291,7 +291,7 @@ fn request_body(request: &Request) -> Vec<u8> {
         }
         return body;
     };
-    // cef-rs przekazuje len() wektora jako rozmiar tablicy C — trzeba go wcześniej wypełnić.
+    // cef-rs przekazuje len() wektora jako rozmiar tablicy C - trzeba go wcześniej wypełnić.
     let mut elements: Vec<Option<PostDataElement>> = (0..post.element_count()).map(|_| None).collect();
     post.elements(Some(&mut elements));
     if debug {

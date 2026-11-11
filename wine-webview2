@@ -1,0 +1,248 @@
+#!/bin/bash
+# wine-webview2 - installs the open WebView2 runtime for Wine/Proton.
+#
+#   wine-webview2 install                 install the browser helper (CEF) for the current user
+#   wine-webview2 prefix [WINEPREFIX]     install the runtime into a Wine prefix (default: $WINEPREFIX or ~/.wine)
+#   wine-webview2 steam APPID             install the runtime into the Proton prefix of a Steam game
+#   wine-webview2 uninstall [WINEPREFIX]  remove it from a prefix (restores Microsoft's runtime if present)
+#   wine-webview2 steam-uninstall APPID   the same for a Steam game
+#   wine-webview2 status [WINEPREFIX]     show what the prefix uses
+#
+# Environment:
+#   WINE                    wine binary used for registry changes in "prefix"/"uninstall" (default: wine)
+#   STEAM_DIR               Steam installation (default: ~/.local/share/Steam or ~/.steam/steam)
+#   WINE_WEBVIEW2_DATA      where "install" puts the helper (default: ${XDG_DATA_HOME:-~/.local/share}/wine-webview2)
+#   WINE_WEBVIEW2_RUNTIME   use this helper directory instead of the installed one (development)
+#
+# Layout:
+#   $WINE_WEBVIEW2_DATA/<version>/            helper + CEF, shared by all prefixes (no root needed, visible
+#                                             inside the Steam Linux Runtime container)
+#   <prefix>/drive_c/Program Files (x86)/Microsoft/EdgeWebView/Application/<runtime version>/
+#       msedgewebview2.exe, EBWebView/{x64,x86}/EmbeddedBrowserWebView.dll, x64/embeddedbrowserwebview.so,
+#       x64/wine-webview2-helper -> $WINE_WEBVIEW2_DATA/<version>/wine-webview2-helper
+#   registry (32-bit view): EdgeUpdate\ClientState\{F3017226-…}\EBWebView and \pv, EdgeUpdate\Clients\{…}\pv
+#
+# Requires Wine >= 11.2 (Proton Experimental); older Wine cannot load the runtime's Unix library.
+set -euo pipefail
+
+VERSION=0.1.0
+RUNTIME_VERSION=156.0.9999.0
+CLIENT_ID='{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}'
+
+HERE=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)
+DATA=${WINE_WEBVIEW2_DATA:-${XDG_DATA_HOME:-$HOME/.local/share}/wine-webview2}
+
+die() { echo "wine-webview2: $*" >&2; exit 1; }
+info() { echo "wine-webview2: $*"; }
+
+# Sources: release tarball (helper/, prefix/) or a source tree after "make" (build/).
+if [ -d "$HERE/prefix" ]; then
+    SRC_X64="$HERE/prefix/x64"; SRC_X86="$HERE/prefix/x86"; SRC_EXE="$HERE/prefix/msedgewebview2.exe"
+    SRC_HELPER="$HERE/helper"
+else
+    SRC_X64="$HERE/build/x86_64"; SRC_X86="$HERE/build/i386"; SRC_EXE="$HERE/build/x86_64/msedgewebview2.exe"
+    SRC_HELPER="$HERE/build/runtime"
+fi
+
+helper_dir() {
+    if [ -n "${WINE_WEBVIEW2_RUNTIME:-}" ]; then echo "$WINE_WEBVIEW2_RUNTIME"; else echo "$DATA/$VERSION"; fi
+}
+
+cmd_install() {
+    [ -x "$SRC_HELPER/wine-webview2-helper" ] || die "helper not found in $SRC_HELPER (run make?)"
+    local dest="$DATA/$VERSION"
+    info "installing the helper into $dest"
+    mkdir -p "$DATA"
+    rm -rf "$dest.tmp"
+    mkdir -p "$dest.tmp"
+    cp -rL "$SRC_HELPER/." "$dest.tmp/"     # -L: the source tree links CEF files from the CEF download
+    rm -rf "$dest.tmp/extensions" "$dest.tmp/archive.json"
+    # The CEF download ships libcef.so with debug symbols (~1.4 GB); stripped it is ~280 MB.
+    if command -v strip >/dev/null; then
+        strip --strip-unneeded "$dest.tmp/libcef.so" "$dest.tmp/wine-webview2-helper" 2>/dev/null || true
+    fi
+    rm -rf "$dest"
+    mv "$dest.tmp" "$dest"
+    info "done; now run: wine-webview2 prefix [WINEPREFIX]  or  wine-webview2 steam APPID"
+}
+
+runtime_dir() { echo "$1/drive_c/Program Files (x86)/Microsoft/EdgeWebView/Application/$RUNTIME_VERSION"; }
+
+copy_files() {
+    local prefix=$1 rt helper
+    rt=$(runtime_dir "$prefix")
+    helper="$(helper_dir)/wine-webview2-helper"
+    [ -x "$helper" ] || die "helper not installed ($helper); run: wine-webview2 install"
+    [ -f "$SRC_X64/EmbeddedBrowserWebView.dll" ] || die "runtime files not found in $SRC_X64"
+    mkdir -p "$rt/EBWebView/x64" "$rt/EBWebView/x86"
+    cp "$SRC_X64/EmbeddedBrowserWebView.dll" "$SRC_X64/embeddedbrowserwebview.so" "$rt/EBWebView/x64/"
+    [ -f "$SRC_X86/EmbeddedBrowserWebView.dll" ] && cp "$SRC_X86/EmbeddedBrowserWebView.dll" "$rt/EBWebView/x86/"
+    cp "$SRC_EXE" "$rt/"
+    ln -sfn "$helper" "$rt/EBWebView/x64/wine-webview2-helper"
+}
+
+win_runtime_path() { echo "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\$1"; }
+
+# Registry through Wine (prefix may be running).
+reg_set_wine() {
+    local wine=${WINE:-wine} ver=$1
+    reg() { WINEDEBUG=-all "$wine" reg add "$@" /f /reg:32 >/dev/null 2>&1; }
+    reg "HKLM\\SOFTWARE\\Microsoft\\EdgeUpdate\\ClientState\\$CLIENT_ID" /v EBWebView /t REG_SZ /d "$(win_runtime_path "$ver")"
+    reg "HKLM\\SOFTWARE\\Microsoft\\EdgeUpdate\\ClientState\\$CLIENT_ID" /v pv /t REG_SZ /d "$ver"
+    reg "HKLM\\SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\$CLIENT_ID" /v pv /t REG_SZ /d "$ver"
+    reg "HKLM\\SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\$CLIENT_ID" /v name /t REG_SZ /d "Microsoft Edge WebView2 Runtime"
+    reg "HKLM\\SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\$CLIENT_ID" /v location /t REG_SZ /d "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application"
+}
+
+# Registry by editing system.reg (Proton prefix, game not running): no foreign Wine touches the prefix.
+reg_set_file() {
+    local reg=$1 ver=$2
+    command -v python3 >/dev/null || die "python3 is required"
+    python3 -I - "$reg" "$ver" "$CLIENT_ID" <<'EOF'
+import re, sys
+path, ver, cid = sys.argv[1:4]
+text = open(path, encoding="utf-8", errors="surrogateescape").read()
+esc = lambda s: s.replace("\\", "\\\\")
+base = "Software\\\\Wow6432Node\\\\Microsoft\\\\EdgeUpdate\\\\"
+values = {
+    "ClientState": {"EBWebView": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\" + ver, "pv": ver},
+    "Clients": {"pv": ver, "name": "Microsoft Edge WebView2 Runtime",
+                "location": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application"},
+}
+for sub, vals in values.items():
+    head = "[" + base + sub + "\\\\" + cid + "]"
+    i = text.find(head)
+    if i < 0:
+        text = text.rstrip("\n") + "\n\n" + head + " 0\n" + "".join('"%s"="%s"\n' % (k, esc(v)) for k, v in vals.items())
+        continue
+    j = text.find("\n\n", i)
+    j = len(text) if j < 0 else j
+    block = text[i:j]
+    for k, v in vals.items():
+        line = '"%s"="%s"' % (k, esc(v))
+        block, n = re.subn(r'^"%s"=.*$' % re.escape(k), lambda m: line, block, flags=re.M)
+        if not n:
+            block += "\n" + line
+    text = text[:i] + block + text[j:]
+open(path, "w", encoding="utf-8", errors="surrogateescape").write(text)
+EOF
+}
+
+# Version of Microsoft's runtime in a prefix (highest real one), empty if none.
+ms_runtime_version() {
+    local apps="$1/drive_c/Program Files (x86)/Microsoft/EdgeWebView/Application" d best=""
+    [ -d "$apps" ] || return 0
+    for d in "$apps"/*/; do
+        d=$(basename "$d")
+        [ "$d" = "$RUNTIME_VERSION" ] && continue
+        [ -f "$apps/$d/msedgewebview2.exe" ] && [ -f "$apps/$d/EBWebView/x64/EmbeddedBrowserWebView.dll" ] || continue
+        best=$(printf '%s\n%s\n' "$best" "$d" | sort -V | tail -1)
+    done
+    echo "$best"
+}
+
+default_prefix() { echo "${1:-${WINEPREFIX:-$HOME/.wine}}"; }
+
+cmd_prefix() {
+    local prefix; prefix=$(default_prefix "${1:-}")
+    [ -f "$prefix/system.reg" ] || die "$prefix is not a Wine prefix"
+    copy_files "$prefix"
+    WINEPREFIX=$prefix reg_set_wine "$RUNTIME_VERSION"
+    info "installed into $prefix (runtime $RUNTIME_VERSION, helper $(helper_dir))"
+}
+
+steam_dir() {
+    local d
+    for d in "${STEAM_DIR:-}" "$HOME/.local/share/Steam" "$HOME/.steam/steam"; do
+        [ -n "$d" ] && [ -d "$d/steamapps" ] && { echo "$d"; return; }
+    done
+    die "Steam not found (set STEAM_DIR)"
+}
+
+steam_prefix() {
+    local appid=$1 lib prefix=""
+    [[ "$appid" =~ ^[0-9]+$ ]] || die "APPID must be a number"
+    for lib in "$(steam_dir)" $(sed -n 's/^\s*"path"\s*"\(.*\)"/\1/p' "$(steam_dir)/steamapps/libraryfolders.vdf" 2>/dev/null); do
+        [ -f "$lib/steamapps/compatdata/$appid/pfx/system.reg" ] && { prefix="$lib/steamapps/compatdata/$appid/pfx"; break; }
+    done
+    [ -n "$prefix" ] || die "no Proton prefix for app $appid; run the game once with Proton first"
+    echo "$prefix"
+}
+
+check_not_running() {
+    # Steam's reaper process lives exactly as long as the game.
+    pgrep -f "reaper SteamLaunch AppId=$1 " >/dev/null && die "the game ($1) is running; close it first" || true
+}
+
+cmd_steam() {
+    local appid=${1:?usage: wine-webview2 steam APPID} prefix
+    prefix=$(steam_prefix "$appid")
+    check_not_running "$appid"
+    copy_files "$prefix"
+    reg_set_file "$prefix/system.reg" "$RUNTIME_VERSION"
+    info "installed into the prefix of app $appid ($prefix)"
+    info "select Proton Experimental (or Wine >= 11.2 based Proton) for this game in Steam"
+}
+
+remove_files() {
+    local rt; rt=$(runtime_dir "$1")
+    rm -rf -- "$rt"
+}
+
+cmd_uninstall() {
+    local prefix ms; prefix=$(default_prefix "${1:-}")
+    [ -f "$prefix/system.reg" ] || die "$prefix is not a Wine prefix"
+    ms=$(ms_runtime_version "$prefix")
+    remove_files "$prefix"
+    if [ -n "$ms" ]; then
+        WINEPREFIX=$prefix reg_set_wine "$ms"
+        info "removed; Microsoft's runtime $ms is active again"
+    else
+        WINEPREFIX=$prefix WINEDEBUG=-all "${WINE:-wine}" reg delete "HKLM\\SOFTWARE\\Microsoft\\EdgeUpdate\\ClientState\\$CLIENT_ID" /f /reg:32 >/dev/null 2>&1 || true
+        WINEPREFIX=$prefix WINEDEBUG=-all "${WINE:-wine}" reg delete "HKLM\\SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\$CLIENT_ID" /f /reg:32 >/dev/null 2>&1 || true
+        info "removed; no WebView2 runtime is installed in $prefix now"
+    fi
+}
+
+cmd_steam_uninstall() {
+    local appid=${1:?usage: wine-webview2 steam-uninstall APPID} prefix ms
+    prefix=$(steam_prefix "$appid")
+    check_not_running "$appid"
+    ms=$(ms_runtime_version "$prefix")
+    remove_files "$prefix"
+    if [ -n "$ms" ]; then
+        reg_set_file "$prefix/system.reg" "$ms"
+        info "removed; Microsoft's runtime $ms is active again"
+    else
+        info "removed; the game may install Microsoft's runtime on next start"
+    fi
+}
+
+cmd_status() {
+    local prefix rt link; prefix=$(default_prefix "${1:-}")
+    [ -f "$prefix/system.reg" ] || die "$prefix is not a Wine prefix"
+    rt=$(runtime_dir "$prefix")
+    echo "prefix:        $prefix"
+    if grep -q "EBWebView\"=\".*$RUNTIME_VERSION\"" "$prefix/system.reg" 2>/dev/null; then
+        echo "active:        wine-webview2 ($RUNTIME_VERSION)"
+    elif [ -n "$(ms_runtime_version "$prefix")" ]; then
+        echo "active:        Microsoft WebView2 $(ms_runtime_version "$prefix")"
+    else
+        echo "active:        none"
+    fi
+    if [ -L "$rt/EBWebView/x64/wine-webview2-helper" ]; then
+        link=$(readlink "$rt/EBWebView/x64/wine-webview2-helper")
+        echo "helper:        $link $([ -x "$link" ] && echo '(ok)' || echo '(MISSING)')"
+    fi
+}
+
+case "${1:-}" in
+    install) shift; cmd_install "$@" ;;
+    prefix) shift; cmd_prefix "$@" ;;
+    steam) shift; cmd_steam "$@" ;;
+    uninstall) shift; cmd_uninstall "$@" ;;
+    steam-uninstall) shift; cmd_steam_uninstall "$@" ;;
+    status) shift; cmd_status "$@" ;;
+    version|--version) echo "wine-webview2 $VERSION (runtime $RUNTIME_VERSION)" ;;
+    *) sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//'; exit 1 ;;
+esac

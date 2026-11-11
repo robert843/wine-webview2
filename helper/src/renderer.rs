@@ -6,7 +6,7 @@
 //!   renderer -> browser  "wv2.result" [id, json, ok, name, message, line, col, exception_json]  wynik ExecuteScript
 //!   renderer -> browser  "wv2.close"  []                         window.close() w ramce głównej
 //! Skrypty AddScriptToExecuteOnDocumentCreated: plik `<--wv2-scripts-dir>/<browser_id>.scripts`
-//! (rekordy: u32 LE długość + UTF-8), czytany przy każdym nowym kontekście JS — działa także
+//! (rekordy: u32 LE długość + UTF-8), czytany przy każdym nowym kontekście JS - działa także
 //! po zmianie procesu renderera przy nawigacji między witrynami.
 
 use cef::rc::Rc as _;

@@ -1,4 +1,4 @@
-// Aplikacja testowa E3: wejście (mysz, klawiatura, kółko, fokus) — zdarzenia wracają mostem JS na stderr.
+// Aplikacja testowa E3: wejście (mysz, klawiatura, kółko, fokus) - zdarzenia wracają mostem JS na stderr.
 #include "webview/webview.h"
 #include <cstdio>
 

@@ -1,23 +1,24 @@
-# wine-webview2 — budowanie poza drzewem Wine (jak lsteamclient w Protonie).
+# wine-webview2 - budowanie poza drzewem Wine (jak lsteamclient w Protonie).
 #
 # Wymaga zbudowanego drzewa Wine (nagłówki, widl, wrc, winegcc, biblioteki importów PE):
-#   WINE_SRC   — źródła Wine
-#   WINE_BUILD — katalog budowania Wine (configure --enable-archs=x86_64,i386)
+#   WINE_SRC   - źródła Wine
+#   WINE_BUILD - katalog budowania Wine (configure --enable-archs=x86_64,i386)
 #
-# make            — DLL x86_64 i i386 + biblioteka uniksowa x86_64 + pomocnik (build/runtime/)
-# make stubs      — regeneracja szkieletu z IDL (tools/gen-stubs)
+# make            - DLL x86_64 i i386 + biblioteka uniksowa x86_64 + pomocnik (build/runtime/)
+# make stubs      - regeneracja szkieletu z IDL (tools/gen-stubs)
 #
 # build/runtime/ ma układ docelowej paczki /usr/lib/wine-webview2/: pomocnik + pliki CEF.
 
-WINE_SRC   ?= $(CURDIR)/../wine-webview2-ref/wine
-WINE_BUILD ?= $(CURDIR)/../wine-webview2-ref/wine-build
+REF        ?= $(CURDIR)/../wine-webview2-ref
+WINE_SRC   ?= $(REF)/wine
+WINE_BUILD ?= $(REF)/wine-build
 
 WIDL    = $(WINE_BUILD)/tools/widl/widl
 WRC     = $(WINE_BUILD)/tools/wrc/wrc
 WINEGCC = $(WINE_BUILD)/tools/winegcc/winegcc
 
 # CEF pobrany przez build.rs crate'a cef (wersja wynika z helper/Cargo.toml)
-CEF_PATH    ?= $(CURDIR)/../wine-webview2-ref/cef-rs
+CEF_PATH    ?= $(REF)/cef-rs
 CEF_VERSION  = 156.0.26
 CEF_DIR      = $(CEF_PATH)/$(CEF_VERSION)/cef_linux_x86_64
 
@@ -90,4 +91,21 @@ stubs: $(B)/webview2.h
 clean:
 	rm -rf $(B)
 
-.PHONY: all stubs clean runtime
+.PHONY: all stubs clean runtime dist
+
+# Paczka wydania: wine-webview2-<wersja>.tar.xz (skrypt + pomocnik bez symboli + pliki do prefiksu)
+VERSION = $(shell sed -n 's/^VERSION=//p' wine-webview2)
+DIST    = $(B)/dist/wine-webview2-$(VERSION)
+dist: all
+	rm -rf $(DIST) && mkdir -p $(DIST)/helper $(DIST)/prefix/x64 $(DIST)/prefix/x86
+	cp wine-webview2 README.md LICENSE $(DIST)/
+	cp -rL $(B)/runtime/. $(DIST)/helper/
+	rm -rf $(DIST)/helper/extensions $(DIST)/helper/archive.json
+	strip --strip-unneeded $(DIST)/helper/libcef.so $(DIST)/helper/wine-webview2-helper
+	cp third_party/CEF-LICENSE.txt $(DIST)/helper/
+	cp -L $(CEF_DIR)/CREDITS.html $(DIST)/helper/CHROMIUM-CREDITS.html
+	cp $(B)/x86_64/EmbeddedBrowserWebView.dll $(B)/x86_64/embeddedbrowserwebview.so $(DIST)/prefix/x64/
+	cp $(B)/i386/EmbeddedBrowserWebView.dll $(DIST)/prefix/x86/
+	cp $(B)/x86_64/msedgewebview2.exe $(DIST)/prefix/
+	tar -C $(B)/dist -cJf $(B)/dist/wine-webview2-$(VERSION).tar.xz wine-webview2-$(VERSION)
+	@ls -la $(B)/dist/wine-webview2-$(VERSION).tar.xz

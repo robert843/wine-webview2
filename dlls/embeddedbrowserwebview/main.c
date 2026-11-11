@@ -1,5 +1,5 @@
 /*
- * EmbeddedBrowserWebView — open implementation of the WebView2 runtime client DLL
+ * EmbeddedBrowserWebView - open implementation of the WebView2 runtime client DLL
  *
  * Copyright 2026 wine-webview2 contributors
  *
@@ -137,7 +137,7 @@ static void init_overrides(void)
 }
 
 /*
- * Environment creation — the entry point used by WebView2Loader.
+ * Environment creation - the entry point used by WebView2Loader.
  */
 
 struct environment_created_ctx

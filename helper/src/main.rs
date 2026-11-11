@@ -1,4 +1,4 @@
-//! wine-webview2-helper — natywny (linuksowy) proces przeglądarki dla wine-webview2.
+//! wine-webview2-helper - natywny (linuksowy) proces przeglądarki dla wine-webview2.
 //!
 //! Tryby:
 //!   --ipc-fd=N                     normalna praca: polecenia z EmbeddedBrowserWebView.dll
@@ -88,7 +88,7 @@ fn devtools(browser: &Browser, method: &str, params: &str) -> Option<i32> {
     devtools_with_id(browser, next_devtools_id(), method, params)
 }
 
-/// CEF potrafi odpowiedzieć synchronicznie (wewnątrz send_dev_tools_message) — oczekujący musi
+/// CEF potrafi odpowiedzieć synchronicznie (wewnątrz send_dev_tools_message) - oczekujący musi
 /// być zarejestrowany przed wysłaniem, stąd id podawane z zewnątrz.
 fn devtools_with_id(browser: &Browser, id: i32, method: &str, params: &str) -> Option<i32> {
     let msg = format!("{{\"id\":{id},\"method\":{},\"params\":{params}}}", renderer::json_string(method));
@@ -211,7 +211,7 @@ struct IpcState {
 }
 
 thread_local! {
-    /// Stan trybu IPC — używany wyłącznie na wątku UI CEF.
+    /// Stan trybu IPC - używany wyłącznie na wątku UI CEF.
     static STATE: RefCell<Option<IpcState>> = const { RefCell::new(None) };
 }
 
@@ -446,7 +446,7 @@ fn paint_view(st: &mut IpcState, view_id: u32, src: &[u8], width: u32, height: u
     }
     let fb = view.frames.as_mut().unwrap();
     let Some(slot) = fb.busy.iter().position(|b| !b) else {
-        // DLL trzyma oba sloty — pomijamy klatkę, odświeżymy po FRAME_DONE.
+        // DLL trzyma oba sloty - pomijamy klatkę, odświeżymy po FRAME_DONE.
         view.dropped = true;
         return false;
     };
@@ -498,7 +498,7 @@ wrap_display_handler! {
                 return;
             }
             // Nowe dokumenty zgłasza on_load_start; tu zostają nawigacje w obrębie dokumentu
-            // (pushState, kotwice) — wtedy URL różni się od ostatnio zgłoszonego.
+            // (pushState, kotwice) - wtedy URL różni się od ostatnio zgłoszonego.
             let url = url.map(|u| u.to_string()).unwrap_or_default();
             if set_last_source(self.client.view(), &url) {
                 webview::on_source_changed(self.client.view(), &url);
@@ -559,7 +559,7 @@ wrap_load_handler! {
             let view = self.client.view();
             let url = CefString::from(&frame.url()).to_string();
             // about:blank (i podobne) nie przechodzą przez OnBeforeBrowse: NavigationStarting tutaj
-            // (bez możliwości anulowania — dokument już się ładuje).
+            // (bez możliwości anulowania - dokument już się ładuje).
             let id = resources::active_navigation(view).unwrap_or_else(|| {
                 let id = resources::begin_navigation(view);
                 webview::on_navigation_starting(view, id, false, false, &url);
@@ -719,12 +719,12 @@ fn view_browser(view: u32) -> Option<Browser> {
 static CLOSING_BROWSERS: AtomicUsize = AtomicUsize::new(0);
 static SHUTTING_DOWN: AtomicBool = AtomicBool::new(false);
 
-/// Koniec połączenia z DLL (aplikacja zakończyła się — także bez Close()).
+/// Koniec połączenia z DLL (aplikacja zakończyła się - także bez Close()).
 fn shutdown_ipc() {
     if SHUTTING_DOWN.swap(true, Ordering::SeqCst) {
         return;
     }
-    // Bezpiecznik: bez aplikacji nie ma czego ratować — proces nie może zostać (Steam czeka
+    // Bezpiecznik: bez aplikacji nie ma czego ratować - proces nie może zostać (Steam czeka
     // na wszystkie procesy gry), nawet gdy CEF nie zamknie się sam.
     std::thread::spawn(|| {
         std::thread::sleep(std::time::Duration::from_secs(5));
@@ -745,7 +745,7 @@ fn shutdown_ipc() {
     }
 }
 
-/// OnBeforeClose: przy wyłączaniu — koniec pętli po zamknięciu ostatniej przeglądarki.
+/// OnBeforeClose: przy wyłączaniu - koniec pętli po zamknięciu ostatniej przeglądarki.
 fn browser_closed() {
     if !SHUTTING_DOWN.load(Ordering::SeqCst) {
         return;
@@ -869,7 +869,7 @@ struct PendingPopup {
     adopt: Option<u32>,
     /// Decyzja: zamknąć (Handled albo okno domyślne po odroczeniu).
     close: bool,
-    /// Wstrzymana pierwsza nawigacja popupu (URL), puszczana po podpięciu — wtedy zdarzenia
+    /// Wstrzymana pierwsza nawigacja popupu (URL), puszczana po podpięciu - wtedy zdarzenia
     /// nawigacji (NavigationStarting…) trafiają już do WebView aplikacji, jak w WebView2.
     held: Option<String>,
     intercepted: bool,
@@ -1226,7 +1226,7 @@ pub fn close_browser(view: u32) {
 
 /// Nawigacje z API startują osobnym zadaniem UI: CEF woła OnBeforeBrowse wewnątrz load_url,
 /// a NavigationStarting (synchroniczne, z Cancel) nie może się wykonać w trakcie wywołania z DLL.
-/// Tak jest też w WebView2 — zdarzenie przychodzi po powrocie z Navigate().
+/// Tak jest też w WebView2 - zdarzenie przychodzi po powrocie z Navigate().
 pub fn navigate(view: u32, url: &str) {
     let url = url.to_string();
     post_ui(move || {
@@ -1298,7 +1298,7 @@ pub fn post_web_message(view: u32, json: &str) {
     }
 }
 
-/// Polecenia hosta (okno, klatki, wejście) — na wątku UI CEF.
+/// Polecenia hosta (okno, klatki, wejście) - na wątku UI CEF.
 fn handle_command(msg: Message) {
     let mut r = Reader(&msg.payload);
     match msg.ty {

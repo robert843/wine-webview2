@@ -1,4 +1,4 @@
-/* Wygenerowane przez tools/gen-stubs (proxy) — NIE EDYTOWAĆ ręcznie. */
+/* Wygenerowane przez tools/gen-stubs (proxy) - NIE EDYTOWAĆ ręcznie. */
 #ifndef __WEBVIEW2_PROXY_GEN_H
 #define __WEBVIEW2_PROXY_GEN_H
 

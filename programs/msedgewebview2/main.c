@@ -20,7 +20,7 @@
 
 /* The browser process of the real runtime. Ours lives in the native helper, but applications
  * check that this file exists in the runtime folder (LeviLauncher), and open the process
- * reported by ICoreWebView2::get_BrowserProcessId (WebView2APISample) — with
+ * reported by ICoreWebView2::get_BrowserProcessId (WebView2APISample) - with
  * --wine-webview2-placeholder we stay alive as that process until the application exits
  * (EmbeddedBrowserWebView puts us in a kill-on-close job). */
 

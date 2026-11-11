@@ -1,4 +1,4 @@
-//! Wygenerowane przez tools/gen-stubs (proxy) — NIE EDYTOWAĆ ręcznie.
+//! Wygenerowane przez tools/gen-stubs (proxy) - NIE EDYTOWAĆ ręcznie.
 #![allow(non_snake_case, non_camel_case_types, non_upper_case_globals, dead_code, unused_variables, unused_mut, clippy::all)]
 
 use crate::rpc::{Ctx, Dispatch, ObjRef, AppRef, WvResult, S_OK, E_NOTIMPL};

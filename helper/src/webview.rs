@@ -1,7 +1,7 @@
 //! Środowisko, kontroler i ICoreWebView2 jako obiekty serwera (architektura v8).
 //!
 //! Zdarzenia CEF (main.rs, resources.rs) trafiają tu przez funkcje `on_*` i są dostarczane
-//! handlerom aplikacji przez INVOKE — asynchronicznie, poza NavigationStarting
+//! handlerom aplikacji przez INVOKE - asynchronicznie, poza NavigationStarting
 //! i WebResourceRequested, które muszą znać decyzję aplikacji.
 
 use crate::api_gen::*;
@@ -212,7 +212,7 @@ pub struct ScriptError {
 }
 
 impl PendingScript {
-    /// ExecuteScript zwraca "null" także po wyjątku (jak WebView2); WithResult — szczegóły.
+    /// ExecuteScript zwraca "null" także po wyjątku (jak WebView2); WithResult - szczegóły.
     fn complete(self, ctx: &mut Ctx, result: Result<String, ScriptError>) {
         match self {
             PendingScript::Plain(app) => {
@@ -683,7 +683,7 @@ macro_rules! raise_async {
     }};
 }
 
-/// NavigationStarting — synchronicznie; zwraca true, gdy aplikacja anulowała nawigację.
+/// NavigationStarting - synchronicznie; zwraca true, gdy aplikacja anulowała nawigację.
 pub fn on_navigation_starting(view: u32, id: u64, user_initiated: bool, redirected: bool, uri: &str) -> bool {
     with_webview(view, |wv, sender| {
         let handlers = wv.ev(Ev::NavigationStarting).snapshot();
@@ -980,7 +980,7 @@ fn decide_new_window(args: &NewWindowArgs) -> PopupDecision {
     }
 }
 
-/// NewWindowRequested — synchronicznie z OnBeforePopup. `popup` = numer widoku, pod którym
+/// NewWindowRequested - synchronicznie z OnBeforePopup. `popup` = numer widoku, pod którym
 /// przeglądarka popupu czeka na decyzję (przy odroczeniu).
 pub fn on_new_window(view: u32, popup: u32, uri: &str, name: &str, user_initiated: bool,
                      features: WindowFeatures) -> PopupDecision {

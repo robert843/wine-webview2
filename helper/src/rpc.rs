@@ -105,7 +105,7 @@ thread_local! {
     static NEXT_INVOKE: Cell<u64> = const { Cell::new(1) };
 }
 
-/// Obsługa obiektu 0 (korzeń) i komunikatów spoza RPC — dostarczane przez main.rs.
+/// Obsługa obiektu 0 (korzeń) i komunikatów spoza RPC - dostarczane przez main.rs.
 pub type RootFn = fn(&mut Ctx, u32, &mut Reader, &mut Writer) -> i32;
 pub type MessageFn = fn(Message);
 static HANDLERS: Mutex<Option<(RootFn, MessageFn)>> = Mutex::new(None);
@@ -322,7 +322,7 @@ impl Ctx {
             match pop(Some(Duration::from_millis(100))) {
                 Some(Some(m)) => process(m),
                 Some(None) => {
-                    enqueue(None); // koniec połączenia — niech zobaczy go też główna pętla
+                    enqueue(None); // koniec połączenia - niech zobaczy go też główna pętla
                     return Err(E_FAIL);
                 }
                 None => {

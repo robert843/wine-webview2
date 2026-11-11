@@ -1,4 +1,4 @@
-/* Wygenerowane przez tools/gen-stubs (proxy) — NIE EDYTOWAĆ ręcznie. */
+/* Wygenerowane przez tools/gen-stubs (proxy) - NIE EDYTOWAĆ ręcznie. */
 
 #include <stdarg.h>
 #include <stdlib.h>

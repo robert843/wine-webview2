@@ -33,7 +33,7 @@
  * changes. WV2_EVT_FRAME_READY names a slot; the helper does not write that slot again
  * until the DLL returns it with WV2_CMD_FRAME_DONE.
  *
- * Mirror: helper/src/protocol.rs — keep both in sync.
+ * Mirror: helper/src/protocol.rs - keep both in sync.
  */
 
 #ifndef __WEBVIEW2_PROTOCOL_H

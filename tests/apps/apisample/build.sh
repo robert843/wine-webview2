@@ -3,7 +3,7 @@
 #   tests/apps/apisample/build.sh
 # Zmienne: REF (katalog z WebView2Samples, xwin, wine), LLVM (katalog bin LLVM >= 18), WIN10=1 (USE_WEBVIEW2_WIN10)
 set -euo pipefail
-REF=${REF:-$ROOT/../wine-webview2-ref}
+REF=${REF:-$(cd "$(dirname "$0")/../../.." && pwd)/../wine-webview2-ref}
 LLVM=${LLVM:-/usr/lib/llvm-20/bin}
 SRC=$REF/WebView2Samples/SampleApps/WebView2APISample
 PKG=$REF/WebView2Samples/SampleApps/packages
@@ -31,7 +31,7 @@ sed -i 's/self->clientCertificates\[i\]\.Subject,$/self->clientCertificates[i].S
 sed -i 's/^    CHECK_FAILURE(exp_env15->add_RestartRequested($/    if (exp_env15) CHECK_FAILURE(exp_env15->add_RestartRequested(/' "$SRC/AppWindow.cpp"
 
 echo "== widl HostObjectSample.idl"
-# Biblioteka typów (-t) wywraca widl na tym IDL — pomijamy (dotyczy tylko scenariusza obiektów hosta).
+# Biblioteka typów (-t) wywraca widl na tym IDL - pomijamy (dotyczy tylko scenariusza obiektów hosta).
 $WIDL -I"$REF/wine/include" -I"$REF/wine-build/include" -m64 \
       -h -H "$OUT/HostObjectSample_h.h" -u -U "$OUT/HostObjectSample_i.c" "$SRC/HostObjectSample.idl"
 

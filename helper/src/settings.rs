@@ -1,4 +1,4 @@
-//! ICoreWebView2Settings w Ruście — pierwszy obiekt nowej architektury (docs/architektura-proxy.md).
+//! ICoreWebView2Settings w Ruście - pierwszy obiekt nowej architektury (docs/architektura-proxy.md).
 
 use crate::api_gen::ICoreWebView2Settings9Impl;
 use crate::protocol::*;

@@ -1,4 +1,4 @@
-//! Lustro `dlls/embeddedbrowserwebview/protocol.h` — trzymać oba pliki w zgodzie.
+//! Lustro `dlls/embeddedbrowserwebview/protocol.h` - trzymać oba pliki w zgodzie.
 
 #![allow(dead_code)]
 
