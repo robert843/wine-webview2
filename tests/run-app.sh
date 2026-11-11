@@ -44,6 +44,7 @@ sleep 0.5
 if [ ! -f "$WINEPREFIX/system.reg" ]; then
     echo "== creating prefix $WINEPREFIX"
     WINEDEBUG=-all "$WINE" wineboot -i >/dev/null 2>&1
+    "$WINESERVER" -w   # the registry files are written when wineserver exits
 fi
 
 # Install the runtime with the same script users run (helper straight from build/runtime).

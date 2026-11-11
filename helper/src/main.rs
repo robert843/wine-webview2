@@ -8,6 +8,16 @@
 //! The same executable also serves as the CEF subprocess (renderer, GPU, ...): CEF starts it
 //! with `--type=...` and `execute_process` handles that case and exits.
 
+// Logging must never take the helper down: std's eprintln! panics when stderr is a closed pipe
+// (e.g. the app's log reader is gone), which would skip shutdown and cleanup. Defined before the
+// modules so it shadows the std macro everywhere.
+macro_rules! eprintln {
+    ($($arg:tt)*) => {{
+        use std::io::Write as _;
+        let _ = writeln!(std::io::stderr(), $($arg)*);
+    }};
+}
+
 mod ipc;
 mod protocol;
 mod api_gen;
@@ -28,7 +38,7 @@ use std::collections::HashMap;
 use std::os::fd::AsRawFd;
 use std::path::PathBuf;
 use std::rc::Rc;
-use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use std::sync::{Arc, Mutex, OnceLock};
 
 /// Directory with document-created script files (passed to renderers via a switch).
@@ -166,6 +176,26 @@ struct View {
     popup: Option<PendingPopup>,
 }
 
+impl View {
+    fn new(width: u32, height: u32) -> Self {
+        View {
+            browser: None,
+            devtools_observer: None,
+            doc_scripts: Vec::new(),
+            settings: SETTINGS_DEFAULT,
+            last_source: String::new(),
+            pending_completion: None,
+            width: width.max(1),
+            height: height.max(1),
+            frames: None,
+            dropped: false,
+            user_agent: String::new(),
+            widget: None,
+            popup: None,
+        }
+    }
+}
+
 #[derive(Default)]
 struct WidgetPopup {
     rect: Option<Rect>,
@@ -297,6 +327,11 @@ wrap_client! {
             let Some(args) = message.argument_list() else { return 0 };
             match name.as_str() {
                 renderer::MSG_POST => {
+                    // Like WebView2: messages from iframes belong to ICoreWebView2Frame.WebMessageReceived
+                    // (not implemented yet), never to the top-level WebMessageReceived.
+                    if frame.as_ref().is_none_or(|f| f.is_main() == 0) {
+                        return 1;
+                    }
                     let json = CefString::from(&args.string(0)).to_string();
                     let source = frame.map(|f| CefString::from(&f.url()).to_string()).unwrap_or_default();
                     webview::on_web_message(self.client.view(), &source, &json);
@@ -559,7 +594,7 @@ wrap_load_handler! {
             // about:blank (and similar) skip OnBeforeBrowse: raise NavigationStarting here
             // (not cancellable - the document is already loading).
             let id = resources::active_navigation(view).unwrap_or_else(|| {
-                let id = resources::begin_navigation(view);
+                let id = resources::begin_navigation(view, &url);
                 webview::on_navigation_starting(view, id, false, false, &url);
                 id
             });
@@ -587,12 +622,21 @@ wrap_load_handler! {
             frame: Option<&mut Frame>,
             error_code: Errorcode,
             _error_text: Option<&CefString>,
-            _failed_url: Option<&CefString>,
+            failed_url: Option<&CefString>,
         ) {
             if frame.map(|f| f.is_main() != 0) != Some(true) {
                 return;
             }
-            finish_navigation(self.client.view(), browser, 0, *error_code.as_ref() as i32);
+            let (view, error) = (self.client.view(), *error_code.as_ref() as i32);
+            // A navigation replaced by a newer one: complete it, not the current one.
+            if error == resources::ERR_ABORTED {
+                let url = failed_url.map(|u| u.to_string()).unwrap_or_default();
+                if let Some(id) = resources::take_superseded(view, &url) {
+                    webview::on_navigation_completed(view, id, false, 0, error);
+                    return;
+                }
+            }
+            finish_navigation(view, browser, 0, error);
         }
     }
 }
@@ -712,10 +756,78 @@ fn view_browser(view: u32) -> Option<Browser> {
     with_state(|st| st.views.get(&view).and_then(|v| v.browser.clone())).flatten()
 }
 
-/// Browsers being closed at shutdown; quit the loop after the last OnBeforeClose
-/// (CefShutdown with an open browser hangs forever).
-static CLOSING_BROWSERS: AtomicUsize = AtomicUsize::new(0);
 static SHUTTING_DOWN: AtomicBool = AtomicBool::new(false);
+/// Per-process CEF profile and cache, removed on exit (also by the shutdown watchdog).
+static CACHE_DIR: OnceLock<PathBuf> = OnceLock::new();
+
+/// Cache directories of helpers that were killed (SIGTERM to the whole process group, e.g. Steam's
+/// "Stop" or a timeout) and could not clean up. A live helper holds an flock on its directory's
+/// lock file; PIDs alone are not enough (Steam containers have their own PID namespace).
+fn remove_stale_cache_dirs() {
+    let Ok(entries) = std::fs::read_dir(std::env::temp_dir()) else { return };
+    for entry in entries.flatten() {
+        let name = entry.file_name();
+        if !name.to_str().is_some_and(|n| n.starts_with("wine-webview2-helper-")) {
+            continue;
+        }
+        // Skip fresh ones: a starting helper creates its lock file just before locking it.
+        let old = entry.metadata().and_then(|m| m.modified()).ok()
+            .and_then(|t| t.elapsed().ok())
+            .is_some_and(|age| age > std::time::Duration::from_secs(60));
+        if !old {
+            continue;
+        }
+        let Ok(lock) = std::fs::File::open(entry.path().join("lock")) else { continue };
+        if unsafe { libc::flock(lock.as_raw_fd(), libc::LOCK_EX | libc::LOCK_NB) } == 0 {
+            let _ = std::fs::remove_dir_all(entry.path());
+        }
+    }
+}
+
+/// Creates the cache directory and keeps it locked for the lifetime of the process.
+fn lock_cache_dir(dir: &std::path::Path) {
+    static LOCK: OnceLock<std::fs::File> = OnceLock::new();
+    let _ = std::fs::create_dir_all(dir);
+    if let Ok(f) = std::fs::File::create(dir.join("lock")) {
+        if unsafe { libc::flock(f.as_raw_fd(), libc::LOCK_EX | libc::LOCK_NB) } == 0 {
+            let _ = LOCK.set(f);
+        }
+    }
+}
+
+fn remove_cache_dir() {
+    if let Some(dir) = CACHE_DIR.get() {
+        let _ = std::fs::remove_dir_all(dir);
+    }
+}
+
+thread_local! {
+    /// Every live browser (views, pending and native popups), from OnAfterCreated to OnBeforeClose.
+    /// At shutdown all are closed and the loop quits when this is empty: CefShutdown hangs while a
+    /// browser is still open.
+    static LIVE_BROWSERS: RefCell<HashMap<i32, Browser>> = RefCell::new(HashMap::new());
+}
+
+fn browser_created(browser: &Browser) {
+    LIVE_BROWSERS.with(|b| b.borrow_mut().insert(browser.identifier(), browser.clone()));
+    if SHUTTING_DOWN.load(Ordering::SeqCst) {
+        if let Some(host) = browser.host() {
+            host.close_browser(1);
+        }
+    }
+}
+
+fn browser_closed(browser: Option<&mut Browser>) {
+    let Some(browser) = browser else { return };
+    let empty = LIVE_BROWSERS.with(|b| {
+        let mut b = b.borrow_mut();
+        b.remove(&browser.identifier());
+        b.is_empty()
+    });
+    if empty && SHUTTING_DOWN.load(Ordering::SeqCst) {
+        quit_message_loop();
+    }
+}
 
 /// Connection to the DLL lost (app exited, possibly without Close()).
 fn shutdown_ipc() {
@@ -727,30 +839,19 @@ fn shutdown_ipc() {
     std::thread::spawn(|| {
         std::thread::sleep(std::time::Duration::from_secs(5));
         eprintln!("helper: CEF did not shut down in 5 s, exiting");
+        remove_cache_dir();
         std::process::exit(0);
     });
-    let browsers: Vec<Browser> =
-        with_state(|st| st.views.drain().filter_map(|(_, v)| v.browser).collect()).unwrap_or_default();
+    with_state(|st| st.views.clear());
+    let browsers: Vec<Browser> = LIVE_BROWSERS.with(|b| b.borrow().values().cloned().collect());
     if browsers.is_empty() {
         quit_message_loop();
         return;
     }
-    CLOSING_BROWSERS.store(browsers.len(), Ordering::SeqCst);
     for b in browsers {
         if let Some(host) = b.host() {
             host.close_browser(1);
         }
-    }
-}
-
-fn browser_closed() {
-    if !SHUTTING_DOWN.load(Ordering::SeqCst) {
-        return;
-    }
-    // Saturate at zero: browsers closed earlier via Close() also land here.
-    let prev = CLOSING_BROWSERS.fetch_update(Ordering::SeqCst, Ordering::SeqCst, |n| n.checked_sub(1));
-    if prev == Ok(1) {
-        quit_message_loop();
     }
 }
 
@@ -810,19 +911,8 @@ wrap_life_span_handler! {
             let popup_client = ViewClient::new(popup);
             with_state(|st| {
                 st.views.insert(popup, View {
-                    browser: None,
-                    devtools_observer: None,
-                    doc_scripts: Vec::new(),
-                    settings: SETTINGS_DEFAULT,
-                    last_source: String::new(),
-                    pending_completion: None,
-                    width,
-                    height,
-                    frames: None,
-                    dropped: false,
-                    user_agent: String::new(),
-                    widget: None,
                     popup: Some(PendingPopup { adopt, close: false, held: None, intercepted: false, client: popup_client.clone() }),
+                    ..View::new(width, height)
                 })
             });
             if let Some(wi) = window_info {
@@ -838,12 +928,13 @@ wrap_life_span_handler! {
             0
         }
 
-        fn on_before_close(&self, _browser: Option<&mut Browser>) {
-            browser_closed();
+        fn on_before_close(&self, browser: Option<&mut Browser>) {
+            browser_closed(browser);
         }
 
         fn on_after_created(&self, browser: Option<&mut Browser>) {
             let (view, Some(browser)) = (self.client.view(), browser) else { return };
+            browser_created(browser);
             if view < POPUP_BASE {
                 return;
             }
@@ -990,7 +1081,7 @@ fn adopt_popup(browser: Browser, p: PendingPopup, target: u32) {
             // Document without network navigation (about:blank) already loaded: emit events now.
             let url = browser.main_frame().map(|f| CefString::from(&f.url()).to_string()).unwrap_or_default();
             if !url.is_empty() {
-                let id = resources::begin_navigation(target);
+                let id = resources::begin_navigation(target, &url);
                 webview::on_navigation_starting(target, id, false, false, &url);
                 set_last_source(target, &url);
                 webview::on_source_changed(target, &url);
@@ -1032,12 +1123,34 @@ pub fn open_native_popup(url: &str, size: Option<(u32, u32)>) {
 #[derive(Clone)]
 struct PopupClient;
 
+wrap_life_span_handler! {
+    struct PopupLifeSpanHandlerBuilder {
+        client: PopupClient,
+    }
+
+    impl LifeSpanHandler {
+        fn on_after_created(&self, browser: Option<&mut Browser>) {
+            if let Some(browser) = browser {
+                browser_created(browser);
+            }
+        }
+
+        fn on_before_close(&self, browser: Option<&mut Browser>) {
+            browser_closed(browser);
+        }
+    }
+}
+
 wrap_client! {
     struct PopupClientBuilder {
         client: PopupClient,
     }
 
     impl Client {
+        fn life_span_handler(&self) -> Option<LifeSpanHandler> {
+            Some(PopupLifeSpanHandlerBuilder::new(self.client.clone()))
+        }
+
         fn on_process_message_received(
             &self,
             browser: Option<&mut Browser>,
@@ -1164,21 +1277,7 @@ wrap_jsdialog_handler! {
 /// Creates the view's CEF browser (called from ROOT_CREATE_CONTROLLER).
 pub fn create_browser(view: u32, width: u32, height: u32) -> bool {
     with_state(|st| {
-        st.views.insert(view, View {
-            browser: None,
-            devtools_observer: None,
-            doc_scripts: Vec::new(),
-            settings: SETTINGS_DEFAULT,
-            last_source: String::new(),
-            pending_completion: None,
-            width: width.max(1),
-            height: height.max(1),
-            frames: None,
-            dropped: false,
-            user_agent: String::new(),
-            widget: None,
-            popup: None,
-        })
+        st.views.insert(view, View::new(width, height))
     });
     let window_info = WindowInfo { windowless_rendering_enabled: true as _, ..Default::default() };
     // Always transparent: OSR transparency is fixed at creation, so the DLL applies
@@ -1705,7 +1804,10 @@ fn main() -> std::process::ExitCode {
 
     let dir = cef_dir();
     let exe = std::env::current_exe().unwrap_or_default();
+    remove_stale_cache_dirs();
     let cache = std::env::temp_dir().join(format!("wine-webview2-helper-{}", std::process::id()));
+    let _ = CACHE_DIR.set(cache.clone());
+    lock_cache_dir(&cache);
     if matches!(mode, Mode::Ipc(_)) {
         let dir = cache.join("scripts");
         let _ = std::fs::create_dir_all(&dir);
@@ -1731,7 +1833,7 @@ fn main() -> std::process::ExitCode {
     run_message_loop();
     STATE.with(|s| s.borrow_mut().take());
     shutdown();
-    let _ = std::fs::remove_dir_all(&cache);
+    remove_cache_dir();
 
     match mode {
         Mode::Shot(s) if !s.borrow().done => std::process::ExitCode::from(1),

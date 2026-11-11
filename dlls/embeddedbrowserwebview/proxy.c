@@ -326,12 +326,18 @@ ULONG STDMETHODCALLTYPE proxy_Release(IUnknown *iface)
 
     if (ref) return ref;
     EnterCriticalSection(&proxy_cs);
+    /* get_proxy() may have found and revived it (under proxy_cs) before we got the lock. */
+    if (ReadNoFence(&proxy->ref))
+    {
+        LeaveCriticalSection(&proxy_cs);
+        return 0;
+    }
     rb_remove(&proxies_by_id, &proxy->id_entry);
     rb_remove(&proxies_by_ptr, &proxy->ptr_entry);
+    msg.count = proxy->remote_refs;
     LeaveCriticalSection(&proxy_cs);
     TRACE("releasing %s proxy %p (id %s)\n", proxy_family_names[proxy->family], iface, wine_dbgstr_longlong(proxy->id));
     msg.id = proxy->id;
-    msg.count = proxy->remote_refs;
     msg.reserved = 0;
     webview2_send(0, WV2_CMD_RELEASE, &msg, sizeof(msg));
     if (proxy->host_destroy) proxy->host_destroy(proxy->host_data);

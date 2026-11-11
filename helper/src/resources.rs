@@ -21,9 +21,20 @@ static PENDING: Mutex<Option<HashMap<u64, Arc<Mutex<RequestState>>>>> = Mutex::n
 static NEXT_ID: AtomicU64 = AtomicU64::new(1);
 
 const CONTEXT_ALL: u32 = 0;
+/// net::ERR_ABORTED (maps to COREWEBVIEW2_WEB_ERROR_STATUS_OPERATION_CANCELED).
+pub const ERR_ABORTED: i32 = -3;
 
 /// Current main-frame navigation per view: (id, completed).
-static NAVIGATIONS: Mutex<Option<HashMap<u32, (u64, bool)>>> = Mutex::new(None);
+static NAVIGATIONS: Mutex<Option<HashMap<u32, Navigation>>> = Mutex::new(None);
+
+/// Main-frame navigation of a view. `superseded`: the previous one, still unfinished when this one
+/// started; CEF reports it later as ERR_ABORTED and it gets its own NavigationCompleted.
+struct Navigation {
+    id: u64,
+    done: bool,
+    url: String,
+    superseded: Option<(u64, String)>,
+}
 static NEXT_NAVIGATION: AtomicU64 = AtomicU64::new(1);
 
 pub fn send_event(ty: u32, view: u32, payload: &[u8]) {
@@ -34,25 +45,42 @@ pub fn send_event(ty: u32, view: u32, payload: &[u8]) {
     }
 }
 
-pub fn begin_navigation(view: u32) -> u64 {
+pub fn begin_navigation(view: u32, url: &str) -> u64 {
     let id = NEXT_NAVIGATION.fetch_add(1, Ordering::Relaxed);
-    NAVIGATIONS.lock().unwrap().get_or_insert_with(HashMap::new).insert(view, (id, false));
+    let mut n = NAVIGATIONS.lock().unwrap();
+    let map = n.get_or_insert_with(HashMap::new);
+    let superseded = map.get(&view).filter(|old| !old.done).map(|old| (old.id, old.url.clone()));
+    map.insert(view, Navigation { id, done: false, url: url.to_string(), superseded });
     id
 }
 
 pub fn active_navigation(view: u32) -> Option<u64> {
-    NAVIGATIONS.lock().unwrap().as_ref()?.get(&view).filter(|n| !n.1).map(|n| n.0)
+    NAVIGATIONS.lock().unwrap().as_ref()?.get(&view).filter(|n| !n.done).map(|n| n.id)
 }
 
 /// Marks the current navigation completed; None if it already was.
 pub fn complete_navigation(view: u32) -> Option<u64> {
     let mut n = NAVIGATIONS.lock().unwrap();
     let entry = n.as_mut()?.get_mut(&view)?;
-    if entry.1 {
+    if entry.done {
         return None;
     }
-    entry.1 = true;
-    Some(entry.0)
+    entry.done = true;
+    Some(entry.id)
+}
+
+/// The superseded navigation to `url`, if any (taken: it completes only once).
+pub fn take_superseded(view: u32, url: &str) -> Option<u64> {
+    let mut n = NAVIGATIONS.lock().unwrap();
+    let entry = n.as_mut()?.get_mut(&view)?;
+    match &entry.superseded {
+        Some((id, u)) if u == url => {
+            let id = *id;
+            entry.superseded = None;
+            Some(id)
+        }
+        _ => None,
+    }
 }
 
 pub fn set_sender(chan: Channel) {
@@ -357,11 +385,12 @@ wrap_request_handler! {
             if crate::popup_hold_navigation(self.handler.view, &url) {
                 return 1;
             }
-            let id = begin_navigation(self.handler.view);
+            let id = begin_navigation(self.handler.view, &url);
             // Synchronous so the app's Cancel decision is made before the request goes out.
             let cancel = crate::webview::on_navigation_starting(self.handler.view, id, user_gesture != 0, is_redirect != 0, &url);
-            if cancel {
-                complete_navigation(self.handler.view);
+            if cancel && complete_navigation(self.handler.view).is_some() {
+                // WebView2 reports a cancelled navigation as failed with OPERATION_CANCELED.
+                crate::webview::on_navigation_completed(self.handler.view, id, false, 0, ERR_ABORTED);
             }
             cancel as i32
         }
@@ -466,9 +495,13 @@ wrap_resource_request_handler! {
             &self,
             _browser: Option<&mut Browser>,
             _frame: Option<&mut Frame>,
-            _request: Option<&mut Request>,
+            request: Option<&mut Request>,
         ) -> Option<ResourceHandler> {
-            let response = self.req.state.lock().unwrap().response.take()?;
+            let response = self.req.state.lock().unwrap().response.take().or_else(|| {
+                // The app did not answer: a mapped virtual host still serves the file (as in WebView2).
+                let url = CefString::from(&request?.url()).to_string();
+                virtual_host_file(self.req.view, &url).map(file_response)
+            })?;
             Some(ResourceHandlerBuilder::new(ServedResponse {
                 response: Arc::new(response),
                 offset: Arc::new(Mutex::new(0)),

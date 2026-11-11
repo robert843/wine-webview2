@@ -602,7 +602,7 @@ static DWORD WINAPI reader_thread(void *arg)
         {
             TRACE("event %#x for unknown view %u\n", params.header.type, params.header.view);
             /* Return the slot so the helper does not stall on a view we no longer track. */
-            if (params.header.type == WV2_EVT_FRAME_READY)
+            if (params.header.type == WV2_EVT_FRAME_READY && payload >= sizeof(struct wv2_frame_ready))
             {
                 struct helper_copy_frame_params copy = {helper, params.header.view,
                         ((struct wv2_frame_ready *)params.buffer)->slot,

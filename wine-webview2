@@ -145,7 +145,7 @@ default_prefix() { echo "${1:-${WINEPREFIX:-$HOME/.wine}}"; }
 
 cmd_prefix() {
     local prefix; prefix=$(default_prefix "${1:-}")
-    [ -f "$prefix/system.reg" ] || die "$prefix is not a Wine prefix"
+    [ -d "$prefix/drive_c" ] || [ -f "$prefix/system.reg" ] || die "$prefix is not a Wine prefix"
     copy_files "$prefix"
     WINEPREFIX=$prefix reg_set_wine "$RUNTIME_VERSION"
     info "installed into $prefix (runtime $RUNTIME_VERSION, helper $(helper_dir))"
@@ -160,11 +160,13 @@ steam_dir() {
 }
 
 steam_prefix() {
-    local appid=$1 lib prefix=""
+    local appid=$1 steam lib prefix=""
     [[ "$appid" =~ ^[0-9]+$ ]] || die "APPID must be a number"
-    for lib in "$(steam_dir)" $(sed -n 's/^\s*"path"\s*"\(.*\)"/\1/p' "$(steam_dir)/steamapps/libraryfolders.vdf" 2>/dev/null); do
+    steam=$(steam_dir)
+    # Library paths may contain spaces: read them line by line.
+    while IFS= read -r lib; do
         [ -f "$lib/steamapps/compatdata/$appid/pfx/system.reg" ] && { prefix="$lib/steamapps/compatdata/$appid/pfx"; break; }
-    done
+    done < <(echo "$steam"; sed -n 's/^\s*"path"\s*"\(.*\)"/\1/p' "$steam/steamapps/libraryfolders.vdf" 2>/dev/null)
     [ -n "$prefix" ] || die "no Proton prefix for app $appid; run the game once with Proton first"
     echo "$prefix"
 }
@@ -184,6 +186,18 @@ cmd_steam() {
     info "select Proton Experimental (or Wine >= 11.2 based Proton) for this game in Steam"
 }
 
+# Removes the runtime's registry keys from system.reg (Proton prefix, game not running).
+reg_delete_file() {
+    python3 -I - "$1" "$CLIENT_ID" <<'PY'
+import sys
+path, cid = sys.argv[1:3]
+text = open(path, encoding="utf-8", errors="surrogateescape").read()
+heads = ["[Software\\\\Wow6432Node\\\\Microsoft\\\\EdgeUpdate\\\\%s\\\\%s" % (sub, cid) for sub in ("ClientState", "Clients")]
+kept = [b for b in text.split("\n\n") if not any(b.lstrip("\n").startswith(h) for h in heads)]
+open(path, "w", encoding="utf-8", errors="surrogateescape").write("\n\n".join(kept))
+PY
+}
+
 remove_files() {
     local rt; rt=$(runtime_dir "$1")
     rm -rf -- "$rt"
@@ -191,7 +205,7 @@ remove_files() {
 
 cmd_uninstall() {
     local prefix ms; prefix=$(default_prefix "${1:-}")
-    [ -f "$prefix/system.reg" ] || die "$prefix is not a Wine prefix"
+    [ -d "$prefix/drive_c" ] || [ -f "$prefix/system.reg" ] || die "$prefix is not a Wine prefix"
     ms=$(ms_runtime_version "$prefix")
     remove_files "$prefix"
     if [ -n "$ms" ]; then
@@ -214,13 +228,14 @@ cmd_steam_uninstall() {
         reg_set_file "$prefix/system.reg" "$ms"
         info "removed; Microsoft's runtime $ms is active again"
     else
+        reg_delete_file "$prefix/system.reg"
         info "removed; the game may install Microsoft's runtime on next start"
     fi
 }
 
 cmd_status() {
     local prefix rt link; prefix=$(default_prefix "${1:-}")
-    [ -f "$prefix/system.reg" ] || die "$prefix is not a Wine prefix"
+    [ -d "$prefix/drive_c" ] || [ -f "$prefix/system.reg" ] || die "$prefix is not a Wine prefix"
     rt=$(runtime_dir "$prefix")
     echo "prefix:        $prefix"
     if grep -q "EBWebView\"=\".*$RUNTIME_VERSION\"" "$prefix/system.reg" 2>/dev/null; then
