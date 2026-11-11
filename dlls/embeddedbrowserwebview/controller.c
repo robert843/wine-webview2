@@ -94,6 +94,16 @@ struct view
     HBITMAP dib, old_bitmap;
     void *bits;
     UINT32 dib_width, dib_height;
+
+    /* AcceleratorKeyPressed handlers (raised here, synchronously with the key message) */
+    struct accel_handler
+    {
+        ICoreWebView2AcceleratorKeyPressedEventHandler *handler;
+        INT64 token;
+    } *accel_handlers;
+    UINT32 accel_count;
+    INT64 next_token;
+    BOOL skip_char;         /* the app handled the key down: drop its WM_CHAR too */
 };
 
 static void view_addref(struct view *view)
@@ -330,6 +340,200 @@ static void send_key(struct view *view, UINT msg, WPARAM wparam, LPARAM lparam)
     if (msg == WM_SYSKEYDOWN || msg == WM_SYSKEYUP || msg == WM_SYSCHAR) key.is_system_key = 1;
     if (wparam >= VK_NUMPAD0 && wparam <= VK_DIVIDE) key.modifiers |= WV2_FLAG_IS_KEY_PAD;
     helper_send(view, WV2_CMD_KEY, &key, sizeof(key));
+}
+
+/*
+ * AcceleratorKeyPressed: raised for keys that do not produce a character or come with Ctrl/Alt,
+ * before the browser sees them; Handled = TRUE keeps the key from the browser.
+ */
+struct accel_args
+{
+    ICoreWebView2AcceleratorKeyPressedEventArgs2 ICoreWebView2AcceleratorKeyPressedEventArgs2_iface;
+    LONG ref;
+    COREWEBVIEW2_KEY_EVENT_KIND kind;
+    UINT vkey;
+    LPARAM lparam;
+    BOOL handled;
+    BOOL browser_accelerator;
+};
+
+static inline struct accel_args *impl_from_accel_args(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface)
+{
+    return CONTAINING_RECORD(iface, struct accel_args, ICoreWebView2AcceleratorKeyPressedEventArgs2_iface);
+}
+
+static HRESULT STDMETHODCALLTYPE accel_args_QueryInterface(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface,
+        REFIID iid, void **out)
+{
+    if (IsEqualGUID(iid, &IID_IUnknown) || IsEqualGUID(iid, &IID_ICoreWebView2AcceleratorKeyPressedEventArgs) ||
+        IsEqualGUID(iid, &IID_ICoreWebView2AcceleratorKeyPressedEventArgs2))
+    {
+        *out = iface;
+        ICoreWebView2AcceleratorKeyPressedEventArgs2_AddRef(iface);
+        return S_OK;
+    }
+    *out = NULL;
+    return E_NOINTERFACE;
+}
+
+static ULONG STDMETHODCALLTYPE accel_args_AddRef(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface)
+{
+    return InterlockedIncrement(&impl_from_accel_args(iface)->ref);
+}
+
+static ULONG STDMETHODCALLTYPE accel_args_Release(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface)
+{
+    struct accel_args *args = impl_from_accel_args(iface);
+    ULONG ref = InterlockedDecrement(&args->ref);
+    if (!ref) free(args);
+    return ref;
+}
+
+static HRESULT STDMETHODCALLTYPE accel_args_get_KeyEventKind(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface,
+        COREWEBVIEW2_KEY_EVENT_KIND *kind)
+{
+    if (!kind) return E_POINTER;
+    *kind = impl_from_accel_args(iface)->kind;
+    return S_OK;
+}
+
+static HRESULT STDMETHODCALLTYPE accel_args_get_VirtualKey(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface, UINT *key)
+{
+    if (!key) return E_POINTER;
+    *key = impl_from_accel_args(iface)->vkey;
+    return S_OK;
+}
+
+static HRESULT STDMETHODCALLTYPE accel_args_get_KeyEventLParam(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface, INT *lparam)
+{
+    if (!lparam) return E_POINTER;
+    *lparam = impl_from_accel_args(iface)->lparam;
+    return S_OK;
+}
+
+static HRESULT STDMETHODCALLTYPE accel_args_get_PhysicalKeyStatus(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface,
+        COREWEBVIEW2_PHYSICAL_KEY_STATUS *status)
+{
+    LPARAM lparam = impl_from_accel_args(iface)->lparam;
+
+    if (!status) return E_POINTER;
+    status->RepeatCount = lparam & 0xffff;
+    status->ScanCode = (lparam >> 16) & 0xff;
+    status->IsExtendedKey = !!(lparam & (1 << 24));
+    status->IsMenuKeyDown = !!(lparam & (1 << 29));
+    status->WasKeyDown = !!(lparam & (1 << 30));
+    status->IsKeyReleased = !!(lparam & (1u << 31));
+    return S_OK;
+}
+
+static HRESULT STDMETHODCALLTYPE accel_args_get_Handled(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface, BOOL *handled)
+{
+    if (!handled) return E_POINTER;
+    *handled = impl_from_accel_args(iface)->handled;
+    return S_OK;
+}
+
+static HRESULT STDMETHODCALLTYPE accel_args_put_Handled(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface, BOOL handled)
+{
+    impl_from_accel_args(iface)->handled = handled;
+    return S_OK;
+}
+
+static HRESULT STDMETHODCALLTYPE accel_args_get_IsBrowserAcceleratorKeyEnabled(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface,
+        BOOL *enabled)
+{
+    if (!enabled) return E_POINTER;
+    *enabled = impl_from_accel_args(iface)->browser_accelerator;
+    return S_OK;
+}
+
+static HRESULT STDMETHODCALLTYPE accel_args_put_IsBrowserAcceleratorKeyEnabled(ICoreWebView2AcceleratorKeyPressedEventArgs2 *iface,
+        BOOL enabled)
+{
+    /* FIXME: the off-screen browser has no accelerators of its own (find bar, print, ...) yet. */
+    impl_from_accel_args(iface)->browser_accelerator = enabled;
+    return S_OK;
+}
+
+static const ICoreWebView2AcceleratorKeyPressedEventArgs2Vtbl accel_args_vtbl =
+{
+    accel_args_QueryInterface,
+    accel_args_AddRef,
+    accel_args_Release,
+    accel_args_get_KeyEventKind,
+    accel_args_get_VirtualKey,
+    accel_args_get_KeyEventLParam,
+    accel_args_get_PhysicalKeyStatus,
+    accel_args_get_Handled,
+    accel_args_put_Handled,
+    accel_args_get_IsBrowserAcceleratorKeyEnabled,
+    accel_args_put_IsBrowserAcceleratorKeyEnabled,
+};
+
+static BOOL is_accelerator_key(UINT vkey)
+{
+    return (GetKeyState(VK_CONTROL) < 0 || GetKeyState(VK_MENU) < 0) || !MapVirtualKeyW(vkey, MAPVK_VK_TO_CHAR);
+}
+
+/* TRUE if an AcceleratorKeyPressed handler handled the key. */
+static BOOL raise_accelerator_key(struct view *view, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    struct accel_handler *handlers;
+    struct accel_args *args;
+    UINT32 i, count;
+    BOOL handled;
+
+    if (!view->accel_count || !view->controller || !is_accelerator_key(wparam)) return FALSE;
+    if (!(args = calloc(1, sizeof(*args)))) return FALSE;
+    args->ICoreWebView2AcceleratorKeyPressedEventArgs2_iface.lpVtbl = &accel_args_vtbl;
+    args->ref = 1;
+    args->kind = msg == WM_KEYDOWN ? COREWEBVIEW2_KEY_EVENT_KIND_KEY_DOWN :
+                 msg == WM_KEYUP ? COREWEBVIEW2_KEY_EVENT_KIND_KEY_UP :
+                 msg == WM_SYSKEYDOWN ? COREWEBVIEW2_KEY_EVENT_KIND_SYSTEM_KEY_DOWN : COREWEBVIEW2_KEY_EVENT_KIND_SYSTEM_KEY_UP;
+    args->vkey = wparam;
+    args->lparam = lparam;
+    args->browser_accelerator = TRUE;
+
+    /* Handlers may add or remove handlers: call a snapshot. */
+    count = view->accel_count;
+    if (!(handlers = malloc(count * sizeof(*handlers)))) { free(args); return FALSE; }
+    memcpy(handlers, view->accel_handlers, count * sizeof(*handlers));
+    for (i = 0; i < count; i++) ICoreWebView2AcceleratorKeyPressedEventHandler_AddRef(handlers[i].handler);
+    view_addref(view);
+    for (i = 0; i < count; i++)
+    {
+        ICoreWebView2AcceleratorKeyPressedEventHandler_Invoke(handlers[i].handler,
+                (ICoreWebView2Controller *)view->controller,
+                (ICoreWebView2AcceleratorKeyPressedEventArgs *)&args->ICoreWebView2AcceleratorKeyPressedEventArgs2_iface);
+        ICoreWebView2AcceleratorKeyPressedEventHandler_Release(handlers[i].handler);
+    }
+    free(handlers);
+    handled = args->handled;
+    TRACE("view %u: key %#Ix msg %#x handled %d\n", view->id, wparam, msg, handled);
+    ICoreWebView2AcceleratorKeyPressedEventArgs2_Release(&args->ICoreWebView2AcceleratorKeyPressedEventArgs2_iface);
+    view_release(view);
+    return handled;
+}
+
+static void handle_key(struct view *view, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    switch (msg)
+    {
+    case WM_KEYDOWN: case WM_SYSKEYDOWN:
+        view->skip_char = FALSE;
+        /* fall through */
+    case WM_KEYUP: case WM_SYSKEYUP:
+        if (raise_accelerator_key(view, msg, wparam, lparam))
+        {
+            if (msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN) view->skip_char = TRUE;
+            return;
+        }
+        break;
+    case WM_CHAR: case WM_SYSCHAR:
+        if (view->skip_char) return;
+        break;
+    }
+    send_key(view, msg, wparam, lparam);
 }
 
 /* Default JavaScript dialogs (alert/confirm/prompt/beforeunload), like the browser's own:
@@ -877,12 +1081,30 @@ static NTSTATUS load_unixlib(void)
 
 static void start_placeholder(void);
 
+/* Browser data lives in <user data folder>\EBWebView like WebView2's; the helper gets its unix path. */
+static void get_data_dir(const WCHAR *user_data_dir, char *buffer, size_t size)
+{
+    WCHAR path[MAX_PATH + 16];
+    char *unix_name;
+
+    buffer[0] = 0;
+    if (!user_data_dir || !*user_data_dir || wcslen(user_data_dir) > MAX_PATH) return;
+    swprintf(path, ARRAY_SIZE(path), L"%s\\EBWebView", user_data_dir);
+    SHCreateDirectoryExW(NULL, path, NULL);
+    if (!(unix_name = wine_get_unix_file_name(path))) return;
+    if (strlen(unix_name) < size) strcpy(buffer, unix_name);
+    else WARN("data folder path too long: %s\n", debugstr_a(unix_name));
+    HeapFree(GetProcessHeap(), 0, unix_name);
+}
+
 static BOOL WINAPI start_helper_once(INIT_ONCE *once, void *param, void **context)
 {
     struct helper_start_params params = {WV2_API_HASH};
     HANDLE thread;
 
     if (load_unixlib()) return TRUE;
+    get_data_dir(param, params.data_dir, sizeof(params.data_dir));
+    TRACE("data folder %s\n", debugstr_a(params.data_dir));
     if (UNIX_CALL(helper_start, &params))
     {
         ERR("cannot start the helper process, continuing without rendering\n");
@@ -929,9 +1151,10 @@ static void start_placeholder(void)
     TRACE("placeholder browser process %lu\n", browser_process_id);
 }
 
-BOOL helper_ensure_started(void)
+/* One helper per process: the first environment's user data folder holds the browser data. */
+BOOL helper_ensure_started(const WCHAR *user_data_dir)
 {
-    InitOnceExecuteOnce(&helper_once, start_helper_once, NULL, NULL);
+    InitOnceExecuteOnce(&helper_once, start_helper_once, (void *)user_data_dir, NULL);
     return helper != 0;
 }
 
@@ -1044,10 +1267,10 @@ static LRESULT CALLBACK host_wndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM 
         return 0;
     }
     case WM_KEYDOWN: case WM_KEYUP: case WM_CHAR:
-        send_key(view, msg, wparam, lparam);
+        handle_key(view, msg, wparam, lparam);
         return 0;
     case WM_SYSKEYDOWN: case WM_SYSKEYUP: case WM_SYSCHAR:
-        send_key(view, msg, wparam, lparam);
+        handle_key(view, msg, wparam, lparam);
         break;  /* keep Alt+F4, Alt+Space etc. working */
     case WM_SETFOCUS:
     case WM_KILLFOCUS:
@@ -1114,6 +1337,45 @@ static HRESULT STDMETHODCALLTYPE webview_get_BrowserProcessId(ICoreWebView2_29 *
 }
 static HRESULT (STDMETHODCALLTYPE *proxy_controller_Close)(ICoreWebView2Controller4 *iface);
 
+static struct view *view_from_controller(ICoreWebView2Controller4 *iface);
+
+static HRESULT STDMETHODCALLTYPE controller_add_AcceleratorKeyPressed(ICoreWebView2Controller4 *iface,
+        ICoreWebView2AcceleratorKeyPressedEventHandler *handler, EventRegistrationToken *token)
+{
+    struct view *view = view_from_controller(iface);
+    struct accel_handler *handlers;
+
+    TRACE("iface %p, handler %p, token %p.\n", iface, handler, token);
+    if (!handler || !token) return E_POINTER;
+    if (!view) return E_UNEXPECTED;
+    if (!(handlers = realloc(view->accel_handlers, (view->accel_count + 1) * sizeof(*handlers)))) return E_OUTOFMEMORY;
+    view->accel_handlers = handlers;
+    ICoreWebView2AcceleratorKeyPressedEventHandler_AddRef(handler);
+    handlers[view->accel_count].handler = handler;
+    handlers[view->accel_count].token = token->value = ++view->next_token;
+    view->accel_count++;
+    return S_OK;
+}
+
+static HRESULT STDMETHODCALLTYPE controller_remove_AcceleratorKeyPressed(ICoreWebView2Controller4 *iface,
+        EventRegistrationToken token)
+{
+    struct view *view = view_from_controller(iface);
+    UINT32 i;
+
+    TRACE("iface %p, token %s.\n", iface, wine_dbgstr_longlong(token.value));
+    if (!view) return E_UNEXPECTED;
+    for (i = 0; i < view->accel_count; i++)
+    {
+        if (view->accel_handlers[i].token != token.value) continue;
+        ICoreWebView2AcceleratorKeyPressedEventHandler_Release(view->accel_handlers[i].handler);
+        memmove(view->accel_handlers + i, view->accel_handlers + i + 1, (view->accel_count - i - 1) * sizeof(*view->accel_handlers));
+        view->accel_count--;
+        break;
+    }
+    return S_OK;
+}
+
 static struct view *view_from_controller(ICoreWebView2Controller4 *iface)
 {
     return proxy_get_host_data((IUnknown *)iface);
@@ -1130,6 +1392,10 @@ static void close_view(struct view *view)
 
     if (view->closed) return;
     view->closed = TRUE;
+    while (view->accel_count)
+        ICoreWebView2AcceleratorKeyPressedEventHandler_Release(view->accel_handlers[--view->accel_count].handler);
+    free(view->accel_handlers);
+    view->accel_handlers = NULL;
     if (view->hwnd)
     {
         DestroyWindow(view->hwnd);
@@ -1161,6 +1427,15 @@ static HRESULT STDMETHODCALLTYPE controller_put_Bounds(ICoreWebView2Controller4 
                      bounds.bottom - bounds.top, SWP_NOZORDER | SWP_NOACTIVATE);
     send_size(view);
     return S_OK;
+}
+
+static HRESULT STDMETHODCALLTYPE controller_SetBoundsAndZoomFactor(ICoreWebView2Controller4 *iface, RECT bounds, double zoom)
+{
+    HRESULT hr;
+
+    TRACE("iface %p, bounds %s, zoom %f.\n", iface, wine_dbgstr_rect(&bounds), zoom);
+    if (FAILED(hr = ICoreWebView2Controller4_put_ZoomFactor(iface, zoom))) return hr;
+    return controller_put_Bounds(iface, bounds);
 }
 
 static HRESULT STDMETHODCALLTYPE controller_get_IsVisible(ICoreWebView2Controller4 *iface, BOOL *visible)
@@ -1397,6 +1672,9 @@ void controller_init(void)
     controller_vtbl.get_DefaultBackgroundColor = controller_get_DefaultBackgroundColor;
     controller_vtbl.put_DefaultBackgroundColor = controller_put_DefaultBackgroundColor;
     controller_vtbl.MoveFocus = controller_MoveFocus;
+    controller_vtbl.SetBoundsAndZoomFactor = controller_SetBoundsAndZoomFactor;
+    controller_vtbl.add_AcceleratorKeyPressed = controller_add_AcceleratorKeyPressed;
+    controller_vtbl.remove_AcceleratorKeyPressed = controller_remove_AcceleratorKeyPressed;
     controller_vtbl.Close = controller_Close;
     proxy_set_host_vtbl(FAMILY_ICoreWebView2Controller4, &controller_vtbl);
 

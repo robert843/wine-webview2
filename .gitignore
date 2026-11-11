@@ -7,3 +7,5 @@
 /tests/apps/*/x86/
 /tests/apps/dltest/dl/
 /tests/apps/filetest/ft/
+/tests/apps/*/*.WebView2/
+/tests/apps/persisttest/site/

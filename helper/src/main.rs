@@ -1120,6 +1120,26 @@ fn lock_cache_dir(dir: &std::path::Path) {
     }
 }
 
+/// `<user data folder>/EBWebView` from the DLL (`--data-dir=`), where browser data persists like in
+/// WebView2. Not if another live process holds Chromium's profile lock (SingletonLock -> "host-pid"),
+/// e.g. a second instance of the application: its data then stays in the temporary directory.
+fn data_dir(argv: &[String]) -> Option<PathBuf> {
+    let dir = PathBuf::from(argv.iter().find_map(|a| a.strip_prefix("--data-dir="))?);
+    if let Err(e) = std::fs::create_dir_all(&dir) {
+        eprintln!("helper: cannot create {}: {e}", dir.display());
+        return None;
+    }
+    if let Ok(target) = std::fs::read_link(dir.join("SingletonLock")) {
+        let target = target.to_string_lossy().into_owned();
+        let pid = target.rsplit('-').next().and_then(|p| p.parse::<u32>().ok());
+        if let Some(pid) = pid.filter(|&p| p != std::process::id() && std::path::Path::new(&format!("/proc/{p}")).exists()) {
+            eprintln!("helper: {} is used by process {pid}, browser data will not be kept", dir.display());
+            return None;
+        }
+    }
+    Some(dir)
+}
+
 fn remove_cache_dir() {
     if let Some(dir) = CACHE_DIR.get() {
         let _ = std::fs::remove_dir_all(dir);
@@ -2162,6 +2182,8 @@ wrap_app! {
             let Some(cl) = command_line else { return };
             cl.append_switch(Some(&"no-startup-window".into()));
             cl.append_switch(Some(&"noerrdialogs".into()));
+            // No background downloads of Chrome components (safety lists, CRLSets...) from Google.
+            cl.append_switch(Some(&"disable-component-update".into()));
             cl.append_switch(Some(&"use-mock-keychain".into()));
             // WebView2 has no popup blocker (window.open without a gesture -> NewWindowRequested).
             cl.append_switch(Some(&"disable-popup-blocking".into()));
@@ -2322,13 +2344,17 @@ fn main() -> std::process::ExitCode {
         let _ = std::fs::create_dir_all(&dir);
         let _ = SCRIPTS_DIR.set(dir);
     }
+    // Persistent data in the user data folder when we have one, otherwise in the temporary directory.
+    let profile_root = data_dir(&argv).unwrap_or_else(|| cache.clone());
+    let profile = profile_root.join("Default");
     let settings = Settings {
         no_sandbox: true as _,
         windowless_rendering_enabled: true as _,
         browser_subprocess_path: exe.to_string_lossy().as_ref().into(),
         resources_dir_path: dir.to_string_lossy().as_ref().into(),
         locales_dir_path: dir.join("locales").to_string_lossy().as_ref().into(),
-        root_cache_path: cache.to_string_lossy().as_ref().into(),
+        root_cache_path: profile_root.to_string_lossy().as_ref().into(),
+        cache_path: profile.to_string_lossy().as_ref().into(),
         log_severity: LogSeverity::WARNING,
         background_color: DEFAULT_BACKGROUND,
         // Windows/Edge UA from the first request (the DevTools override arrives later).

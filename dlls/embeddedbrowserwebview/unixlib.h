@@ -31,6 +31,7 @@ struct helper_start_params
     helper_handle_t handle;     /* out */
     UINT32 helper_pid;          /* out */
     UINT32 helper_version;      /* out */
+    char data_dir[1024];        /* in: unix path of <user data folder>\EBWebView, or empty */
 };
 
 struct helper_stop_params

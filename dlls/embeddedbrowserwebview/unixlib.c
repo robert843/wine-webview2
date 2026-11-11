@@ -327,9 +327,9 @@ static NTSTATUS helper_start(void *args)
     struct wv2_msg_header *header;
     const char *payload;
     struct wv2_hello hello = {WV2_PROTOCOL_VERSION, getpid(), params->api_hash};
-    char path_buf[PATH_MAX], fd_arg[32];
+    char path_buf[PATH_MAX], fd_arg[32], dir_arg[sizeof(params->data_dir) + 16];
     const char *path = find_helper_path(path_buf, sizeof(path_buf));
-    char *argv[] = {(char *)path, fd_arg, NULL};
+    char *argv[] = {(char *)path, fd_arg, NULL, NULL};
     struct helper *helper;
     int fds[2], fd, ret;
     NTSTATUS status;
@@ -346,6 +346,12 @@ static NTSTATUS helper_start(void *args)
 
     /* fd 3 in the helper; dup2 clears FD_CLOEXEC on the target. */
     snprintf(fd_arg, sizeof(fd_arg), "--ipc-fd=3");
+    params->data_dir[sizeof(params->data_dir) - 1] = 0;
+    if (params->data_dir[0])
+    {
+        snprintf(dir_arg, sizeof(dir_arg), "--data-dir=%s", params->data_dir);
+        argv[2] = dir_arg;
+    }
     posix_spawn_file_actions_init(&actions);
     posix_spawn_file_actions_adddup2(&actions, fds[1], 3);
     TRACE("starting helper %s\n", debugstr_a(path));

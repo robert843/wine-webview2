@@ -75,6 +75,9 @@ check apitest "$A/apitest/apitest.exe" 90 "0" \
     'ZoomFactorChanged 1.50' \
     '-> "dpr=1.5"' \
     '^GotFocus' \
+    'AcceleratorKeyPressed kind=0 key=0x71 released=0' \
+    'AcceleratorKeyPressed kind=1 key=0x72 released=1' \
+    '-> "keys=F3"' \
     '^done'
 
 check dltest "$A/dltest/dltest.exe" 90 "0" \
@@ -90,6 +93,11 @@ check filetest "$A/filetest/filetest.exe" 90 "0" \
     'cancelled' \
     'still alive' \
     '^done'
+
+# Browser data persists in the user data folder: the second run sees the first one's data.
+rm -rf "$A/persisttest/persisttest.exe.WebView2"
+check persisttest-1 "$A/persisttest/persisttest.exe" 90 "0" 'script -> hr=0 "n=1 cookie=false"' '^done'
+check persisttest-2 "$A/persisttest/persisttest.exe" 90 "0" 'script -> hr=0 "n=2 cookie=true"' '^done'
 
 # hello runs until closed: the timeout ending it is expected.
 check hello "$A/hello/hello-loader.exe" 40 "0 124" \

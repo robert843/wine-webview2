@@ -35,6 +35,8 @@ controller options and the environment's `UserDataFolder`.
 Downloads (`DownloadStarting`, `DownloadOperation` with progress, pause, resume and cancel, the profile's
 `DefaultDownloadFolderPath`) and `PermissionRequested` (with a native Yes/No prompt as the default UI), the file chooser
 (`<input type=file>` opens the application's Wine file dialog).
+Browser data (cookies, local storage, cache) is kept in the application's user data folder
+(`<folder>\EBWebView`), like with Microsoft's runtime. `AcceleratorKeyPressed`, `SetBoundsAndZoomFactor`.
 
 Copy and paste works in both directions with Windows and Linux applications (CEF and Wine share
 the system clipboard).

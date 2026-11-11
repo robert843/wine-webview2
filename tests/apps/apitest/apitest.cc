@@ -1,5 +1,5 @@
 // Test: profile (name, PreferredColorScheme), ZoomFactor + ZoomFactorChanged, GotFocus,
-// environment UserDataFolder, controller options.
+// environment UserDataFolder, controller options, AcceleratorKeyPressed.
 #include <windows.h>
 #include <cstdio>
 #include <functional>
@@ -97,7 +97,26 @@ static void step(int n) {
         SetFocus(hwnd);
         controller->MoveFocus(COREWEBVIEW2_MOVE_FOCUS_REASON_PROGRAMMATIC);
         later(1000, 6); break; }
-    case 6: log("done"); PostMessageW(hwnd, WM_CLOSE, 0, 0); break;
+    case 6: {
+        // AcceleratorKeyPressed: the app handles F2 (the page must not see it), F3 goes through.
+        EventRegistrationToken t;
+        controller->add_AcceleratorKeyPressed(new Handler<ICoreWebView2AcceleratorKeyPressedEventHandler, ICoreWebView2Controller *,
+            ICoreWebView2AcceleratorKeyPressedEventArgs *>([](ICoreWebView2Controller *, ICoreWebView2AcceleratorKeyPressedEventArgs *args) {
+                COREWEBVIEW2_KEY_EVENT_KIND kind; UINT key; COREWEBVIEW2_PHYSICAL_KEY_STATUS status;
+                args->get_KeyEventKind(&kind); args->get_VirtualKey(&key); args->get_PhysicalKeyStatus(&status);
+                log("AcceleratorKeyPressed kind=%d key=%#x released=%d", kind, key, status.IsKeyReleased);
+                if (key == VK_F2) args->put_Handled(TRUE);
+                return S_OK; }), &t);
+        run(L"window.keys = []; addEventListener('keydown', e => keys.push(e.key)); 'listening'", 0);
+        HWND child = FindWindowExW(hwnd, nullptr, nullptr, nullptr);
+        for (UINT key : {VK_F2, VK_F3}) {
+            UINT scan = MapVirtualKeyW(key, MAPVK_VK_TO_VSC);
+            PostMessageW(child, WM_KEYDOWN, key, 1 | scan << 16);
+            PostMessageW(child, WM_KEYUP, key, 1 | scan << 16 | 3u << 30);
+        }
+        later(1000, 7); break; }
+    case 7: run(L"'keys=' + keys.join(',')", 8); break;
+    case 8: log("done"); PostMessageW(hwnd, WM_CLOSE, 0, 0); break;
     }
 }
 

@@ -243,6 +243,7 @@ HRESULT WINAPI CreateWebViewEnvironmentWithOptionsInternal(BOOLEAN check_running
         ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler *handler)
 {
     struct environment_created_ctx *ctx;
+    WCHAR default_dir[MAX_PATH + 16];
     HMODULE module;
 
     TRACE("check_running_instance %d, runtime_type %u, user_data_dir %s, options %p, handler %p.\n",
@@ -256,21 +257,21 @@ HRESULT WINAPI CreateWebViewEnvironmentWithOptionsInternal(BOOLEAN check_running
     GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_PIN,
                        (const WCHAR *)CreateWebViewEnvironmentWithOptionsInternal, &module);
 
+    /* Like WebView2: without a user data folder, "<exe path>.WebView2" next to the executable. */
+    if (!user_data_dir || !*user_data_dir)
+    {
+        DWORD len = GetModuleFileNameW(NULL, default_dir, MAX_PATH);
+        wcscpy(default_dir + len, L".WebView2");
+        user_data_dir = default_dir;
+    }
+
     if (!(ctx = calloc(1, sizeof(*ctx)))) return E_OUTOFMEMORY;
-    if (!helper_ensure_started()) ctx->hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
+    if (!helper_ensure_started(user_data_dir)) ctx->hr = HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
     else
     {
         struct wv2_buffer args = {0};
         struct wv2_reader ret;
-        WCHAR default_dir[MAX_PATH + 16];
 
-        /* Like WebView2: without a user data folder, "<exe path>.WebView2" next to the executable. */
-        if (!user_data_dir || !*user_data_dir)
-        {
-            DWORD len = GetModuleFileNameW(NULL, default_dir, MAX_PATH);
-            wcscpy(default_dir + len, L".WebView2");
-            user_data_dir = default_dir;
-        }
         wv2_put_str(&args, user_data_dir);
         wv2_put_iface(&args, options);
         put_drive_map(&args);

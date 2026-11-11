@@ -44,7 +44,7 @@ HWND webview2_get_async_window(void);
 
 /* controller.c */
 void controller_init(void);
-BOOL helper_ensure_started(void);
+BOOL helper_ensure_started(const WCHAR *user_data_dir);
 HRESULT controller_create(IUnknown *environment, HWND parent,
                           ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler);
 /* Sends a protocol message (any thread); view 0 for generic calls. */
