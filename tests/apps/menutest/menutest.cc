@@ -1,4 +1,5 @@
 // Test: default context menu (native popup menu built from CEF's model), choosing an item,
+// ContextMenuRequested (custom items, submenu, CustomItemSelected, handled by the app),
 // AreDefaultContextMenusEnabled = FALSE.
 #include <windows.h>
 #include <cstdio>
@@ -90,6 +91,54 @@ static void start_driver(UINT choose) {
     CloseHandle(CreateThread(nullptr, 0, menu_driver, nullptr, 0, nullptr));
 }
 
+static ICoreWebView2Environment *env;
+static int menu_mode = 1;   // 1 = change the menu, 2 = handle it, 0 = leave it
+
+static HRESULT on_menu_requested(ICoreWebView2 *, ICoreWebView2ContextMenuRequestedEventArgs *args) {
+    if (!menu_mode) return S_OK;
+    ICoreWebView2ContextMenuTarget *target; args->get_ContextMenuTarget(&target);
+    COREWEBVIEW2_CONTEXT_MENU_TARGET_KIND kind; BOOL editable;
+    target->get_Kind(&kind); target->get_IsEditable(&editable); target->Release();
+    ICoreWebView2ContextMenuItemCollection *items; args->get_MenuItems(&items);
+    UINT32 count; items->get_Count(&count);
+    std::string names;
+    INT32 select_all = -1;
+    for (UINT32 i = 0; i < count; i++) {
+        ICoreWebView2ContextMenuItem *item; items->GetValueAtIndex(i, &item);
+        LPWSTR name; item->get_Name(&name);
+        char utf8[64]; WideCharToMultiByte(CP_UTF8, 0, name, -1, utf8, sizeof(utf8), nullptr, nullptr);
+        names += utf8; names += ",";
+        if (!wcscmp(name, L"selectAll")) { item->get_CommandId(&select_all); if (menu_mode == 1) { items->RemoveValueAtIndex(i); i--; count--; } }
+        CoTaskMemFree(name); item->Release();
+    }
+    log("ContextMenuRequested kind=%d editable=%d items=%s", kind, editable, names.c_str());
+    if (menu_mode == 2) {
+        args->put_Handled(TRUE);
+        args->put_SelectedCommandId(select_all);
+    } else {
+        ICoreWebView2Environment9 *e9; env->QueryInterface(IID_ICoreWebView2Environment9, (void **)&e9);
+        ICoreWebView2ContextMenuItem *custom, *sub, *child;
+        e9->CreateContextMenuItem(L"Custom item", nullptr, COREWEBVIEW2_CONTEXT_MENU_ITEM_KIND_COMMAND, &custom);
+        e9->CreateContextMenuItem(L"More", nullptr, COREWEBVIEW2_CONTEXT_MENU_ITEM_KIND_SUBMENU, &sub);
+        e9->CreateContextMenuItem(L"Nested", nullptr, COREWEBVIEW2_CONTEXT_MENU_ITEM_KIND_COMMAND, &child);
+        ICoreWebView2ContextMenuItemCollection *children; sub->get_Children(&children);
+        children->InsertValueAtIndex(0, child); children->Release();
+        EventRegistrationToken t;
+        custom->add_CustomItemSelected(new Handler<ICoreWebView2CustomItemSelectedEventHandler, ICoreWebView2ContextMenuItem *, IUnknown *>(
+            [](ICoreWebView2ContextMenuItem *item, IUnknown *) {
+                LPWSTR label; item->get_Label(&label);
+                log("CustomItemSelected %ls", label); CoTaskMemFree(label);
+                return S_OK; }), &t);
+        INT32 id; custom->get_CommandId(&id);
+        log("custom item id=%d", id);
+        items->InsertValueAtIndex(0, custom);
+        items->InsertValueAtIndex(1, sub);
+        custom->Release(); sub->Release(); child->Release(); e9->Release();
+    }
+    items->Release();
+    return S_OK;
+}
+
 static void step(int n) {
     log("--- step %d", n);
     switch (n) {
@@ -99,13 +148,31 @@ static void step(int n) {
         right_click();
         later(3000, 2); break;
     case 2: run(L"var t = document.getElementById('t'); t.selectionStart + '-' + t.selectionEnd", 3); break;
-    case 3: { // menus disabled: nothing may appear
+    case 3: { // ContextMenuRequested: remove "selectAll", add a custom item and a submenu, choose the custom item
+        ICoreWebView2_11 *w11; webview->QueryInterface(IID_ICoreWebView2_11, (void **)&w11);
+        EventRegistrationToken t;
+        w11->add_ContextMenuRequested(new Handler<ICoreWebView2ContextMenuRequestedEventHandler, ICoreWebView2 *,
+            ICoreWebView2ContextMenuRequestedEventArgs *>(on_menu_requested), &t);
+        w11->Release();
+        run(L"var t = document.getElementById('t'); t.focus(); t.setSelectionRange(0, 0); 'ready'", 0);
+        start_driver(50000);
+        right_click();
+        later(3000, 4); break; }
+    case 4: // handled by the app: select all without a menu
+        menu_mode = 2;
+        run(L"var t = document.getElementById('t'); t.focus(); t.setSelectionRange(0, 0); 'ready'", 0);
+        start_driver(0);
+        right_click();
+        later(3000, 5); break;
+    case 5: run(L"var t = document.getElementById('t'); 'handled ' + t.selectionStart + '-' + t.selectionEnd", 6); break;
+    case 6: { // menus disabled: nothing may appear
+        menu_mode = 0;
         ICoreWebView2Settings *s; webview->get_Settings(&s);
         s->put_AreDefaultContextMenusEnabled(FALSE); s->Release();
         start_driver(0);
         right_click();
-        later(6000, 4); break; }
-    case 4: log("done"); PostMessageW(hwnd, WM_CLOSE, 0, 0); break;
+        later(6000, 7); break; }
+    case 7: log("done"); PostMessageW(hwnd, WM_CLOSE, 0, 0); break;
     }
 }
 
@@ -127,7 +194,8 @@ int WINAPI WinMain(HINSTANCE inst, HINSTANCE, LPSTR, int) {
         GetProcAddress(LoadLibraryW(L"WebView2Loader.dll"), "CreateCoreWebView2EnvironmentWithOptions");
     create(nullptr, nullptr, nullptr,
         new Handler<ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler, HRESULT, ICoreWebView2Environment *>(
-            [](HRESULT, ICoreWebView2Environment *env) {
+            [](HRESULT, ICoreWebView2Environment *e) {
+                env = e; env->AddRef();
                 env->CreateCoreWebView2Controller(hwnd,
                     new Handler<ICoreWebView2CreateCoreWebView2ControllerCompletedHandler, HRESULT, ICoreWebView2Controller *>(
                         [](HRESULT, ICoreWebView2Controller *c) {

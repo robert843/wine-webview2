@@ -18,6 +18,7 @@ macro_rules! eprintln {
     }};
 }
 
+mod contextmenu;
 mod ipc;
 mod paths;
 mod protocol;
@@ -2045,7 +2046,8 @@ const MENU_ID_INSPECT: i32 = 26501;
 
 thread_local! {
     /// Context menus shown by the DLL, waiting for CMD_CONTEXT_MENU_REPLY.
-    static MENUS: RefCell<HashMap<u64, RunContextMenuCallback>> = RefCell::new(HashMap::new());
+    /// The items are kept to tell custom ones (CustomItemSelected) from CEF's commands.
+    static MENUS: RefCell<HashMap<u64, (RunContextMenuCallback, Vec<rpc::ObjRef>)>> = RefCell::new(HashMap::new());
     static NEXT_MENU: std::cell::Cell<u64> = const { std::cell::Cell::new(1) };
 }
 
@@ -2089,46 +2091,70 @@ wrap_context_menu_handler! {
             model: Option<&mut MenuModel>,
             callback: Option<&mut RunContextMenuCallback>,
         ) -> ::std::os::raw::c_int {
-            // Off-screen rendering: CEF does not draw menus; the DLL shows a native one.
+            // Off-screen rendering: CEF does not draw menus; ContextMenuRequested, then the DLL shows a
+            // native one.
             let (Some(params), Some(model), Some(callback)) = (params, model, callback) else { return 0 };
-            let mut items = Writer::default();
-            let mut count = 0u32;
+            let mut entries = Vec::new();
             for i in 0..model.count() {
                 let kind = model.type_at(i);
-                if kind == MenuItemType::SEPARATOR {
-                    items = items.u32(1).i32(0).u32(0).u32(0);
-                } else if kind == MenuItemType::COMMAND || kind == MenuItemType::CHECK {
-                    let label = CefString::from(&model.label_at(i)).to_string();
-                    let flags = (model.is_enabled_at(i) != 0) as u32 | ((model.is_checked_at(i) != 0) as u32) << 1;
-                    items = items
-                        .u32(0)
-                        .i32(model.command_id_at(i))
-                        .u32(flags)
-                        .u32(label.len() as u32)
-                        .bytes(label.as_bytes());
+                let kind = if kind == MenuItemType::SEPARATOR {
+                    contextmenu::KIND_SEPARATOR
+                } else if kind == MenuItemType::COMMAND {
+                    contextmenu::KIND_COMMAND
+                } else if kind == MenuItemType::CHECK {
+                    contextmenu::KIND_CHECK_BOX
                 } else {
                     continue; // submenus and radio groups are not in the default menu
-                }
-                count += 1;
+                };
+                entries.push(contextmenu::ModelEntry {
+                    command: model.command_id_at(i),
+                    label: CefString::from(&model.label_at(i)).to_string(),
+                    kind,
+                    enabled: model.is_enabled_at(i) != 0,
+                    checked: model.is_checked_at(i) != 0,
+                });
             }
-            if count == 0 {
+            if entries.is_empty() {
                 callback.cancel();
                 return 1;
             }
-            let id = NEXT_MENU.with(|n| {
-                let id = n.get();
-                n.set(id + 1);
-                id
-            });
-            MENUS.with(|m| m.borrow_mut().insert(id, callback.clone()));
-            let payload = Writer::default()
-                .u64(id)
-                .i32((params.xcoord() as f64 * view_scale(self.client.view())).round() as i32)
-                .i32((params.ycoord() as f64 * view_scale(self.client.view())).round() as i32)
-                .u32(count)
-                .u32(0)
-                .bytes(&items.0);
-            send_event(EVT_CONTEXT_MENU, self.client.view(), &payload.0);
+            let view = self.client.view();
+            let scale = view_scale(view);
+            let (x, y) = ((params.xcoord() as f64 * scale).round() as i32, (params.ycoord() as f64 * scale).round() as i32);
+            let flags = sys::cef_context_menu_type_flags_t::from(params.type_flags()).0;
+            let media = params.media_type();
+            let text = |s: CefStringUserfree| CefString::from(&s).to_string();
+            // COREWEBVIEW2_CONTEXT_MENU_TARGET_KIND
+            let kind = if media == ContextMenuMediaType::IMAGE {
+                1
+            } else if media == ContextMenuMediaType::AUDIO {
+                3
+            } else if media == ContextMenuMediaType::VIDEO {
+                4
+            } else if flags & 16 != 0 {
+                2 // CM_TYPEFLAG_SELECTION
+            } else {
+                0
+            };
+            let frame_uri = text(params.frame_url());
+            let target = contextmenu::Target {
+                kind,
+                editable: params.is_editable() != 0,
+                main_frame: frame_uri.is_empty(),
+                page_uri: text(params.page_url()),
+                frame_uri,
+                link_uri: text(params.link_url()),
+                link_text: String::new(), // FIXME: CEF does not give the link text
+                source_uri: text(params.source_url()),
+                selection: text(params.selection_text()),
+            };
+            let callback = callback.clone();
+            contextmenu::raise(view, contextmenu::items_from_model(entries), target, api_gen::POINT { x, y },
+                Box::new(move |decision| match decision {
+                    contextmenu::Decision::Show(items) => show_context_menu(view, x, y, items, callback),
+                    contextmenu::Decision::Run(item) => run_menu_item(&item, &callback),
+                    contextmenu::Decision::Cancel => callback.cancel(),
+                }));
             1
         }
 
@@ -2151,13 +2177,69 @@ wrap_context_menu_handler! {
     }
 }
 
-fn context_menu_reply(id: u64, command: i32) {
-    if let Some(callback) = MENUS.with(|m| m.borrow_mut().remove(&id)) {
-        if command > 0 {
-            callback.cont(command, EventFlags::default());
-        } else {
-            callback.cancel();
+/// Writes menu items for EVT_CONTEXT_MENU (submenus as SUBMENU ... END); returns the entry count.
+fn write_menu_items(w: &mut Writer, items: &[rpc::ObjRef], depth: u32) -> u32 {
+    let mut count = 0;
+    for item in items {
+        let Some((kind, command, label, enabled, checked, children)) = contextmenu::describe(item) else { continue };
+        let flags = enabled as u32 | (checked as u32) << 1 | ((kind == contextmenu::KIND_RADIO) as u32) << 2;
+        let entry = |w: &mut Writer, ty: u32, command: i32, flags: u32, label: &str| {
+            let out = std::mem::take(w).u32(ty).i32(command).u32(flags).u32(label.len() as u32).bytes(label.as_bytes());
+            *w = out;
+        };
+        match kind {
+            contextmenu::KIND_SEPARATOR => entry(w, 1, 0, 0, ""),
+            contextmenu::KIND_SUBMENU if depth < 8 => {
+                entry(w, 2, 0, flags, &label);
+                count += write_menu_items(w, &children, depth + 1);
+                entry(w, 3, 0, 0, "");
+                count += 1;
+            }
+            contextmenu::KIND_SUBMENU => continue,
+            _ => entry(w, 0, command, flags, &label),
         }
+        count += 1;
+    }
+    count
+}
+
+fn show_context_menu(view: u32, x: i32, y: i32, items: Vec<rpc::ObjRef>, callback: RunContextMenuCallback) {
+    let mut entries = Writer::default();
+    let count = write_menu_items(&mut entries, &items, 0);
+    if count == 0 {
+        callback.cancel();
+        return;
+    }
+    let id = NEXT_MENU.with(|n| {
+        let id = n.get();
+        n.set(id + 1);
+        id
+    });
+    MENUS.with(|m| m.borrow_mut().insert(id, (callback, items)));
+    let payload = Writer::default().u64(id).i32(x).i32(y).u32(count).u32(0).bytes(&entries.0);
+    send_event(EVT_CONTEXT_MENU, view, &payload.0);
+}
+
+/// A chosen item: CustomItemSelected for the application's own items, else CEF runs the command.
+fn run_menu_item(item: &rpc::ObjRef, callback: &RunContextMenuCallback) {
+    match item.downcast::<contextmenu::ItemObj>() {
+        Some(i) if i.0.is_custom() => {
+            callback.cancel();
+            contextmenu::custom_item_selected(item);
+        }
+        Some(_) => {
+            let command = contextmenu::describe(item).map(|d| d.1).unwrap_or(0);
+            callback.cont(command, EventFlags::default());
+        }
+        None => callback.cancel(),
+    }
+}
+
+fn context_menu_reply(id: u64, command: i32) {
+    let Some((callback, items)) = MENUS.with(|m| m.borrow_mut().remove(&id)) else { return };
+    match contextmenu::find_command(&items, command).filter(|_| command > 0) {
+        Some(item) => run_menu_item(&item, &callback),
+        None => callback.cancel(),
     }
 }
 
@@ -2505,6 +2587,8 @@ fn reader_thread(chan: Channel) {
                 post_ui(drain_queue);
             }
             Ok(None) => break,
+            // The application exited with data still unread: the same as a closed connection.
+            Err(e) if e.kind() == std::io::ErrorKind::ConnectionReset => break,
             Err(e) => {
                 eprintln!("helper: recv failed: {e}");
                 break;

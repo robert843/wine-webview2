@@ -66,6 +66,10 @@ check popuptest "$A/popuptest/popuptest.exe" 120 "0" \
 check menutest "$A/menutest/menutest.exe" 90 "0" \
     'context menu: .*=117; .*=26501;' \
     'script -> hr=0 "0-10"' \
+    'ContextMenuRequested kind=0 editable=1 items=undo,redo,separator,cut,copy,paste,pasteAsPlainText,separator,selectAll,separator,inspectElement,' \
+    'context menu: Custom item=50000; More=' \
+    'CustomItemSelected Custom item' \
+    'script -> hr=0 "handled 0-10"' \
     'context menu: none' \
     '^done'
 

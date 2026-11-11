@@ -41,12 +41,13 @@ Browser data (cookies, local storage, cache) is kept in the application's user d
 `IsMuted`. `AddHostObjectToScript`: the application's `IDispatch` objects in
 `chrome.webview.hostObjects` (asynchronous and synchronous proxies). DPI scaling (`RasterizationScale`, by default
 the window's DPI from Wine's settings). `ProcessFailed` when the renderer or the whole browser ends.
+`ContextMenuRequested`: the application can change the menu (its own items and submenus,
+`CustomItemSelected`) or handle it.
 
 Copy and paste works in both directions with Windows and Linux applications (CEF and Wine share
 the system clipboard).
 
-Not yet: IME, drag and drop, `ContextMenuRequested` (custom menus),
-composition mode (`CompositionController`).
+Not yet: IME, drag and drop, composition mode (`CompositionController`).
 
 ## Requirements
 

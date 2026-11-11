@@ -146,8 +146,11 @@ struct wv2_context_menu
 
 #define WV2_MENU_ITEM_COMMAND   0
 #define WV2_MENU_ITEM_SEPARATOR 1
+#define WV2_MENU_ITEM_SUBMENU   2   /* the following items up to WV2_MENU_ITEM_END belong to it */
+#define WV2_MENU_ITEM_END       3
 #define WV2_MENU_ENABLED        0x1
 #define WV2_MENU_CHECKED        0x2
+#define WV2_MENU_RADIO          0x4
 
 struct wv2_context_menu_item
 {

@@ -61,8 +61,9 @@ enum Ev {
     FaviconChanged,
     IsMutedChanged,
     IsDocumentPlayingAudioChanged,
+    ContextMenuRequested,
 }
-const EV_COUNT: usize = 19;
+const EV_COUNT: usize = 20;
 
 fn rc<T: Dispatch + 'static>(obj: T) -> ObjRef {
     ObjRef::Runtime(Rc::new(obj))
@@ -105,6 +106,9 @@ impl ICoreWebView2Environment15Impl for Environment {
         Ok(self.user_data_dir.clone())
     }
 
+    fn CreateContextMenuItem(&self, _ctx: &mut Ctx, label: Option<String>, icon: Option<Vec<u8>>, kind: i32) -> WvResult<ObjRef> {
+        crate::contextmenu::create_custom_item(&label.unwrap_or_default(), icon, kind)
+    }
     fn CreateCoreWebView2ControllerOptions(&self, _ctx: &mut Ctx) -> WvResult<ObjRef> {
         Ok(rc(ICoreWebView2ControllerOptions4Obj(ControllerOptions::default())))
     }
@@ -559,6 +563,11 @@ pub fn create_controller(view: u32, width: u32, height: u32, options: &ObjRef) -
     Ok(ObjRef::Runtime(controller))
 }
 
+/// ContextMenuRequested handlers and the sender, for contextmenu.rs.
+pub fn context_menu_handlers(view: u32) -> Option<(Vec<AppRef>, ObjRef)> {
+    with_webview(view, |wv, sender| (wv.ev(Ev::ContextMenuRequested).snapshot(), sender))
+}
+
 fn webview_ref(view: u32) -> ObjRef {
     WEBVIEWS.with(|w| w.borrow().get(&view).cloned()).map(|wv| ObjRef::Runtime(wv)).unwrap_or(ObjRef::Null)
 }
@@ -707,6 +716,7 @@ impl ICoreWebView2_29Impl for WebView {
         add_FaviconChanged, remove_FaviconChanged, FaviconChanged;
         add_IsMutedChanged, remove_IsMutedChanged, IsMutedChanged;
         add_IsDocumentPlayingAudioChanged, remove_IsDocumentPlayingAudioChanged, IsDocumentPlayingAudioChanged;
+        add_ContextMenuRequested, remove_ContextMenuRequested, ContextMenuRequested;
     }
 
     fn get_StatusBarText(&self, _ctx: &mut Ctx) -> WvResult<String> {
@@ -1274,17 +1284,17 @@ enum DeferralState {
 }
 
 /// Shared GetDeferral logic: after the handlers return, `finish` runs immediately or on Complete().
-struct DeferralSlot {
+pub(crate) struct DeferralSlot {
     state: Cell<DeferralState>,
     finish: RefCell<Option<Box<dyn FnOnce()>>>,
 }
 
 impl DeferralSlot {
-    fn new() -> Rc<Self> {
+    pub(crate) fn new() -> Rc<Self> {
         Rc::new(DeferralSlot { state: Cell::new(DeferralState::None), finish: RefCell::new(None) })
     }
 
-    fn get(self: &Rc<Self>) -> ObjRef {
+    pub(crate) fn get(self: &Rc<Self>) -> ObjRef {
         self.state.set(DeferralState::Taken);
         let slot = self.clone();
         rc(ICoreWebView2DeferralObj(Deferral {
@@ -1299,7 +1309,7 @@ impl DeferralSlot {
     }
 
     /// After the handlers: true = result ready now; false = `finish` waits for Complete().
-    fn settle(&self, finish: Box<dyn FnOnce()>) -> bool {
+    pub(crate) fn settle(&self, finish: Box<dyn FnOnce()>) -> bool {
         if self.state.get() == DeferralState::Taken {
             *self.finish.borrow_mut() = Some(finish);
             false

@@ -1105,37 +1105,63 @@ static void show_context_menu(struct view *view, const void *payload, UINT32 siz
     const struct wv2_context_menu *menu = payload;
     const char *p = (const char *)(menu + 1), *end = (const char *)payload + size;
     struct wv2_context_menu_reply reply = {0};
-    HMENU popup;
+    HMENU stack[16];
+    int depth = 0;
     POINT pt;
     UINT32 i;
 
     if (size < sizeof(*menu)) return;
     reply.id = menu->id;
-    if ((popup = CreatePopupMenu()))
+    if ((stack[0] = CreatePopupMenu()))
     {
         for (i = 0; i < menu->count; i++)
         {
             const struct wv2_context_menu_item *item = (const void *)p;
+            UINT flags;
             WCHAR *label;
 
             if (end - p < sizeof(*item) || end - p - sizeof(*item) < item->label_len) break;
             p += sizeof(*item);
-            if (item->type == WV2_MENU_ITEM_SEPARATOR)
-                AppendMenuW(popup, MF_SEPARATOR, 0, NULL);
-            else if ((label = utf8_to_wide(p, item->label_len)))
+            flags = (item->flags & WV2_MENU_ENABLED ? 0 : MF_GRAYED) | (item->flags & WV2_MENU_CHECKED ? MF_CHECKED : 0);
+            switch (item->type)
             {
-                AppendMenuW(popup, MF_STRING | (item->flags & WV2_MENU_ENABLED ? 0 : MF_GRAYED)
-                            | (item->flags & WV2_MENU_CHECKED ? MF_CHECKED : 0), item->command, label);
-                free(label);
+            case WV2_MENU_ITEM_SEPARATOR:
+                AppendMenuW(stack[depth], MF_SEPARATOR, 0, NULL);
+                break;
+            case WV2_MENU_ITEM_END:
+                if (depth) depth--;
+                break;
+            case WV2_MENU_ITEM_SUBMENU:
+                if (depth + 1 < ARRAY_SIZE(stack) && (label = utf8_to_wide(p, item->label_len)))
+                {
+                    HMENU sub = CreatePopupMenu();
+                    AppendMenuW(stack[depth], MF_POPUP | flags, (UINT_PTR)sub, label);
+                    stack[++depth] = sub;
+                    free(label);
+                }
+                break;
+            default:
+                if ((label = utf8_to_wide(p, item->label_len)))
+                {
+                    AppendMenuW(stack[depth], MF_STRING | flags, item->command, label);
+                    if (item->flags & WV2_MENU_RADIO)
+                    {
+                        MENUITEMINFOW info = {sizeof(info), MIIM_FTYPE};
+                        info.fType = MFT_RADIOCHECK;
+                        SetMenuItemInfoW(stack[depth], item->command, FALSE, &info);
+                    }
+                    free(label);
+                }
+                break;
             }
             p += item->label_len;
         }
         pt.x = menu->x;
         pt.y = menu->y;
         ClientToScreen(view->hwnd, &pt);
-        reply.command = TrackPopupMenu(popup, TPM_RETURNCMD | TPM_RIGHTBUTTON | TPM_NONOTIFY,
+        reply.command = TrackPopupMenu(stack[0], TPM_RETURNCMD | TPM_RIGHTBUTTON | TPM_NONOTIFY,
                                        pt.x, pt.y, 0, view->hwnd, NULL);
-        DestroyMenu(popup);
+        DestroyMenu(stack[0]);
     }
     TRACE("view %u: context menu %s -> command %d\n", view->id, wine_dbgstr_longlong(menu->id), reply.command);
     helper_send(view, WV2_CMD_CONTEXT_MENU_REPLY, &reply, sizeof(reply));
