@@ -73,7 +73,29 @@ pub fn remove_filter(view: u32, pattern: &str, context: u32) {
     }
 }
 
+// ---------- Settings.UserAgent ----------
+// Emulation.setUserAgentOverride (DevTools) obejmuje tylko ramkę główną; ramki z innych witryn
+// (osobne procesy renderera) wysyłałyby domyślny UA — np. logowanie FFXIV odrzuca wtedy formularz.
+// Dlatego własny UA wstawiamy też w nagłówek każdego żądania widoku (jak WebView2).
+static USER_AGENTS: Mutex<Option<HashMap<u32, String>>> = Mutex::new(None);
+
+pub fn set_user_agent(view: u32, ua: Option<String>) {
+    let mut m = USER_AGENTS.lock().unwrap();
+    let m = m.get_or_insert_with(HashMap::new);
+    match ua {
+        Some(ua) => m.insert(view, ua),
+        None => m.remove(&view),
+    };
+}
+
+fn user_agent(view: u32) -> Option<String> {
+    USER_AGENTS.lock().unwrap().as_ref()?.get(&view).cloned()
+}
+
 pub fn remove_view(view: u32) {
+    if let Some(u) = USER_AGENTS.lock().unwrap().as_mut() {
+        u.remove(&view);
+    }
     if let Some(f) = FILTERS.lock().unwrap().as_mut() {
         f.remove(&view);
     }
@@ -357,20 +379,35 @@ wrap_request_handler! {
         ) -> Option<ResourceRequestHandler> {
             let request = request?;
             let url = CefString::from(&request.url()).to_string();
+            let user_agent = user_agent(self.handler.view);
             if !matches(self.handler.view, &url, web_resource_context(request)) {
                 // Zmapowany host wirtualny: plik z dysku, bez udziału aplikacji.
-                let file = virtual_host_file(self.handler.view, &url)?;
-                let state = RequestState { callback: None, response: Some(file_response(file)) };
+                if let Some(file) = virtual_host_file(self.handler.view, &url) {
+                    let state = RequestState { callback: None, response: Some(file_response(file)) };
+                    return Some(ResourceRequestHandlerBuilder::new(InterceptedRequest {
+                        view: self.handler.view,
+                        state: Arc::new(Mutex::new(state)),
+                        serve_only: true,
+                        pass_through: false,
+                        user_agent: None,
+                    }));
+                }
+                // Własny UA aplikacji: tylko nagłówek, żądanie idzie normalnie do sieci.
+                user_agent.as_ref()?;
                 return Some(ResourceRequestHandlerBuilder::new(InterceptedRequest {
                     view: self.handler.view,
-                    state: Arc::new(Mutex::new(state)),
-                    serve_only: true,
+                    state: Arc::new(Mutex::new(RequestState::default())),
+                    serve_only: false,
+                    pass_through: true,
+                    user_agent,
                 }));
             }
             Some(ResourceRequestHandlerBuilder::new(InterceptedRequest {
                 view: self.handler.view,
                 state: Arc::new(Mutex::new(RequestState::default())),
                 serve_only: false,
+                pass_through: false,
+                user_agent,
             }))
         }
     }
@@ -382,6 +419,9 @@ struct InterceptedRequest {
     state: Arc<Mutex<RequestState>>,
     /// Odpowiedź już gotowa (host wirtualny): bez pytania aplikacji.
     serve_only: bool,
+    /// Tylko nagłówek User-Agent (Settings.UserAgent), bez udziału aplikacji.
+    pass_through: bool,
+    user_agent: Option<String>,
 }
 
 wrap_resource_request_handler! {
@@ -403,6 +443,12 @@ wrap_resource_request_handler! {
             let (Some(request), Some(callback)) = (request, callback) else {
                 return ReturnValue::CONTINUE;
             };
+            if let Some(ua) = &self.req.user_agent {
+                request.set_header_by_name(Some(&"User-Agent".into()), Some(&ua.as_str().into()), 1);
+            }
+            if self.req.pass_through {
+                return ReturnValue::CONTINUE;
+            }
             let id = NEXT_ID.fetch_add(1, Ordering::Relaxed);
             let url = CefString::from(&request.url()).to_string();
             let method = CefString::from(&request.method()).to_string();

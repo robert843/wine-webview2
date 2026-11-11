@@ -56,6 +56,10 @@ runtime:
 	for f in $(CEF_DIR)/*.so $(CEF_DIR)/*.so.1 $(CEF_DIR)/*.pak $(CEF_DIR)/*.dat $(CEF_DIR)/*.bin \
 	         $(CEF_DIR)/*.json $(CEF_DIR)/locales; do ln -sfn $$f $(B)/runtime/; done
 	cp helper/target/release/wine-webview2-helper $(B)/runtime/.wine-webview2-helper.new && mv -f $(B)/runtime/.wine-webview2-helper.new $(B)/runtime/wine-webview2-helper
+	@# Biblioteki dostępności potrzebne CEF, których nie ma w kontenerze Steam Linux Runtime 4 (Proton).
+	@for l in libatk-bridge-2.0.so.0 libatspi.so.0; do \
+	    src=$$(ldconfig -p | awk -v L=$$l '$$1==L && /x86-64/ {print $$NF; exit}'); \
+	    if [ -n "$$src" ]; then cp -L "$$src" $(B)/runtime/$$l; else echo "uwaga: brak $$l w systemie"; fi; done
 
 $(B)/webview2.h: include/webview2.idl
 	@mkdir -p $(B)

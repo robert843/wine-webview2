@@ -160,8 +160,48 @@ struct View {
     frames: Option<FrameBuffer>,
     dropped: bool,
     user_agent: String,
+    /// Popup widżetu (<select>, podpowiedzi) w OSR: CEF rysuje go osobno (PaintElementType::POPUP),
+    /// składamy go z ostatnią klatką widoku.
+    widget: Option<WidgetPopup>,
     /// Popup czekający na podpięcie pod WebView aplikacji (NewWindow) albo na decyzję.
     popup: Option<PendingPopup>,
+}
+
+#[derive(Default)]
+struct WidgetPopup {
+    rect: Option<Rect>,
+    pixels: Vec<u8>,
+    size: (i32, i32),
+    /// Kopia ostatniej klatki widoku (BGRA) i jej rozmiar.
+    view: Vec<u8>,
+    view_size: (i32, i32),
+}
+
+/// Nakłada piksele popupu na kopię klatki widoku (z przycięciem do widoku).
+fn compose_widget(w: &WidgetPopup) -> Option<Vec<u8>> {
+    let r = w.rect.as_ref()?;
+    let (vw, vh) = w.view_size;
+    let (pw, ph) = w.size;
+    if w.view.len() != (vw * vh * 4) as usize || w.pixels.len() != (pw * ph * 4) as usize {
+        return None;
+    }
+    let mut out = w.view.clone();
+    for y in 0..ph.min(r.height) {
+        let dy = r.y + y;
+        if dy < 0 || dy >= vh {
+            continue;
+        }
+        let x0 = r.x.max(0);
+        let x1 = (r.x + pw.min(r.width)).min(vw);
+        if x1 <= x0 {
+            continue;
+        }
+        let src = ((y * pw + (x0 - r.x)) * 4) as usize;
+        let dst = ((dy * vw + x0) * 4) as usize;
+        let n = ((x1 - x0) * 4) as usize;
+        out[dst..dst + n].copy_from_slice(&w.pixels[src..src + n]);
+    }
+    Some(out)
 }
 
 struct IpcState {
@@ -307,6 +347,28 @@ wrap_render_handler! {
             rect.height = h.max(1) as i32;
         }
 
+        fn on_popup_show(&self, browser: Option<&mut Browser>, show: ::std::os::raw::c_int) {
+            let view = self.client.view();
+            with_state(|st| {
+                if let Some(v) = st.views.get_mut(&view) {
+                    v.widget = if show != 0 { Some(WidgetPopup::default()) } else { None };
+                }
+            });
+            // Świeża klatka widoku: pod popup (pokazanie) albo bez niego (ukrycie).
+            if let Some(host) = browser.and_then(|b| b.host()) {
+                host.invalidate(PaintElementType::VIEW);
+            }
+        }
+
+        fn on_popup_size(&self, _browser: Option<&mut Browser>, rect: Option<&Rect>) {
+            let view = self.client.view();
+            with_state(|st| {
+                if let Some(w) = st.views.get_mut(&view).and_then(|v| v.widget.as_mut()) {
+                    w.rect = rect.cloned();
+                }
+            });
+        }
+
         fn on_paint(
             &self,
             browser: Option<&mut Browser>,
@@ -316,10 +378,33 @@ wrap_render_handler! {
             width: ::std::os::raw::c_int,
             height: ::std::os::raw::c_int,
         ) {
-            if type_ != PaintElementType::VIEW || buffer.is_null() || width <= 0 || height <= 0 {
+            if buffer.is_null() || width <= 0 || height <= 0 {
                 return;
             }
             let src = unsafe { std::slice::from_raw_parts(buffer, (width * height * 4) as usize) };
+            let view = self.client.view();
+            // Popup widżetu widoczny: zapamiętaj warstwę i wyślij złożoną klatkę.
+            let composed = with_state(|st| {
+                let w = st.views.get_mut(&view)?.widget.as_mut()?;
+                if type_ == PaintElementType::POPUP {
+                    w.pixels.clear();
+                    w.pixels.extend_from_slice(src);
+                    w.size = (width, height);
+                } else {
+                    w.view.clear();
+                    w.view.extend_from_slice(src);
+                    w.view_size = (width, height);
+                }
+                compose_widget(w).map(|buf| (buf, w.view_size))
+            })
+            .flatten();
+            if let Some((buf, (vw, vh))) = composed {
+                with_state(|st| paint_view(st, view, &buf, vw as u32, vh as u32, (0, 0, vw, vh)));
+                return;
+            }
+            if type_ != PaintElementType::VIEW {
+                return;
+            }
             let dirty = dirty_rects.unwrap_or(&[]).iter().fold(None::<(i32, i32, i32, i32)>, |acc, r| {
                 let (l, t, rr, b) = (r.x, r.y, r.x + r.width, r.y + r.height);
                 Some(match acc {
@@ -327,7 +412,7 @@ wrap_render_handler! {
                     Some((al, at, ar, ab)) => (al.min(l), at.min(t), ar.max(rr), ab.max(b)),
                 })
             }).unwrap_or((0, 0, width, height));
-            let invalidate = with_state(|st| paint_view(st, self.client.view(), src, width as u32, height as u32, dirty));
+            let invalidate = with_state(|st| paint_view(st, view, src, width as u32, height as u32, dirty));
             if invalidate == Some(true) {
                 if let Some(host) = browser.and_then(|b| b.host()) {
                     host.invalidate(PaintElementType::VIEW);
@@ -586,6 +671,7 @@ pub fn apply_settings(view: u32, flags: u32) {
 }
 
 pub fn apply_user_agent(view: u32, ua: &str) {
+    resources::set_user_agent(view, (!ua.is_empty()).then(|| ua.to_string()));
     with_state(|st| {
         if let Some(v) = st.views.get_mut(&view) {
             v.user_agent = ua.to_string();
@@ -706,6 +792,7 @@ wrap_life_span_handler! {
                     frames: None,
                     dropped: false,
                     user_agent: String::new(),
+                    widget: None,
                     popup: Some(PendingPopup { adopt, close: false, held: None, intercepted: false, client: popup_client.clone() }),
                 })
             });
@@ -1057,6 +1144,7 @@ pub fn create_browser(view: u32, width: u32, height: u32) -> bool {
             frames: None,
             dropped: false,
             user_agent: String::new(),
+            widget: None,
             popup: None,
         })
     });
