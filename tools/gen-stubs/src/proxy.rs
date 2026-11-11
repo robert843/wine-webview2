@@ -378,8 +378,10 @@ fn gen_c_proxy(c: &mut String, leaf: &str, fname: &str, pm: &PMethod) {
         return;
     }
     writeln!(c, "    struct wv2_buffer args = {{0}};\n    struct wv2_reader ret = {{0}};\n    HRESULT hr;\n").unwrap();
+    // Token w add_X jest opcjonalny w WebView2 (WebView2APISample podaje NULL); reszta: E_POINTER.
+    let optional = |p: &crate::Param| p.ty.replace(' ', "") == "EventRegistrationToken*";
     for (p, (_, out)) in m.params.iter().zip(&pm.kinds) {
-        if *out {
+        if *out && !optional(p) {
             writeln!(c, "    if (!{}) return E_POINTER;", p.name).unwrap();
         }
     }
@@ -393,7 +395,11 @@ fn gen_c_proxy(c: &mut String, leaf: &str, fname: &str, pm: &PMethod) {
     if !outs.is_empty() {
         writeln!(c, "    if (SUCCEEDED(hr))\n    {{").unwrap();
         for (p, (pk, _)) in outs {
-            c_get_out(c, pk, &p.name, &p.ty);
+            if optional(p) {
+                writeln!(c, "        if ({0}) wv2_get_bytes(&ret, {0}, sizeof(*{0}));", p.name).unwrap();
+            } else {
+                c_get_out(c, pk, &p.name, &p.ty);
+            }
         }
         writeln!(c, "    }}").unwrap();
     }

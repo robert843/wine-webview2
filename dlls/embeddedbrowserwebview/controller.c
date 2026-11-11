@@ -52,6 +52,7 @@ WINE_DEFAULT_DEBUG_CHANNEL(webview2);
 
 static unixlib_handle_t unix_handle;
 static helper_handle_t helper;
+static DWORD browser_process_id;       /* msedgewebview2.exe placeholder, see start_placeholder() */
 static INIT_ONCE helper_once = INIT_ONCE_STATIC_INIT;
 
 #define UNIX_CALL(func, params) __wine_unix_call(unix_handle, unix_ ## func, params)
@@ -454,6 +455,8 @@ static NTSTATUS load_unixlib(void)
     return status;
 }
 
+static void start_placeholder(void);
+
 static BOOL WINAPI start_helper_once(INIT_ONCE *once, void *param, void **context)
 {
     struct helper_start_params params = {WV2_API_HASH};
@@ -468,7 +471,42 @@ static BOOL WINAPI start_helper_once(INIT_ONCE *once, void *param, void **contex
     helper = params.handle;
     TRACE("helper pid %u, protocol %u\n", params.helper_pid, params.helper_version);
     if ((thread = CreateThread(NULL, 0, reader_thread, NULL, 0, NULL))) CloseHandle(thread);
+    start_placeholder();
     return TRUE;
+}
+
+/* Starts msedgewebview2.exe (from the runtime's version folder, two levels above the DLL) as a
+ * stand-in browser process: applications open the process reported by get_BrowserProcessId. */
+static void start_placeholder(void)
+{
+    JOBOBJECT_EXTENDED_LIMIT_INFORMATION limits;
+    WCHAR path[MAX_PATH], cmdline[MAX_PATH + 64], *p;
+    PROCESS_INFORMATION pi;
+    STARTUPINFOW si = {sizeof(si)};
+    HANDLE job;
+    int i;
+
+    memset(&limits, 0, sizeof(limits));
+    GetModuleFileNameW(webview2_instance, path, ARRAY_SIZE(path));
+    for (i = 0; i < 3 && (p = wcsrchr(path, '\\')); i++) *p = 0;   /* ...\<version>\EBWebView\x64\dll */
+    wcscat(path, L"\\msedgewebview2.exe");
+    swprintf(cmdline, ARRAY_SIZE(cmdline), L"\"%s\" --wine-webview2-placeholder", path);
+    if (!CreateProcessW(path, cmdline, NULL, NULL, FALSE, CREATE_SUSPENDED | CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+    {
+        WARN("cannot start %s, error %lu\n", debugstr_w(path), GetLastError());
+        return;
+    }
+    if ((job = CreateJobObjectW(NULL, NULL)))
+    {
+        limits.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+        SetInformationJobObject(job, JobObjectExtendedLimitInformation, &limits, sizeof(limits));
+        AssignProcessToJobObject(job, pi.hProcess);     /* handle kept open: dies with us */
+    }
+    ResumeThread(pi.hThread);
+    CloseHandle(pi.hThread);
+    CloseHandle(pi.hProcess);
+    browser_process_id = pi.dwProcessId;
+    TRACE("placeholder browser process %lu\n", browser_process_id);
 }
 
 BOOL helper_ensure_started(void)
@@ -617,6 +655,43 @@ static LRESULT CALLBACK host_wndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM 
  */
 
 static ICoreWebView2Controller4Vtbl controller_vtbl;
+static ICoreWebView2_29Vtbl webview_vtbl;
+
+static HRESULT (STDMETHODCALLTYPE *proxy_SetVirtualHostNameToFolderMapping)(ICoreWebView2_29 *iface,
+        LPCWSTR host, LPCWSTR folder, COREWEBVIEW2_HOST_RESOURCE_ACCESS_KIND kind);
+
+/* The helper reads the files natively: pass the folder as a unix path. */
+static HRESULT STDMETHODCALLTYPE webview_SetVirtualHostNameToFolderMapping(ICoreWebView2_29 *iface,
+        LPCWSTR host, LPCWSTR folder, COREWEBVIEW2_HOST_RESOURCE_ACCESS_KIND kind)
+{
+    WCHAR *unix_folder;
+    char *unix_name;
+    HRESULT hr;
+    int len;
+
+    TRACE("iface %p, host %s, folder %s, kind %d.\n", iface, debugstr_w(host), debugstr_w(folder), kind);
+    if (!host || !folder) return E_INVALIDARG;
+    if (!(unix_name = wine_get_unix_file_name(folder))) return HRESULT_FROM_WIN32(ERROR_PATH_NOT_FOUND);
+    len = MultiByteToWideChar(CP_UNIXCP, 0, unix_name, -1, NULL, 0);
+    if (!(unix_folder = malloc(len * sizeof(WCHAR))))
+    {
+        HeapFree(GetProcessHeap(), 0, unix_name);
+        return E_OUTOFMEMORY;
+    }
+    MultiByteToWideChar(CP_UNIXCP, 0, unix_name, -1, unix_folder, len);
+    HeapFree(GetProcessHeap(), 0, unix_name);
+    hr = proxy_SetVirtualHostNameToFolderMapping(iface, host, unix_folder, kind);
+    free(unix_folder);
+    return hr;
+}
+
+static HRESULT STDMETHODCALLTYPE webview_get_BrowserProcessId(ICoreWebView2_29 *iface, UINT32 *pid)
+{
+    TRACE("iface %p, pid %p.\n", iface, pid);
+    if (!pid) return E_POINTER;
+    *pid = browser_process_id;
+    return S_OK;
+}
 static HRESULT (STDMETHODCALLTYPE *proxy_controller_Close)(ICoreWebView2Controller4 *iface);
 
 static struct view *view_from_controller(ICoreWebView2Controller4 *iface)
@@ -904,4 +979,10 @@ void controller_init(void)
     controller_vtbl.MoveFocus = controller_MoveFocus;
     controller_vtbl.Close = controller_Close;
     proxy_set_host_vtbl(FAMILY_ICoreWebView2Controller4, &controller_vtbl);
+
+    webview_vtbl = *(const ICoreWebView2_29Vtbl *)proxy_get_vtbl(FAMILY_ICoreWebView2_29);
+    webview_vtbl.get_BrowserProcessId = webview_get_BrowserProcessId;
+    proxy_SetVirtualHostNameToFolderMapping = webview_vtbl.SetVirtualHostNameToFolderMapping;
+    webview_vtbl.SetVirtualHostNameToFolderMapping = webview_SetVirtualHostNameToFolderMapping;
+    proxy_set_host_vtbl(FAMILY_ICoreWebView2_29, &webview_vtbl);
 }

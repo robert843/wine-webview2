@@ -31,6 +31,12 @@ name=$(basename "$exe" .exe)
 log=${WV2_LOG:-$ROOT/build/logs/$name.log}
 mkdir -p "$(dirname "$log")" "$WINEPREFIX"
 
+# Czysty start: zamknij resztki poprzednich przebiegów w tym prefiksie (np. okna debuggera).
+WINESERVER=${WINESERVER:-$(dirname "$WINE")/server/wineserver}
+[ -x "$WINESERVER" ] || WINESERVER=wineserver
+"$WINESERVER" -k >/dev/null 2>&1 || true
+sleep 0.5
+
 if [ ! -f "$WINEPREFIX/system.reg" ]; then
     echo "== tworzę prefiks $WINEPREFIX"
     WINEDEBUG=-all "$WINE" wineboot -i >/dev/null 2>&1

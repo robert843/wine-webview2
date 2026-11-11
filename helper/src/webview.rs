@@ -305,6 +305,18 @@ impl ICoreWebView2_29Impl for WebView {
         Ok(())
     }
 
+    /// folderPath przychodzi już jako ścieżka uniksowa (konwersja w hoście DLL).
+    fn SetVirtualHostNameToFolderMapping(&self, _ctx: &mut Ctx, host: Option<String>, folder: Option<String>,
+                                         _access: i32) -> WvResult<()> {
+        crate::resources::set_virtual_host(self.view, &host.ok_or(E_INVALIDARG)?, folder.ok_or(E_INVALIDARG)?.into());
+        Ok(())
+    }
+
+    fn ClearVirtualHostNameToFolderMapping(&self, _ctx: &mut Ctx, host: Option<String>) -> WvResult<()> {
+        crate::resources::clear_virtual_host(self.view, &host.ok_or(E_INVALIDARG)?);
+        Ok(())
+    }
+
     fn AddWebResourceRequestedFilter(&self, _ctx: &mut Ctx, uri: Option<String>, context: i32) -> WvResult<()> {
         crate::resources::add_filter(self.view, uri.ok_or(E_INVALIDARG)?, context as u32);
         Ok(())

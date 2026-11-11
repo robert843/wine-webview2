@@ -19,7 +19,10 @@
  */
 
 /* The browser process of the real runtime. Ours lives in the native helper, but applications
- * (e.g. LeviLauncher) check that this file exists in the runtime folder, so we ship a stub. */
+ * check that this file exists in the runtime folder (LeviLauncher), and open the process
+ * reported by ICoreWebView2::get_BrowserProcessId (WebView2APISample) — with
+ * --wine-webview2-placeholder we stay alive as that process until the application exits
+ * (EmbeddedBrowserWebView puts us in a kill-on-close job). */
 
 #include <stdarg.h>
 #include "windef.h"
@@ -30,6 +33,11 @@ WINE_DEFAULT_DEBUG_CHANNEL(webview2);
 
 int WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev, WCHAR *cmdline, int show)
 {
+    if (wcsstr(cmdline, L"--wine-webview2-placeholder"))
+    {
+        Sleep(INFINITE);
+        return 0;
+    }
     FIXME("msedgewebview2.exe started with %s; the browser runs in the native helper\n", debugstr_w(cmdline));
     return 0;
 }

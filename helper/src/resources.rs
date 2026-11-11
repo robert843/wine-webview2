@@ -76,6 +76,107 @@ pub fn remove_view(view: u32) {
     if let Some(f) = FILTERS.lock().unwrap().as_mut() {
         f.remove(&view);
     }
+    if let Some(v) = VIRTUAL_HOSTS.lock().unwrap().as_mut() {
+        v.remove(&view);
+    }
+}
+
+// ---------- SetVirtualHostNameToFolderMapping ----------
+
+/// Widok -> (host małymi literami, folder uniksowy).
+static VIRTUAL_HOSTS: Mutex<Option<HashMap<u32, Vec<(String, std::path::PathBuf)>>>> = Mutex::new(None);
+
+pub fn set_virtual_host(view: u32, host: &str, folder: std::path::PathBuf) {
+    let host = host.to_ascii_lowercase();
+    let mut v = VIRTUAL_HOSTS.lock().unwrap();
+    let list = v.get_or_insert_with(HashMap::new).entry(view).or_default();
+    list.retain(|(h, _)| *h != host);
+    list.push((host, folder));
+}
+
+pub fn clear_virtual_host(view: u32, host: &str) {
+    let host = host.to_ascii_lowercase();
+    if let Some(list) = VIRTUAL_HOSTS.lock().unwrap().as_mut().and_then(|v| v.get_mut(&view)) {
+        list.retain(|(h, _)| *h != host);
+    }
+}
+
+fn percent_decode(s: &str) -> String {
+    let b = s.as_bytes();
+    let mut out = Vec::with_capacity(b.len());
+    let mut i = 0;
+    while i < b.len() {
+        if b[i] == b'%' && i + 2 < b.len() {
+            if let Ok(v) = u8::from_str_radix(&s[i + 1..i + 3], 16) {
+                out.push(v);
+                i += 3;
+                continue;
+            }
+        }
+        out.push(b[i]);
+        i += 1;
+    }
+    String::from_utf8_lossy(&out).into_owned()
+}
+
+/// Plik dla URL-a pod zmapowanym hostem (None = host niezmapowany).
+fn virtual_host_file(view: u32, url: &str) -> Option<Option<std::path::PathBuf>> {
+    let rest = url.strip_prefix("https://").or_else(|| url.strip_prefix("http://"))?;
+    let (host, path) = rest.split_once('/').unwrap_or((rest, ""));
+    let host = host.split(':').next().unwrap_or(host).to_ascii_lowercase();
+    let folder = VIRTUAL_HOSTS.lock().unwrap().as_ref()?.get(&view)?.iter().find(|(h, _)| *h == host)?.1.clone();
+    let path = path.split(['?', '#']).next().unwrap_or("");
+    let mut file = folder.clone();
+    for part in percent_decode(path).split(['/', '\\']) {
+        match part {
+            "" | "." => {}
+            ".." => return Some(None), // poza folder — odmowa
+            p => file.push(p),
+        }
+    }
+    if file.is_dir() {
+        file.push("index.html");
+    }
+    Some(Some(file))
+}
+
+fn mime_type(path: &std::path::Path) -> &'static str {
+    match path.extension().and_then(|e| e.to_str()).map(|e| e.to_ascii_lowercase()).as_deref() {
+        Some("html" | "htm") => "text/html",
+        Some("js" | "mjs") => "text/javascript",
+        Some("css") => "text/css",
+        Some("json" | "map") => "application/json",
+        Some("svg") => "image/svg+xml",
+        Some("png") => "image/png",
+        Some("jpg" | "jpeg") => "image/jpeg",
+        Some("gif") => "image/gif",
+        Some("webp") => "image/webp",
+        Some("ico") => "image/x-icon",
+        Some("wasm") => "application/wasm",
+        Some("woff") => "font/woff",
+        Some("woff2") => "font/woff2",
+        Some("ttf") => "font/ttf",
+        Some("mp3") => "audio/mpeg",
+        Some("wav") => "audio/wav",
+        Some("mp4") => "video/mp4",
+        Some("webm") => "video/webm",
+        Some("pdf") => "application/pdf",
+        Some("xml") => "text/xml",
+        Some("txt") => "text/plain",
+        _ => "application/octet-stream",
+    }
+}
+
+fn file_response(file: Option<std::path::PathBuf>) -> AppResponse {
+    match file.and_then(|f| std::fs::read(&f).ok().map(|d| (f, d))) {
+        Some((f, content)) => AppResponse {
+            status: 200,
+            reason: "OK".into(),
+            headers: vec![("Content-Type".into(), mime_type(&f).into()), ("Access-Control-Allow-Origin".into(), "*".into())],
+            content,
+        },
+        None => AppResponse { status: 404, reason: "Not Found".into(), headers: Vec::new(), content: Vec::new() },
+    }
 }
 
 /// Dopasowanie wzorca WebView2: `*` = dowolny ciąg, `?` = jeden znak.
@@ -253,11 +354,19 @@ wrap_request_handler! {
             let request = request?;
             let url = CefString::from(&request.url()).to_string();
             if !matches(self.handler.view, &url, web_resource_context(request)) {
-                return None;
+                // Zmapowany host wirtualny: plik z dysku, bez udziału aplikacji.
+                let file = virtual_host_file(self.handler.view, &url)?;
+                let state = RequestState { callback: None, response: Some(file_response(file)) };
+                return Some(ResourceRequestHandlerBuilder::new(InterceptedRequest {
+                    view: self.handler.view,
+                    state: Arc::new(Mutex::new(state)),
+                    serve_only: true,
+                }));
             }
             Some(ResourceRequestHandlerBuilder::new(InterceptedRequest {
                 view: self.handler.view,
                 state: Arc::new(Mutex::new(RequestState::default())),
+                serve_only: false,
             }))
         }
     }
@@ -267,6 +376,8 @@ wrap_request_handler! {
 struct InterceptedRequest {
     view: u32,
     state: Arc<Mutex<RequestState>>,
+    /// Odpowiedź już gotowa (host wirtualny): bez pytania aplikacji.
+    serve_only: bool,
 }
 
 wrap_resource_request_handler! {
@@ -282,6 +393,9 @@ wrap_resource_request_handler! {
             request: Option<&mut Request>,
             callback: Option<&mut Callback>,
         ) -> ReturnValue {
+            if self.req.serve_only {
+                return ReturnValue::CONTINUE;
+            }
             let (Some(request), Some(callback)) = (request, callback) else {
                 return ReturnValue::CONTINUE;
             };

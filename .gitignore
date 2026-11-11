@@ -3,3 +3,4 @@
 /tests/apps/*/*.exe
 /tests/apps/*/*.dll
 /helper/target/
+/tests/apps/apisample/out/

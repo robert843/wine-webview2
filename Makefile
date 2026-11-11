@@ -66,7 +66,7 @@ $(B)/version.res: $(DLL)/version.rc $(DLL)/webview2_private.h
 	$(WRC) --nostdinc -I$(DLL) -I$(WINE_BUILD)/include -I$(WINE_SRC)/include -o $@ $<
 
 define arch_rules
-$(B)/$(1)/%.o: $(DLL)/%.c $(B)/webview2.h $(DLL)/stubs.h $(DLL)/webview2_private.h $(DLL)/unixlib.h $(DLL)/protocol.h $(DLL)/proxy.h $(DLL)/proxy_gen.h
+$(B)/$(1)/%.o: $(DLL)/%.c $(B)/webview2.h $(DLL)/webview2_private.h $(DLL)/unixlib.h $(DLL)/protocol.h $(DLL)/proxy.h $(DLL)/proxy_gen.h
 	@mkdir -p $(B)/$(1)
 	$(2)-gcc -c -o $$@ $$< $(INCLUDES) $(CFLAGS)
 

@@ -1215,12 +1215,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ContextMenuItem_ICoreWebView
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ContextMenuItem_add_CustomItemSelected, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -2024,12 +2023,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebVi
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_add_BytesReceivedChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -2053,12 +2051,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebVi
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_add_EstimatedEndTimeChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -2082,12 +2079,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DownloadOperation_ICoreWebVi
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DownloadOperation_add_StateChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -5592,12 +5588,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Notification_ICoreWebView2No
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Notification_add_CloseRequested, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -6460,12 +6455,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICore
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController_add_CursorChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -6580,12 +6574,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICore
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController4_add_NonClientRegionChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -6609,12 +6602,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2CompositionController5_ICore
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2CompositionController5_add_DragStarting, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -6888,12 +6880,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Con
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_add_ZoomFactorChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -6942,12 +6933,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Con
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_add_MoveFocusRequested, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -6971,12 +6961,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Con
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_add_GotFocus, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -7000,12 +6989,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Con
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_add_LostFocus, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -7029,12 +7017,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Con
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller_add_AcceleratorKeyPressed, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -7208,12 +7195,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Controller4_ICoreWebView2Con
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Controller3_add_RasterizationScaleChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -7697,12 +7683,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DedicatedWorker_ICoreWebView
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DedicatedWorker_add_DedicatedWorkerCreated, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -7726,12 +7711,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DedicatedWorker_ICoreWebView
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DedicatedWorker_add_Destroying, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -7755,12 +7739,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DedicatedWorker_ICoreWebView
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DedicatedWorker_add_WebMessageReceived, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -7962,12 +7945,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2DevToolsProtocolEventReceive
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2DevToolsProtocolEventReceiver_add_DevToolsProtocolEventReceived, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -8227,12 +8209,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2E
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment_add_NewBrowserVersionAvailable, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -8322,12 +8303,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2E
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment5_add_BrowserProcessExited, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -8383,12 +8363,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Environment15_ICoreWebView2E
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Environment8_add_ProcessInfosChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -8820,12 +8799,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Find_ICoreWebView2Find_add_A
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Find_add_ActiveMatchIndexChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -8849,12 +8827,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Find_ICoreWebView2Find_add_M
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Find_add_MatchCountChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -9139,12 +9116,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame_ad
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame_add_NameChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -9186,12 +9162,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame_ad
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame_add_Destroyed, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -9231,12 +9206,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_a
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_add_NavigationStarting, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -9260,12 +9234,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_a
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_add_ContentLoading, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -9289,12 +9262,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_a
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_add_NavigationCompleted, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -9318,12 +9290,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_a
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_add_DOMContentLoaded, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -9384,12 +9355,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame2_a
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)handler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame2_add_WebMessageReceived, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -9413,12 +9383,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame3_a
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame3_add_PermissionRequested, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -9472,12 +9441,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame6_a
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame6_add_ScreenCaptureStarting, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -9501,12 +9469,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame7_a
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame7_add_FrameCreated, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -9530,12 +9497,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Frame8_ICoreWebView2Frame8_a
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Frame8_add_DedicatedWorkerCreated, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -11128,12 +11094,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2Profile9_ICoreWebView2Profil
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2Profile8_add_Deleted, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -11582,12 +11547,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorker_ICoreWebView2S
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorker_add_Destroying, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -11611,12 +11575,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorker_ICoreWebView2S
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorker_add_WebMessageReceived, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -11771,12 +11734,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerManager_ICoreWe
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerManager_add_ServiceWorkerRegistered, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -11942,12 +11904,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerRegistration_IC
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerRegistration_add_ServiceWorkerActivated, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -11971,12 +11932,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2ServiceWorkerRegistration_IC
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2ServiceWorkerRegistration_add_Unregistering, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -12636,12 +12596,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedWorker_ICoreWebView2Sh
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SharedWorker_add_Destroying, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -12770,12 +12729,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2SharedWorkerManager_ICoreWeb
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2SharedWorkerManager_add_SharedWorkerCreated, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13197,12 +13155,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_Naviga
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_NavigationStarting, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13226,12 +13183,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_Conten
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_ContentLoading, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13255,12 +13211,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_Source
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_SourceChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13284,12 +13239,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_Histor
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_HistoryChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13313,12 +13267,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_Naviga
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_NavigationCompleted, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13342,12 +13295,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_FrameN
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_FrameNavigationStarting, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13371,12 +13323,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_FrameN
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_FrameNavigationCompleted, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13400,12 +13351,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_Script
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_ScriptDialogOpening, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13429,12 +13379,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_Permis
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_PermissionRequested, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13458,12 +13407,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_Proces
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_ProcessFailed, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13574,12 +13522,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_WebMes
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)handler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_WebMessageReceived, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13715,12 +13662,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_NewWin
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_NewWindowRequested, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13744,12 +13690,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_Docume
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_DocumentTitleChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13818,12 +13763,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_Contai
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_ContainsFullScreenElementChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13863,12 +13807,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_WebRes
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_WebResourceRequested, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13918,12 +13861,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_add_Window
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_add_WindowCloseRequested, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13947,12 +13889,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_2_add_WebR
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_2_add_WebResourceResponseReceived, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -13988,12 +13929,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_2_add_DOMC
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_2_add_DOMContentLoaded, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -14114,12 +14054,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_4_add_Fram
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_4_add_FrameCreated, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -14143,12 +14082,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_4_add_Down
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_4_add_DownloadStarting, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -14172,12 +14110,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_5_add_Clie
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_5_add_ClientCertificateRequested, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -14226,12 +14163,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_8_add_IsMu
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_8_add_IsMutedChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -14283,12 +14219,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_8_add_IsDo
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_8_add_IsDocumentPlayingAudioChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -14328,12 +14263,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_9_add_IsDe
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)handler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_9_add_IsDefaultDownloadDialogOpenChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -14451,12 +14385,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_10_add_Bas
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_10_add_BasicAuthenticationRequested, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -14495,12 +14428,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_11_add_Con
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_11_add_ContextMenuRequested, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -14524,12 +14456,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_12_add_Sta
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_12_add_StatusBarTextChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -14585,12 +14516,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_14_add_Ser
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_14_add_ServerCertificateErrorDetected, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -14626,12 +14556,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_15_add_Fav
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_15_add_FaviconChanged, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -14736,12 +14665,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_18_add_Lau
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_18_add_LaunchingExternalUriScheme, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -14863,12 +14791,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_24_add_Not
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_24_add_NotificationReceived, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -14892,12 +14819,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_25_add_Sav
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_25_add_SaveAsUIShowing, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -14933,12 +14859,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_26_add_Sav
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_26_add_SaveFileSecurityCheckStarting, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -14962,12 +14887,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_27_add_Scr
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_27_add_ScreenCaptureStarting, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
@@ -15007,12 +14931,11 @@ static HRESULT STDMETHODCALLTYPE proxy_ICoreWebView2_29_ICoreWebView2_29_add_Ded
     struct wv2_reader ret = {0};
     HRESULT hr;
 
-    if (!token) return E_POINTER;
     wv2_put_iface(&args, (IUnknown *)eventHandler);
     hr = proxy_call((IUnknown *)iface, METHOD_ICoreWebView2_29_add_DedicatedWorkerCreated, &args, &ret);
     if (SUCCEEDED(hr))
     {
-        wv2_get_bytes(&ret, token, sizeof(EventRegistrationToken));
+        if (token) wv2_get_bytes(&ret, token, sizeof(*token));
     }
     wv2_reader_free(&ret);
     return hr;
