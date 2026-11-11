@@ -1,0 +1,12 @@
+{
+  "productName": "tauri-hello",
+  "version": "0.1.0",
+  "identifier": "dev.winewebview2.taurihello",
+  "build": { "frontendDist": "../dist" },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [{ "title": "wine-webview2 tauri", "width": 800, "height": 600 }],
+    "security": { "csp": null }
+  },
+  "bundle": { "active": false, "icon": ["icons/icon.ico", "icons/icon.png"] }
+}

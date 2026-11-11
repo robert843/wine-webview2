@@ -130,7 +130,7 @@ pub struct WebView {
     can_go_back: Cell<bool>,
     can_go_forward: Cell<bool>,
     settings: RefCell<Option<ObjRef>>,
-    pending_scripts: RefCell<HashMap<u64, AppRef>>,
+    pending_scripts: RefCell<HashMap<u64, PendingScript>>,
     pending_devtools: RefCell<HashMap<i32, AppRef>>,
     devtools_receivers: RefCell<Vec<Rc<ICoreWebView2DevToolsProtocolEventReceiverObj<DevToolsReceiver>>>>,
     next_id: Cell<u64>,
@@ -194,6 +194,111 @@ macro_rules! events {
             }
         )*
     };
+}
+
+/// Oczekujący wynik ExecuteScript / ExecuteScriptWithResult.
+pub enum PendingScript {
+    Plain(AppRef),
+    WithResult(AppRef),
+}
+
+/// Wyjątek JS ze skryptu (ExecuteScriptWithResult).
+pub struct ScriptError {
+    pub name: String,
+    pub message: String,
+    pub line: u32,
+    pub column: u32,
+    pub json: String,
+}
+
+impl PendingScript {
+    /// ExecuteScript zwraca "null" także po wyjątku (jak WebView2); WithResult — szczegóły.
+    fn complete(self, ctx: &mut Ctx, result: Result<String, ScriptError>) {
+        match self {
+            PendingScript::Plain(app) => {
+                let json = result.unwrap_or_else(|_| "null".to_string());
+                ICoreWebView2ExecuteScriptCompletedHandlerApp(app).Invoke_async(ctx, S_OK, Some(&json));
+            }
+            PendingScript::WithResult(app) => {
+                let obj = rc(ICoreWebView2ExecuteScriptResultObj(ScriptResult { result }));
+                ICoreWebView2ExecuteScriptWithResultCompletedHandlerApp(app).Invoke_async(ctx, S_OK, &obj);
+            }
+        }
+    }
+}
+
+impl WebView {
+    fn run_script(&self, ctx: &mut Ctx, script: String, pending: Option<PendingScript>) -> WvResult<()> {
+        let id = self.id();
+        if let Some(p) = pending {
+            self.pending_scripts.borrow_mut().insert(id, p);
+        }
+        if !crate::execute_script(self.view, id, &script) {
+            // Brak renderera (np. przed pierwszą nawigacją): jak skrypt bez wyniku.
+            if let Some(p) = self.pending_scripts.borrow_mut().remove(&id) {
+                p.complete(ctx, Ok("null".to_string()));
+            }
+        }
+        Ok(())
+    }
+}
+
+pub struct ScriptResult {
+    result: Result<String, ScriptError>,
+}
+
+impl ICoreWebView2ExecuteScriptResultImpl for ScriptResult {
+    fn get_Succeeded(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.result.is_ok())
+    }
+    fn get_ResultAsJson(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        // Po wyjątku pusty napis (dokumentacja WebView2).
+        Ok(self.result.as_ref().map(|j| j.clone()).unwrap_or_default())
+    }
+    fn TryGetResultAsString(&self, _ctx: &mut Ctx) -> WvResult<(String, bool)> {
+        match self.result.as_ref().ok().and_then(|j| json_unquote(j)) {
+            Some(s) => Ok((s, true)),
+            None => Ok((String::new(), false)),
+        }
+    }
+    fn get_Exception(&self, _ctx: &mut Ctx) -> WvResult<ObjRef> {
+        Ok(match &self.result {
+            Ok(_) => ObjRef::Null,
+            Err(e) => rc(ICoreWebView2ScriptExceptionObj(ScriptException {
+                name: e.name.clone(),
+                message: e.message.clone(),
+                line: e.line,
+                column: e.column,
+                json: e.json.clone(),
+            })),
+        })
+    }
+}
+
+pub struct ScriptException {
+    name: String,
+    message: String,
+    line: u32,
+    column: u32,
+    json: String,
+}
+
+impl ICoreWebView2ScriptExceptionImpl for ScriptException {
+    fn get_LineNumber(&self, _ctx: &mut Ctx) -> WvResult<u32> {
+        Ok(self.line)
+    }
+    fn get_ColumnNumber(&self, _ctx: &mut Ctx) -> WvResult<u32> {
+        Ok(self.column)
+    }
+    fn get_Name(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.name.clone())
+    }
+    fn get_Message(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.message.clone())
+    }
+    fn get_ToJson(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.json.clone())
+    }
 }
 
 impl ICoreWebView2_29Impl for WebView {
@@ -273,17 +378,12 @@ impl ICoreWebView2_29Impl for WebView {
 
     fn ExecuteScript(&self, ctx: &mut Ctx, script: Option<String>, handler: ObjRef) -> WvResult<()> {
         let script = script.ok_or(E_INVALIDARG)?;
-        let id = self.id();
-        if let Some(app) = handler.app() {
-            self.pending_scripts.borrow_mut().insert(id, app.clone());
-        }
-        if !crate::execute_script(self.view, id, &script) {
-            // Brak renderera (np. przed pierwszą nawigacją): jak skrypt bez wyniku.
-            if let Some(app) = self.pending_scripts.borrow_mut().remove(&id) {
-                ICoreWebView2ExecuteScriptCompletedHandlerApp(app).Invoke_async(ctx, S_OK, Some("null"));
-            }
-        }
-        Ok(())
+        self.run_script(ctx, script, handler.app().cloned().map(PendingScript::Plain))
+    }
+
+    fn ExecuteScriptWithResult(&self, ctx: &mut Ctx, script: Option<String>, handler: ObjRef) -> WvResult<()> {
+        let script = script.ok_or(E_INVALIDARG)?;
+        self.run_script(ctx, script, handler.app().cloned().map(PendingScript::WithResult))
     }
 
     fn AddScriptToExecuteOnDocumentCreated(&self, ctx: &mut Ctx, script: Option<String>, handler: ObjRef) -> WvResult<()> {
@@ -658,10 +758,11 @@ pub fn on_web_message(view: u32, source: &str, json: &str) {
     });
 }
 
-pub fn on_script_result(view: u32, id: u64, json: &str) {
+pub fn on_script_result(view: u32, id: u64, result: Result<String, ScriptError>) {
     with_webview(view, |wv, _| {
-        if let Some(app) = wv.pending_scripts.borrow_mut().remove(&id) {
-            ICoreWebView2ExecuteScriptCompletedHandlerApp(app).Invoke_async(&mut Ctx, S_OK, Some(json));
+        let pending = wv.pending_scripts.borrow_mut().remove(&id);
+        if let Some(p) = pending {
+            p.complete(&mut Ctx, result);
         }
     });
 }

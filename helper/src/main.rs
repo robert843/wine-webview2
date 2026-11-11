@@ -264,9 +264,20 @@ wrap_client! {
                     1
                 }
                 renderer::MSG_RESULT => {
-                    let id = CefString::from(&args.string(0)).to_string().parse::<u64>().unwrap_or(0);
-                    let json = CefString::from(&args.string(1)).to_string();
-                    webview::on_script_result(self.client.view(), id, &json);
+                    let arg = |i| CefString::from(&args.string(i)).to_string();
+                    let id = arg(0).parse::<u64>().unwrap_or(0);
+                    let result = if arg(2) == "1" {
+                        Ok(arg(1))
+                    } else {
+                        Err(webview::ScriptError {
+                            name: arg(3),
+                            message: arg(4),
+                            line: arg(5).parse().unwrap_or(0),
+                            column: arg(6).parse().unwrap_or(0),
+                            json: arg(7),
+                        })
+                    };
+                    webview::on_script_result(self.client.view(), id, result);
                     1
                 }
                 renderer::MSG_CLOSE => {
@@ -1590,6 +1601,8 @@ fn main() -> std::process::ExitCode {
         root_cache_path: cache.to_string_lossy().as_ref().into(),
         log_severity: LogSeverity::WARNING,
         background_color: DEFAULT_BACKGROUND,
+        // UA Windows/Edge od pierwszego żądania (nadpisanie przez DevTools przychodzi z opóźnieniem).
+        user_agent: DEFAULT_USER_AGENT.into(),
         ..Default::default()
     };
     if initialize(Some(args.as_main_args()), Some(&settings), Some(&mut app), std::ptr::null_mut()) != 1 {

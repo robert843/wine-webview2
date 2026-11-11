@@ -1,0 +1,22 @@
+<!doctype html><meta charset=utf-8><title>tauri-hello</title>
+<style>body{font:20px sans-serif;margin:24px}</style>
+<h1>Tauri na wine-webview2</h1><div id=log></div>
+<script>
+const log = s => { document.getElementById('log').innerHTML += s + '<br>'; };
+const { invoke } = window.__TAURI__.core;
+const { listen } = window.__TAURI__.event;
+(async () => {
+  try {
+    await invoke('report', { msg: 'page loaded: ' + location.href + ' ua=' + navigator.userAgent.slice(0, 60) });
+    const r = await invoke('greet', { name: 'Wine' });
+    log(r); await invoke('report', { msg: 'greet -> ' + r });
+    const got = new Promise(res => listen('pong', e => res(e.payload)));
+    await invoke('ping_event');
+    const p = await got;
+    log('pong ' + JSON.stringify(p)); await invoke('report', { msg: 'event pong -> ' + JSON.stringify(p) });
+    setTimeout(() => invoke('finish'), 1500);
+  } catch (e) {
+    await invoke('report', { msg: 'ERROR ' + e });
+  }
+})();
+</script>

@@ -3,7 +3,7 @@
 //! Komunikaty procesowe (CefProcessMessage) między rendererem a procesem przeglądarki:
 //!   renderer -> browser  "wv2.post"   [json]                       chrome.webview.postMessage
 //!   browser  -> renderer "wv2.exec"   [id, skrypt]                 ExecuteScript
-//!   renderer -> browser  "wv2.result" [id, json]                   wynik ExecuteScript
+//!   renderer -> browser  "wv2.result" [id, json, ok, name, message, line, col, exception_json]  wynik ExecuteScript
 //!   renderer -> browser  "wv2.close"  []                         window.close() w ramce głównej
 //! Skrypty AddScriptToExecuteOnDocumentCreated: plik `<--wv2-scripts-dir>/<browser_id>.scripts`
 //! (rekordy: u32 LE długość + UTF-8), czytany przy każdym nowym kontekście JS — działa także
@@ -236,27 +236,43 @@ wrap_render_process_handler! {
             let Some(args) = message.argument_list() else { return 1 };
             let id = CefString::from(&args.string(0)).to_string();
             let script = CefString::from(&args.string(1)).to_string();
-            let json = match frame.v8_context() {
+            // Wynik jako obiekt {ok, r | name, message, line, col, json}: wyjątek (także SyntaxError
+            // z eval) łapiemy w JS, żeby ExecuteScriptWithResult dostał szczegóły.
+            let mut fields: [String; 6] = ["0".into(), "null".into(), String::new(), String::new(), "0".into(), "0".into()];
+            let mut exception_json = String::from("{}");
+            match frame.v8_context() {
                 Some(context) if context.enter() != 0 => {
-                    // Pośredni eval = zasięg globalny, jak w WebView2; wynik jako JSON ("null" dla undefined).
-                    let wrapper = format!(
-                        "(function(){{var r=(0,eval)({});var j=JSON.stringify(r);return j===undefined?'null':j;}})()",
-                        json_string(&script)
-                    );
+                    let wrapper = format!("(function(){{try{{var r=(0,eval)({});var j=JSON.stringify(r);\
+return {{ok:true,r:j===undefined?'null':j}};}}catch(e){{var m=/<anonymous>:(\\d+):(\\d+)/.exec(e&&e.stack||'');\
+var d;try{{d=JSON.stringify({{className:e&&e.constructor?e.constructor.name:typeof e,description:String(e&&e.stack||e),type:typeof e}});}}catch(x){{d='{{}}';}}\
+return {{ok:false,name:(e&&e.name)||'Error',message:(e&&e.message!==undefined)?String(e.message):String(e),\
+line:m?m[1]-1:0,col:m?m[2]-1:0,json:d}};}}}})()", json_string(&script));
                     let result = eval(&context, &wrapper);
-                    context.exit();
+                    let get = |v: &V8Value, k: &str| v.value_bykey(Some(&k.into()));
+                    let text = |v: Option<V8Value>| v.filter(|v| v.is_string() != 0).map(|v| CefString::from(&v.string_value()).to_string());
+                    let int = |v: Option<V8Value>| v.filter(|v| v.is_int() != 0 || v.is_double() != 0).map(|v| v.int_value().max(0).to_string());
                     match result {
-                        Ok(Some(v)) if v.is_string() != 0 => CefString::from(&v.string_value()).to_string(),
-                        Ok(_) => "null".to_string(),
-                        Err(e) => {
-                            eprintln!("helper(renderer): ExecuteScript exception: {e}");
-                            "null".to_string()
+                        Ok(Some(v)) if v.is_object() != 0 => {
+                            if get(&v, "ok").is_some_and(|o| o.bool_value() != 0) {
+                                fields[0] = "1".into();
+                                fields[1] = text(get(&v, "r")).unwrap_or_else(|| "null".into());
+                            } else {
+                                fields[2] = text(get(&v, "name")).unwrap_or_default();
+                                fields[3] = text(get(&v, "message")).unwrap_or_default();
+                                fields[4] = int(get(&v, "line")).unwrap_or_else(|| "0".into());
+                                fields[5] = int(get(&v, "col")).unwrap_or_else(|| "0".into());
+                                exception_json = text(get(&v, "json")).unwrap_or_else(|| "{}".into());
+                                eprintln!("helper(renderer): ExecuteScript exception: {}: {}", fields[2], fields[3]);
+                            }
                         }
+                        Ok(_) => {}
+                        Err(e) => eprintln!("helper(renderer): ExecuteScript failed: {e}"),
                     }
+                    context.exit();
                 }
-                _ => "null".to_string(),
-            };
-            send_to_browser(frame, MSG_RESULT, &[&id, &json]);
+                _ => {}
+            }
+            send_to_browser(frame, MSG_RESULT, &[&id, &fields[1], &fields[0], &fields[2], &fields[3], &fields[4], &fields[5], &exception_json]);
             1
         }
     }
