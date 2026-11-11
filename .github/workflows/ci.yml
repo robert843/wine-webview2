@@ -64,6 +64,15 @@ jobs:
           sudo mkdir -pm755 /etc/apt/keyrings
           sudo wget -qO /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
           sudo wget -qNP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources
+          # The runner's own Ubuntu mirror is sometimes unresolvable; apt walks this list
+          # and falls back to the next mirror on failure.
+          printf '%s\n' http://azure.archive.ubuntu.com/ubuntu/ \
+            https://mirrors.edge.kernel.org/ubuntu/ \
+            https://mirror.us.leaseweb.net/ubuntu/ \
+            https://ftp.uni-stuttgart.de/ubuntu/ \
+            http://archive.ubuntu.com/ubuntu/ | sudo tee /etc/apt/apt-mirrors.txt
+          echo 'Acquire::Retries "3";' | sudo tee /etc/apt/apt.conf.d/80-retries
+          grep -rl 'mirror+file:/etc/apt/apt-mirrors.txt' /etc/apt/sources.list.d /etc/apt/sources.list 2>/dev/null || true
           sudo apt-get update -q
           sudo apt-get install -yq --install-recommends wine-devel wine-devel-dev
           sudo apt-get install -yq gcc-mingw-w64 g++-mingw-w64 gcc-multilib cmake ninja-build xvfb x11-utils \
