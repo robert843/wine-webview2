@@ -85,6 +85,9 @@ check apitest "$A/apitest/apitest.exe" 90 "0" \
     'IsMuted=1' \
     '^IsMutedChanged' \
     '-> "dpr=3 width=213"' \
+    'ProcessFailed kind=1 reason=2' \
+    '-> "alive apitest"' \
+    'ProcessFailed kind=0' \
     '^done'
 
 check dltest "$A/dltest/dltest.exe" 90 "0" \

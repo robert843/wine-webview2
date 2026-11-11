@@ -40,7 +40,7 @@ Browser data (cookies, local storage, cache) is kept in the application's user d
 (`ControllerOptions`). `AcceleratorKeyPressed`, `SetBoundsAndZoomFactor`, status bar text, favicon,
 `IsMuted`. `AddHostObjectToScript`: the application's `IDispatch` objects in
 `chrome.webview.hostObjects` (asynchronous and synchronous proxies). DPI scaling (`RasterizationScale`, by default
-the window's DPI from Wine's settings).
+the window's DPI from Wine's settings). `ProcessFailed` when the renderer or the whole browser ends.
 
 Copy and paste works in both directions with Windows and Linux applications (CEF and Wine share
 the system clipboard).

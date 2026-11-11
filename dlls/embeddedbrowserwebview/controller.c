@@ -105,6 +105,15 @@ struct view
     INT64 next_token;
     BOOL skip_char;         /* the app handled the key down: drop its WM_CHAR too */
 
+    /* ProcessFailed handlers: raised here, also when the helper itself is gone */
+    struct process_failed_handler
+    {
+        ICoreWebView2ProcessFailedEventHandler *handler;
+        INT64 token;
+    } *failed_handlers;
+    UINT32 failed_count;
+    BOOL browser_exited;
+
     IUnknown *webview;      /* ICoreWebView2 proxy kept for the view's host data */
     struct host_objects *host_objects;
 };
@@ -768,6 +777,202 @@ static void show_permission_prompt(struct view *view, const void *payload, UINT3
     helper_send(view, WV2_CMD_PERMISSION_REPLY, &reply, sizeof(reply));
 }
 
+/*
+ * ProcessFailed
+ */
+struct failed_args
+{
+    ICoreWebView2ProcessFailedEventArgs3 ICoreWebView2ProcessFailedEventArgs3_iface;
+    LONG ref;
+    struct wv2_process_failed info;
+};
+
+static inline struct failed_args *impl_from_failed_args(ICoreWebView2ProcessFailedEventArgs3 *iface)
+{
+    return CONTAINING_RECORD(iface, struct failed_args, ICoreWebView2ProcessFailedEventArgs3_iface);
+}
+
+static HRESULT STDMETHODCALLTYPE failed_args_QueryInterface(ICoreWebView2ProcessFailedEventArgs3 *iface, REFIID iid, void **out)
+{
+    if (IsEqualGUID(iid, &IID_IUnknown) || IsEqualGUID(iid, &IID_ICoreWebView2ProcessFailedEventArgs) ||
+        IsEqualGUID(iid, &IID_ICoreWebView2ProcessFailedEventArgs2) || IsEqualGUID(iid, &IID_ICoreWebView2ProcessFailedEventArgs3))
+    {
+        *out = iface;
+        ICoreWebView2ProcessFailedEventArgs3_AddRef(iface);
+        return S_OK;
+    }
+    *out = NULL;
+    return E_NOINTERFACE;
+}
+
+static ULONG STDMETHODCALLTYPE failed_args_AddRef(ICoreWebView2ProcessFailedEventArgs3 *iface)
+{
+    return InterlockedIncrement(&impl_from_failed_args(iface)->ref);
+}
+
+static ULONG STDMETHODCALLTYPE failed_args_Release(ICoreWebView2ProcessFailedEventArgs3 *iface)
+{
+    struct failed_args *args = impl_from_failed_args(iface);
+    ULONG ref = InterlockedDecrement(&args->ref);
+    if (!ref) free(args);
+    return ref;
+}
+
+static HRESULT STDMETHODCALLTYPE failed_args_get_ProcessFailedKind(ICoreWebView2ProcessFailedEventArgs3 *iface,
+        COREWEBVIEW2_PROCESS_FAILED_KIND *kind)
+{
+    if (!kind) return E_POINTER;
+    *kind = impl_from_failed_args(iface)->info.kind;
+    return S_OK;
+}
+
+static HRESULT STDMETHODCALLTYPE failed_args_get_Reason(ICoreWebView2ProcessFailedEventArgs3 *iface,
+        COREWEBVIEW2_PROCESS_FAILED_REASON *reason)
+{
+    if (!reason) return E_POINTER;
+    *reason = impl_from_failed_args(iface)->info.reason;
+    return S_OK;
+}
+
+static HRESULT STDMETHODCALLTYPE failed_args_get_ExitCode(ICoreWebView2ProcessFailedEventArgs3 *iface, int *code)
+{
+    if (!code) return E_POINTER;
+    *code = impl_from_failed_args(iface)->info.exit_code;
+    return S_OK;
+}
+
+static HRESULT co_string(const WCHAR *str, LPWSTR *out)
+{
+    if (!out) return E_POINTER;
+    if (!(*out = CoTaskMemAlloc((wcslen(str) + 1) * sizeof(WCHAR)))) return E_OUTOFMEMORY;
+    wcscpy(*out, str);
+    return S_OK;
+}
+
+static HRESULT STDMETHODCALLTYPE failed_args_get_ProcessDescription(ICoreWebView2ProcessFailedEventArgs3 *iface, LPWSTR *value)
+{
+    return co_string(L"", value);
+}
+
+static HRESULT STDMETHODCALLTYPE failed_args_get_FrameInfosForFailedProcess(ICoreWebView2ProcessFailedEventArgs3 *iface,
+        ICoreWebView2FrameInfoCollection **frames)
+{
+    FIXME("iface %p, frames %p, stub!\n", iface, frames);
+    if (!frames) return E_POINTER;
+    *frames = NULL;
+    return E_NOTIMPL;
+}
+
+static HRESULT STDMETHODCALLTYPE failed_args_get_FailureSourceModulePath(ICoreWebView2ProcessFailedEventArgs3 *iface, LPWSTR *value)
+{
+    return co_string(L"", value);
+}
+
+static const ICoreWebView2ProcessFailedEventArgs3Vtbl failed_args_vtbl =
+{
+    failed_args_QueryInterface,
+    failed_args_AddRef,
+    failed_args_Release,
+    failed_args_get_ProcessFailedKind,
+    failed_args_get_Reason,
+    failed_args_get_ExitCode,
+    failed_args_get_ProcessDescription,
+    failed_args_get_FrameInfosForFailedProcess,
+    failed_args_get_FailureSourceModulePath,
+};
+
+static void raise_process_failed(struct view *view, const struct wv2_process_failed *info)
+{
+    struct process_failed_handler *handlers;
+    struct failed_args *args;
+    UINT32 i, count;
+
+    TRACE("view %u: process failed, kind %u reason %u exit code %d\n", view->id, info->kind, info->reason, info->exit_code);
+    if (!(count = view->failed_count) || !view->webview) return;
+    if (!(args = calloc(1, sizeof(*args)))) return;
+    args->ICoreWebView2ProcessFailedEventArgs3_iface.lpVtbl = &failed_args_vtbl;
+    args->ref = 1;
+    args->info = *info;
+    if (!(handlers = malloc(count * sizeof(*handlers)))) { free(args); return; }
+    memcpy(handlers, view->failed_handlers, count * sizeof(*handlers));
+    for (i = 0; i < count; i++) ICoreWebView2ProcessFailedEventHandler_AddRef(handlers[i].handler);
+    view_addref(view);
+    for (i = 0; i < count; i++)
+    {
+        ICoreWebView2ProcessFailedEventHandler_Invoke(handlers[i].handler, (ICoreWebView2 *)view->webview,
+                (ICoreWebView2ProcessFailedEventArgs *)&args->ICoreWebView2ProcessFailedEventArgs3_iface);
+        ICoreWebView2ProcessFailedEventHandler_Release(handlers[i].handler);
+    }
+    free(handlers);
+    ICoreWebView2ProcessFailedEventArgs3_Release(&args->ICoreWebView2ProcessFailedEventArgs3_iface);
+    view_release(view);
+}
+
+static void browser_exited_cb(void *arg)
+{
+    struct view *view = arg;
+    struct wv2_process_failed info = {COREWEBVIEW2_PROCESS_FAILED_KIND_BROWSER_PROCESS_EXITED,
+                                      COREWEBVIEW2_PROCESS_FAILED_REASON_UNEXPECTED, 0, 0};
+
+    if (!view->closed && !view->browser_exited)
+    {
+        view->browser_exited = TRUE;
+        raise_process_failed(view, &info);
+    }
+    view_release(view);
+}
+
+/* The helper is gone: every view's browser process exited. */
+static void notify_browser_exited(void)
+{
+    struct view *view;
+
+    EnterCriticalSection(&views_cs);
+    LIST_FOR_EACH_ENTRY(view, &views, struct view, entry)
+    {
+        view_addref(view);
+        if (!webview2_queue_async_to(view->async_hwnd, browser_exited_cb, view)) view_release(view);
+    }
+    LeaveCriticalSection(&views_cs);
+}
+
+static HRESULT STDMETHODCALLTYPE webview_add_ProcessFailed(ICoreWebView2_29 *iface,
+        ICoreWebView2ProcessFailedEventHandler *handler, EventRegistrationToken *token)
+{
+    struct view *view = proxy_get_host_data((IUnknown *)iface);
+    struct process_failed_handler *handlers;
+
+    TRACE("iface %p, handler %p, token %p.\n", iface, handler, token);
+    if (!handler || !token) return E_POINTER;
+    if (!view) return E_UNEXPECTED;
+    if (!(handlers = realloc(view->failed_handlers, (view->failed_count + 1) * sizeof(*handlers)))) return E_OUTOFMEMORY;
+    view->failed_handlers = handlers;
+    ICoreWebView2ProcessFailedEventHandler_AddRef(handler);
+    handlers[view->failed_count].handler = handler;
+    handlers[view->failed_count].token = token->value = ++view->next_token;
+    view->failed_count++;
+    return S_OK;
+}
+
+static HRESULT STDMETHODCALLTYPE webview_remove_ProcessFailed(ICoreWebView2_29 *iface, EventRegistrationToken token)
+{
+    struct view *view = proxy_get_host_data((IUnknown *)iface);
+    UINT32 i;
+
+    TRACE("iface %p, token %s.\n", iface, wine_dbgstr_longlong(token.value));
+    if (!view) return E_UNEXPECTED;
+    for (i = 0; i < view->failed_count; i++)
+    {
+        if (view->failed_handlers[i].token != token.value) continue;
+        ICoreWebView2ProcessFailedEventHandler_Release(view->failed_handlers[i].handler);
+        memmove(view->failed_handlers + i, view->failed_handlers + i + 1,
+                (view->failed_count - i - 1) * sizeof(*view->failed_handlers));
+        view->failed_count--;
+        break;
+    }
+    return S_OK;
+}
+
 static void host_object_call(struct view *view, const void *payload, UINT32 size)
 {
     struct wv2_buffer reply = {0};
@@ -974,6 +1179,9 @@ static void dispatch_event_cb(void *arg)
     case WV2_EVT_SCRIPT_DIALOG:
         show_script_dialog(view, event->payload, payload);
         break;
+    case WV2_EVT_PROCESS_FAILED:
+        if (payload >= sizeof(struct wv2_process_failed)) raise_process_failed(view, (const struct wv2_process_failed *)event->payload);
+        break;
     case WV2_EVT_HOST_OBJECT_CALL:
         host_object_call(view, event->payload, payload);
         break;
@@ -1050,6 +1258,7 @@ static DWORD WINAPI reader_thread(void *arg)
     }
     ERR("helper connection lost\n");
     proxy_connection_lost();
+    notify_browser_exited();
     free(params.buffer);
     return 0;
 }
@@ -1430,6 +1639,10 @@ static void close_view(struct view *view)
         ICoreWebView2AcceleratorKeyPressedEventHandler_Release(view->accel_handlers[--view->accel_count].handler);
     free(view->accel_handlers);
     view->accel_handlers = NULL;
+    while (view->failed_count)
+        ICoreWebView2ProcessFailedEventHandler_Release(view->failed_handlers[--view->failed_count].handler);
+    free(view->failed_handlers);
+    view->failed_handlers = NULL;
     if (view->hwnd)
     {
         DestroyWindow(view->hwnd);
@@ -1746,6 +1959,8 @@ void controller_init(void)
     webview_vtbl = *(const ICoreWebView2_29Vtbl *)proxy_get_vtbl(FAMILY_ICoreWebView2_29);
     webview_vtbl.get_BrowserProcessId = webview_get_BrowserProcessId;
     webview_vtbl.AddHostObjectToScript = webview_AddHostObjectToScript;
+    webview_vtbl.add_ProcessFailed = webview_add_ProcessFailed;
+    webview_vtbl.remove_ProcessFailed = webview_remove_ProcessFailed;
     webview_vtbl.RemoveHostObjectFromScript = webview_RemoveHostObjectFromScript;
     proxy_SetVirtualHostNameToFolderMapping = webview_vtbl.SetVirtualHostNameToFolderMapping;
     webview_vtbl.SetVirtualHostNameToFolderMapping = webview_SetVirtualHostNameToFolderMapping;

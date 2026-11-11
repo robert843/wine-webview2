@@ -130,6 +130,7 @@ enum wv2_event
     WV2_EVT_HOST_OBJECT_CALL,       /* u64 id, u32 op (WV2_HOST_*), u32 root (0 = named host object,
                                        else object id), [string name], u32 count, count x string path,
                                        u32 argc, argc x value */
+    WV2_EVT_PROCESS_FAILED,         /* wv2_process_failed */
 };
 
 /* Default context menu: CEF builds it, the host shows it as a native menu at (x, y) in view
@@ -179,6 +180,15 @@ struct wv2_context_menu_item
 #define WV2_FILE_DIALOG_OPEN_MULTIPLE 1
 #define WV2_FILE_DIALOG_OPEN_FOLDER   2
 #define WV2_FILE_DIALOG_SAVE          3
+
+/* A browser subprocess ended (ProcessFailed); the helper's own end is noticed by the DLL. */
+struct wv2_process_failed
+{
+    UINT32 kind;            /* COREWEBVIEW2_PROCESS_FAILED_KIND */
+    UINT32 reason;          /* COREWEBVIEW2_PROCESS_FAILED_REASON */
+    INT32 exit_code;
+    UINT32 reserved;
+};
 
 /* Default permission prompt (PermissionRequested left the state at DEFAULT), shown by the host. */
 struct wv2_permission_prompt

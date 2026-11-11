@@ -974,6 +974,26 @@ fn host_object_reply(payload: &[u8]) {
     });
 }
 
+/// The view's renderer ended: ProcessFailed (RENDER_PROCESS_EXITED) in the DLL.
+pub fn render_process_terminated(view: u32, status: TerminationStatus, exit_code: i32) {
+    // COREWEBVIEW2_PROCESS_FAILED_REASON
+    let reason = if status == TerminationStatus::PROCESS_WAS_KILLED {
+        2 // TERMINATED
+    } else if status == TerminationStatus::PROCESS_CRASHED {
+        3 // CRASHED
+    } else if status == TerminationStatus::PROCESS_OOM {
+        5 // OUT_OF_MEMORY
+    } else if status == TerminationStatus::LAUNCH_FAILED {
+        4 // LAUNCH_FAILED
+    } else if status == TerminationStatus::INTEGRITY_FAILURE {
+        9 // INTEGRITY_FAILURE
+    } else {
+        0 // UNEXPECTED
+    };
+    eprintln!("helper: renderer of view {view} ended (reason {reason}, exit code {exit_code})");
+    send_event(EVT_PROCESS_FAILED, view, &Writer::default().u32(1).u32(reason).i32(exit_code).u32(0).0);
+}
+
 // ======================================================================
 // Favicon images, audio muting
 // ======================================================================

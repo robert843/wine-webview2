@@ -1,5 +1,6 @@
 // Test: profile (name, PreferredColorScheme), ZoomFactor + ZoomFactorChanged, GotFocus,
-// environment UserDataFolder, controller options, AcceleratorKeyPressed, favicon, status bar, IsMuted.
+// environment UserDataFolder, controller options, AcceleratorKeyPressed, favicon, status bar, IsMuted,
+// RasterizationScale, ProcessFailed.
 #include <windows.h>
 #include <cstdio>
 #include <functional>
@@ -168,7 +169,28 @@ static void step(int n) {
         c3->Release();
         later(1000, 12); break; }
     case 12: run(L"'dpr=' + devicePixelRatio + ' width=' + innerWidth", 0); later(getenv("APITEST_HOLD") ? 6000 : 1, 13); break;
-    case 13: log("done"); PostMessageW(hwnd, WM_CLOSE, 0, 0); break;
+    case 13: {
+        // ProcessFailed: kill the renderer, then Reload brings the page back.
+        EventRegistrationToken t;
+        webview->add_ProcessFailed(new Handler<ICoreWebView2ProcessFailedEventHandler, ICoreWebView2 *, ICoreWebView2ProcessFailedEventArgs *>(
+            [](ICoreWebView2 *, ICoreWebView2ProcessFailedEventArgs *args) {
+                COREWEBVIEW2_PROCESS_FAILED_KIND kind; args->get_ProcessFailedKind(&kind);
+                COREWEBVIEW2_PROCESS_FAILED_REASON reason = COREWEBVIEW2_PROCESS_FAILED_REASON_UNEXPECTED;
+                ICoreWebView2ProcessFailedEventArgs2 *a2;
+                if (SUCCEEDED(args->QueryInterface(IID_ICoreWebView2ProcessFailedEventArgs2, (void **)&a2))) {
+                    a2->get_Reason(&reason); a2->Release();
+                }
+                log("ProcessFailed kind=%d reason=%d", kind, reason);
+                return S_OK; }), &t);
+        webview->Navigate(L"chrome://kill");
+        later(3000, 14); break; }
+    case 14: webview->Reload(); later(3000, 15); break;
+    case 15: run(L"'alive ' + document.title", 16); break;
+    case 16:
+        // The whole browser process goes away: ProcessFailed BROWSER_PROCESS_EXITED, and the app keeps working.
+        webview->CallDevToolsProtocolMethod(L"Browser.crash", L"{}", nullptr);
+        later(4000, 17); break;
+    case 17: log("done"); PostMessageW(hwnd, WM_CLOSE, 0, 0); break;
     }
 }
 

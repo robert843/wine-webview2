@@ -369,6 +369,16 @@ wrap_request_handler! {
     }
 
     impl RequestHandler {
+        fn on_render_process_terminated(
+            &self,
+            _browser: Option<&mut Browser>,
+            status: TerminationStatus,
+            error_code: ::std::os::raw::c_int,
+            _error_string: Option<&CefString>,
+        ) {
+            crate::render_process_terminated(self.handler.view, status, error_code);
+        }
+
         fn on_before_browse(
             &self,
             _browser: Option<&mut Browser>,
