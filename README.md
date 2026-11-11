@@ -29,7 +29,10 @@ Implemented: environment and controller creation, navigation and its events, `Ex
 (`CallDevToolsProtocolMethod`, event receivers), popups (`NewWindowRequested` with `window.opener`),
 `WindowCloseRequested`, JavaScript dialogs, mouse/keyboard/cursor input, `<select>` popups.
 
-Not yet: IME, clipboard integration, drag and drop, file chooser, DPI scaling, context menus,
+Copy and paste works in both directions with Windows and Linux applications (CEF and Wine share
+the system clipboard).
+
+Not yet: IME, drag and drop, file chooser, DPI scaling, context menus,
 downloads, profiles, `AddHostObjectToScript`, composition mode (`CompositionController`).
 
 ## Requirements
