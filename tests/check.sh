@@ -80,6 +80,10 @@ check apitest "$A/apitest/apitest.exe" 90 "0" \
     'AcceleratorKeyPressed kind=0 key=0x71 released=0' \
     'AcceleratorKeyPressed kind=1 key=0x72 released=1' \
     '-> "keys=F3"' \
+    'GetFavicon hr=0 png=1' \
+    'StatusBarTextChanged https://example.test/hover' \
+    'IsMuted=1' \
+    '^IsMutedChanged' \
     '^done'
 
 check dltest "$A/dltest/dltest.exe" 90 "0" \

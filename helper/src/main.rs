@@ -559,6 +559,15 @@ wrap_display_handler! {
             }
         }
 
+        fn on_status_message(&self, _browser: Option<&mut Browser>, value: Option<&CefString>) {
+            webview::on_status_text(self.client.view(), &value.map(|v| v.to_string()).unwrap_or_default());
+        }
+
+        fn on_favicon_urlchange(&self, _browser: Option<&mut Browser>, icon_urls: Option<&mut CefStringList>) {
+            let url = string_list(icon_urls).into_iter().next().unwrap_or_default();
+            webview::on_favicon_changed(self.client.view(), &url);
+        }
+
         fn on_fullscreen_mode_change(&self, _browser: Option<&mut Browser>, fullscreen: ::std::os::raw::c_int) {
             webview::on_fullscreen_changed(self.client.view(), fullscreen != 0);
         }
@@ -693,6 +702,126 @@ fn file_dialog_reply(id: u64, windows_paths: Vec<String>) {
         }
     }
     callback.cont(Some(&mut list));
+}
+
+// ======================================================================
+// Favicon images, audio muting
+// ======================================================================
+
+type FaviconDone = Box<dyn FnOnce(Option<Vec<u8>>)>;
+
+thread_local! {
+    static FAVICON_REQUESTS: RefCell<HashMap<u64, FaviconDone>> = RefCell::new(HashMap::new());
+    static NEXT_FAVICON: std::cell::Cell<u64> = const { std::cell::Cell::new(1) };
+}
+
+wrap_download_image_callback! {
+    struct FaviconCallback {
+        id: u64,
+        png: bool,
+    }
+
+    impl DownloadImageCallback {
+        fn on_download_image_finished(
+            &self,
+            _image_url: Option<&CefString>,
+            _http_status_code: ::std::os::raw::c_int,
+            image: Option<&mut Image>,
+        ) {
+            // CEF's own encoders (as_png / as_jpeg) return nothing in this build: encode the bitmap.
+            let bytes = image.filter(|i| i.is_empty() == 0).and_then(|i| {
+                if !self.png {
+                    if let Some(jpeg) = i.as_jpeg(1.0, 90, None, None) {
+                        return Some(unsafe { std::slice::from_raw_parts(jpeg.raw_data() as *const u8, jpeg.size()) }.to_vec());
+                    }
+                    // FIXME: no JPEG encoder; PNG instead (image decoders detect the format).
+                }
+                let (mut width, mut height) = (0, 0);
+                let bitmap = i.as_bitmap(1.0, ColorType::RGBA_8888, AlphaType::POSTMULTIPLIED, Some(&mut width), Some(&mut height))?;
+                let pixels = unsafe { std::slice::from_raw_parts(bitmap.raw_data() as *const u8, bitmap.size()) };
+                encode_png(width as u32, height as u32, pixels)
+            });
+            if let Some(done) = FAVICON_REQUESTS.with(|r| r.borrow_mut().remove(&self.id)) {
+                done(bytes);
+            }
+        }
+    }
+}
+
+/// Minimal PNG encoder (RGBA, deflate "stored" blocks): favicons are small.
+fn encode_png(width: u32, height: u32, rgba: &[u8]) -> Option<Vec<u8>> {
+    let row = width as usize * 4;
+    if width == 0 || height == 0 || rgba.len() < row * height as usize {
+        return None;
+    }
+    fn crc32(data: &[u8]) -> u32 {
+        let mut crc = !0u32;
+        for &b in data {
+            crc ^= b as u32;
+            for _ in 0..8 {
+                crc = if crc & 1 != 0 { 0xedb8_8320 ^ (crc >> 1) } else { crc >> 1 };
+            }
+        }
+        !crc
+    }
+    fn chunk(out: &mut Vec<u8>, kind: &[u8; 4], data: &[u8]) {
+        out.extend_from_slice(&(data.len() as u32).to_be_bytes());
+        let start = out.len();
+        out.extend_from_slice(kind);
+        out.extend_from_slice(data);
+        let crc = crc32(&out[start..]);
+        out.extend_from_slice(&crc.to_be_bytes());
+    }
+    // Scanlines with filter type 0.
+    let mut raw = Vec::with_capacity((row + 1) * height as usize);
+    for y in 0..height as usize {
+        raw.push(0);
+        raw.extend_from_slice(&rgba[y * row..(y + 1) * row]);
+    }
+    let mut zlib = vec![0x78, 0x01];
+    let blocks: Vec<&[u8]> = raw.chunks(65535).collect();
+    for (i, block) in blocks.iter().enumerate() {
+        zlib.push((i + 1 == blocks.len()) as u8);
+        zlib.extend_from_slice(&(block.len() as u16).to_le_bytes());
+        zlib.extend_from_slice(&(!(block.len() as u16)).to_le_bytes());
+        zlib.extend_from_slice(block);
+    }
+    let (mut a, mut b) = (1u32, 0u32);
+    for &byte in &raw {
+        a = (a + byte as u32) % 65521;
+        b = (b + a) % 65521;
+    }
+    zlib.extend_from_slice(&(b << 16 | a).to_be_bytes());
+    let mut png = b"\x89PNG\r\n\x1a\n".to_vec();
+    let mut ihdr = Vec::new();
+    ihdr.extend_from_slice(&width.to_be_bytes());
+    ihdr.extend_from_slice(&height.to_be_bytes());
+    ihdr.extend_from_slice(&[8, 6, 0, 0, 0]); // 8-bit RGBA
+    chunk(&mut png, b"IHDR", &ihdr);
+    chunk(&mut png, b"IDAT", &zlib);
+    chunk(&mut png, b"IEND", &[]);
+    Some(png)
+}
+
+/// The page's favicon as PNG or JPEG (None: no icon).
+pub fn get_favicon(view: u32, url: &str, png: bool, done: FaviconDone) {
+    let Some(host) = view_browser(view).and_then(|b| b.host()).filter(|_| !url.is_empty()) else {
+        return done(None);
+    };
+    let id = NEXT_FAVICON.with(|n| {
+        let id = n.get();
+        n.set(id + 1);
+        id
+    });
+    FAVICON_REQUESTS.with(|r| r.borrow_mut().insert(id, done));
+    let mut callback = FaviconCallback::new(id, png);
+    host.download_image(Some(&url.into()), 1, 0, 0, Some(&mut callback));
+}
+
+pub fn set_audio_muted(view: u32, muted: bool) {
+    if let Some(host) = view_browser(view).and_then(|b| b.host()) {
+        host.set_audio_muted(muted as i32);
+    }
 }
 
 /// CEF_PERMISSION_TYPE_* bit -> COREWEBVIEW2_PERMISSION_KIND.
@@ -2424,5 +2553,19 @@ fn main() -> std::process::ExitCode {
     match mode {
         Mode::Shot(s) if !s.borrow().done => std::process::ExitCode::from(1),
         _ => std::process::ExitCode::SUCCESS,
+    }
+}
+
+#[cfg(test)]
+mod png_tests {
+    #[test]
+    fn png_writes() {
+        let (w, h) = (300u32, 300u32); // > 65535 bytes: several stored blocks
+        let pixels: Vec<u8> = (0..w * h * 4).map(|i| (i % 251) as u8).collect();
+        let png = super::encode_png(w, h, &pixels).unwrap();
+        if let Ok(path) = std::env::var("PNG_OUT") {
+            std::fs::write(path, &png).unwrap();
+        }
+        assert_eq!(&png[..8], b"\x89PNG\r\n\x1a\n");
     }
 }

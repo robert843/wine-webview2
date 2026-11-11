@@ -37,7 +37,8 @@ Downloads (`DownloadStarting`, `DownloadOperation` with progress, pause, resume 
 (`<input type=file>` opens the application's Wine file dialog).
 Browser data (cookies, local storage, cache) is kept in the application's user data folder
 (`<folder>\EBWebView`), like with Microsoft's runtime; named profiles and InPrivate mode
-(`ControllerOptions`). `AcceleratorKeyPressed`, `SetBoundsAndZoomFactor`.
+(`ControllerOptions`). `AcceleratorKeyPressed`, `SetBoundsAndZoomFactor`, status bar text, favicon,
+`IsMuted`.
 
 Copy and paste works in both directions with Windows and Linux applications (CEF and Wine share
 the system clipboard).

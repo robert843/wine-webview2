@@ -57,8 +57,12 @@ enum Ev {
     ContainsFullScreenElementChanged,
     DownloadStarting,
     PermissionRequested,
+    StatusBarTextChanged,
+    FaviconChanged,
+    IsMutedChanged,
+    IsDocumentPlayingAudioChanged,
 }
-const EV_COUNT: usize = 15;
+const EV_COUNT: usize = 19;
 
 fn rc<T: Dispatch + 'static>(obj: T) -> ObjRef {
     ObjRef::Runtime(Rc::new(obj))
@@ -484,6 +488,9 @@ pub struct WebView {
     profile_name: String,
     in_private: bool,
     fullscreen: Cell<bool>,
+    status_text: RefCell<String>,
+    favicon: RefCell<String>,
+    muted: Cell<bool>,
 }
 
 impl WebView {
@@ -505,6 +512,9 @@ impl WebView {
             doc_scripts: RefCell::new(Vec::new()),
             profile: RefCell::new(None),
             fullscreen: Cell::new(false),
+            status_text: RefCell::new(String::new()),
+            favicon: RefCell::new(String::new()),
+            muted: Cell::new(false),
         }
     }
 
@@ -547,6 +557,10 @@ pub fn create_controller(view: u32, width: u32, height: u32, options: &ObjRef) -
     }));
     CONTROLLERS.with(|c| c.borrow_mut().insert(view, controller.clone()));
     Ok(ObjRef::Runtime(controller))
+}
+
+fn webview_ref(view: u32) -> ObjRef {
+    WEBVIEWS.with(|w| w.borrow().get(&view).cloned()).map(|wv| ObjRef::Runtime(wv)).unwrap_or(ObjRef::Null)
 }
 
 fn with_webview<R>(view: u32, f: impl FnOnce(&WebView, ObjRef) -> R) -> Option<R> {
@@ -689,6 +703,48 @@ impl ICoreWebView2_29Impl for WebView {
         add_ContainsFullScreenElementChanged, remove_ContainsFullScreenElementChanged, ContainsFullScreenElementChanged;
         add_DownloadStarting, remove_DownloadStarting, DownloadStarting;
         add_PermissionRequested, remove_PermissionRequested, PermissionRequested;
+        add_StatusBarTextChanged, remove_StatusBarTextChanged, StatusBarTextChanged;
+        add_FaviconChanged, remove_FaviconChanged, FaviconChanged;
+        add_IsMutedChanged, remove_IsMutedChanged, IsMutedChanged;
+        add_IsDocumentPlayingAudioChanged, remove_IsDocumentPlayingAudioChanged, IsDocumentPlayingAudioChanged;
+    }
+
+    fn get_StatusBarText(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.status_text.borrow().clone())
+    }
+
+    fn get_FaviconUri(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.favicon.borrow().clone())
+    }
+
+    fn GetFavicon(&self, ctx: &mut Ctx, format: i32, handler: ObjRef) -> WvResult<()> {
+        let app = handler.app().cloned().ok_or(E_INVALIDARG)?;
+        let _ = ctx;
+        // COREWEBVIEW2_FAVICON_IMAGE_FORMAT: 0 = PNG, 1 = JPEG
+        crate::get_favicon(self.view, &self.favicon.borrow(), format != 1, Box::new(move |bytes| {
+            ICoreWebView2GetFaviconCompletedHandlerApp(app).Invoke_async(&mut Ctx, S_OK, bytes.as_deref());
+        }));
+        Ok(())
+    }
+
+    fn get_IsMuted(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.muted.get())
+    }
+
+    fn put_IsMuted(&self, ctx: &mut Ctx, muted: bool) -> WvResult<()> {
+        if self.muted.replace(muted) != muted {
+            crate::set_audio_muted(self.view, muted);
+            let sender = webview_ref(self.view);
+            for h in self.ev(Ev::IsMutedChanged).snapshot() {
+                ICoreWebView2IsMutedChangedEventHandlerApp(h).Invoke_async(ctx, &sender, &ObjRef::Null);
+            }
+        }
+        Ok(())
+    }
+
+    // FIXME: CEF only reports audio through an AudioHandler that captures the stream instead of playing it.
+    fn get_IsDocumentPlayingAudio(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(false)
     }
 
     fn get_ContainsFullScreenElement(&self, _ctx: &mut Ctx) -> WvResult<bool> {
@@ -2031,4 +2087,26 @@ pub fn on_permission_requested(view: u32, origin: &str, kinds: Vec<i32>, done: B
     let mut kinds = kinds;
     kinds.reverse();
     next(view, origin.to_string(), kinds, done);
+}
+
+// ===================================================================
+// Status bar text, favicon
+// ===================================================================
+
+pub fn on_status_text(view: u32, text: &str) {
+    with_webview(view, |wv, sender| {
+        if *wv.status_text.borrow() != text {
+            *wv.status_text.borrow_mut() = text.to_string();
+            raise_async!(wv, sender, StatusBarTextChanged, ICoreWebView2StatusBarTextChangedEventHandlerApp, ObjRef::Null);
+        }
+    });
+}
+
+pub fn on_favicon_changed(view: u32, url: &str) {
+    with_webview(view, |wv, sender| {
+        if *wv.favicon.borrow() != url {
+            *wv.favicon.borrow_mut() = url.to_string();
+            raise_async!(wv, sender, FaviconChanged, ICoreWebView2FaviconChangedEventHandlerApp, ObjRef::Null);
+        }
+    });
 }

@@ -1,5 +1,5 @@
 // Test: profile (name, PreferredColorScheme), ZoomFactor + ZoomFactorChanged, GotFocus,
-// environment UserDataFolder, controller options, AcceleratorKeyPressed.
+// environment UserDataFolder, controller options, AcceleratorKeyPressed, favicon, status bar, IsMuted.
 #include <windows.h>
 #include <cstdio>
 #include <functional>
@@ -116,7 +116,49 @@ static void step(int n) {
         }
         later(1000, 7); break; }
     case 7: run(L"'keys=' + keys.join(',')", 8); break;
-    case 8: log("done"); PostMessageW(hwnd, WM_CLOSE, 0, 0); break;
+    case 8: {
+        ICoreWebView2_15 *w15;
+        webview->QueryInterface(IID_ICoreWebView2_15, (void **)&w15);
+        LPWSTR uri = nullptr; w15->get_FaviconUri(&uri);
+        log("FaviconUri %.22ls", uri ? uri : L"(null)");
+        CoTaskMemFree(uri);
+        w15->GetFavicon(COREWEBVIEW2_FAVICON_IMAGE_FORMAT_PNG, new Handler<ICoreWebView2GetFaviconCompletedHandler, HRESULT, IStream *>(
+            [](HRESULT hr, IStream *stream) {
+                unsigned char sig[8] = {0}; ULONG got = 0;
+                if (stream) stream->Read(sig, sizeof(sig), &got);
+                log("GetFavicon hr=%#lx png=%d", hr, got == 8 && sig[1] == 'P' && sig[2] == 'N' && sig[3] == 'G');
+                step(9);
+                return S_OK; }));
+        w15->Release();
+        break; }
+    case 9: {
+        ICoreWebView2_12 *w12;
+        webview->QueryInterface(IID_ICoreWebView2_12, (void **)&w12);
+        EventRegistrationToken t;
+        w12->add_StatusBarTextChanged(new Handler<ICoreWebView2StatusBarTextChangedEventHandler, ICoreWebView2 *, IUnknown *>(
+            [](ICoreWebView2 *wv, IUnknown *) {
+                ICoreWebView2_12 *w; wv->QueryInterface(IID_ICoreWebView2_12, (void **)&w);
+                LPWSTR text = nullptr; w->get_StatusBarText(&text);
+                if (text && *text) log("StatusBarTextChanged %ls", text);
+                CoTaskMemFree(text); w->Release();
+                return S_OK; }), &t);
+        w12->Release();
+        HWND child = FindWindowExW(hwnd, nullptr, nullptr, nullptr);
+        POINT pt = {30, 245}; ClientToScreen(child, &pt); SetCursorPos(pt.x, pt.y);
+        PostMessageW(child, WM_MOUSEMOVE, 0, MAKELPARAM(30, 245));
+        later(1000, 10); break; }
+    case 10: {
+        ICoreWebView2_8 *w8;
+        webview->QueryInterface(IID_ICoreWebView2_8, (void **)&w8);
+        EventRegistrationToken t;
+        w8->add_IsMutedChanged(new Handler<ICoreWebView2IsMutedChangedEventHandler, ICoreWebView2 *, IUnknown *>(
+            [](ICoreWebView2 *, IUnknown *) { log("IsMutedChanged"); return S_OK; }), &t);
+        w8->put_IsMuted(TRUE);
+        BOOL muted = FALSE; w8->get_IsMuted(&muted);
+        log("IsMuted=%d", muted);
+        w8->Release();
+        later(500, 11); break; }
+    case 11: log("done"); PostMessageW(hwnd, WM_CLOSE, 0, 0); break;
     }
 }
 
@@ -151,7 +193,10 @@ int WINAPI WinMain(HINSTANCE inst, HINSTANCE, LPSTR, int) {
                             webview->add_NavigationCompleted(new Handler<ICoreWebView2NavigationCompletedEventHandler, ICoreWebView2 *, ICoreWebView2NavigationCompletedEventArgs *>(
                                 [](ICoreWebView2 *, ICoreWebView2NavigationCompletedEventArgs *) {
                                     if (!started) { started = true; later(300, 1); } return S_OK; }), &t);
-                            webview->NavigateToString(L"<title>apitest</title><body>apitest</body>");
+                            webview->NavigateToString(L"<title>apitest</title><link rel=icon href='data:image/png;base64,"
+                                L"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='>"
+                                L"<body>apitest<a href='https://example.test/hover' style='position:absolute;left:0;top:150px;"
+                                L"font:30px sans-serif'>hover</a></body>");
                             return S_OK; }));
                 return S_OK; }));
     SetTimer(nullptr, 0, 40000, on_timeout);
