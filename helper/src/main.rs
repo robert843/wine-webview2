@@ -1,12 +1,12 @@
-//! wine-webview2-helper - natywny (linuksowy) proces przeglądarki dla wine-webview2.
+//! wine-webview2-helper - native (Linux) browser process for wine-webview2.
 //!
-//! Tryby:
-//!   --ipc-fd=N                     normalna praca: polecenia z EmbeddedBrowserWebView.dll
-//!                                  przez gniazdo N (protokół: protocol.rs / protocol.h)
-//!   --screenshot <url> <plik.ppm>  test: renderuje stronę off-screen i zapisuje klatkę
+//! Modes:
+//!   --ipc-fd=N                     normal operation: commands from EmbeddedBrowserWebView.dll
+//!                                  over socket N (protocol: protocol.rs / protocol.h)
+//!   --screenshot <url> <file.ppm>  test: renders a page off-screen and saves one frame
 //!
-//! Ten sam plik wykonywalny jest też podprocesem CEF (renderer, GPU, …): CEF uruchamia go
-//! z `--type=…`, a `execute_process` obsługuje taki przypadek i kończy proces.
+//! The same executable also serves as the CEF subprocess (renderer, GPU, ...): CEF starts it
+//! with `--type=...` and `execute_process` handles that case and exits.
 
 mod ipc;
 mod protocol;
@@ -31,11 +31,11 @@ use std::rc::Rc;
 use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex, OnceLock};
 
-/// Katalog plików ze skryptami startowymi (przekazywany rendererom przełącznikiem).
+/// Directory with document-created script files (passed to renderers via a switch).
 static SCRIPTS_DIR: OnceLock<PathBuf> = OnceLock::new();
 
 // ======================================================================
-// Wspólne: zadania na wątku UI CEF
+// Common: tasks on the CEF UI thread
 // ======================================================================
 
 type BoxedFn = Box<dyn FnOnce() + Send>;
@@ -66,18 +66,17 @@ pub fn post_ui(f: impl FnOnce() + Send + 'static) {
 }
 
 // ======================================================================
-// Tryb IPC
+// IPC mode
 // ======================================================================
 
-/// ARGB, jak COREWEBVIEW2_COLOR domyślnie (biały, nieprzezroczysty).
+/// ARGB, matching the default COREWEBVIEW2_COLOR (opaque white).
 const DEFAULT_BACKGROUND: u32 = 0xFFFF_FFFF;
 
-/// Domyślny User-Agent jak w WebView2 na Windows (aplikacje i strony sprawdzają platformę;
-/// pod Wine program ma widzieć Windows). Wersja = wersja Chromium w CEF.
+/// Default User-Agent as in WebView2 on Windows: apps and sites check the platform and must
+/// see Windows under Wine. Version = Chromium version in CEF.
 pub const DEFAULT_USER_AGENT: &str =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0";
 
-/// Wywołanie metody DevTools na przeglądarce (bez otwierania DevTools); zwraca id wiadomości.
 static NEXT_DEVTOOLS_ID: std::sync::atomic::AtomicI32 = std::sync::atomic::AtomicI32::new(1);
 
 pub fn next_devtools_id() -> i32 {
@@ -88,8 +87,8 @@ fn devtools(browser: &Browser, method: &str, params: &str) -> Option<i32> {
     devtools_with_id(browser, next_devtools_id(), method, params)
 }
 
-/// CEF potrafi odpowiedzieć synchronicznie (wewnątrz send_dev_tools_message) - oczekujący musi
-/// być zarejestrowany przed wysłaniem, stąd id podawane z zewnątrz.
+/// CEF may reply synchronously (inside send_dev_tools_message), so the waiter must be
+/// registered before sending - hence the caller-supplied id.
 fn devtools_with_id(browser: &Browser, id: i32, method: &str, params: &str) -> Option<i32> {
     let msg = format!("{{\"id\":{id},\"method\":{},\"params\":{params}}}", renderer::json_string(method));
     let host = browser.host()?;
@@ -100,7 +99,7 @@ fn devtools_with_id(browser: &Browser, id: i32, method: &str, params: &str) -> O
     Some(id)
 }
 
-/// CallDevToolsProtocolMethod z id nadanym wcześniej (wynik -> webview::on_devtools_result).
+/// CallDevToolsProtocolMethod with a preassigned id (result -> webview::on_devtools_result).
 pub fn devtools_call(view: u32, id: i32, method: &str, params: &str) -> bool {
     let params = if params.trim().is_empty() { "{}" } else { params };
     view_browser(view).and_then(|b| devtools_with_id(&b, id, method, params)).is_some()
@@ -153,17 +152,17 @@ struct View {
     doc_scripts: Vec<String>,
     settings: u32,
     last_source: String,
-    /// Zakończenie nawigacji czekające na OnLoadingStateChange(false): (http_status, net_error).
+    /// Navigation completion held until OnLoadingStateChange(false): (http_status, net_error).
     pending_completion: Option<(i32, i32)>,
     width: u32,
     height: u32,
     frames: Option<FrameBuffer>,
     dropped: bool,
     user_agent: String,
-    /// Popup widżetu (<select>, podpowiedzi) w OSR: CEF rysuje go osobno (PaintElementType::POPUP),
-    /// składamy go z ostatnią klatką widoku.
+    /// Widget popup (<select>, autofill) in OSR: CEF paints it separately (PaintElementType::POPUP),
+    /// so we composite it onto the last view frame.
     widget: Option<WidgetPopup>,
-    /// Popup czekający na podpięcie pod WebView aplikacji (NewWindow) albo na decyzję.
+    /// Popup waiting to be adopted by an app WebView (NewWindow) or for a decision.
     popup: Option<PendingPopup>,
 }
 
@@ -172,12 +171,12 @@ struct WidgetPopup {
     rect: Option<Rect>,
     pixels: Vec<u8>,
     size: (i32, i32),
-    /// Kopia ostatniej klatki widoku (BGRA) i jej rozmiar.
+    /// Copy of the last view frame (BGRA) and its size.
     view: Vec<u8>,
     view_size: (i32, i32),
 }
 
-/// Nakłada piksele popupu na kopię klatki widoku (z przycięciem do widoku).
+/// Composites popup pixels onto a copy of the view frame (clipped to the view).
 fn compose_widget(w: &WidgetPopup) -> Option<Vec<u8>> {
     let r = w.rect.as_ref()?;
     let (vw, vh) = w.view_size;
@@ -211,7 +210,7 @@ struct IpcState {
 }
 
 thread_local! {
-    /// Stan trybu IPC - używany wyłącznie na wątku UI CEF.
+    /// IPC mode state - accessed only on the CEF UI thread.
     static STATE: RefCell<Option<IpcState>> = const { RefCell::new(None) };
 }
 
@@ -240,8 +239,8 @@ pub fn base64(data: &[u8]) -> String {
     out
 }
 
-/// Klient CEF widoku. Numer widoku da się zmienić: popup utworzony w OnBeforePopup zostaje
-/// potem podpięty pod WebView aplikacji (NewWindow) bez tworzenia przeglądarki od nowa.
+/// CEF client of a view. The view id is mutable: a popup created in OnBeforePopup is later
+/// adopted by an app WebView (NewWindow) without recreating the browser.
 #[derive(Clone)]
 struct ViewClient {
     id: Arc<AtomicU32>,
@@ -354,7 +353,7 @@ wrap_render_handler! {
                     v.widget = if show != 0 { Some(WidgetPopup::default()) } else { None };
                 }
             });
-            // Świeża klatka widoku: pod popup (pokazanie) albo bez niego (ukrycie).
+            // Fresh view frame: to composite under the popup (show) or without it (hide).
             if let Some(host) = browser.and_then(|b| b.host()) {
                 host.invalidate(PaintElementType::VIEW);
             }
@@ -383,7 +382,6 @@ wrap_render_handler! {
             }
             let src = unsafe { std::slice::from_raw_parts(buffer, (width * height * 4) as usize) };
             let view = self.client.view();
-            // Popup widżetu widoczny: zapamiętaj warstwę i wyślij złożoną klatkę.
             let composed = with_state(|st| {
                 let w = st.views.get_mut(&view)?.widget.as_mut()?;
                 if type_ == PaintElementType::POPUP {
@@ -422,8 +420,8 @@ wrap_render_handler! {
     }
 }
 
-/// Zapisuje klatkę do wolnego slotu memfd i wysyła FRAME_READY. Zwraca true, gdy trzeba
-/// natychmiast poprosić o nową klatkę (nie powinno się zdarzać).
+/// Copies the frame into a free memfd slot and sends FRAME_READY. Returns true if a new frame
+/// must be requested immediately (should not happen).
 fn paint_view(st: &mut IpcState, view_id: u32, src: &[u8], width: u32, height: u32, dirty: (i32, i32, i32, i32)) -> bool {
     let Some(view) = st.views.get_mut(&view_id).filter(|v| v.popup.is_none()) else { return false };
 
@@ -446,7 +444,7 @@ fn paint_view(st: &mut IpcState, view_id: u32, src: &[u8], width: u32, height: u
     }
     let fb = view.frames.as_mut().unwrap();
     let Some(slot) = fb.busy.iter().position(|b| !b) else {
-        // DLL trzyma oba sloty - pomijamy klatkę, odświeżymy po FRAME_DONE.
+        // DLL holds both slots - drop the frame and repaint after FRAME_DONE.
         view.dropped = true;
         return false;
     };
@@ -481,7 +479,7 @@ wrap_display_handler! {
             source: Option<&CefString>,
             line: ::std::os::raw::c_int,
         ) -> ::std::os::raw::c_int {
-            // Diagnostyka aplikacji: konsola JS na stderr (widoczna w logu Wine).
+            // JS console to stderr so it shows up in the Wine log.
             let message = message.map(|m| m.to_string()).unwrap_or_default();
             let source = source.map(|s| s.to_string()).unwrap_or_default();
             eprintln!("helper: console[view {}] {source}:{line}: {message}", self.client.view());
@@ -497,8 +495,8 @@ wrap_display_handler! {
             if frame.map(|f| f.is_main() != 0) != Some(true) {
                 return;
             }
-            // Nowe dokumenty zgłasza on_load_start; tu zostają nawigacje w obrębie dokumentu
-            // (pushState, kotwice) - wtedy URL różni się od ostatnio zgłoszonego.
+            // New documents are reported by on_load_start; this catches same-document
+            // navigations (pushState, anchors), detected by a URL change.
             let url = url.map(|u| u.to_string()).unwrap_or_default();
             if set_last_source(self.client.view(), &url) {
                 webview::on_source_changed(self.client.view(), &url);
@@ -540,7 +538,7 @@ wrap_load_handler! {
             let view = self.client.view();
             send_event(EVT_LOAD_STATE, view, &Writer::default().u32((is_loading != 0) as u32).u32(0).0);
             if is_loading == 0 {
-                // Dopiero teraz stan historii jest pewny; potem wstrzymane NavigationCompleted.
+                // Only now is the history state reliable; then the held NavigationCompleted.
                 send_history(view, can_go_back != 0, can_go_forward != 0);
                 if let Some((status, error)) = with_state(|st| st.views.get_mut(&view)?.pending_completion.take()).flatten() {
                     send_navigation_completed(view, status, error);
@@ -555,11 +553,11 @@ wrap_load_handler! {
             _transition_type: TransitionType,
         ) {
             let Some(frame) = frame.filter(|f| f.is_main() != 0) else { return };
-            // Kolejność WebView2: SourceChanged -> ContentLoading -> HistoryChanged.
+            // WebView2 order: SourceChanged -> ContentLoading -> HistoryChanged.
             let view = self.client.view();
             let url = CefString::from(&frame.url()).to_string();
-            // about:blank (i podobne) nie przechodzą przez OnBeforeBrowse: NavigationStarting tutaj
-            // (bez możliwości anulowania - dokument już się ładuje).
+            // about:blank (and similar) skip OnBeforeBrowse: raise NavigationStarting here
+            // (not cancellable - the document is already loading).
             let id = resources::active_navigation(view).unwrap_or_else(|| {
                 let id = resources::begin_navigation(view);
                 webview::on_navigation_starting(view, id, false, false, &url);
@@ -599,7 +597,7 @@ wrap_load_handler! {
     }
 }
 
-/// Zapisuje skrypty startowe przeglądarki do pliku czytanego przez renderer (zapis atomowy).
+/// Writes the browser's document-created scripts to the file read by the renderer (atomically).
 fn write_doc_scripts(dir: &std::path::Path, browser_id: i32, scripts: &[String]) {
     let mut data = Vec::new();
     for s in scripts {
@@ -617,8 +615,8 @@ fn send_history(view: u32, back: bool, forward: bool) {
     webview::on_history_changed(view, back, forward);
 }
 
-/// Koniec ładowania ramki głównej: jeśli przeglądarka wciąż „ładuje”, czekamy na
-/// OnLoadingStateChange(false) (pewny stan historii), inaczej zgłaszamy od razu.
+/// Main frame finished loading: if the browser is still "loading", wait for
+/// OnLoadingStateChange(false) (reliable history state), otherwise report now.
 fn finish_navigation(view: u32, browser: Option<&mut Browser>, http_status: i32, net_error: i32) {
     let loading = browser.as_ref().map(|b| b.is_loading() != 0).unwrap_or(false);
     if loading {
@@ -635,7 +633,7 @@ fn finish_navigation(view: u32, browser: Option<&mut Browser>, http_status: i32,
     }
 }
 
-/// Zapamiętuje URL ramki głównej; true, jeśli się zmienił.
+/// Stores the main frame URL; returns true if it changed.
 fn set_last_source(view: u32, url: &str) -> bool {
     with_state(|st| {
         let v = st.views.get_mut(&view)?;
@@ -655,7 +653,7 @@ fn send_navigation_completed(view: u32, http_status: i32, net_error: i32) {
     webview::on_navigation_completed(view, id, success, http_status.max(0), net_error);
 }
 
-/// Flagi ustawień widoku (z obiektu Settings): zapis dla renderera, stan dla DevTools.
+/// View settings flags (from the Settings object): file for the renderer, state for DevTools.
 pub fn apply_settings(view: u32, flags: u32) {
     with_state(|st| {
         if let Some(v) = st.views.get_mut(&view) {
@@ -682,7 +680,7 @@ pub fn apply_user_agent(view: u32, ua: &str) {
     }
 }
 
-/// Korzeń (obiekt 0) ogólnych wywołań.
+/// Root object (id 0) of generic calls.
 fn root_call(ctx: &mut rpc::Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32 {
     match method {
         rpc::ROOT_CREATE_ENVIRONMENT => {
@@ -714,18 +712,18 @@ fn view_browser(view: u32) -> Option<Browser> {
     with_state(|st| st.views.get(&view).and_then(|v| v.browser.clone())).flatten()
 }
 
-/// Przeglądarki zamykane przy wyłączaniu; pętlę kończymy po OnBeforeClose ostatniej
-/// (CefShutdown przy otwartej przeglądarce blokuje się na zawsze).
+/// Browsers being closed at shutdown; quit the loop after the last OnBeforeClose
+/// (CefShutdown with an open browser hangs forever).
 static CLOSING_BROWSERS: AtomicUsize = AtomicUsize::new(0);
 static SHUTTING_DOWN: AtomicBool = AtomicBool::new(false);
 
-/// Koniec połączenia z DLL (aplikacja zakończyła się - także bez Close()).
+/// Connection to the DLL lost (app exited, possibly without Close()).
 fn shutdown_ipc() {
     if SHUTTING_DOWN.swap(true, Ordering::SeqCst) {
         return;
     }
-    // Bezpiecznik: bez aplikacji nie ma czego ratować - proces nie może zostać (Steam czeka
-    // na wszystkie procesy gry), nawet gdy CEF nie zamknie się sam.
+    // Watchdog: the process must not linger (Steam waits for all game processes),
+    // even if CEF fails to shut down.
     std::thread::spawn(|| {
         std::thread::sleep(std::time::Duration::from_secs(5));
         eprintln!("helper: CEF did not shut down in 5 s, exiting");
@@ -745,12 +743,11 @@ fn shutdown_ipc() {
     }
 }
 
-/// OnBeforeClose: przy wyłączaniu - koniec pętli po zamknięciu ostatniej przeglądarki.
 fn browser_closed() {
     if !SHUTTING_DOWN.load(Ordering::SeqCst) {
         return;
     }
-    // Bez zejścia poniżej zera: przeglądarka zamknięta wcześniej przez Close() też tu trafia.
+    // Saturate at zero: browsers closed earlier via Close() also land here.
     let prev = CLOSING_BROWSERS.fetch_update(Ordering::SeqCst, Ordering::SeqCst, |n| n.checked_sub(1));
     if prev == Ok(1) {
         quit_message_loop();
@@ -758,7 +755,7 @@ fn browser_closed() {
 }
 
 // ======================================================================
-// Okna wyskakujące (NewWindowRequested) i dialogi JS (ScriptDialogOpening)
+// Popups (NewWindowRequested) and JS dialogs (ScriptDialogOpening)
 // ======================================================================
 
 wrap_life_span_handler! {
@@ -794,8 +791,8 @@ wrap_life_span_handler! {
             let (adopt, osr_size) = match webview::on_new_window(self.client.view(), popup, &url, &name, user_gesture != 0, features) {
                 webview::PopupDecision::Cancel => return 1,
                 webview::PopupDecision::Default => {
-                    // Natywne okno CEF (zachowuje window.opener); własny klient, żeby zdarzenia
-                    // popupu nie trafiały do widoku-rodzica.
+                    // Native CEF window (keeps window.opener); own client so popup events
+                    // don't reach the parent view.
                     if let Some(wi) = window_info {
                         *wi = popup_window_info(size);
                     }
@@ -807,8 +804,8 @@ wrap_life_span_handler! {
                 webview::PopupDecision::Adopt(target) => (Some(target), view_size(target)),
                 webview::PopupDecision::Deferred => (None, size),
             };
-            // Prawdziwy popup CEF (off-screen), żeby window.opener i uchwyt z window.open działały;
-            // podpinany pod WebView aplikacji, gdy oba są gotowe (on_after_created + decyzja).
+            // Real (off-screen) CEF popup so window.opener and the window.open handle work;
+            // adopted by the app WebView once both are ready (on_after_created + decision).
             let (width, height) = osr_size.filter(|s| s.0 > 0 && s.1 > 0).unwrap_or((800, 600));
             let popup_client = ViewClient::new(popup);
             with_state(|st| {
@@ -860,17 +857,17 @@ wrap_life_span_handler! {
     }
 }
 
-/// Numery widoków popupów czekających na decyzję (poza zakresem numerów nadawanych przez DLL).
+/// View ids for pending popups (outside the range assigned by the DLL).
 const POPUP_BASE: u32 = 0x4000_0000;
 static NEXT_POPUP: AtomicU32 = AtomicU32::new(POPUP_BASE);
 
 struct PendingPopup {
-    /// Decyzja: podpiąć pod ten widok.
+    /// Decision: adopt into this view.
     adopt: Option<u32>,
-    /// Decyzja: zamknąć (Handled albo okno domyślne po odroczeniu).
+    /// Decision: close (Handled, or default window after a deferral).
     close: bool,
-    /// Wstrzymana pierwsza nawigacja popupu (URL), puszczana po podpięciu - wtedy zdarzenia
-    /// nawigacji (NavigationStarting…) trafiają już do WebView aplikacji, jak w WebView2.
+    /// Held first navigation (URL), resumed after adoption so navigation events
+    /// (NavigationStarting...) reach the app WebView, as in WebView2.
     held: Option<String>,
     intercepted: bool,
     client: ViewClient,
@@ -880,14 +877,14 @@ fn view_size(view: u32) -> Option<(u32, u32)> {
     with_state(|st| st.views.get(&view).map(|v| (v.width, v.height))).flatten()
 }
 
-/// Decyzja po odroczeniu (Complete() deferrala NewWindowRequested).
+/// Decision after a deferral (NewWindowRequested deferral Complete()).
 pub fn popup_decided(popup: u32, decision: webview::PopupDecision, uri: &str, size: Option<(u32, u32)>) {
     with_state(|st| {
         let Some(p) = st.views.get_mut(&popup).and_then(|v| v.popup.as_mut()) else { return };
         match decision {
             webview::PopupDecision::Adopt(target) => p.adopt = Some(target),
             webview::PopupDecision::Default => {
-                // Przeglądarka off-screen nie ma okna: nowe okno natywne (bez window.opener).
+                // Off-screen browser has no window: open a new native one (no window.opener).
                 p.close = true;
                 open_native_popup(uri, size);
             }
@@ -897,7 +894,7 @@ pub fn popup_decided(popup: u32, decision: webview::PopupDecision, uri: &str, si
     popup_progress(popup);
 }
 
-/// Pierwsza nawigacja popupu czekającego na podpięcie: wstrzymaj (true = anuluj w CEF).
+/// Holds the first navigation of a pending popup (true = cancel in CEF).
 pub fn popup_hold_navigation(view: u32, url: &str) -> bool {
     if view < POPUP_BASE {
         return false;
@@ -914,13 +911,13 @@ pub fn popup_hold_navigation(view: u32, url: &str) -> bool {
     .flatten()
     .unwrap_or(false);
     if held {
-        // Nie w OnBeforeBrowse: podpięcie może od razu puścić nawigację (load_url).
+        // Not inside OnBeforeBrowse: adoption may resume the navigation right away (load_url).
         post_ui(move || popup_progress(view));
     }
     held
 }
 
-/// Wykonuje decyzję, gdy przeglądarka popupu już istnieje.
+/// Carries out the decision once the popup browser exists.
 fn popup_progress(popup: u32) {
     let ready = with_state(|st| {
         let v = st.views.get(&popup)?;
@@ -943,7 +940,7 @@ fn popup_progress(popup: u32) {
     }
 }
 
-/// NewWindow: przeglądarka popupu zastępuje (jeszcze pustą) przeglądarkę widoku aplikacji.
+/// NewWindow: the popup browser replaces the (still empty) browser of the app view.
 fn adopt_popup(browser: Browser, p: PendingPopup, target: u32) {
     let old = with_state(|st| {
         let v = st.views.get_mut(&target)?;
@@ -955,7 +952,6 @@ fn adopt_popup(browser: Browser, p: PendingPopup, target: u32) {
     })
     .flatten();
     let Some((old, observer, settings, scripts, ua)) = old else {
-        // Widok aplikacji zniknął w międzyczasie.
         if let Some(host) = browser.host() {
             host.close_browser(1);
         }
@@ -983,7 +979,7 @@ fn adopt_popup(browser: Browser, p: PendingPopup, target: u32) {
         host.invalidate(PaintElementType::VIEW);
     }
     eprintln!("helper: popup adopted by view {target}");
-    // FIXME: dane POST pierwszej nawigacji giną (load_request z innym pochodzeniem CEF odrzuca).
+    // FIXME: POST data of the first navigation is lost (CEF rejects cross-origin load_request).
     match p.held {
         Some(url) => {
             if let Some(frame) = browser.main_frame() {
@@ -991,7 +987,7 @@ fn adopt_popup(browser: Browser, p: PendingPopup, target: u32) {
             }
         }
         None => {
-            // Dokument bez nawigacji sieciowej (about:blank) już załadowany: zdarzenia dla aplikacji.
+            // Document without network navigation (about:blank) already loaded: emit events now.
             let url = browser.main_frame().map(|f| CefString::from(&f.url()).to_string()).unwrap_or_default();
             if !url.is_empty() {
                 let id = resources::begin_navigation(target);
@@ -1017,7 +1013,7 @@ fn popup_window_info(size: Option<(u32, u32)>) -> WindowInfo {
     }
 }
 
-/// Okno domyślne, gdy decyzja zapadła po odroczeniu (popup CEF był już anulowany).
+/// Default window when decided after a deferral (the CEF popup was already cancelled).
 pub fn open_native_popup(url: &str, size: Option<(u32, u32)>) {
     let url = url.to_string();
     post_ui(move || {
@@ -1049,7 +1045,7 @@ wrap_client! {
             _source_process: ProcessId,
             message: Option<&mut ProcessMessage>,
         ) -> ::std::os::raw::c_int {
-            // window.close() w natywnym popupie: zamknij okno (renderer podmienia window.close).
+            // window.close() in a native popup (the renderer overrides window.close).
             let Some(message) = message else { return 0 };
             if CefString::from(&message.name()).to_string() == renderer::MSG_CLOSE {
                 if let Some(host) = browser.and_then(|b| b.host()) {
@@ -1069,12 +1065,12 @@ const DIALOG_PROMPT: i32 = 2;
 const DIALOG_BEFOREUNLOAD: i32 = 3;
 
 thread_local! {
-    /// Dialogi domyślne czekające na odpowiedź DLL (CMD_SCRIPT_DIALOG_REPLY).
+    /// Default dialogs awaiting the DLL reply (CMD_SCRIPT_DIALOG_REPLY).
     static DIALOGS: RefCell<HashMap<u64, JsdialogCallback>> = RefCell::new(HashMap::new());
     static NEXT_DIALOG: std::cell::Cell<u64> = const { std::cell::Cell::new(1) };
 }
 
-/// Dialog JS: domyślne okno w aplikacji (MessageBox w DLL) albo ScriptDialogOpening.
+/// JS dialog: default UI in the app (MessageBox in the DLL) or ScriptDialogOpening.
 fn show_dialog(view: u32, uri: &str, kind: i32, message: &str, default_text: &str, callback: JsdialogCallback) {
     let defaults = with_state(|st| st.views.get(&view).map(|v| v.settings & SETTING_SCRIPT_DIALOGS != 0))
         .flatten()
@@ -1098,7 +1094,7 @@ fn show_dialog(view: u32, uri: &str, kind: i32, message: &str, default_text: &st
         send_event(EVT_SCRIPT_DIALOG, view, &payload.0);
         return;
     }
-    // Zadanie UI: handler aplikacji wołany synchronicznie nie może się zagnieździć w OnJSDialog.
+    // Separate UI task: the app handler runs synchronously and must not nest inside OnJSDialog.
     let (uri, message, default_text) = (uri.to_string(), message.to_string(), default_text.to_string());
     post_ui(move || {
         let done: webview::DialogDone = Box::new(move |accepted, text| {
@@ -1162,10 +1158,10 @@ wrap_jsdialog_handler! {
 }
 
 // ======================================================================
-// Operacje na przeglądarce dla obiektów serwera (webview.rs)
+// Browser operations for server objects (webview.rs)
 // ======================================================================
 
-/// Tworzy przeglądarkę CEF widoku (wołane z ROOT_CREATE_CONTROLLER).
+/// Creates the view's CEF browser (called from ROOT_CREATE_CONTROLLER).
 pub fn create_browser(view: u32, width: u32, height: u32) -> bool {
     with_state(|st| {
         st.views.insert(view, View {
@@ -1185,14 +1181,14 @@ pub fn create_browser(view: u32, width: u32, height: u32) -> bool {
         })
     });
     let window_info = WindowInfo { windowless_rendering_enabled: true as _, ..Default::default() };
-    // Zawsze przezroczyste: w OSR przezroczystość ustala się tylko przy tworzeniu, więc
-    // DefaultBackgroundColor nakłada DLL pod klatką (kolor albo zawartość rodzica).
+    // Always transparent: OSR transparency is fixed at creation, so the DLL applies
+    // DefaultBackgroundColor under the frame (color or parent content).
     let settings = BrowserSettings { windowless_frame_rate: 60, background_color: 0, ..Default::default() };
     let mut client = ViewClientBuilder::new(ViewClient::new(view));
     let browser = browser_host_create_browser_sync(
         Some(&window_info),
         Some(&mut client),
-        // Pusty URL = bez początkowej nawigacji (WebView2 nie zgłasza zdarzeń przed Navigate).
+        // Empty URL = no initial navigation (WebView2 raises no events before Navigate).
         Some(&"".into()),
         Some(&settings),
         None,
@@ -1224,9 +1220,8 @@ pub fn close_browser(view: u32) {
     }
 }
 
-/// Nawigacje z API startują osobnym zadaniem UI: CEF woła OnBeforeBrowse wewnątrz load_url,
-/// a NavigationStarting (synchroniczne, z Cancel) nie może się wykonać w trakcie wywołania z DLL.
-/// Tak jest też w WebView2 - zdarzenie przychodzi po powrocie z Navigate().
+/// Runs in a separate UI task: CEF calls OnBeforeBrowse inside load_url, and the synchronous
+/// NavigationStarting must not fire during the DLL call. WebView2 also raises it after Navigate() returns.
 pub fn navigate(view: u32, url: &str) {
     let url = url.to_string();
     post_ui(move || {
@@ -1256,7 +1251,7 @@ pub fn browser_command(view: u32, cmd: BrowserCommand) {
     });
 }
 
-/// Natywne okno DevTools (Chrome style) obok aplikacji; AreDevToolsEnabled = FALSE blokuje.
+/// Native DevTools window (Chrome style); blocked by AreDevToolsEnabled = FALSE.
 pub fn open_devtools(view: u32) {
     let allowed = with_state(|st| st.views.get(&view).map(|v| v.settings & SETTING_DEVTOOLS != 0)).flatten().unwrap_or(true);
     if let Some(host) = view_browser(view).and_then(|b| b.host()).filter(|_| allowed) {
@@ -1264,7 +1259,7 @@ pub fn open_devtools(view: u32) {
     }
 }
 
-/// Wysyła skrypt do renderera; false, gdy nie ma ramki głównej.
+/// Sends a script to the renderer; false if there is no main frame.
 pub fn execute_script(view: u32, id: u64, script: &str) -> bool {
     let frame = view_browser(view).and_then(|b| b.main_frame());
     frame
@@ -1298,7 +1293,7 @@ pub fn post_web_message(view: u32, json: &str) {
     }
 }
 
-/// Polecenia hosta (okno, klatki, wejście) - na wątku UI CEF.
+/// Host commands (window, frames, input) - on the CEF UI thread.
 fn handle_command(msg: Message) {
     let mut r = Reader(&msg.payload);
     match msg.ty {
@@ -1417,7 +1412,7 @@ fn reader_thread(chan: Channel) {
     post_ui(drain_queue);
 }
 
-/// Zadanie UI: opróżnia kolejkę (CALL/RELEASE przez rpc, reszta przez handle_command).
+/// UI task: drains the queue (CALL/RELEASE via rpc, the rest via handle_command).
 fn drain_queue() {
     if !rpc::drain() {
         shutdown_ipc();
@@ -1425,7 +1420,7 @@ fn drain_queue() {
 }
 
 // ======================================================================
-// Tryb zrzutu (test)
+// Screenshot mode (test)
 // ======================================================================
 
 #[derive(Default)]
@@ -1519,7 +1514,7 @@ wrap_load_handler! {
     }
 }
 
-/// CEF podaje BGRA; PPM (P6) to RGB.
+/// CEF delivers BGRA; PPM (P6) is RGB.
 fn write_ppm(path: &PathBuf, bgra: &[u8], w: usize, h: usize) -> std::io::Result<()> {
     let mut data = format!("P6\n{w} {h}\n255\n").into_bytes();
     data.reserve(w * h * 3);
@@ -1560,10 +1555,10 @@ wrap_app! {
             cl.append_switch(Some(&"no-startup-window".into()));
             cl.append_switch(Some(&"noerrdialogs".into()));
             cl.append_switch(Some(&"use-mock-keychain".into()));
-            // WebView2 nie ma blokady popupów (window.open bez gestu -> NewWindowRequested).
+            // WebView2 has no popup blocker (window.open without a gesture -> NewWindowRequested).
             cl.append_switch(Some(&"disable-popup-blocking".into()));
             cl.append_switch(Some(&"password-store=basic".into()));
-            // Diagnostyka: zdalne DevTools (chrome://inspect w zwykłym Chrome).
+            // Debugging: remote DevTools (chrome://inspect in regular Chrome).
             if let Ok(port) = std::env::var("WINE_WEBVIEW2_DEVTOOLS_PORT") {
                 cl.append_switch_with_value(Some(&"remote-debugging-port".into()), Some(&port.as_str().into()));
             }
@@ -1651,7 +1646,7 @@ wrap_browser_process_handler! {
     }
 }
 
-/// Katalog z libcef.so i zasobami (icudtl.dat, *.pak, locales/).
+/// Directory with libcef.so and resources (icudtl.dat, *.pak, locales/).
 fn cef_dir() -> PathBuf {
     if let Some(dir) = std::env::var_os("WINE_WEBVIEW2_CEF_DIR") {
         return PathBuf::from(dir);
@@ -1659,7 +1654,7 @@ fn cef_dir() -> PathBuf {
     std::env::current_exe().ok().and_then(|p| p.parent().map(|p| p.to_path_buf())).unwrap_or_default()
 }
 
-/// Uzgodnienie wersji protokołu przed startem CEF.
+/// Protocol version handshake before starting CEF.
 fn handshake(chan: &Channel) -> Result<(), String> {
     let msg = chan.recv().map_err(|e| e.to_string())?.ok_or("connection closed")?;
     let mut r = Reader(&msg.payload);
@@ -1695,14 +1690,14 @@ fn main() -> std::process::ExitCode {
             ..Default::default()
         })))
     } else {
-        eprintln!("użycie: wine-webview2-helper --ipc-fd=N | --screenshot <url> <plik.ppm>");
+        eprintln!("usage: wine-webview2-helper --ipc-fd=N | --screenshot <url> <file.ppm>");
         return std::process::ExitCode::from(2);
     };
 
     let args = Args::new();
     let mut app = AppBuilder::new(HelperApp { mode: mode.clone() });
 
-    // Podprocesy CEF (renderer, gpu, utility) kończą się tutaj.
+    // CEF subprocesses (renderer, gpu, utility) exit here.
     let ret = execute_process(Some(args.as_main_args()), Some(&mut app), std::ptr::null_mut());
     if ret >= 0 {
         return std::process::ExitCode::from(ret as u8);
@@ -1725,7 +1720,7 @@ fn main() -> std::process::ExitCode {
         root_cache_path: cache.to_string_lossy().as_ref().into(),
         log_severity: LogSeverity::WARNING,
         background_color: DEFAULT_BACKGROUND,
-        // UA Windows/Edge od pierwszego żądania (nadpisanie przez DevTools przychodzi z opóźnieniem).
+        // Windows/Edge UA from the first request (the DevTools override arrives later).
         user_agent: DEFAULT_USER_AGENT.into(),
         ..Default::default()
     };

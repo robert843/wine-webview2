@@ -1,8 +1,8 @@
-//! Środowisko, kontroler i ICoreWebView2 jako obiekty serwera (architektura v8).
+//! Environment, controller and ICoreWebView2 as server-side objects (architecture v8).
 //!
-//! Zdarzenia CEF (main.rs, resources.rs) trafiają tu przez funkcje `on_*` i są dostarczane
-//! handlerom aplikacji przez INVOKE - asynchronicznie, poza NavigationStarting
-//! i WebResourceRequested, które muszą znać decyzję aplikacji.
+//! CEF events (main.rs, resources.rs) arrive through the `on_*` functions and are delivered to
+//! app handlers via INVOKE - asynchronously, except NavigationStarting and WebResourceRequested,
+//! which need the app's decision.
 
 use crate::api_gen::*;
 use crate::rpc::{AppRef, Ctx, Dispatch, ObjRef, WvResult, E_INVALIDARG, E_INVALID_STATE, S_OK};
@@ -13,7 +13,7 @@ use std::rc::Rc;
 pub const VERSION: &str = "156.0.9999.0";
 
 // ===================================================================
-// Rejestracje zdarzeń
+// Event registrations
 // ===================================================================
 
 #[derive(Default)]
@@ -34,7 +34,7 @@ impl EventList {
         self.list.borrow_mut().retain(|(t, _)| *t != token.value);
         Ok(())
     }
-    /// Kopia (handlery mogą się (wy)rejestrować w trakcie wywołania).
+    /// Copy, since handlers may (un)register themselves during the call.
     pub fn snapshot(&self) -> Vec<AppRef> {
         self.list.borrow().iter().map(|(_, a)| a.clone()).collect()
     }
@@ -62,11 +62,11 @@ fn rc<T: Dispatch + 'static>(obj: T) -> ObjRef {
 }
 
 // ===================================================================
-// Środowisko
+// Environment
 // ===================================================================
 
 pub struct Environment {
-    #[allow(dead_code)] // profil użytkownika: później (root_cache_path per środowisko)
+    #[allow(dead_code)] // user profile: later (root_cache_path per environment)
     pub user_data_dir: String,
 }
 
@@ -82,10 +82,10 @@ impl ICoreWebView2Environment15Impl for Environment {
 }
 
 // ===================================================================
-// Kontroler
+// Controller
 // ===================================================================
 
-/// Okno, rozmiar, widoczność, fokus i tło obsługuje host w DLL (nadpisania w vtable).
+/// Window, size, visibility, focus and background are handled by the DLL host (vtable overrides).
 pub struct Controller {
     pub view: u32,
     pub webview: ObjRef,
@@ -118,7 +118,7 @@ pub fn close_view(view: u32) {
 pub type WebViewObj = ICoreWebView2_29Obj<WebView>;
 
 thread_local! {
-    /// Widok -> WebView (dla zdarzeń z CEF).
+    /// View -> WebView, for routing CEF events.
     static WEBVIEWS: RefCell<HashMap<u32, Rc<WebViewObj>>> = RefCell::new(HashMap::new());
 }
 
@@ -166,7 +166,6 @@ impl WebView {
     }
 }
 
-/// Tworzy widok: przeglądarkę CEF, WebView i kontroler.
 pub fn create_controller(view: u32, width: u32, height: u32) -> WvResult<ObjRef> {
     if !crate::create_browser(view, width, height) {
         return Err(crate::rpc::E_FAIL);
@@ -196,13 +195,12 @@ macro_rules! events {
     };
 }
 
-/// Oczekujący wynik ExecuteScript / ExecuteScriptWithResult.
 pub enum PendingScript {
     Plain(AppRef),
     WithResult(AppRef),
 }
 
-/// Wyjątek JS ze skryptu (ExecuteScriptWithResult).
+/// JS exception thrown by the script (ExecuteScriptWithResult).
 pub struct ScriptError {
     pub name: String,
     pub message: String,
@@ -212,7 +210,7 @@ pub struct ScriptError {
 }
 
 impl PendingScript {
-    /// ExecuteScript zwraca "null" także po wyjątku (jak WebView2); WithResult - szczegóły.
+    /// ExecuteScript reports "null" even after an exception (as WebView2); WithResult gets details.
     fn complete(self, ctx: &mut Ctx, result: Result<String, ScriptError>) {
         match self {
             PendingScript::Plain(app) => {
@@ -234,7 +232,7 @@ impl WebView {
             self.pending_scripts.borrow_mut().insert(id, p);
         }
         if !crate::execute_script(self.view, id, &script) {
-            // Brak renderera (np. przed pierwszą nawigacją): jak skrypt bez wyniku.
+            // No renderer yet (e.g. before the first navigation): complete as a script with no result.
             if let Some(p) = self.pending_scripts.borrow_mut().remove(&id) {
                 p.complete(ctx, Ok("null".to_string()));
             }
@@ -252,7 +250,7 @@ impl ICoreWebView2ExecuteScriptResultImpl for ScriptResult {
         Ok(self.result.is_ok())
     }
     fn get_ResultAsJson(&self, _ctx: &mut Ctx) -> WvResult<String> {
-        // Po wyjątku pusty napis (dokumentacja WebView2).
+        // Empty string after an exception, per WebView2 docs.
         Ok(self.result.as_ref().map(|j| j.clone()).unwrap_or_default())
     }
     fn TryGetResultAsString(&self, _ctx: &mut Ctx) -> WvResult<(String, bool)> {
@@ -415,7 +413,7 @@ impl ICoreWebView2_29Impl for WebView {
         Ok(())
     }
 
-    /// folderPath przychodzi już jako ścieżka uniksowa (konwersja w hoście DLL).
+    /// folderPath is already a unix path (converted by the DLL host).
     fn SetVirtualHostNameToFolderMapping(&self, _ctx: &mut Ctx, host: Option<String>, folder: Option<String>,
                                          _access: i32) -> WvResult<()> {
         crate::resources::set_virtual_host(self.view, &host.ok_or(E_INVALIDARG)?, folder.ok_or(E_INVALIDARG)?.into());
@@ -477,7 +475,7 @@ impl ICoreWebView2_29Impl for WebView {
 }
 
 // ===================================================================
-// Argumenty zdarzeń
+// Event args
 // ===================================================================
 
 pub struct DevToolsReceiver {
@@ -608,7 +606,7 @@ impl ICoreWebView2WebMessageReceivedEventArgs2Impl for WebMessageArgs {
     fn get_WebMessageAsJson(&self, _ctx: &mut Ctx) -> WvResult<String> {
         Ok(self.json.clone())
     }
-    /// Udaje się tylko, gdy strona wysłała napis.
+    /// Succeeds only if the page posted a string.
     fn TryGetWebMessageAsString(&self, _ctx: &mut Ctx) -> WvResult<String> {
         json_unquote(&self.json).ok_or(E_INVALIDARG)
     }
@@ -671,7 +669,7 @@ fn web_error_status(net_error: i32) -> i32 {
 }
 
 // ===================================================================
-// Zdarzenia z CEF (wątek UI CEF)
+// Events from CEF (CEF UI thread)
 // ===================================================================
 
 macro_rules! raise_async {
@@ -683,7 +681,7 @@ macro_rules! raise_async {
     }};
 }
 
-/// NavigationStarting - synchronicznie; zwraca true, gdy aplikacja anulowała nawigację.
+/// Synchronous; returns true if the app cancelled the navigation.
 pub fn on_navigation_starting(view: u32, id: u64, user_initiated: bool, redirected: bool, uri: &str) -> bool {
     with_webview(view, |wv, sender| {
         let handlers = wv.ev(Ev::NavigationStarting).snapshot();
@@ -788,17 +786,17 @@ pub fn on_devtools_event(view: u32, method: &str, params: &str) {
     });
 }
 
-/// Handlery WebResourceRequested widoku i nadawca (None = brak WebView/handlerów).
+/// WebResourceRequested handlers of the view and the sender (None = no WebView or no handlers).
 pub fn resource_handlers(view: u32) -> Option<(Vec<AppRef>, ObjRef)> {
     with_webview(view, |wv, sender| (wv.ev(Ev::WebResourceRequested).snapshot(), sender))
         .filter(|(h, _)| !h.is_empty())
 }
 
 // ===================================================================
-// Odroczenia (GetDeferral)
+// Deferrals (GetDeferral)
 // ===================================================================
 
-/// ICoreWebView2Deferral: Complete() wykonuje odłożoną akcję (raz).
+/// Complete() runs the deferred action once.
 pub struct Deferral {
     action: RefCell<Option<Box<dyn FnOnce()>>>,
 }
@@ -813,8 +811,8 @@ impl ICoreWebView2DeferralImpl for Deferral {
     }
 }
 
-/// Stan odroczenia w argumentach zdarzenia: Taken = aplikacja wzięła odroczenie, a zdarzenie
-/// jeszcze nie skończyło się wywoływać; Done = Complete() przyszło przed końcem wywołania.
+/// Taken = the app took a deferral while handlers are still running;
+/// Done = Complete() arrived before the handlers returned.
 #[derive(Clone, Copy, PartialEq)]
 enum DeferralState {
     None,
@@ -822,7 +820,7 @@ enum DeferralState {
     Done,
 }
 
-/// Wspólna obsługa GetDeferral: po zakończeniu handlerów `finish` wykonuje się od razu albo przy Complete().
+/// Shared GetDeferral logic: after the handlers return, `finish` runs immediately or on Complete().
 struct DeferralSlot {
     state: Cell<DeferralState>,
     finish: RefCell<Option<Box<dyn FnOnce()>>>,
@@ -847,7 +845,7 @@ impl DeferralSlot {
         }))
     }
 
-    /// Po wywołaniu handlerów: true = wynik gotowy teraz; false = `finish` poczeka na Complete().
+    /// After the handlers: true = result ready now; false = `finish` waits for Complete().
     fn settle(&self, finish: Box<dyn FnOnce()>) -> bool {
         if self.state.get() == DeferralState::Taken {
             *self.finish.borrow_mut() = Some(finish);
@@ -886,7 +884,7 @@ impl ICoreWebView2WindowFeaturesImpl for WindowFeatures {
     fn get_Height(&self, _ctx: &mut Ctx) -> WvResult<u32> {
         Ok(self.size.map_or(0, |s| s.1))
     }
-    // Okno popup w Chromium: bez paska menu, statusu i narzędzi; paski przewijania tak.
+    // Chromium popups have no menu bar, status bar or toolbar, but do have scroll bars.
     fn get_ShouldDisplayMenuBar(&self, _ctx: &mut Ctx) -> WvResult<bool> {
         Ok(false)
     }
@@ -917,11 +915,11 @@ impl ICoreWebView2NewWindowRequestedEventArgs3Impl for NewWindowArgs {
         Ok(self.uri.clone())
     }
     fn put_NewWindow(&self, _ctx: &mut Ctx, new_window: ObjRef) -> WvResult<()> {
-        // Musi to być nasz ICoreWebView2 (z innego kontrolera tego środowiska).
+        // Must be one of our ICoreWebView2 objects (from another controller of this environment).
         if !new_window.is_null() && webview_of(&new_window).is_none() {
             return Err(E_INVALIDARG);
         }
-        // Ustawienie NewWindow oznacza też Handled (dokumentacja WebView2).
+        // Setting NewWindow also implies Handled, per WebView2 docs.
         self.handled.set(true);
         *self.new_window.borrow_mut() = new_window;
         Ok(())
@@ -950,7 +948,7 @@ impl ICoreWebView2NewWindowRequestedEventArgs3Impl for NewWindowArgs {
     }
 }
 
-/// Widok WebView, jeśli obiekt jest naszym ICoreWebView2.
+/// View number if the object is one of our ICoreWebView2.
 fn webview_of(obj: &ObjRef) -> Option<u32> {
     match obj {
         ObjRef::Runtime(o) => o.as_any().downcast_ref::<WebViewObj>().map(|w| w.0.view),
@@ -958,15 +956,14 @@ fn webview_of(obj: &ObjRef) -> Option<u32> {
     }
 }
 
-/// Co zrobić z popupem CEF.
 pub enum PopupDecision {
-    /// Domyślne okno (natywne okno CEF, z window.opener).
+    /// Default window (native CEF window, keeps window.opener).
     Default,
-    /// Aplikacja obsłużyła (Handled bez NewWindow): popup anulowany.
+    /// Handled without NewWindow: the popup is cancelled.
     Cancel,
-    /// NewWindow: popup trafia do WebView tego widoku.
+    /// NewWindow set: the popup goes into the WebView of this view.
     Adopt(u32),
-    /// Aplikacja wzięła odroczenie: decyzja przyjdzie przez `crate::popup_decided`.
+    /// App took a deferral: the decision arrives via `crate::popup_decided`.
     Deferred,
 }
 
@@ -980,8 +977,8 @@ fn decide_new_window(args: &NewWindowArgs) -> PopupDecision {
     }
 }
 
-/// NewWindowRequested - synchronicznie z OnBeforePopup. `popup` = numer widoku, pod którym
-/// przeglądarka popupu czeka na decyzję (przy odroczeniu).
+/// Synchronous from OnBeforePopup. `popup` is the view number under which the popup browser
+/// waits for the decision (when deferred).
 pub fn on_new_window(view: u32, popup: u32, uri: &str, name: &str, user_initiated: bool,
                      features: WindowFeatures) -> PopupDecision {
     with_webview(view, |wv, sender| {
@@ -1017,7 +1014,7 @@ pub fn on_new_window(view: u32, popup: u32, uri: &str, name: &str, user_initiate
     .unwrap_or(PopupDecision::Default)
 }
 
-/// window.close() w dokumencie głównym.
+/// window.close() in the main document.
 pub fn on_window_close(view: u32) {
     with_webview(view, |wv, sender| {
         raise_async!(wv, sender, WindowCloseRequested, ICoreWebView2WindowCloseRequestedEventHandlerApp, ObjRef::Null);
@@ -1067,11 +1064,11 @@ impl ICoreWebView2ScriptDialogOpeningEventArgsImpl for ScriptDialogArgs {
     }
 }
 
-/// Wynik dialogu JS: (zaakceptowany, tekst prompt).
+/// JS dialog result: (accepted, prompt text).
 pub type DialogDone = Box<dyn FnOnce(bool, &str)>;
 
-/// Dialog JS przy AreDefaultScriptDialogsEnabled = FALSE. Bez handlerów dialog zamyka się
-/// jak anulowany (jak w WebView2). `done` może przyjść później (GetDeferral).
+/// JS dialog when AreDefaultScriptDialogsEnabled = FALSE. Without handlers it closes as cancelled,
+/// as in WebView2. `done` may be called later (GetDeferral).
 pub fn on_script_dialog(view: u32, uri: &str, kind: i32, message: &str, default_text: &str, done: DialogDone) {
     let done = Rc::new(RefCell::new(Some(done)));
     let deferred = with_webview(view, |wv, sender| {
@@ -1110,7 +1107,7 @@ pub fn on_script_dialog(view: u32, uri: &str, kind: i32, message: &str, default_
     })
     .unwrap_or(false);
     if !deferred {
-        // Brak WebView albo handlerów (po handlerach `done` jest już wzięte).
+        // No WebView or no handlers (if handlers ran, `done` was already taken).
         if let Some(d) = done.borrow_mut().take() {
             d(false, "");
         }

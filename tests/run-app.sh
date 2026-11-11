@@ -1,16 +1,17 @@
 #!/bin/bash
-# Uruchamia aplikację Windows z naszym runtime'em WebView2 (zainstalowanym jak prawdziwy: pliki + rejestr).
+# Runs a Windows app with our WebView2 runtime, installed like the real one (files + registry).
 #
-#   tests/run-app.sh <program.exe> [argumenty…]
+#   tests/run-app.sh <program.exe> [args...]
 #
-# Zmienne:
-#   WINE         - binarka Wine ≥ 11.2 (domyślnie drzewo budowania z wine-webview2-ref)
-#   WINEPREFIX   - prefiks testowy (domyślnie ~/.local/share/wine-webview2/prefix)
-#   WINEDEBUG    - domyślnie +webview2 (TRACE i FIXME naszego kanału)
-#   WV2_LOG      - plik logu (domyślnie build/logs/<program>.log)
-#   WINE_WEBVIEW2_HELPER - natywny pomocnik (domyślnie build/runtime/wine-webview2-helper)
-#   WV2_VISIBLE  - 1 = okna na pulpicie użytkownika; domyślnie niewidoczny ekran Xvfb (WV2_DISPLAY, :99),
-#                  żeby testy nie migały oknami (zrzuty: DISPLAY=:99 import -window …)
+# Environment:
+#   WINE          - Wine >= 11.2 binary (default: the build tree in wine-webview2-ref)
+#   WINEPREFIX    - test prefix (default ~/.local/share/wine-webview2/prefix)
+#   WINEDEBUG     - default +webview2 (TRACE and FIXME of our channel)
+#   WV2_LOG       - log file (default build/logs/<program>.log)
+#   WINE_WEBVIEW2_RUNTIME - helper directory (default build/runtime)
+#   WINE_WEBVIEW2_HELPER  - override the helper binary itself
+#   WV2_VISIBLE   - 1 = windows on the user's desktop; default is a hidden Xvfb display
+#                   (WV2_DISPLAY, :99) so tests don't flash windows (screenshots: DISPLAY=:99 import -window ...)
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
@@ -32,18 +33,18 @@ name=$(basename "$exe" .exe)
 log=${WV2_LOG:-$ROOT/build/logs/$name.log}
 mkdir -p "$(dirname "$log")" "$WINEPREFIX"
 
-# Czysty start: zamknij resztki poprzednich przebiegów w tym prefiksie (np. okna debuggera).
+# Clean start: kill leftovers of previous runs in this prefix (e.g. debugger windows).
 WINESERVER=${WINESERVER:-$(dirname "$WINE")/server/wineserver}
 [ -x "$WINESERVER" ] || WINESERVER=wineserver
 "$WINESERVER" -k >/dev/null 2>&1 || true
 sleep 0.5
 
 if [ ! -f "$WINEPREFIX/system.reg" ]; then
-    echo "== tworzę prefiks $WINEPREFIX"
+    echo "== creating prefix $WINEPREFIX"
     WINEDEBUG=-all "$WINE" wineboot -i >/dev/null 2>&1
 fi
 
-# Instalacja runtime'u tak jak prawdziwy - tym samym skryptem co u użytkowników (pomocnik prosto z build/runtime).
+# Install the runtime with the same script users run (helper straight from build/runtime).
 export WINE_WEBVIEW2_RUNTIME=${WINE_WEBVIEW2_RUNTIME:-$ROOT/build/runtime}
 WINE="$WINE" "$ROOT/wine-webview2" prefix "$WINEPREFIX" >/dev/null
 

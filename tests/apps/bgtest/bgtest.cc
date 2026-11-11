@@ -1,4 +1,4 @@
-// Test: przezroczyste DefaultBackgroundColor, Settings (UserAgent, IsWebMessageEnabled), ExecuteScript.
+// Test: transparent DefaultBackgroundColor, Settings (UserAgent, IsWebMessageEnabled), ExecuteScript.
 #include <windows.h>
 #include <cstdio>
 #include <functional>
@@ -15,7 +15,7 @@ struct Handler : I {
     HRESULT STDMETHODCALLTYPE Invoke(A... a) override { return fn(a...); }
 };
 
-// IID_ICoreWebView2Controller2 (uuid z WebView2.idl)
+// IID_ICoreWebView2Controller2 (uuid from WebView2.idl)
 static const GUID iid_controller2 = {0xc979903e, 0xd4ca, 0x4228, {0x92, 0xeb, 0x47, 0xee, 0x3f, 0xa9, 0x6e, 0xab}};
 static ICoreWebView2 *webview;
 static ICoreWebView2Controller *controller;
@@ -27,8 +27,8 @@ static void log(const char *fmt, ...) {
 }
 
 static const wchar_t page[] = L"<html><body style='background:transparent;margin:0;font:28px sans-serif'>"
-    L"<div style='margin:40px;padding:30px;background:rgba(0,80,255,0.5);color:white'>półprzezroczysty</div>"
-    L"<p style='margin:40px'>tekst na przezroczystym tle</p></body></html>";
+    L"<div style='margin:40px;padding:30px;background:rgba(0,80,255,0.5);color:white'>semi-transparent</div>"
+    L"<p style='margin:40px'>text on a transparent background</p></body></html>";
 
 static void probe() {
     webview->ExecuteScript(L"navigator.userAgent + ' | ' + navigator.platform + ' | webview=' + typeof (window.chrome && window.chrome.webview)",
@@ -39,7 +39,7 @@ static void probe() {
                 s->put_IsWebMessageEnabled(FALSE); s->Release();
                 step = 2; webview->NavigateToString(page);
             } else {
-                // DevTools: wywołanie metody + odbiornik zdarzenia konsoli
+                // DevTools: a method call + a console event receiver
                 webview->CallDevToolsProtocolMethod(L"Browser.getVersion", L"{}",
                     new Handler<ICoreWebView2CallDevToolsProtocolMethodCompletedHandler, HRESULT, LPCWSTR>([](HRESULT hr, LPCWSTR json) {
                         log("cdp Browser.getVersion hr=%#lx result=%.160ls", hr, json ? json : L"(null)");

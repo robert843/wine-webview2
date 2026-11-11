@@ -1,12 +1,12 @@
-// Aplikacja testowa E3: wejście (mysz, klawiatura, kółko, fokus) - zdarzenia wracają mostem JS na stderr.
+// Input test (mouse, keyboard, wheel, focus); events come back over the JS bridge to stderr.
 #include "webview/webview.h"
 #include <cstdio>
 
 static const char *page = R"HTML(<!doctype html><meta charset=utf-8>
 <style>body{font:24px sans-serif;margin:16px} input,button{font:24px sans-serif}</style>
-<input id=t placeholder="pisz tutaj"> <button id=b>kliknij</button>
+<input id=t placeholder="type here"> <button id=b>click</button>
 <div id=state>start</div>
-<div style="height:3000px;background:linear-gradient(#fff,#36c)">przewiń w dół</div>
+<div style="height:3000px;background:linear-gradient(#fff,#36c)">scroll down</div>
 <script>
 let clicks = 0;
 const say = s => { report(s); document.getElementById('state').textContent = s; };

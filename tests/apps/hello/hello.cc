@@ -1,6 +1,5 @@
-// Aplikacja testowa E1: minimalne użycie WebView2 przez webview/webview.
-// Ćwiczy: środowisko, kontroler, Navigate/NavigateToString, AddScriptToExecuteOnDocumentCreated,
-// ExecuteScript, WebMessageReceived (bind).
+// Minimal WebView2 use through webview/webview. Exercises: environment, controller,
+// Navigate/NavigateToString, AddScriptToExecuteOnDocumentCreated, ExecuteScript, WebMessageReceived (bind).
 #include "webview/webview.h"
 #include <cstdio>
 

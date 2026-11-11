@@ -1,10 +1,10 @@
-//! Lustro `dlls/embeddedbrowserwebview/protocol.h` - trzymać oba pliki w zgodzie.
+//! Mirror of `dlls/embeddedbrowserwebview/protocol.h` - keep both files in sync.
 
 #![allow(dead_code)]
 
 pub const PROTOCOL_VERSION: u32 = 8;
 pub const FRAME_SLOTS: u32 = 2;
-/// Treści większe niż INLINE_MAX idą w zapieczętowanym memfd (protocol.h: WV2_INLINE_MAX).
+/// Payloads larger than this go in a sealed memfd (protocol.h: WV2_INLINE_MAX).
 pub const INLINE_MAX: usize = 64 * 1024;
 pub const MAX_PAYLOAD: usize = 256 * 1024 * 1024;
 pub const MSG_PAYLOAD_IN_FD: u32 = 0x1;
@@ -81,7 +81,6 @@ pub const MOUSE_UP: u32 = 2;
 pub const MOUSE_WHEEL: u32 = 3;
 pub const MOUSE_LEAVE: u32 = 4;
 
-/// Prosty zapis pól little-endian do bufora komunikatu.
 #[derive(Default)]
 pub struct Writer(pub Vec<u8>);
 
@@ -104,7 +103,6 @@ impl Writer {
     }
 }
 
-/// Odczyt pól little-endian z ładunku komunikatu.
 pub struct Reader<'a>(pub &'a [u8]);
 
 impl<'a> Reader<'a> {

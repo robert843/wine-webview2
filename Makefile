@@ -1,13 +1,14 @@
-# wine-webview2 - budowanie poza drzewem Wine (jak lsteamclient w Protonie).
+# wine-webview2 - out-of-tree build against a Wine build tree (like lsteamclient in Proton).
 #
-# Wymaga zbudowanego drzewa Wine (nagłówki, widl, wrc, winegcc, biblioteki importów PE):
-#   WINE_SRC   - źródła Wine
-#   WINE_BUILD - katalog budowania Wine (configure --enable-archs=x86_64,i386)
+# Needs a built Wine tree (headers, widl, wrc, winegcc, PE import libraries):
+#   WINE_SRC   - Wine sources
+#   WINE_BUILD - Wine build directory (configure --enable-archs=x86_64,i386)
 #
-# make            - DLL x86_64 i i386 + biblioteka uniksowa x86_64 + pomocnik (build/runtime/)
-# make stubs      - regeneracja szkieletu z IDL (tools/gen-stubs)
+# make        - x86_64 and i386 DLLs + x86_64 unix library + helper (build/runtime/)
+# make stubs  - regenerate the generated code from the IDL (tools/gen-stubs)
+# make dist   - release tarball
 #
-# build/runtime/ ma układ docelowej paczki /usr/lib/wine-webview2/: pomocnik + pliki CEF.
+# build/runtime/ has the layout of the installed /usr/lib/wine-webview2/: helper + CEF files.
 
 REF        ?= $(CURDIR)/../wine-webview2-ref
 WINE_SRC   ?= $(REF)/wine
@@ -17,7 +18,7 @@ WIDL    = $(WINE_BUILD)/tools/widl/widl
 WRC     = $(WINE_BUILD)/tools/wrc/wrc
 WINEGCC = $(WINE_BUILD)/tools/winegcc/winegcc
 
-# CEF pobrany przez build.rs crate'a cef (wersja wynika z helper/Cargo.toml)
+# CEF downloaded by the cef crate's build.rs (version follows helper/Cargo.toml)
 CEF_PATH    ?= $(REF)/cef-rs
 CEF_VERSION  = 156.0.26
 CEF_DIR      = $(CEF_PATH)/$(CEF_VERSION)/cef_linux_x86_64
@@ -37,7 +38,7 @@ UNIX_CFLAGS = -O2 -g -Wall -fPIC -fno-strict-aliasing -fvisibility=hidden -DWINE
 all: $(B)/x86_64/EmbeddedBrowserWebView.dll $(B)/i386/EmbeddedBrowserWebView.dll \
      $(B)/x86_64/embeddedbrowserwebview.so $(B)/x86_64/msedgewebview2.exe runtime
 
-# Atrapa procesu przeglądarki (aplikacje sprawdzają, czy plik istnieje w katalogu runtime'u).
+# Dummy browser process: apps check that the file exists in the runtime directory.
 $(B)/x86_64/msedgewebview2.exe: programs/msedgewebview2/main.c $(B)/version.res
 	@mkdir -p $(B)/x86_64
 	x86_64-w64-mingw32-gcc -c -o $(B)/x86_64/msedgewebview2.o $< $(INCLUDES) $(CFLAGS)
@@ -45,22 +46,22 @@ $(B)/x86_64/msedgewebview2.exe: programs/msedgewebview2/main.c $(B)/version.res
 	  -mwindows -municode $(B)/x86_64/msedgewebview2.o $(B)/version.res -lkernel32 -lucrtbase -lntdll \
 	  -L$(WINE_BUILD)/libs/winecrt0/x86_64-windows -lwinecrt0 -lkernel32 -lntdll
 
-# Część uniksowa: ładowana przez __wine_load_unix_lib (Wine >= 11.2) z katalogu DLL-ki.
+# Unix side, loaded by explicit path from the DLL's directory (Wine >= 11.2).
 $(B)/x86_64/embeddedbrowserwebview.so: $(DLL)/unixlib.c $(DLL)/unixlib.h $(DLL)/protocol.h
 	@mkdir -p $(B)/x86_64
 	gcc -shared -o $@ $< $(UNIX_CFLAGS) -L$(WINE_BUILD)/dlls/ntdll -l:ntdll.so -Wl,-z,defs -lpthread
 
-# Pomocnik (Rust + CEF) i katalog uruchomieniowy z plikami CEF.
+# Helper (Rust + CEF) and the runtime directory with the CEF files.
 runtime:
 	cd helper && CEF_PATH=$(CEF_PATH) cargo build --release
 	@mkdir -p $(B)/runtime
 	for f in $(CEF_DIR)/*.so $(CEF_DIR)/*.so.1 $(CEF_DIR)/*.pak $(CEF_DIR)/*.dat $(CEF_DIR)/*.bin \
 	         $(CEF_DIR)/*.json $(CEF_DIR)/locales; do ln -sfn $$f $(B)/runtime/; done
 	cp helper/target/release/wine-webview2-helper $(B)/runtime/.wine-webview2-helper.new && mv -f $(B)/runtime/.wine-webview2-helper.new $(B)/runtime/wine-webview2-helper
-	@# Biblioteki dostępności potrzebne CEF, których nie ma w kontenerze Steam Linux Runtime 4 (Proton).
+	@# Accessibility libraries CEF needs that the Steam Linux Runtime 4 container (Proton) lacks.
 	@for l in libatk-bridge-2.0.so.0 libatspi.so.0; do \
 	    src=$$(ldconfig -p | awk -v L=$$l '$$1==L && /x86-64/ {print $$NF; exit}'); \
-	    if [ -n "$$src" ]; then cp -L "$$src" $(B)/runtime/$$l; else echo "uwaga: brak $$l w systemie"; fi; done
+	    if [ -n "$$src" ]; then cp -L "$$src" $(B)/runtime/$$l; else echo "warning: $$l not found on the system"; fi; done
 
 $(B)/webview2.h: include/webview2.idl
 	@mkdir -p $(B)
@@ -93,7 +94,7 @@ clean:
 
 .PHONY: all stubs clean runtime dist
 
-# Paczka wydania: wine-webview2-<wersja>.tar.xz (skrypt + pomocnik bez symboli + pliki do prefiksu)
+# Release tarball wine-webview2-<version>.tar.xz: script + stripped helper + prefix files.
 VERSION = $(shell sed -n 's/^VERSION=//p' wine-webview2)
 DIST    = $(B)/dist/wine-webview2-$(VERSION)
 dist: all

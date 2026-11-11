@@ -1,11 +1,11 @@
-// Test wine-webview2: aplikacja Tauri 2 (wry -> WebView2) zbudowana pod Windows.
-// Sprawdza: zasoby z własnego schematu, invoke (IPC JS -> Rust), zdarzenia Rust -> JS, zamknięcie.
+// Tauri 2 test app (wry -> WebView2) built for Windows.
+// Checks: custom scheme resources, invoke (IPC JS -> Rust), Rust -> JS events, shutdown.
 use tauri::{Emitter, Manager};
 
 #[tauri::command]
 fn greet(name: &str) -> String {
     eprintln!("tauri: greet({name})");
-    format!("Hello, {name}! (z Rusta)")
+    format!("Hello, {name}! (from Rust)")
 }
 
 #[tauri::command]

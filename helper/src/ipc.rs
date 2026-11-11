@@ -1,4 +1,4 @@
-//! Gniazdo SOCK_SEQPACKET do EmbeddedBrowserWebView.dll (strona uniksowa) i bufory klatek memfd.
+//! SOCK_SEQPACKET channel to EmbeddedBrowserWebView.dll (its unix side) and memfd frame buffers.
 
 use crate::protocol::*;
 use std::io;
@@ -10,9 +10,9 @@ pub struct Channel {
 
 impl Channel {
     /// # Safety
-    /// `fd` musi być otwartym gniazdem przekazanym przez proces rodzica.
+    /// `fd` must be an open socket handed over by the parent process.
     pub unsafe fn from_raw(fd: RawFd) -> Self {
-        // Nie dziedziczyć gniazda do podprocesów CEF.
+        // Keep the socket out of CEF subprocesses.
         libc::fcntl(fd, libc::F_SETFD, libc::FD_CLOEXEC);
         Channel { fd: OwnedFd::from_raw_fd(fd) }
     }
@@ -21,7 +21,7 @@ impl Channel {
         Ok(Channel { fd: self.fd.try_clone()? })
     }
 
-    /// Wysyła komunikat; treść większa niż INLINE_MAX idzie w zapieczętowanym memfd.
+    /// Payloads larger than INLINE_MAX are sent in a sealed memfd.
     pub fn send(&self, ty: u32, view: u32, payload: &[u8], pass_fd: Option<RawFd>) -> io::Result<()> {
         let big = payload.len() > INLINE_MAX;
         let payload_fd = if big { Some(payload_memfd(payload)?) } else { None };
@@ -31,7 +31,7 @@ impl Channel {
             libc::iovec { iov_base: header.as_ptr() as *mut _, iov_len: header.len() },
             libc::iovec { iov_base: payload.as_ptr() as *mut _, iov_len: payload.len() },
         ];
-        // Kolejność deskryptorów: najpierw memfd z treścią (jeśli jest), potem dołączony.
+        // Descriptor order: payload memfd (if any) first, then the passed fd.
         let fds: Vec<RawFd> = payload_fd.iter().map(|f| f.as_raw_fd()).chain(pass_fd).collect();
         let mut control = [0u8; 64];
         let mut msg: libc::msghdr = unsafe { std::mem::zeroed() };
@@ -61,7 +61,7 @@ impl Channel {
         }
     }
 
-    /// Blokuje do następnego komunikatu; `Ok(None)` = druga strona zamknęła połączenie.
+    /// Blocks for the next message; `Ok(None)` means the peer closed the connection.
     pub fn recv(&self) -> io::Result<Option<Message>> {
         let mut buf = vec![0u8; HEADER_SIZE + INLINE_MAX];
         let mut control = [0u8; 64];
@@ -148,7 +148,7 @@ fn read_memfd(fd: &OwnedFd, size: usize) -> io::Result<Vec<u8>> {
     Ok(data)
 }
 
-/// Bufor klatek: memfd z `FRAME_SLOTS` slotami BGRA, zmapowany do zapisu.
+/// memfd with `FRAME_SLOTS` BGRA slots, mapped writable.
 pub struct FrameBuffer {
     pub fd: OwnedFd,
     pub width: u32,

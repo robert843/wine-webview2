@@ -1,5 +1,5 @@
-// Test: NewWindowRequested (Handled, odroczenie + NewWindow, okno domyślne), WindowCloseRequested,
-// ScriptDialogOpening (AreDefaultScriptDialogsEnabled = FALSE) i dialogi domyślne.
+// Test: NewWindowRequested (Handled, deferral + NewWindow, default window), WindowCloseRequested,
+// ScriptDialogOpening (AreDefaultScriptDialogsEnabled = FALSE) and the default dialogs.
 #include <windows.h>
 #include <cstdio>
 #include <functional>
@@ -48,7 +48,7 @@ static void later(int ms, int n) {
     SetTimer(hwnd, 10, ms, [](HWND h, UINT, UINT_PTR id, DWORD) { KillTimer(h, id); step(pending); });
 }
 
-// Domyślny dialog (MessageBox / prompt w DLL): znajdź i kliknij OK.
+// Default dialog (MessageBox / prompt in the DLL): find it and click OK.
 static DWORD WINAPI clicker(void *) {
     for (int i = 0; i < 100; i++) {
         Sleep(100);
@@ -70,7 +70,7 @@ static void step(int n) {
     case 1: popup_mode = POPUP_HANDLED;
         run(L"String(window.open('about:blank#handled', 'win1', 'width=320,height=240'))", 0);
         later(1000, 12); break;
-    case 12: { // kliknięcie (gest użytkownika) w przycisk z window.open
+    case 12: { // click (user gesture) on the button that calls window.open
         HWND child = FindWindowExW(hwnd, nullptr, nullptr, nullptr);
         log("click child=%p", child);
         PostMessageW(child, WM_MOUSEMOVE, 0, MAKELPARAM(50, 50));
@@ -80,14 +80,14 @@ static void step(int n) {
     case 13: run(L"String(window.clicked)", 2); break;
     case 2: popup_mode = POPUP_DEFER;
         run(L"window.w2 = window.open('about:blank#deferred', 'win2'); String(!!w2)", 0); later(2500, 20); break;
-    case 20: // połączenie popup <-> otwierający
+    case 20: // popup <-> opener link
         popup_webview->ExecuteScript(L"String(!!window.opener) + ' ' + location.href",
             new Handler<ICoreWebView2ExecuteScriptCompletedHandler, HRESULT, LPCWSTR>([](HRESULT hr, LPCWSTR json) {
                 log("popup: opener+href -> hr=%#lx %ls", hr, json ? json : L"(null)");
                 run(L"String(!w2.closed) + ' ' + w2.location.href", 21);
                 return S_OK; }));
         break;
-    case 21: // popup z https (host wirtualny) odsyła wiadomość do otwierającego
+    case 21: // https popup (virtual host) posts a message back to the opener
         popup_mode = POPUP_DEFER;
         run(L"window.addEventListener('message', e => chrome.webview.postMessage('opener got: ' + e.data));"
             L"window.w4 = window.open('https://app.test/popup.html', 'win4'); String(!!w4)", 0);
@@ -96,9 +96,9 @@ static void step(int n) {
     case 4: {
         ICoreWebView2Settings *s; webview->get_Settings(&s);
         s->put_AreDefaultScriptDialogsEnabled(FALSE); s->Release();
-        dialog_mode = DLG_ACCEPT; run(L"confirm('pytanie?')", 5); break; }
-    case 5: dialog_mode = DLG_PROMPT; run(L"prompt('imię?', 'domyślne')", 6); break;
-    case 6: dialog_mode = DLG_DEFER; run(L"confirm('odroczone?')", 7);
+        dialog_mode = DLG_ACCEPT; run(L"confirm('question?')", 5); break; }
+    case 5: dialog_mode = DLG_PROMPT; run(L"prompt('name?', 'default')", 6); break;
+    case 6: dialog_mode = DLG_DEFER; run(L"confirm('deferred?')", 7);
         SetTimer(hwnd, 11, 500, [](HWND h, UINT, UINT_PTR id, DWORD) {
             KillTimer(h, id);
             log("completing dialog deferral");
@@ -109,10 +109,10 @@ static void step(int n) {
         ICoreWebView2Settings *s; webview->get_Settings(&s);
         s->put_AreDefaultScriptDialogsEnabled(TRUE); s->Release();
         CloseHandle(CreateThread(nullptr, 0, clicker, nullptr, 0, nullptr));
-        run(L"prompt('domyślny prompt', 'tekst')", 8); break; }
+        run(L"prompt('default prompt', 'text')", 8); break; }
     case 8:
         CloseHandle(CreateThread(nullptr, 0, clicker, nullptr, 0, nullptr));
-        run(L"confirm('domyślny confirm')", 9); break;
+        run(L"confirm('default confirm')", 9); break;
     case 9: popup_mode = POPUP_DEFAULT;
         run(L"window.w3 = window.open('about:blank#default', 'win3', 'width=300,height=200'); String(!!w3)", 0);
         later(2000, 10); break;
@@ -169,7 +169,7 @@ static void register_events() {
             log("ScriptDialogOpening kind=%d message=%ls default=%ls uri=%.40ls", kind, msg, def, uri);
             CoTaskMemFree(msg); CoTaskMemFree(def); CoTaskMemFree(uri);
             if (dialog_mode == DLG_ACCEPT) a->Accept();
-            else if (dialog_mode == DLG_PROMPT) { a->put_ResultText(L"Zażółć"); a->Accept(); }
+            else if (dialog_mode == DLG_PROMPT) { a->put_ResultText(L"Grüße ✔"); a->Accept(); }
             else { a->GetDeferral(&dialog_deferral); dialog_args = a; a->AddRef(); }
             return S_OK; }), &t);
 }

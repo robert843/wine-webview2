@@ -1,13 +1,13 @@
-//! Proces renderera CEF: most `window.chrome.webview`, skrypty startowe, ExecuteScript.
+//! CEF renderer process: `window.chrome.webview` bridge, document-created scripts, ExecuteScript.
 //!
-//! Komunikaty procesowe (CefProcessMessage) między rendererem a procesem przeglądarki:
+//! Process messages (CefProcessMessage) between renderer and browser process:
 //!   renderer -> browser  "wv2.post"   [json]                       chrome.webview.postMessage
-//!   browser  -> renderer "wv2.exec"   [id, skrypt]                 ExecuteScript
-//!   renderer -> browser  "wv2.result" [id, json, ok, name, message, line, col, exception_json]  wynik ExecuteScript
-//!   renderer -> browser  "wv2.close"  []                         window.close() w ramce głównej
-//! Skrypty AddScriptToExecuteOnDocumentCreated: plik `<--wv2-scripts-dir>/<browser_id>.scripts`
-//! (rekordy: u32 LE długość + UTF-8), czytany przy każdym nowym kontekście JS - działa także
-//! po zmianie procesu renderera przy nawigacji między witrynami.
+//!   browser  -> renderer "wv2.exec"   [id, script]                 ExecuteScript
+//!   renderer -> browser  "wv2.result" [id, json, ok, name, message, line, col, exception_json]  ExecuteScript result
+//!   renderer -> browser  "wv2.close"  []                         window.close() in the main frame
+//! AddScriptToExecuteOnDocumentCreated scripts: file `<--wv2-scripts-dir>/<browser_id>.scripts`
+//! (records: u32 LE length + UTF-8), re-read for every new JS context so it also survives
+//! renderer process swaps on cross-site navigation.
 
 use cef::rc::Rc as _;
 use cef::*;
@@ -19,7 +19,7 @@ pub const MSG_RESULT: &str = "wv2.result";
 pub const MSG_CLOSE: &str = "wv2.close";
 pub const SCRIPTS_DIR_SWITCH: &str = "wv2-scripts-dir";
 
-/// Instaluje window.chrome.webview z użyciem natywnej funkcji __wv2_post (usuwanej zaraz potem).
+/// Installs window.chrome.webview on top of the native __wv2_post function, which it then deletes.
 const BOOTSTRAP: &str = r#"(function () {
   if (window.chrome && window.chrome.webview) return;
   var post = window.__wv2_post;
@@ -46,7 +46,7 @@ pub fn settings_file(dir: &str, browser_id: i32) -> PathBuf {
     PathBuf::from(dir).join(format!("{browser_id}.settings"))
 }
 
-/// Flagi WV2_SETTING_* zapisane przez proces przeglądarki (brak pliku = domyślne).
+/// WV2_SETTING_* flags written by the browser process (missing file = defaults).
 fn read_settings(dir: &str, browser_id: i32) -> u32 {
     std::fs::read(settings_file(dir, browser_id))
         .ok()
@@ -73,7 +73,7 @@ fn read_scripts(dir: &str, browser_id: i32) -> Vec<String> {
     out
 }
 
-/// Kodowanie napisu jako literału JSON (poprawny także jako literał JS).
+/// Encodes a string as a JSON literal (also a valid JS literal).
 pub fn json_string(s: &str) -> String {
     let mut out = String::with_capacity(s.len() + 2);
     out.push('"');
@@ -150,8 +150,8 @@ wrap_v8_handler! {
     }
 }
 
-/// window.close() w ramce głównej -> WindowCloseRequested (Chromium pozwala zamknąć tylko
-/// okna otwarte skryptem; WebView2 zgłasza zdarzenie zawsze i zostawia decyzję aplikacji).
+/// window.close() in the main frame -> WindowCloseRequested. Chromium only closes script-opened
+/// windows; WebView2 always raises the event and leaves the decision to the app.
 #[derive(Clone)]
 struct CloseHandler;
 
@@ -203,7 +203,7 @@ wrap_render_process_handler! {
                 .map(|cl| CefString::from(&cl.switch_value(Some(&SCRIPTS_DIR_SWITCH.into()))).to_string())
                 .unwrap_or_default();
             let settings = if dir.is_empty() { crate::protocol::SETTINGS_DEFAULT } else { read_settings(&dir, browser.identifier()) };
-            // IsWebMessageEnabled = FALSE: brak window.chrome.webview (jak w WebView2).
+            // IsWebMessageEnabled = FALSE: no window.chrome.webview at all, as in WebView2.
             if settings & crate::protocol::SETTING_WEB_MESSAGE != 0 {
                 let mut handler = PostHandlerBuilder::new(PostHandler);
                 let mut func = v8_value_create_function(Some(&"__wv2_post".into()), Some(&mut handler));
@@ -236,8 +236,8 @@ wrap_render_process_handler! {
             let Some(args) = message.argument_list() else { return 1 };
             let id = CefString::from(&args.string(0)).to_string();
             let script = CefString::from(&args.string(1)).to_string();
-            // Wynik jako obiekt {ok, r | name, message, line, col, json}: wyjątek (także SyntaxError
-            // z eval) łapiemy w JS, żeby ExecuteScriptWithResult dostał szczegóły.
+            // Exceptions (including SyntaxError from eval) are caught in JS and returned as
+            // {ok, r | name, message, line, col, json} so ExecuteScriptWithResult gets the details.
             let mut fields: [String; 6] = ["0".into(), "null".into(), String::new(), String::new(), "0".into(), "0".into()];
             let mut exception_json = String::from("{}");
             match frame.v8_context() {

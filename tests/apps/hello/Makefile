@@ -1,7 +1,7 @@
-# hello-builtin.exe - loader wbudowany w webview/webview (własna reimplementacja)
-# hello-loader.exe  - oficjalny WebView2Loader.dll z SDK (ładowany w czasie działania)
-WEBVIEW_SRC ?= $(error ustaw WEBVIEW_SRC na klon github.com/webview/webview)
-WV2_SDK     ?= $(error ustaw WV2_SDK na rozpakowany NuGet Microsoft.Web.WebView2)
+# hello-builtin.exe - webview/webview's built-in loader (its own reimplementation)
+# hello-loader.exe  - the official WebView2Loader.dll from the SDK (loaded at run time)
+WEBVIEW_SRC ?= $(error set WEBVIEW_SRC to a clone of github.com/webview/webview)
+WV2_SDK     ?= $(error set WV2_SDK to the unpacked Microsoft.Web.WebView2 NuGet package)
 CXX = x86_64-w64-mingw32-g++
 CXXFLAGS = -std=c++17 -O1 -g -Icompat -I$(WEBVIEW_SRC)/core/include -I$(WV2_SDK)/build/native/include \
            -mwindows -static

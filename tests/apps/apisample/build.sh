@@ -1,7 +1,7 @@
 #!/bin/bash
-# Buduje WebView2APISample (MicrosoftEdge/WebView2Samples) na Linuksie: clang-cl + lld-link + xwin.
+# Builds WebView2APISample (MicrosoftEdge/WebView2Samples) on Linux: clang-cl + lld-link + xwin.
 #   tests/apps/apisample/build.sh
-# Zmienne: REF (katalog z WebView2Samples, xwin, wine), LLVM (katalog bin LLVM >= 18), WIN10=1 (USE_WEBVIEW2_WIN10)
+# Env: REF (dir with WebView2Samples, xwin, wine), LLVM (LLVM >= 18 bin dir), WIN10=1 (USE_WEBVIEW2_WIN10)
 set -euo pipefail
 REF=${REF:-$(cd "$(dirname "$0")/../../.." && pwd)/../wine-webview2-ref}
 LLVM=${LLVM:-/usr/lib/llvm-20/bin}
@@ -19,36 +19,36 @@ SYS="-imsvc $X/crt/include -imsvc $X/sdk/include/ucrt -imsvc $X/sdk/include/um -
 DEFS="/DUNICODE /D_UNICODE /DWIN32 /DNDEBUG /D_WINDOWS"
 [ "${WIN10:-0}" = 1 ] && DEFS="$DEFS /DUSE_WEBVIEW2_WIN10"
 
-echo "== wielkość liter w nagłówkach"
+echo "== header letter case"
 for d in "$X/sdk/include/cppwinrt" "$X/sdk/include/um" "$X/sdk/include/shared" "$X/sdk/include/winrt" "$X/crt/include"; do
     python3 -I "$(dirname "$0")/fix-case.py" "$d" "$SRC" "$WIL" "$WV2/include"
 done
 ln -sfn "$SRC/resource.h" "$OUT/Resource.h"
 
-echo "== łatki dla clanga (MSVC przepuszcza niekopiowalne obiekty w argumentach ...)"
+echo "== patches for clang (MSVC accepts non-copyable objects passed to ...)"
 sed -i 's/self->clientCertificates\[i\]\.Subject,$/self->clientCertificates[i].Subject.get(),/' "$SRC/ClientCertificateSelectionDialog.cpp"
-# Przykład zakłada runtime prerelease (interfejsy Experimental); na stabilnym try_query zwraca NULL.
+# The sample assumes a prerelease runtime (Experimental interfaces); on stable try_query returns NULL.
 sed -i 's/^    CHECK_FAILURE(exp_env15->add_RestartRequested($/    if (exp_env15) CHECK_FAILURE(exp_env15->add_RestartRequested(/' "$SRC/AppWindow.cpp"
 
 echo "== widl HostObjectSample.idl"
-# Biblioteka typów (-t) wywraca widl na tym IDL - pomijamy (dotyczy tylko scenariusza obiektów hosta).
+# The type library (-t) crashes widl on this IDL; skipped (only the host object scenario needs it).
 $WIDL -I"$REF/wine/include" -I"$REF/wine-build/include" -m64 \
       -h -H "$OUT/HostObjectSample_h.h" -u -U "$OUT/HostObjectSample_i.c" "$SRC/HostObjectSample.idl"
 
-echo "== wrc (llvm-rc nie parsuje tego .rc)"
+echo "== wrc (llvm-rc cannot parse this .rc)"
 $REF/wine-build/tools/wrc/wrc --nostdinc -I"$SRC" -I"$REF/wine/include" -I"$REF/wine-build/include" \
       -o "$OUT/obj/WebView2APISample.res" "$SRC/WebView2APISample.rc"
 
-echo "== clang-cl ($(ls "$SRC"/*.cpp | wc -l) plików)"
+echo "== clang-cl ($(ls "$SRC"/*.cpp | wc -l) files)"
 compile() {
     local f=$1 o
     o="$OUT/obj/$(basename "${f%.*}").obj"
     [ "$o" -nt "$f" ] && return 0
-    # TextInputDialog.h deklaruje `friend DlgProcStatic` -> każdy plik eksportowałby swoją "statyczną"
-    # wersję pod tą samą nazwą (MSVC toleruje, lld nie); unikalna nazwa per plik.
+    # TextInputDialog.h declares `friend DlgProcStatic`, so every file would export its own "static"
+    # copy under the same name (MSVC tolerates it, lld does not); make the name unique per file.
     $LLVM/clang-cl /nologo /c /std:c++20 /Zc:char8_t- /MT /EHsc /O1 /Zc:__cplusplus /utf-8 -Wno-everything $DEFS $SYS \
         /D"DlgProcStatic=DlgProcStatic_$(basename "${f%.*}")" \
-        /I "$SRC" /I "$OUT" /I "$WV2/include" /I "$WIL" /Fo"$o" "$f" || { echo "BŁĄD: $f"; return 1; }
+        /I "$SRC" /I "$OUT" /I "$WV2/include" /I "$WIL" /Fo"$o" "$f" || { echo "ERROR: $f"; return 1; }
 }
 export -f compile; export LLVM SYS DEFS SRC OUT WV2 WIL
 ls "$SRC"/*.cpp "$OUT/HostObjectSample_i.c" | xargs -P "$(nproc)" -I{} bash -c 'compile {}'

@@ -1,4 +1,4 @@
-WV2_SDK ?= $(error ustaw WV2_SDK na rozpakowany NuGet Microsoft.Web.WebView2)
+WV2_SDK ?= $(error set WV2_SDK to the unpacked Microsoft.Web.WebView2 NuGet package)
 CXX = x86_64-w64-mingw32-g++
 all: popuptest.exe WebView2Loader.dll
 popuptest.exe: popuptest.cc

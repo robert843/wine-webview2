@@ -1,6 +1,6 @@
-//! WebResourceRequested po stronie serwera: żądanie, odpowiedź, nagłówki, deferral, argumenty.
-//! Żądanie wstrzymuje resources.rs (OnBeforeResourceLoad, CONTINUE_ASYNC); tu, na wątku UI,
-//! wołamy handlery aplikacji i po ich decyzji (albo Complete() deferrala) zwalniamy żądanie.
+//! WebResourceRequested objects: request, response, headers, deferral, event args.
+//! resources.rs holds the request (OnBeforeResourceLoad, CONTINUE_ASYNC); here, on the UI thread,
+//! the app handlers run and the request is released after they decide (or the deferral completes).
 
 use crate::api_gen::*;
 use crate::resources::AppResponse;
@@ -66,7 +66,7 @@ impl ICoreWebView2HttpHeadersCollectionIteratorImpl for HeaderIterator {
     }
 }
 
-// ---------- kolekcje nagłówków ----------
+// ---------- header collections ----------
 
 pub struct RequestHeaders(Headers);
 
@@ -120,7 +120,7 @@ impl ICoreWebView2HttpResponseHeadersImpl for ResponseHeaders {
     }
 }
 
-// ---------- żądanie i odpowiedź ----------
+// ---------- request and response ----------
 
 pub struct Request {
     uri: RefCell<String>,
@@ -204,7 +204,7 @@ impl ICoreWebView2WebResourceResponseImpl for Response {
     }
 }
 
-// ---------- zdarzenie ----------
+// ---------- event ----------
 
 struct ResourceEvent {
     id: u64,
@@ -217,7 +217,7 @@ struct ResourceEvent {
 }
 
 impl ResourceEvent {
-    /// Zwalnia wstrzymane żądanie z odpowiedzią aplikacji (albo do sieci, gdy jej brak).
+    /// Releases the held request with the app's response, or to the network if there is none.
     fn finish(&self) {
         if self.finished.replace(true) {
             return;
@@ -250,7 +250,7 @@ pub struct Deferral(Rc<ResourceEvent>);
 impl ICoreWebView2DeferralImpl for Deferral {
     fn Complete(&self, _ctx: &mut Ctx) -> WvResult<()> {
         if self.0.dispatching.get() {
-            self.0.deferred.set(false); // zakończone jeszcze w handlerze
+            self.0.deferred.set(false); // completed while still inside the handler
         } else {
             self.0.finish();
         }
@@ -283,7 +283,7 @@ impl ICoreWebView2WebResourceRequestedEventArgs2Impl for Args {
     }
 }
 
-/// Wątek UI: wstrzymane żądanie `id` widoku `view`. Woła handlery i decyduje.
+/// UI thread: runs the app handlers for held request `id` of view `view`.
 #[allow(clippy::too_many_arguments)]
 pub fn handle_request(view: u32, id: u64, context: u32, url: String, method: String, headers: String, body: Vec<u8>) {
     let Some((handlers, sender)) = crate::webview::resource_handlers(view) else {

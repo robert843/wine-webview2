@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Dowiązania z wielkością liter, jakiej używają #include (xwin zapisuje część nagłówków
-małymi literami, a system plików Linuksa rozróżnia wielkość liter).
-    fix-case.py <katalog_include> [<katalog ze źródłami>...]"""
+"""Creates symlinks with the letter case used by #include (xwin writes some headers in
+lower case and Linux file systems are case sensitive).
+    fix-case.py <include_dir> [<source_dir>...]"""
 import os, re, sys
 
 root = sys.argv[1]
@@ -18,7 +18,7 @@ for top in [root] + sys.argv[2:]:
                 for m in pattern.finditer(data):
                     wanted.add(m.group(1).decode(errors="ignore").replace("\\", "/"))
 
-# indeks: ścieżka małymi literami -> istniejąca ścieżka
+# lower-case path -> existing path
 index = {}
 for dirpath, _, files in os.walk(root):
     for f in files:
@@ -40,4 +40,4 @@ for inc in wanted:
         made += 1
     except FileExistsError:
         pass
-print(f"fix-case: {made} dowiązań w {root}")
+print(f"fix-case: {made} symlinks in {root}")

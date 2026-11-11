@@ -1,5 +1,5 @@
 #!/bin/bash
-# Ranking wywołań metod WebView2 z logów (WINEDEBUG=+webview2): ile razy i w ilu aplikacjach.
+# Ranks WebView2 method calls in logs (WINEDEBUG=+webview2): call count and number of apps.
 #   tests/rank.sh build/logs/*.log
 set -euo pipefail
 for f in "$@"; do

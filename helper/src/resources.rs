@@ -1,10 +1,10 @@
-//! WebResourceRequested: przechwytywanie żądań pasujących do filtrów aplikacji.
+//! WebResourceRequested: intercepting requests that match the app's filters.
 //!
-//! Przebieg (wątek IO CEF):
-//!   resource_request_handler - czy URL/kontekst pasuje do filtrów widoku → nasz handler
-//!   on_before_resource_load  - żądanie wstrzymane (CONTINUE_ASYNC), handlery aplikacji na wątku UI
-//!   (webresource.rs; po decyzji albo Complete() deferrala) → callback.cont()
-//!   resource_handler         - odpowiedź aplikacji albo None (żądanie idzie do sieci, jak w WebView2)
+//! Flow (CEF IO thread):
+//!   resource_request_handler - URL/context matches the view's filters -> our handler
+//!   on_before_resource_load  - request held (CONTINUE_ASYNC), app handlers run on the UI thread
+//!   (webresource.rs; after their decision or deferral Complete()) -> callback.cont()
+//!   resource_handler         - the app's response, or None (request goes to the network, as in WebView2)
 
 use crate::ipc::Channel;
 use cef::rc::Rc as _;
@@ -13,16 +13,16 @@ use std::collections::HashMap;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex, OnceLock};
 
-/// Kanał do DLL używany z wątków innych niż UI (sendmsg na SOCK_SEQPACKET jest atomowy).
+/// Channel to the DLL usable from non-UI threads (sendmsg on SOCK_SEQPACKET is atomic).
 static SENDER: OnceLock<Channel> = OnceLock::new();
-/// Filtry per widok: (wzorzec, kontekst COREWEBVIEW2_WEB_RESOURCE_CONTEXT).
+/// Per-view filters: (pattern, COREWEBVIEW2_WEB_RESOURCE_CONTEXT).
 static FILTERS: Mutex<Option<HashMap<u32, Vec<(String, u32)>>>> = Mutex::new(None);
 static PENDING: Mutex<Option<HashMap<u64, Arc<Mutex<RequestState>>>>> = Mutex::new(None);
 static NEXT_ID: AtomicU64 = AtomicU64::new(1);
 
 const CONTEXT_ALL: u32 = 0;
 
-/// Bieżąca nawigacja ramki głównej per widok: (id, zakończona).
+/// Current main-frame navigation per view: (id, completed).
 static NAVIGATIONS: Mutex<Option<HashMap<u32, (u64, bool)>>> = Mutex::new(None);
 static NEXT_NAVIGATION: AtomicU64 = AtomicU64::new(1);
 
@@ -40,12 +40,11 @@ pub fn begin_navigation(view: u32) -> u64 {
     id
 }
 
-/// Trwająca (niezakończona) nawigacja widoku.
 pub fn active_navigation(view: u32) -> Option<u64> {
     NAVIGATIONS.lock().unwrap().as_ref()?.get(&view).filter(|n| !n.1).map(|n| n.0)
 }
 
-/// Oznacza bieżącą nawigację jako zakończoną; None, jeśli już była zakończona.
+/// Marks the current navigation completed; None if it already was.
 pub fn complete_navigation(view: u32) -> Option<u64> {
     let mut n = NAVIGATIONS.lock().unwrap();
     let entry = n.as_mut()?.get_mut(&view)?;
@@ -74,9 +73,9 @@ pub fn remove_filter(view: u32, pattern: &str, context: u32) {
 }
 
 // ---------- Settings.UserAgent ----------
-// Emulation.setUserAgentOverride (DevTools) obejmuje tylko ramkę główną; ramki z innych witryn
-// (osobne procesy renderera) wysyłałyby domyślny UA - np. logowanie FFXIV odrzuca wtedy formularz.
-// Dlatego własny UA wstawiamy też w nagłówek każdego żądania widoku (jak WebView2).
+// Emulation.setUserAgentOverride (DevTools) only covers the main frame; cross-site frames (other
+// renderer processes) would send the default UA, e.g. the FFXIV login then rejects the form.
+// So the custom UA is also set on every request header of the view, as WebView2 does.
 static USER_AGENTS: Mutex<Option<HashMap<u32, String>>> = Mutex::new(None);
 
 pub fn set_user_agent(view: u32, ua: Option<String>) {
@@ -106,7 +105,7 @@ pub fn remove_view(view: u32) {
 
 // ---------- SetVirtualHostNameToFolderMapping ----------
 
-/// Widok -> (host małymi literami, folder uniksowy).
+/// View -> (lowercase host, unix folder).
 static VIRTUAL_HOSTS: Mutex<Option<HashMap<u32, Vec<(String, std::path::PathBuf)>>>> = Mutex::new(None);
 
 pub fn set_virtual_host(view: u32, host: &str, folder: std::path::PathBuf) {
@@ -142,7 +141,7 @@ fn percent_decode(s: &str) -> String {
     String::from_utf8_lossy(&out).into_owned()
 }
 
-/// Plik dla URL-a pod zmapowanym hostem (None = host niezmapowany).
+/// File for a URL under a mapped host (outer None = host not mapped, inner None = denied).
 fn virtual_host_file(view: u32, url: &str) -> Option<Option<std::path::PathBuf>> {
     let rest = url.strip_prefix("https://").or_else(|| url.strip_prefix("http://"))?;
     let (host, path) = rest.split_once('/').unwrap_or((rest, ""));
@@ -153,7 +152,7 @@ fn virtual_host_file(view: u32, url: &str) -> Option<Option<std::path::PathBuf>>
     for part in percent_decode(path).split(['/', '\\']) {
         match part {
             "" | "." => {}
-            ".." => return Some(None), // poza folder - odmowa
+            ".." => return Some(None), // escapes the folder - deny
             p => file.push(p),
         }
     }
@@ -202,7 +201,7 @@ fn file_response(file: Option<std::path::PathBuf>) -> AppResponse {
     }
 }
 
-/// Dopasowanie wzorca WebView2: `*` = dowolny ciąg, `?` = jeden znak.
+/// WebView2 filter pattern: `*` matches any run, `?` a single character.
 fn wildcard_match(pattern: &[char], text: &[char]) -> bool {
     let (mut p, mut t, mut star, mut mark) = (0, 0, None, 0);
     while t < text.len() {
@@ -263,10 +262,10 @@ pub struct AppResponse {
 #[derive(Default)]
 struct RequestState {
     callback: Option<SendCallback>,
-    response: Option<AppResponse>,     // gotowa odpowiedź aplikacji
+    response: Option<AppResponse>,     // app response, once decided
 }
 
-/// Callback CEF jest bezpieczny wątkowo (refcount atomowy, cont() z dowolnego wątku).
+/// CEF callbacks are thread-safe (atomic refcount, cont() callable from any thread).
 struct SendCallback(Callback);
 unsafe impl Send for SendCallback {}
 
@@ -291,7 +290,7 @@ fn request_body(request: &Request) -> Vec<u8> {
         }
         return body;
     };
-    // cef-rs przekazuje len() wektora jako rozmiar tablicy C - trzeba go wcześniej wypełnić.
+    // cef-rs passes the Vec's len() as the C array size, so it must be pre-filled.
     let mut elements: Vec<Option<PostDataElement>> = (0..post.element_count()).map(|_| None).collect();
     post.elements(Some(&mut elements));
     if debug {
@@ -318,7 +317,7 @@ fn request_body(request: &Request) -> Vec<u8> {
 }
 
 
-// ---------- polecenia z DLL (wątek UI) ----------
+// ---------- commands from the DLL (UI thread) ----------
 
 pub fn finish(id: u64, response: Option<AppResponse>) {
     let Some(state) = PENDING.lock().unwrap().as_mut().and_then(|p| p.remove(&id)) else { return };
@@ -329,7 +328,7 @@ pub fn finish(id: u64, response: Option<AppResponse>) {
     }
 }
 
-// ---------- handlery CEF (wątek IO) ----------
+// ---------- CEF handlers (IO thread) ----------
 
 #[derive(Clone)]
 pub struct ViewRequests {
@@ -359,7 +358,7 @@ wrap_request_handler! {
                 return 1;
             }
             let id = begin_navigation(self.handler.view);
-            // Synchronicznie: decyzja aplikacji (Cancel) zapada, zanim żądanie wyjdzie.
+            // Synchronous so the app's Cancel decision is made before the request goes out.
             let cancel = crate::webview::on_navigation_starting(self.handler.view, id, user_gesture != 0, is_redirect != 0, &url);
             if cancel {
                 complete_navigation(self.handler.view);
@@ -381,7 +380,7 @@ wrap_request_handler! {
             let url = CefString::from(&request.url()).to_string();
             let user_agent = user_agent(self.handler.view);
             if !matches(self.handler.view, &url, web_resource_context(request)) {
-                // Zmapowany host wirtualny: plik z dysku, bez udziału aplikacji.
+                // Mapped virtual host: served from disk without involving the app.
                 if let Some(file) = virtual_host_file(self.handler.view, &url) {
                     let state = RequestState { callback: None, response: Some(file_response(file)) };
                     return Some(ResourceRequestHandlerBuilder::new(InterceptedRequest {
@@ -392,7 +391,7 @@ wrap_request_handler! {
                         user_agent: None,
                     }));
                 }
-                // Własny UA aplikacji: tylko nagłówek, żądanie idzie normalnie do sieci.
+                // Custom UA only: set the header, the request goes to the network as usual.
                 user_agent.as_ref()?;
                 return Some(ResourceRequestHandlerBuilder::new(InterceptedRequest {
                     view: self.handler.view,
@@ -417,9 +416,9 @@ wrap_request_handler! {
 struct InterceptedRequest {
     view: u32,
     state: Arc<Mutex<RequestState>>,
-    /// Odpowiedź już gotowa (host wirtualny): bez pytania aplikacji.
+    /// Response already prepared (virtual host); the app is not asked.
     serve_only: bool,
-    /// Tylko nagłówek User-Agent (Settings.UserAgent), bez udziału aplikacji.
+    /// Only set the User-Agent header (Settings.UserAgent); the app is not asked.
     pass_through: bool,
     user_agent: Option<String>,
 }
@@ -457,7 +456,7 @@ wrap_resource_request_handler! {
             self.req.state.lock().unwrap().callback = Some(SendCallback(callback.clone()));
             PENDING.lock().unwrap().get_or_insert_with(HashMap::new).insert(id, self.req.state.clone());
 
-            // Handlery aplikacji wołamy na wątku UI (webresource.rs); żądanie czeka.
+            // App handlers run on the UI thread (webresource.rs); the request waits.
             let (view, context) = (self.req.view, web_resource_context(request));
             crate::post_ui(move || crate::webresource::handle_request(view, id, context, url, method, headers, body));
             ReturnValue::CONTINUE_ASYNC

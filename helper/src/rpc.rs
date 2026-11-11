@@ -1,10 +1,10 @@
-#![allow(dead_code)] // część API zużyją kolejne przenoszone obiekty
+#![allow(dead_code)] // parts of the API are for objects not yet ported
 
-//! Serwer ogólnych wywołań COM (docs/architektura-proxy.md): tabela obiektów runtime'u,
-//! referencje do obiektów aplikacji, CALL/REPLY, INVOKE z zagnieżdżoną pętlą oczekiwania.
+//! Generic COM call server (docs/architektura-proxy.md): runtime object table, references to
+//! app objects, CALL/REPLY, and INVOKE with a nested wait loop.
 //!
-//! Cały stan żyje na wątku UI CEF. Wątek czytający wrzuca komunikaty do kolejki; opróżnia ją
-//! zadanie UI albo pętla oczekiwania synchronicznego INVOKE (model STA, bez zakleszczeń).
+//! All state lives on the CEF UI thread. The reader thread queues messages; they are drained by
+//! a UI task or by the wait loop of a synchronous INVOKE (STA model, no deadlocks).
 
 use crate::api_gen;
 use crate::protocol::*;
@@ -32,21 +32,21 @@ const OBJREF_NULL: u32 = 0;
 const OBJREF_RUNTIME: u32 = 1;
 const OBJREF_APP: u32 = 2;
 
-/// Obiekt runtime'u wywoływany przez pośrednika w DLL.
+/// Runtime object called through a proxy in the DLL.
 pub trait Dispatch {
     fn family(&self) -> u32;
     fn as_any(&self) -> &dyn Any;
     fn dispatch(&self, ctx: &mut Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) -> i32;
 }
 
-/// Uchwyt obiektu aplikacji; ostatnia kopia zwalnia go po stronie DLL.
+/// Handle to an app object; dropping the last copy releases it on the DLL side.
 pub struct AppHandle {
     pub id: u64,
 }
 
 impl Drop for AppHandle {
     fn drop(&mut self) {
-        // try_with: przy wyjściu z procesu tablica może być już zniszczona.
+        // try_with: the table may already be destroyed during process exit.
         let count = APPS.try_with(|a| a.try_borrow_mut().ok().and_then(|mut a| a.remove(&self.id)).map(|e| e.1)).ok().flatten();
         if let Some(count) = count {
             let payload = Writer::default().u64(self.id).u32(count).u32(0).0;
@@ -69,7 +69,7 @@ impl ObjRef {
     pub fn is_null(&self) -> bool {
         matches!(self, ObjRef::Null)
     }
-    /// Konkretny typ obiektu runtime'u (np. `ICoreWebView2_29Obj<WebView>`).
+    /// Concrete runtime object type, e.g. `ICoreWebView2_29Obj<WebView>`.
     pub fn downcast<T: 'static>(&self) -> Option<&T> {
         match self {
             ObjRef::Runtime(rc) => rc.as_any().downcast_ref::<T>(),
@@ -105,7 +105,7 @@ thread_local! {
     static NEXT_INVOKE: Cell<u64> = const { Cell::new(1) };
 }
 
-/// Obsługa obiektu 0 (korzeń) i komunikatów spoza RPC - dostarczane przez main.rs.
+/// Handlers for object 0 (root) and non-RPC messages, supplied by main.rs.
 pub type RootFn = fn(&mut Ctx, u32, &mut Reader, &mut Writer) -> i32;
 pub type MessageFn = fn(Message);
 static HANDLERS: Mutex<Option<(RootFn, MessageFn)>> = Mutex::new(None);
@@ -114,12 +114,12 @@ pub fn set_handlers(root: RootFn, other: MessageFn) {
     *HANDLERS.lock().unwrap() = Some((root, other));
 }
 
-// ---------- kolejka komunikatów (wątek czytający -> wątek UI) ----------
+// ---------- message queue (reader thread -> UI thread) ----------
 
 static QUEUE: Mutex<VecDeque<Option<Message>>> = Mutex::new(VecDeque::new());
 static QUEUE_CV: Condvar = Condvar::new();
 
-/// Wątek czytający: dokłada komunikat (None = koniec połączenia).
+/// Called from the reader thread; None means the connection ended.
 pub fn enqueue(msg: Option<Message>) {
     QUEUE.lock().unwrap().push_back(msg);
     QUEUE_CV.notify_all();
@@ -135,7 +135,7 @@ fn pop(timeout: Option<Duration>) -> Option<Option<Message>> {
     q.pop_front()
 }
 
-/// Zadanie UI: przetwarza wszystko, co czeka w kolejce. Zwraca false po końcu połączenia.
+/// UI task: processes everything queued. Returns false once the connection has ended.
 pub fn drain() -> bool {
     while let Some(msg) = pop(None) {
         match msg {
@@ -208,7 +208,7 @@ fn handle_call(payload: &[u8]) {
     crate::resources::send_event(EVT_REPLY, 0, &reply.0);
 }
 
-/// Token kontekstu wywołań (stan jest w thread_local wątku UI CEF).
+/// Call context token (the state itself is thread_local on the CEF UI thread).
 pub struct Ctx;
 
 impl Ctx {
@@ -218,7 +218,7 @@ impl Ctx {
         }
     }
 
-    /// Obiekt-zaślepka rodziny (dla domyślnych wyników).
+    /// Stub object of the given family, used for default results.
     pub fn stub(&mut self, family: u32) -> ObjRef {
         api_gen::make_stub(family).map(ObjRef::Runtime).unwrap_or_default()
     }
@@ -299,15 +299,15 @@ impl Ctx {
         call_id
     }
 
-    /// Wywołanie asynchroniczne metody obiektu aplikacji (kolejność zachowana).
+    /// Asynchronous call on an app object; ordering is preserved.
     pub fn invoke_async(&mut self, app: &AppRef, method: u32, args: Writer) {
         Self::send_invoke(app, method, args, CALL_ASYNC);
     }
 
-    /// Wywołanie synchroniczne: czeka na wynik, w międzyczasie obsługuje przychodzące komunikaty.
+    /// Synchronous call: waits for the result while processing incoming messages.
     pub fn invoke(&mut self, app: &AppRef, method: u32, args: Writer) -> WvResult<Vec<u8>> {
         if CALL_DEPTH.with(|d| d.get()) > 0 {
-            // Reguła z docs/architektura-proxy.md: DLL czeka na REPLY, nie obsłuży INVOKE.
+            // Per docs/architektura-proxy.md: the DLL is blocked waiting for REPLY and cannot serve an INVOKE.
             eprintln!("helper: synchronous invoke {method} inside a call, sending asynchronously");
             Self::send_invoke(app, method, args, CALL_ASYNC);
             return Err(E_FAIL);
@@ -322,7 +322,7 @@ impl Ctx {
             match pop(Some(Duration::from_millis(100))) {
                 Some(Some(m)) => process(m),
                 Some(None) => {
-                    enqueue(None); // koniec połączenia - niech zobaczy go też główna pętla
+                    enqueue(None); // re-queue end of connection so the main loop sees it too
                     return Err(E_FAIL);
                 }
                 None => {
@@ -336,7 +336,7 @@ impl Ctx {
     }
 }
 
-// ---------- kodowanie wartości ----------
+// ---------- value encoding ----------
 
 impl Writer {
     pub fn put_u32(&mut self, v: u32) {
@@ -363,7 +363,7 @@ impl Writer {
             None => self.put_u32(u32::MAX),
         }
     }
-    /// Struktura o stałym układzie (#[repr(C)], te same co w C).
+    /// Fixed-layout #[repr(C)] struct, identical to the C definition.
     pub fn put_pod<T: Copy>(&mut self, v: &T) {
         let bytes = unsafe { std::slice::from_raw_parts(v as *const T as *const u8, std::mem::size_of::<T>()) };
         self.0.extend_from_slice(bytes);

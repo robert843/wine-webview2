@@ -1,6 +1,6 @@
-// Test zgodności zdarzeń nawigacji WebView2. Wypisuje kolejność zdarzeń na stdout; ten sam plik
-// .exe ma dawać tę samą sekwencję na Windows z prawdziwym runtime'em i pod Wine z wine-webview2.
-//   1. NavigateToString(A)  2. NavigateToString(B)  3. GoBack  4. koniec
+// WebView2 navigation event conformance test. Prints the event order to stdout; the same .exe
+// must give the same sequence on Windows with the real runtime and under Wine with wine-webview2.
+//   1. NavigateToString(A)  2. NavigateToString(B)  3. GoBack  4. done
 #include <windows.h>
 #include <cstdio>
 #include <functional>
@@ -17,7 +17,7 @@ struct Handler : I {
     HRESULT STDMETHODCALLTYPE Invoke(A... a) override { return fn(a...); }
 };
 
-// IID_ICoreWebView2_2 (uuid z WebView2.idl)
+// IID_ICoreWebView2_2 (uuid from WebView2.idl)
 static const GUID iid_webview2_2 = {0x9E8F0CF8, 0xE670, 0x4B5E, {0xB2, 0xBC, 0x73, 0xE0, 0x61, 0xE3, 0x18, 0x4C}};
 static ICoreWebView2 *webview;
 static ICoreWebView2Controller *controller;
@@ -40,8 +40,8 @@ static void next_step() {
     step++;
     log("== step %d", step);
     switch (step) {
-    case 1: webview->NavigateToString(L"<title>Strona A</title><h1>A</h1>"); break;
-    case 2: webview->NavigateToString(L"<title>Strona B</title><h1>B</h1>"); break;
+    case 1: webview->NavigateToString(L"<title>Page A</title><h1>A</h1>"); break;
+    case 2: webview->NavigateToString(L"<title>Page B</title><h1>B</h1>"); break;
     case 3: webview->GoBack(); break;
     default: log("== done"); PostMessageW(hwnd, WM_CLOSE, 0, 0); break;
     }

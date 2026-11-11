@@ -1,11 +1,11 @@
-//! ICoreWebView2Settings w Ruście - pierwszy obiekt nowej architektury (docs/architektura-proxy.md).
+//! ICoreWebView2Settings implemented in the helper (see docs/architektura-proxy.md).
 
 use crate::api_gen::ICoreWebView2Settings9Impl;
 use crate::protocol::*;
 use crate::rpc::{Ctx, WvResult};
 use std::cell::{Cell, RefCell};
 
-/// Wartości domyślne jak w dokumentacji WebView2.
+/// Defaults follow the WebView2 documentation.
 pub struct Settings {
     pub view: u32,
     flags: Cell<u32>,

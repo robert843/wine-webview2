@@ -1,19 +1,13 @@
-//! gen-stubs: generuje szkielet logujący obiektów COM WebView2 w C (styl Wine).
+//! gen-stubs: generates WebView2 COM glue from Microsoft's IDL.
 //!
-//! Wejście:
-//!   - nagłówek wygenerowany przez widl z webview2.idl (dokładne sygnatury C, łańcuchy
-//!     dziedziczenia z grup `/*** X methods ***/` w strukturach `XVtbl`),
-//!   - sam webview2.idl (kierunek parametrów `[out]`, którego nagłówek nie zachowuje).
-//! Wyjście: stubs.c + stubs.h.
+//! Inputs: the widl-generated webview2.h (exact C signatures; inheritance chains come from the
+//! `/*** X methods ***/` groups in `XVtbl`) and webview2.idl itself (for `[out]`, which the
+//! header loses).
 //!
-//! Każda „rodzina” interfejsów implementowanych przez runtime (np. ICoreWebView2 … ICoreWebView2_29)
-//! dostaje jeden obiekt z vtable najnowszej wersji; QueryInterface zna cały łańcuch.
-//! Każda metoda loguje wywołanie (FIXME) i zwraca S_OK z wyzerowanymi parametrami wyjściowymi;
-//! parametry wyjściowe będące interfejsami runtime'u dostają nowy obiekt-zaślepkę, żeby aplikacja
-//! szła dalej i odsłaniała kolejne używane metody.
-//!
-//! Użycie: gen-stubs <webview2.h> <webview2.idl> <katalog_wyjściowy> [<api_gen.rs>]
-//! Z czwartym argumentem generuje też ogólnego pośrednika (proxy.rs, docs/architektura-proxy.md).
+//! Usage: gen-stubs <webview2.h> <webview2.idl> <out_dir> [<api_gen.rs>]
+//! With the 4th argument it generates the generic proxy (proxy.rs, docs/architektura-proxy.md).
+//! Without it, the legacy logging stubs (stubs.[ch]): one object per interface family with the
+//! newest vtable, every method logs FIXME and returns S_OK with zeroed/stub outputs.
 
 mod proxy;
 
@@ -51,7 +45,7 @@ fn die(msg: &str) -> ! {
     process::exit(1)
 }
 
-/// Dzieli po przecinkach na najwyższym poziomie zagnieżdżenia () i [].
+/// Splits on `sep` outside of () and [].
 fn split_top(s: &str, sep: char) -> Vec<String> {
     let mut out = Vec::new();
     let mut depth = 0i32;
@@ -75,7 +69,7 @@ fn split_top(s: &str, sep: char) -> Vec<String> {
     out
 }
 
-/// "const WCHAR *foo" -> (typ "const WCHAR *", nazwa "foo")
+/// "const WCHAR *foo" -> (type "const WCHAR *", name "foo")
 fn split_param(p: &str) -> Param {
     let p = p.split_whitespace().collect::<Vec<_>>().join(" ");
     let idx = p
@@ -109,7 +103,7 @@ fn strip_comments(s: &str) -> String {
     out
 }
 
-/// Parsuje struktury `typedef struct XVtbl { ... } XVtbl;` z nagłówka widl (część C, nie C++).
+/// Parses `typedef struct XVtbl { ... } XVtbl;` from the widl header (the C part, not C++).
 fn parse_header(h: &str) -> (Vec<Iface>, BTreeSet<String>) {
     let mut ifaces = Vec::new();
     let mut structs = BTreeSet::new();
@@ -131,7 +125,7 @@ fn parse_header(h: &str) -> (Vec<Iface>, BTreeSet<String>) {
             continue;
         }
         let end_marker = format!("}} {name};");
-        let end = h[start..].find(&end_marker).unwrap_or_else(|| die(&format!("brak końca {name}"))) + start;
+        let end = h[start..].find(&end_marker).unwrap_or_else(|| die(&format!("no end of {name}"))) + start;
         let body = &h[start..end];
         let mut groups: Vec<Group> = Vec::new();
         for chunk in body.split("/*** ").skip(1) {
@@ -145,7 +139,7 @@ fn parse_header(h: &str) -> (Vec<Iface>, BTreeSet<String>) {
                 let args = args.strip_suffix(')').unwrap_or(args);
                 let mut params: Vec<Param> = split_top(args, ',').iter().map(|p| split_param(p)).collect();
                 if params.is_empty() || params[0].name != "This" {
-                    die(&format!("{iname}::{mname}: brak This"));
+                    die(&format!("{iname}::{mname}: missing This"));
                 }
                 params.remove(0);
                 methods.push(Method { ret, name: mname.trim().to_string(), params });
@@ -158,7 +152,7 @@ fn parse_header(h: &str) -> (Vec<Iface>, BTreeSet<String>) {
     (ifaces, structs)
 }
 
-/// Z IDL: dla każdego interfejsu lista metod -> lista flag `[out]` parametrów.
+/// From the IDL: per interface, list of (method, `[out]` flag per parameter).
 fn parse_idl(idl: &str) -> HashMap<String, Vec<(String, Vec<bool>)>> {
     let src = strip_comments(idl);
     let mut out = HashMap::new();
@@ -171,7 +165,7 @@ fn parse_idl(idl: &str) -> HashMap<String, Vec<(String, Vec<bool>)>> {
             None => break,
         };
         if src.as_bytes()[header_end] == b';' {
-            continue; // deklaracja zapowiadająca
+            continue; // forward declaration
         }
         let name: String = src[start..].chars().take_while(|c| c.is_alphanumeric() || *c == '_').collect();
         let body_end = src[header_end..].find('}').unwrap() + header_end;
@@ -205,7 +199,7 @@ fn parse_idl(idl: &str) -> HashMap<String, Vec<(String, Vec<bool>)>> {
     out
 }
 
-/// Interfejsy implementowane przez APLIKACJĘ (nie przez runtime) - nie generujemy dla nich obiektów.
+/// Interfaces implemented by the application, not by the runtime.
 fn implemented_by_app(name: &str) -> bool {
     name.ends_with("Handler")
         || name.starts_with("ICoreWebView2EnvironmentOptions")
@@ -250,7 +244,7 @@ fn classify(ty: &str, structs: &BTreeSet<String>) -> Kind {
 fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() != 4 && args.len() != 5 {
-        die("użycie: gen-stubs <webview2.h> <webview2.idl> <katalog_wyjściowy> [<api_gen.rs>]");
+        die("usage: gen-stubs <webview2.h> <webview2.idl> <out_dir> [<api_gen.rs>]");
     }
     let header = fs::read_to_string(&args[1]).unwrap_or_else(|e| die(&format!("{}: {e}", args[1])));
     let idl = fs::read_to_string(&args[2]).unwrap_or_else(|e| die(&format!("{}: {e}", args[2])));
@@ -260,7 +254,7 @@ fn main() {
     let idl_methods = parse_idl(&idl);
     let by_name: HashMap<&str, &Iface> = ifaces.iter().map(|i| (i.name.as_str(), i)).collect();
 
-    // Liście = interfejsy, które nie są przodkiem żadnego innego.
+    // Leaves = interfaces that are nobody's ancestor.
     let mut ancestors: BTreeSet<&str> = BTreeSet::new();
     for i in &ifaces {
         for g in &i.groups {
@@ -274,7 +268,7 @@ fn main() {
         .filter(|i| !ancestors.contains(i.name.as_str()) && !implemented_by_app(&i.name))
         .collect();
 
-    // Interfejs -> rodzina (liść), do tworzenia obiektów dla parametrów wyjściowych.
+    // Interface -> family (leaf), for creating objects for [out] parameters.
     let mut family_of: BTreeMap<&str, &str> = BTreeMap::new();
     for l in &leaves {
         for g in &l.groups {
@@ -282,22 +276,22 @@ fn main() {
                 continue;
             }
             if let Some(prev) = family_of.insert(&g.declaring, &l.name) {
-                die(&format!("{} należy do dwóch rodzin: {prev} i {}", g.declaring, l.name));
+                die(&format!("{} belongs to two families: {prev} and {}", g.declaring, l.name));
             }
         }
     }
 
-    // Sprawdzenie zgodności nagłówek <-> IDL i zebranie flag [out].
+    // Cross-check header against IDL and collect [out] flags.
     let mut out_flags: HashMap<(String, String), Vec<bool>> = HashMap::new();
     for i in &ifaces {
         let Some(own) = i.groups.iter().find(|g| g.declaring == i.name) else { continue };
-        let idl_m = idl_methods.get(&i.name).unwrap_or_else(|| die(&format!("{} brak w IDL", i.name)));
+        let idl_m = idl_methods.get(&i.name).unwrap_or_else(|| die(&format!("{} missing from IDL", i.name)));
         if idl_m.len() != own.methods.len() {
-            die(&format!("{}: {} metod w nagłówku, {} w IDL", i.name, own.methods.len(), idl_m.len()));
+            die(&format!("{}: {} methods in header, {} in IDL", i.name, own.methods.len(), idl_m.len()));
         }
         for (m, (iname, flags)) in own.methods.iter().zip(idl_m) {
             if &m.name != iname || flags.len() != m.params.len() {
-                die(&format!("{}: niezgodność {} / {}", i.name, m.name, iname));
+                die(&format!("{}: mismatch {} / {}", i.name, m.name, iname));
             }
             out_flags.insert((i.name.clone(), m.name.clone()), flags.clone());
         }
@@ -307,7 +301,7 @@ fn main() {
         let app_ifaces: Vec<&Iface> =
             ifaces.iter().filter(|i| implemented_by_app(&i.name) && i.name != "IUnknown").collect();
         proxy::generate(&ifaces, &out_flags, &leaves, &app_ifaces, outdir, rust_file);
-        // Architektura v8: obiekty żyją w pomocniku, zaślepki C (stubs.c) nie są już potrzebne.
+        // Since protocol v8 objects live in the helper; the C stubs are not needed.
         return;
     }
 
@@ -315,17 +309,17 @@ fn main() {
     let mut h = String::new();
     let total_methods: usize = leaves.iter().map(|l| l.groups.iter().map(|g| g.methods.len()).sum::<usize>()).sum();
 
-    writeln!(h, "/* Wygenerowane przez tools/gen-stubs - NIE EDYTOWAĆ ręcznie. */").unwrap();
+    writeln!(h, "/* Generated by tools/gen-stubs - do not edit. */").unwrap();
     writeln!(h, "#ifndef __WEBVIEW2_STUBS_H\n#define __WEBVIEW2_STUBS_H\n").unwrap();
     writeln!(h, "struct stub_family\n{{\n    const char *name;\n    const void *vtbl;\n    const IID *const *iids;\n}};\n").unwrap();
-    writeln!(h, "/* Wspólny układ obiektu-zaślepki; `data` do użytku ręcznie napisanych nadpisań metod. */").unwrap();
+    writeln!(h, "/* Common stub object layout; `data` is for hand-written method overrides. */").unwrap();
     writeln!(h, "struct stub_object\n{{\n    const void *vtbl;\n    LONG ref;\n    const struct stub_family *family;\n    void *data;\n    void (*destroy)(struct stub_object *obj);\n}};\n").unwrap();
-    writeln!(h, "/* Tworzy obiekt-zaślepkę rodziny; zwraca wskaźnik na interfejs (ref = 1) albo NULL. */").unwrap();
+    writeln!(h, "/* Creates a stub object of the family; returns an interface pointer (ref = 1) or NULL. */").unwrap();
     writeln!(h, "void *stub_create(const struct stub_family *family);\n").unwrap();
 
-    writeln!(c, "/*\n * Szkielet logujący WebView2 - wygenerowany przez tools/gen-stubs, NIE EDYTOWAĆ ręcznie.").unwrap();
-    writeln!(c, " * Rodzin: {}, metod (z IUnknown): {}.\n *", leaves.len(), total_methods).unwrap();
-    writeln!(c, " * Każda metoda loguje FIXME i zwraca S_OK z wyzerowanymi parametrami wyjściowymi.").unwrap();
+    writeln!(c, "/*\n * WebView2 logging stubs - generated by tools/gen-stubs, do not edit.").unwrap();
+    writeln!(c, " * Families: {}, methods (incl. IUnknown): {}.\n *", leaves.len(), total_methods).unwrap();
+    writeln!(c, " * Every method logs FIXME and returns S_OK with zeroed output parameters.").unwrap();
     writeln!(c, " */\n").unwrap();
     c.push_str(PRELUDE);
     let invokers_at = c.len();
@@ -333,7 +327,6 @@ fn main() {
 
     for l in &leaves {
         let leaf = &l.name;
-        // tablica IID
         write!(c, "\n/* ===== {leaf} ===== */\n\nstatic const IID *const {leaf}_iids[] =\n{{\n    &IID_IUnknown,\n").unwrap();
         for g in l.groups.iter().filter(|g| g.declaring != "IUnknown") {
             writeln!(c, "    &IID_{},", g.declaring).unwrap();
@@ -366,7 +359,7 @@ fn main() {
         writeln!(h, "extern const struct stub_family stub_family_{leaf};").unwrap();
     }
     writeln!(h, "\n#endif /* __WEBVIEW2_STUBS_H */").unwrap();
-    let mut inv_code = String::from("\n/* ===== wywołania handlerów zakończenia ===== */\n");
+    let mut inv_code = String::from("\n/* ===== completion handler invokers ===== */\n");
     for code in invokers.values() {
         inv_code.push_str(code);
     }
@@ -374,7 +367,7 @@ fn main() {
 
     fs::write(format!("{outdir}/stubs.c"), c).unwrap();
     fs::write(format!("{outdir}/stubs.h"), h).unwrap();
-    eprintln!("gen-stubs: {} rodzin, {} metod -> {outdir}/stubs.[ch]", leaves.len(), total_methods);
+    eprintln!("gen-stubs: {} families, {} methods -> {outdir}/stubs.[ch]", leaves.len(), total_methods);
     for l in &leaves {
         eprintln!("  {}", l.name);
     }
@@ -399,7 +392,7 @@ fn gen_method(
     }
     write!(c, "\nstatic {} STDMETHODCALLTYPE {fname}({sig})\n{{\n", m.ret).unwrap();
 
-    // FIXME z parametrami wejściowymi
+    // FIXME trace with the input parameters
     let mut fmt = String::from("iface %p");
     let mut vals = String::from("iface");
     for (p, &is_out) in m.params.iter().zip(outs) {
@@ -425,14 +418,13 @@ fn gen_method(
     }
     writeln!(c, "    FIXME(\"{fmt} stub!\\n\", {vals});").unwrap();
 
-    // parametry wyjściowe
     let is_add = m.name.starts_with("add_");
     for (p, &is_out) in m.params.iter().zip(outs) {
         if !is_out {
             continue;
         }
         let n = &p.name;
-        let base = p.ty.strip_suffix('*').unwrap_or_else(|| die(&format!("{fname}: [out] bez wskaźnika"))).trim();
+        let base = p.ty.strip_suffix('*').unwrap_or_else(|| die(&format!("{fname}: [out] without a pointer"))).trim();
         if is_add && base == "EventRegistrationToken" {
             writeln!(c, "    if ({n}) {n}->value = stub_next_token();").unwrap();
         } else if base == "LPWSTR" {
@@ -448,7 +440,7 @@ fn gen_method(
             writeln!(c, "    if ({n}) memset({n}, 0, sizeof(*{n}));").unwrap();
         }
     }
-    // handlery zakończenia: wywołanie asynchroniczne z S_OK i pustym wynikiem
+    // Completion handlers: invoke asynchronously with S_OK and an empty result.
     for (p, &is_out) in m.params.iter().zip(outs) {
         let Some(hname) = p.ty.strip_suffix('*').map(str::trim) else { continue };
         if is_out || !hname.ends_with("CompletedHandler") {
@@ -464,20 +456,20 @@ fn gen_method(
     writeln!(c, "    return {ret};\n}}").unwrap();
 }
 
-/// Funkcja wołająca `handler->Invoke(S_OK, <puste wyniki>)` dla danego typu handlera.
+/// Emits a function calling `handler->Invoke(S_OK, <empty results>)` for a handler type.
 fn gen_invoker(
     hname: &str,
     structs: &BTreeSet<String>,
     family_of: &BTreeMap<&str, &str>,
     by_name: &HashMap<&str, &Iface>,
 ) -> String {
-    let h = by_name.get(hname).unwrap_or_else(|| die(&format!("brak handlera {hname}")));
+    let h = by_name.get(hname).unwrap_or_else(|| die(&format!("no handler {hname}")));
     let inv = h
         .groups
         .iter()
         .flat_map(|g| g.methods.iter())
         .find(|m| m.name == "Invoke")
-        .unwrap_or_else(|| die(&format!("{hname}: brak Invoke")));
+        .unwrap_or_else(|| die(&format!("{hname}: no Invoke")));
     let mut decls = String::new();
     let mut args = String::new();
     let mut cleanup = String::new();

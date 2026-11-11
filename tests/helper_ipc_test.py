@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Test protokołu pomocnika bez Wine: udaje stronę uniksową EmbeddedBrowserWebView.
+"""Tests the helper protocol without Wine by acting as the EmbeddedBrowserWebView unix side.
 
-    tests/helper_ipc_test.py <wine-webview2-helper> <katalog CEF> <wyjście.png>
+    tests/helper_ipc_test.py <wine-webview2-helper> <cef_dir> <out.png>
 """
 import mmap
 import os
@@ -20,7 +20,7 @@ INLINE_MAX = 64 * 1024
 
 
 def send(sock, ty, view, payload=b""):
-    if len(payload) > INLINE_MAX:  # memfd_test: duża treść w zapieczętowanym memfd
+    if len(payload) > INLINE_MAX:  # large payloads go in a memfd
         fd = os.memfd_create("test-msg", os.MFD_CLOEXEC)
         os.write(fd, payload)
         socket.send_fds(sock, [struct.pack("<IIII", ty, 16 + len(payload), view, 1)], [fd])
@@ -61,8 +61,8 @@ def main():
     print("hello ok, helper pid", struct.unpack_from("<II", payload)[1])
 
     send(parent, CMD_CREATE_VIEW, 1, struct.pack("<IIII", 640, 400, 100, 0))
-    html = ("<body style='background:#1b5e20;color:#fff;font:36px sans-serif'><h1>IPC ✔ zażółć</h1>"
-            + "<!--" + "x" * 200000 + "--></body>")  # > 64 KB: test memfd
+    html = ("<body style='background:#1b5e20;color:#fff;font:36px sans-serif'><h1>IPC ✔ Grüße, ñ, 日本</h1>"
+            + "<!--" + "x" * 200000 + "--></body>")  # > 64 KB: exercises the memfd path
     buf = None
     loaded = False
     frames = 0
