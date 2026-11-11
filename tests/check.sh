@@ -67,6 +67,16 @@ check menutest "$A/menutest/menutest.exe" 90 "0" \
     'context menu: none' \
     '^done'
 
+check apitest "$A/apitest/apitest.exe" 90 "0" \
+    'UserDataFolder set=1' \
+    'ControllerOptions name=apitest private=1' \
+    'Profile name=Default' \
+    '-> "dark=true"' \
+    'ZoomFactorChanged 1.50' \
+    '-> "dpr=1.5"' \
+    '^GotFocus' \
+    '^done'
+
 # hello runs until closed: the timeout ending it is expected.
 check hello "$A/hello/hello-loader.exe" 40 "0 124" \
     'bind called with \["ping"\]'

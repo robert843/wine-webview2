@@ -215,7 +215,15 @@ HRESULT WINAPI CreateWebViewEnvironmentWithOptionsInternal(BOOLEAN check_running
     {
         struct wv2_buffer args = {0};
         struct wv2_reader ret;
+        WCHAR default_dir[MAX_PATH + 16];
 
+        /* Like WebView2: without a user data folder, "<exe path>.WebView2" next to the executable. */
+        if (!user_data_dir || !*user_data_dir)
+        {
+            DWORD len = GetModuleFileNameW(NULL, default_dir, MAX_PATH);
+            wcscpy(default_dir + len, L".WebView2");
+            user_data_dir = default_dir;
+        }
         wv2_put_str(&args, user_data_dir);
         wv2_put_iface(&args, options);
         if (SUCCEEDED(ctx->hr = proxy_call_root(WV2_ROOT_CREATE_ENVIRONMENT, &args, &ret)))

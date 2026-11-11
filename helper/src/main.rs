@@ -299,6 +299,10 @@ wrap_client! {
             Some(ViewLoadHandlerBuilder::new(self.client.clone()))
         }
 
+        fn focus_handler(&self) -> Option<FocusHandler> {
+            Some(ViewFocusHandlerBuilder::new(self.client.clone()))
+        }
+
         fn display_handler(&self) -> Option<DisplayHandler> {
             Some(ViewDisplayHandlerBuilder::new(self.client.clone()))
         }
@@ -542,6 +546,10 @@ wrap_display_handler! {
             }
         }
 
+        fn on_fullscreen_mode_change(&self, _browser: Option<&mut Browser>, fullscreen: ::std::os::raw::c_int) {
+            webview::on_fullscreen_changed(self.client.view(), fullscreen != 0);
+        }
+
         fn on_title_change(&self, _browser: Option<&mut Browser>, title: Option<&CefString>) {
             let title = title.map(|t| t.to_string()).unwrap_or_default();
             webview::on_title_changed(self.client.view(), &title);
@@ -734,6 +742,7 @@ fn root_call(ctx: &mut rpc::Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) 
         rpc::ROOT_CREATE_ENVIRONMENT => {
             let user_data_dir = rd.str_opt().unwrap_or_default();
             let _options = ctx.read_objref(rd);
+            webview::set_user_data_dir(&user_data_dir);
             let env = webview::Environment { user_data_dir };
             ctx.write_objref(wr, &rpc::ObjRef::Runtime(std::rc::Rc::new(api_gen::ICoreWebView2Environment15Obj(env))));
             rpc::S_OK
@@ -1399,6 +1408,46 @@ fn context_menu_reply(id: u64, command: i32) {
     }
 }
 
+wrap_focus_handler! {
+    struct ViewFocusHandlerBuilder {
+        client: ViewClient,
+    }
+
+    impl FocusHandler {
+        /// Tab moved past the last (or first) focusable element: WebView2's MoveFocusRequested.
+        fn on_take_focus(&self, _browser: Option<&mut Browser>, next: ::std::os::raw::c_int) {
+            webview::on_move_focus_requested(self.client.view(), next != 0);
+        }
+    }
+}
+
+/// Controller.ZoomFactor: CEF zoom levels are logarithmic (each step is 20%).
+pub fn set_zoom(view: u32, factor: f64) {
+    if let Some(host) = view_browser(view).and_then(|b| b.host()) {
+        host.set_zoom_level(factor.ln() / 1.2f64.ln());
+    }
+}
+
+/// Profile.PreferredColorScheme through the CSS prefers-color-scheme media feature.
+pub fn set_color_scheme(view: u32, scheme: i32) {
+    let value = match scheme {
+        1 => "light",
+        2 => "dark",
+        _ => "",
+    };
+    if let Some(b) = view_browser(view) {
+        devtools(&b, "Emulation.setEmulatedMedia",
+                 &format!("{{\"features\":[{{\"name\":\"prefers-color-scheme\",\"value\":\"{value}\"}}]}}"));
+    }
+}
+
+pub fn clear_browsing_data(view: u32) {
+    if let Some(b) = view_browser(view) {
+        devtools(&b, "Network.clearBrowserCookies", "{}");
+        devtools(&b, "Network.clearBrowserCache", "{}");
+    }
+}
+
 // ======================================================================
 // Browser operations for server objects (webview.rs)
 // ======================================================================
@@ -1611,6 +1660,7 @@ fn handle_command(msg: Message) {
             if let Some(host) = view_browser(msg.view).and_then(|b| b.host()) {
                 host.set_focus(focus as i32);
             }
+            webview::on_focus_changed(msg.view, focus != 0);
         }
         CMD_SCRIPT_DIALOG_REPLY => {
             let (id, accepted, len) = (r.u64().unwrap_or(0), r.u32().unwrap_or(0) != 0, r.u32().unwrap_or(0));

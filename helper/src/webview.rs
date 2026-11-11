@@ -54,8 +54,9 @@ enum Ev {
     NewWindowRequested,
     WindowCloseRequested,
     ScriptDialogOpening,
+    ContainsFullScreenElementChanged,
 }
-const EV_COUNT: usize = 12;
+const EV_COUNT: usize = 13;
 
 fn rc<T: Dispatch + 'static>(obj: T) -> ObjRef {
     ObjRef::Runtime(Rc::new(obj))
@@ -66,13 +67,29 @@ fn rc<T: Dispatch + 'static>(obj: T) -> ObjRef {
 // ===================================================================
 
 pub struct Environment {
-    #[allow(dead_code)] // user profile: later (root_cache_path per environment)
     pub user_data_dir: String,
+}
+
+thread_local! {
+    /// User data folder of the (last created) environment, for profile paths.
+    static USER_DATA_DIR: RefCell<String> = RefCell::new(String::new());
+}
+
+pub fn set_user_data_dir(dir: &str) {
+    USER_DATA_DIR.with(|d| *d.borrow_mut() = dir.to_string());
 }
 
 impl ICoreWebView2Environment15Impl for Environment {
     fn get_BrowserVersionString(&self, _ctx: &mut Ctx) -> WvResult<String> {
         Ok(VERSION.to_string())
+    }
+
+    fn get_UserDataFolder(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.user_data_dir.clone())
+    }
+
+    fn CreateCoreWebView2ControllerOptions(&self, _ctx: &mut Ctx) -> WvResult<ObjRef> {
+        Ok(rc(ICoreWebView2ControllerOptions4Obj(ControllerOptions::default())))
     }
 
     fn CreateWebResourceResponse(&self, _ctx: &mut Ctx, content: Option<Vec<u8>>, status: i32,
@@ -89,6 +106,29 @@ impl ICoreWebView2Environment15Impl for Environment {
 pub struct Controller {
     pub view: u32,
     pub webview: ObjRef,
+    got_focus: EventList,
+    lost_focus: EventList,
+    move_focus: EventList,
+    zoom_changed: EventList,
+    scale_changed: EventList,
+    zoom: Cell<f64>,
+    scale: Cell<f64>,
+    detect_scale: Cell<bool>,
+    bounds_mode: Cell<i32>,
+    allow_drop: Cell<bool>,
+}
+
+pub type ControllerObj = ICoreWebView2Controller4Obj<Controller>;
+
+thread_local! {
+    /// View -> controller (for focus events from the host and CEF).
+    static CONTROLLERS: RefCell<HashMap<u32, Rc<ControllerObj>>> = RefCell::new(HashMap::new());
+}
+
+fn with_controller<R>(view: u32, f: impl FnOnce(&Controller, ObjRef) -> R) -> Option<R> {
+    let c = CONTROLLERS.with(|c| c.borrow().get(&view).cloned())?;
+    let sender = ObjRef::Runtime(c.clone());
+    Some(f(&c.0, sender))
 }
 
 impl ICoreWebView2Controller4Impl for Controller {
@@ -103,10 +143,291 @@ impl ICoreWebView2Controller4Impl for Controller {
         close_view(self.view);
         Ok(())
     }
+
+    fn add_GotFocus(&self, _ctx: &mut Ctx, handler: ObjRef) -> WvResult<EventRegistrationToken> {
+        self.got_focus.add(handler)
+    }
+    fn remove_GotFocus(&self, _ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        self.got_focus.remove(token)
+    }
+    fn add_LostFocus(&self, _ctx: &mut Ctx, handler: ObjRef) -> WvResult<EventRegistrationToken> {
+        self.lost_focus.add(handler)
+    }
+    fn remove_LostFocus(&self, _ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        self.lost_focus.remove(token)
+    }
+    fn add_MoveFocusRequested(&self, _ctx: &mut Ctx, handler: ObjRef) -> WvResult<EventRegistrationToken> {
+        self.move_focus.add(handler)
+    }
+    fn remove_MoveFocusRequested(&self, _ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        self.move_focus.remove(token)
+    }
+
+    fn get_ZoomFactor(&self, _ctx: &mut Ctx) -> WvResult<f64> {
+        Ok(self.zoom.get())
+    }
+    fn put_ZoomFactor(&self, ctx: &mut Ctx, zoom: f64) -> WvResult<()> {
+        if !(zoom > 0.0) {
+            return Err(E_INVALIDARG);
+        }
+        if (zoom - self.zoom.get()).abs() < 1e-9 {
+            return Ok(());
+        }
+        self.zoom.set(zoom);
+        crate::set_zoom(self.view, zoom);
+        let sender = CONTROLLERS.with(|c| c.borrow().get(&self.view).cloned()).map(|c| ObjRef::Runtime(c)).unwrap_or_default();
+        for h in self.zoom_changed.snapshot() {
+            ICoreWebView2ZoomFactorChangedEventHandlerApp(h).Invoke_async(ctx, &sender, &ObjRef::Null);
+        }
+        Ok(())
+    }
+    fn add_ZoomFactorChanged(&self, _ctx: &mut Ctx, handler: ObjRef) -> WvResult<EventRegistrationToken> {
+        self.zoom_changed.add(handler)
+    }
+    fn remove_ZoomFactorChanged(&self, _ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        self.zoom_changed.remove(token)
+    }
+
+    // FIXME: DPI scaling - the value is kept but the page is not scaled yet.
+    fn get_RasterizationScale(&self, _ctx: &mut Ctx) -> WvResult<f64> {
+        Ok(self.scale.get())
+    }
+    fn put_RasterizationScale(&self, ctx: &mut Ctx, scale: f64) -> WvResult<()> {
+        if !(scale > 0.0) {
+            return Err(E_INVALIDARG);
+        }
+        if (scale - self.scale.get()).abs() < 1e-9 {
+            return Ok(());
+        }
+        self.scale.set(scale);
+        let sender = CONTROLLERS.with(|c| c.borrow().get(&self.view).cloned()).map(|c| ObjRef::Runtime(c)).unwrap_or_default();
+        for h in self.scale_changed.snapshot() {
+            ICoreWebView2RasterizationScaleChangedEventHandlerApp(h).Invoke_async(ctx, &sender, &ObjRef::Null);
+        }
+        Ok(())
+    }
+    fn add_RasterizationScaleChanged(&self, _ctx: &mut Ctx, handler: ObjRef) -> WvResult<EventRegistrationToken> {
+        self.scale_changed.add(handler)
+    }
+    fn remove_RasterizationScaleChanged(&self, _ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        self.scale_changed.remove(token)
+    }
+    fn get_ShouldDetectMonitorScaleChanges(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.detect_scale.get())
+    }
+    fn put_ShouldDetectMonitorScaleChanges(&self, _ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        self.detect_scale.set(value);
+        Ok(())
+    }
+    fn get_BoundsMode(&self, _ctx: &mut Ctx) -> WvResult<i32> {
+        Ok(self.bounds_mode.get())
+    }
+    fn put_BoundsMode(&self, _ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        self.bounds_mode.set(value);
+        Ok(())
+    }
+    // FIXME: drag and drop into the page is not implemented; the setting is only kept.
+    fn get_AllowExternalDrop(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.allow_drop.get())
+    }
+    fn put_AllowExternalDrop(&self, _ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        self.allow_drop.set(value);
+        Ok(())
+    }
+}
+
+/// The host window gained or lost focus (CMD_FOCUS from the DLL).
+pub fn on_focus_changed(view: u32, focused: bool) {
+    with_controller(view, |c, sender| {
+        let list = if focused { &c.got_focus } else { &c.lost_focus };
+        for h in list.snapshot() {
+            ICoreWebView2FocusChangedEventHandlerApp(h).Invoke_async(&mut Ctx, &sender, &ObjRef::Null);
+        }
+    });
+}
+
+pub struct MoveFocusArgs {
+    reason: i32,
+    handled: Cell<bool>,
+}
+
+impl ICoreWebView2MoveFocusRequestedEventArgsImpl for MoveFocusArgs {
+    fn get_Reason(&self, _ctx: &mut Ctx) -> WvResult<i32> {
+        Ok(self.reason)
+    }
+    fn get_Handled(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.handled.get())
+    }
+    fn put_Handled(&self, _ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        self.handled.set(value);
+        Ok(())
+    }
+}
+
+/// Tab moved focus out of the page (CEF OnTakeFocus): COREWEBVIEW2_MOVE_FOCUS_REASON_NEXT/PREVIOUS.
+pub fn on_move_focus_requested(view: u32, next: bool) {
+    with_controller(view, |c, sender| {
+        let args = rc(ICoreWebView2MoveFocusRequestedEventArgsObj(MoveFocusArgs {
+            reason: if next { 1 } else { 2 },
+            handled: Cell::new(false),
+        }));
+        for h in c.move_focus.snapshot() {
+            ICoreWebView2MoveFocusRequestedEventHandlerApp(h).Invoke_async(&mut Ctx, &sender, &args);
+        }
+    });
+}
+
+// ===================================================================
+// Controller options and profile
+// ===================================================================
+
+/// ICoreWebView2ControllerOptions. FIXME: the DLL host does not apply them to the new controller yet
+/// (profile name, InPrivate, script locale, background colour).
+pub struct ControllerOptions {
+    profile_name: RefCell<String>,
+    in_private: Cell<bool>,
+    script_locale: RefCell<String>,
+    background: Cell<COREWEBVIEW2_COLOR>,
+    allow_host_input: Cell<bool>,
+}
+
+impl Default for ControllerOptions {
+    fn default() -> Self {
+        ControllerOptions {
+            profile_name: RefCell::new(String::new()),
+            in_private: Cell::new(false),
+            script_locale: RefCell::new(String::new()),
+            background: Cell::new(COREWEBVIEW2_COLOR { A: 255, R: 255, G: 255, B: 255 }),
+            allow_host_input: Cell::new(true),
+        }
+    }
+}
+
+impl ICoreWebView2ControllerOptions4Impl for ControllerOptions {
+    fn get_ProfileName(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.profile_name.borrow().clone())
+    }
+    fn put_ProfileName(&self, _ctx: &mut Ctx, value: Option<String>) -> WvResult<()> {
+        *self.profile_name.borrow_mut() = value.unwrap_or_default();
+        Ok(())
+    }
+    fn get_IsInPrivateModeEnabled(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.in_private.get())
+    }
+    fn put_IsInPrivateModeEnabled(&self, _ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        self.in_private.set(value);
+        Ok(())
+    }
+    fn get_ScriptLocale(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.script_locale.borrow().clone())
+    }
+    fn put_ScriptLocale(&self, _ctx: &mut Ctx, value: Option<String>) -> WvResult<()> {
+        *self.script_locale.borrow_mut() = value.unwrap_or_default();
+        Ok(())
+    }
+    fn get_DefaultBackgroundColor(&self, _ctx: &mut Ctx) -> WvResult<COREWEBVIEW2_COLOR> {
+        Ok(self.background.get())
+    }
+    fn put_DefaultBackgroundColor(&self, _ctx: &mut Ctx, value: COREWEBVIEW2_COLOR) -> WvResult<()> {
+        self.background.set(value);
+        Ok(())
+    }
+    fn get_AllowHostInputProcessing(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.allow_host_input.get())
+    }
+    fn put_AllowHostInputProcessing(&self, _ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        self.allow_host_input.set(value);
+        Ok(())
+    }
+}
+
+/// ICoreWebView2Profile of a view (the default profile; named and InPrivate profiles: FIXME).
+pub struct Profile {
+    view: u32,
+    color_scheme: Cell<i32>,
+    download_folder: RefCell<String>,
+    tracking_level: Cell<i32>,
+    password_autosave: Cell<bool>,
+    general_autofill: Cell<bool>,
+    worker_script_apis: Cell<bool>,
+}
+
+impl ICoreWebView2Profile9Impl for Profile {
+    fn get_ProfileName(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok("Default".into())
+    }
+    fn get_IsInPrivateModeEnabled(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(false)
+    }
+    fn get_ProfilePath(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(USER_DATA_DIR.with(|d| format!("{}\\EBWebView\\Default", d.borrow().trim_end_matches('\\'))))
+    }
+    fn get_DefaultDownloadFolderPath(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.download_folder.borrow().clone())
+    }
+    fn put_DefaultDownloadFolderPath(&self, _ctx: &mut Ctx, value: Option<String>) -> WvResult<()> {
+        *self.download_folder.borrow_mut() = value.ok_or(E_INVALIDARG)?;
+        Ok(())
+    }
+    fn get_PreferredColorScheme(&self, _ctx: &mut Ctx) -> WvResult<i32> {
+        Ok(self.color_scheme.get())
+    }
+    /// COREWEBVIEW2_PREFERRED_COLOR_SCHEME: 0 auto, 1 light, 2 dark (CSS prefers-color-scheme).
+    fn put_PreferredColorScheme(&self, _ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        if !(0..=2).contains(&value) {
+            return Err(E_INVALIDARG);
+        }
+        self.color_scheme.set(value);
+        crate::set_color_scheme(self.view, value);
+        Ok(())
+    }
+    fn ClearBrowsingDataAll(&self, ctx: &mut Ctx, handler: ObjRef) -> WvResult<()> {
+        crate::clear_browsing_data(self.view);
+        if let Some(app) = handler.app() {
+            ICoreWebView2ClearBrowsingDataCompletedHandlerApp(app.clone()).Invoke_async(ctx, S_OK);
+        }
+        Ok(())
+    }
+    // FIXME: data kinds and time ranges are not distinguished: cookies and cache are cleared.
+    fn ClearBrowsingData(&self, ctx: &mut Ctx, _kinds: i32, handler: ObjRef) -> WvResult<()> {
+        self.ClearBrowsingDataAll(ctx, handler)
+    }
+    fn ClearBrowsingDataInTimeRange(&self, ctx: &mut Ctx, _kinds: i32, _start: f64, _end: f64, handler: ObjRef) -> WvResult<()> {
+        self.ClearBrowsingDataAll(ctx, handler)
+    }
+    fn get_PreferredTrackingPreventionLevel(&self, _ctx: &mut Ctx) -> WvResult<i32> {
+        Ok(self.tracking_level.get())
+    }
+    fn put_PreferredTrackingPreventionLevel(&self, _ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        self.tracking_level.set(value);
+        Ok(())
+    }
+    fn get_IsPasswordAutosaveEnabled(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.password_autosave.get())
+    }
+    fn put_IsPasswordAutosaveEnabled(&self, _ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        self.password_autosave.set(value);
+        Ok(())
+    }
+    fn get_IsGeneralAutofillEnabled(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.general_autofill.get())
+    }
+    fn put_IsGeneralAutofillEnabled(&self, _ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        self.general_autofill.set(value);
+        Ok(())
+    }
+    fn get_AreWebViewScriptApisEnabledForServiceWorkers(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.worker_script_apis.get())
+    }
+    fn put_AreWebViewScriptApisEnabledForServiceWorkers(&self, _ctx: &mut Ctx, value: bool) -> WvResult<()> {
+        self.worker_script_apis.set(value);
+        Ok(())
+    }
 }
 
 pub fn close_view(view: u32) {
     WEBVIEWS.with(|w| w.borrow_mut().remove(&view));
+    CONTROLLERS.with(|c| c.borrow_mut().remove(&view));
     crate::resources::remove_view(view);
     crate::close_browser(view);
 }
@@ -135,6 +456,8 @@ pub struct WebView {
     devtools_receivers: RefCell<Vec<Rc<ICoreWebView2DevToolsProtocolEventReceiverObj<DevToolsReceiver>>>>,
     next_id: Cell<u64>,
     doc_scripts: RefCell<Vec<(u64, String)>>,
+    profile: RefCell<Option<ObjRef>>,
+    fullscreen: Cell<bool>,
 }
 
 impl WebView {
@@ -152,6 +475,8 @@ impl WebView {
             devtools_receivers: RefCell::new(Vec::new()),
             next_id: Cell::new(1),
             doc_scripts: RefCell::new(Vec::new()),
+            profile: RefCell::new(None),
+            fullscreen: Cell::new(false),
         }
     }
 
@@ -173,7 +498,22 @@ pub fn create_controller(view: u32, width: u32, height: u32) -> WvResult<ObjRef>
     let webview = Rc::new(ICoreWebView2_29Obj(WebView::new(view)));
     WEBVIEWS.with(|w| w.borrow_mut().insert(view, webview.clone()));
     let webview_ref = ObjRef::Runtime(webview);
-    Ok(rc(ICoreWebView2Controller4Obj(Controller { view, webview: webview_ref })))
+    let controller = Rc::new(ICoreWebView2Controller4Obj(Controller {
+        view,
+        webview: webview_ref,
+        got_focus: EventList::default(),
+        lost_focus: EventList::default(),
+        move_focus: EventList::default(),
+        zoom_changed: EventList::default(),
+        scale_changed: EventList::default(),
+        zoom: Cell::new(1.0),
+        scale: Cell::new(1.0),
+        detect_scale: Cell::new(true),
+        bounds_mode: Cell::new(0),
+        allow_drop: Cell::new(true),
+    }));
+    CONTROLLERS.with(|c| c.borrow_mut().insert(view, controller.clone()));
+    Ok(ObjRef::Runtime(controller))
 }
 
 fn with_webview<R>(view: u32, f: impl FnOnce(&WebView, ObjRef) -> R) -> Option<R> {
@@ -313,6 +653,27 @@ impl ICoreWebView2_29Impl for WebView {
         add_NewWindowRequested, remove_NewWindowRequested, NewWindowRequested;
         add_WindowCloseRequested, remove_WindowCloseRequested, WindowCloseRequested;
         add_ScriptDialogOpening, remove_ScriptDialogOpening, ScriptDialogOpening;
+        add_ContainsFullScreenElementChanged, remove_ContainsFullScreenElementChanged, ContainsFullScreenElementChanged;
+    }
+
+    fn get_ContainsFullScreenElement(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.fullscreen.get())
+    }
+
+    fn get_Profile(&self, _ctx: &mut Ctx) -> WvResult<ObjRef> {
+        let mut p = self.profile.borrow_mut();
+        Ok(p.get_or_insert_with(|| {
+            rc(ICoreWebView2Profile9Obj(Profile {
+                view: self.view,
+                color_scheme: Cell::new(0),
+                download_folder: RefCell::new(String::new()),
+                tracking_level: Cell::new(2), // BALANCED
+                password_autosave: Cell::new(false),
+                general_autofill: Cell::new(true),
+                worker_script_apis: Cell::new(false),
+            }))
+        })
+        .clone())
     }
 
     fn get_Settings(&self, _ctx: &mut Ctx) -> WvResult<ObjRef> {
@@ -1112,4 +1473,14 @@ pub fn on_script_dialog(view: u32, uri: &str, kind: i32, message: &str, default_
             d(false, "");
         }
     }
+}
+
+/// The page entered or left full screen (CEF OnFullscreenModeChange).
+pub fn on_fullscreen_changed(view: u32, fullscreen: bool) {
+    with_webview(view, |wv, sender| {
+        if wv.fullscreen.replace(fullscreen) != fullscreen {
+            raise_async!(wv, sender, ContainsFullScreenElementChanged,
+                         ICoreWebView2ContainsFullScreenElementChangedEventHandlerApp, ObjRef::Null);
+        }
+    });
 }
