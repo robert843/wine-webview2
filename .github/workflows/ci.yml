@@ -1,9 +1,8 @@
 name: CI
 
 # Pull requests: build + tests. Push to master (merged PR): build + tests + release.
-# Version bump from commit messages since the last tag: #major, #minor; #none in the pushed
-# commit skips the release;
-# otherwise patch. The first release is 0.1.0.
+# Version (anothrNick/github-tag-action) from the pushed commit's message: #major, #minor,
+# #none (no release), otherwise patch.
 on:
   pull_request:
   push:
@@ -30,29 +29,34 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Only computes the version (dry run); the release job creates the tag with the release.
       - name: Next version
+        id: bump
+        uses: anothrNick/github-tag-action@4ed44965e0db8dab2b466a16da04aec3cc312fd8 # 1.75.0
+        env:
+          DRY_RUN: true
+          WITH_V: true
+          DEFAULT_BUMP: patch
+          RELEASE_BRANCHES: master
+          # The pushed commit's message only: with the whole history since the tag, one docs-only
+          # "#none" commit would hold back every later release.
+          BRANCH_HISTORY: last
+
+      - name: Version
         id: version
+        env:
+          OLD: ${{ steps.bump.outputs.old_tag }}
+          NEW: ${{ steps.bump.outputs.new_tag }}
         run: |
-          last=$(git describe --tags --abbrev=0 --match 'v[0-9]*.[0-9]*.[0-9]*' 2>/dev/null || true)
-          if [ -z "$last" ]; then
-            next=0.1.0
-          else
-            log=$(git log --format=%B "$last..HEAD")
-            IFS=. read -r major minor patch <<< "${last#v}"
-            # "#none" only in the pushed commit itself: an earlier docs-only commit must not
-            # suppress the release of everything after it.
-            if git log -1 --format=%B HEAD | grep -q '#none'; then next=
-            elif grep -q '#major' <<< "$log"; then next=$((major + 1)).0.0
-            elif grep -q '#minor' <<< "$log"; then next=$major.$((minor + 1)).0
-            else next=$major.$minor.$((patch + 1)); fi
-          fi
+          next=
+          if [ "${{ github.event_name }}" = push ] && [ -n "$NEW" ] && [ "$NEW" != "$OLD" ]; then next=${NEW#v}; fi
           if [ "${{ github.event_name }}" != push ]; then
             echo "dist=0.0.0-pr${{ github.event.number }}" >> "$GITHUB_OUTPUT"
           else
             echo "dist=${next:-0.0.0-dev}" >> "$GITHUB_OUTPUT"
           fi
           echo "version=$next" >> "$GITHUB_OUTPUT"
-          echo "last tag: ${last:-none}, next version: ${next:-none}"
+          echo "last tag: ${OLD:-none}, next version: ${next:-none}"
 
       - name: Install Wine (WineHQ devel) and build dependencies
         run: |
