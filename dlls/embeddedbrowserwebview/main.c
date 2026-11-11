@@ -117,15 +117,15 @@ static HRESULT STDMETHODCALLTYPE environment_CreateCoreWebView2Controller(ICoreW
         HWND parent, ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler)
 {
     TRACE("iface %p, parent %p, handler %p.\n", iface, parent, handler);
-    return controller_create((IUnknown *)iface, parent, handler);
+    return controller_create((IUnknown *)iface, parent, NULL, handler);
 }
 
 static HRESULT STDMETHODCALLTYPE environment_CreateCoreWebView2ControllerWithOptions(ICoreWebView2Environment15 *iface,
         HWND parent, ICoreWebView2ControllerOptions *options,
         ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler)
 {
-    FIXME("iface %p, parent %p, options %p, handler %p, options ignored.\n", iface, parent, options, handler);
-    return controller_create((IUnknown *)iface, parent, handler);
+    TRACE("iface %p, parent %p, options %p, handler %p.\n", iface, parent, options, handler);
+    return controller_create((IUnknown *)iface, parent, (IUnknown *)options, handler);
 }
 
 static void init_overrides(void)

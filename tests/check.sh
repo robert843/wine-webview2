@@ -38,6 +38,8 @@ check() {
 
 mkdir -p "$LOGS"
 A=$ROOT/tests/apps
+# Browser data persists in "<exe>.WebView2" (permissions, cookies...): every run starts clean.
+rm -rf "$A"/*/*.exe.WebView2 "$A"/*/x86/*.exe.WebView2
 
 check navtest "$A/navtest/navtest.exe" 90 "0" \
     'NavigationCompleted id=1 success=1' \
@@ -95,9 +97,15 @@ check filetest "$A/filetest/filetest.exe" 90 "0" \
     '^done'
 
 # Browser data persists in the user data folder: the second run sees the first one's data.
-rm -rf "$A/persisttest/persisttest.exe.WebView2"
-check persisttest-1 "$A/persisttest/persisttest.exe" 90 "0" 'script -> hr=0 "n=1 cookie=false"' '^done'
-check persisttest-2 "$A/persisttest/persisttest.exe" 90 "0" 'script -> hr=0 "n=2 cookie=true"' '^done'
+check persisttest-1 "$A/persisttest/persisttest.exe" 90 "0" \
+    'default: script -> hr=0 "n=1 cookie=false"' \
+    'private: profile name=Default private=1' \
+    'second: profile name=second private=0' \
+    'second: script -> hr=0 "n=1 cookie=false"' '^done'
+check persisttest-2 "$A/persisttest/persisttest.exe" 90 "0" \
+    'default: script -> hr=0 "n=2 cookie=true"' \
+    'private: script -> hr=0 "n=1 cookie=false"' \
+    'second: script -> hr=0 "n=2 cookie=true"' '^done'
 
 # hello runs until closed: the timeout ending it is expected.
 check hello "$A/hello/hello-loader.exe" 40 "0 124" \

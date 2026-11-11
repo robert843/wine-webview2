@@ -1062,7 +1062,8 @@ fn root_call(ctx: &mut rpc::Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) 
         rpc::ROOT_CREATE_CONTROLLER => {
             let _env = ctx.read_objref(rd);
             let (view, width, height) = (rd.u32().unwrap_or(0), rd.u32().unwrap_or(1), rd.u32().unwrap_or(1));
-            match webview::create_controller(view, width, height) {
+            let options = ctx.read_objref(rd);
+            match webview::create_controller(view, width, height, &options) {
                 Ok(controller) => {
                     ctx.write_objref(wr, &controller);
                     rpc::S_OK
@@ -1784,8 +1785,57 @@ pub fn clear_browsing_data(view: u32) {
 // Browser operations for server objects (webview.rs)
 // ======================================================================
 
+static PROFILE_ROOT: OnceLock<PathBuf> = OnceLock::new();
+
+thread_local! {
+    /// Request contexts of named / InPrivate profiles, shared by their WebViews: (name, in_private).
+    static PROFILES: RefCell<HashMap<(String, bool), (RequestContext, Arc<AtomicBool>)>> = RefCell::new(HashMap::new());
+}
+
+wrap_request_context_handler! {
+    struct ProfileContextHandler {
+        ready: Arc<AtomicBool>,
+    }
+
+    impl RequestContextHandler {
+        fn on_request_context_initialized(&self, _request_context: Option<&mut RequestContext>) {
+            self.ready.store(true, Ordering::Release);
+        }
+    }
+}
+
+/// Profile directory: `<root>/<name>` (the global context is "Default").
+pub fn profile_dir(name: &str) -> Option<PathBuf> {
+    PROFILE_ROOT.get().map(|root| root.join(name))
+}
+
+/// Ok(None) = the global context ("Default", not InPrivate). Err(E_PENDING) while a new context is
+/// still initializing (CEF creates disk-backed contexts asynchronously; the DLL retries).
+fn request_context(profile: &str, in_private: bool) -> Result<Option<RequestContext>, i32> {
+    if profile.eq_ignore_ascii_case("Default") && !in_private {
+        return Ok(None);
+    }
+    let key = (profile.to_ascii_lowercase(), in_private);
+    if let Some((context, ready)) = PROFILES.with(|p| p.borrow().get(&key).cloned()) {
+        return if ready.load(Ordering::Acquire) { Ok(Some(context)) } else { Err(rpc::E_PENDING) };
+    }
+    // InPrivate: empty cache path = in memory only.
+    let cache_path = if in_private {
+        String::new()
+    } else {
+        profile_dir(profile).ok_or(rpc::E_FAIL)?.to_string_lossy().into_owned()
+    };
+    let settings = RequestContextSettings { cache_path: cache_path.as_str().into(), ..Default::default() };
+    let ready = Arc::new(AtomicBool::new(false));
+    let mut handler = ProfileContextHandler::new(ready.clone());
+    let context = request_context_create_context(Some(&settings), Some(&mut handler)).ok_or(rpc::E_FAIL)?;
+    PROFILES.with(|p| p.borrow_mut().insert(key, (context.clone(), ready.clone())));
+    if ready.load(Ordering::Acquire) { Ok(Some(context)) } else { Err(rpc::E_PENDING) }
+}
+
 /// Creates the view's CEF browser (called from ROOT_CREATE_CONTROLLER).
-pub fn create_browser(view: u32, width: u32, height: u32) -> bool {
+pub fn create_browser(view: u32, width: u32, height: u32, profile: &str, in_private: bool) -> Result<(), i32> {
+    let mut context = request_context(profile, in_private)?;
     with_state(|st| {
         st.views.insert(view, View::new(width, height))
     });
@@ -1801,11 +1851,11 @@ pub fn create_browser(view: u32, width: u32, height: u32) -> bool {
         Some(&"".into()),
         Some(&settings),
         None,
-        None,
+        context.as_mut(),
     );
     let Some(browser) = browser else {
         with_state(|st| st.views.remove(&view));
-        return false;
+        return Err(rpc::E_FAIL);
     };
     set_user_agent(&browser, "");
     let registration = browser.host().and_then(|h| {
@@ -1818,7 +1868,7 @@ pub fn create_browser(view: u32, width: u32, height: u32) -> bool {
             v.devtools_observer = registration;
         }
     });
-    true
+    Ok(())
 }
 
 pub fn close_browser(view: u32) {
@@ -2347,6 +2397,7 @@ fn main() -> std::process::ExitCode {
     // Persistent data in the user data folder when we have one, otherwise in the temporary directory.
     let profile_root = data_dir(&argv).unwrap_or_else(|| cache.clone());
     let profile = profile_root.join("Default");
+    let _ = PROFILE_ROOT.set(profile_root.clone());
     let settings = Settings {
         no_sandbox: true as _,
         windowless_rendering_enabled: true as _,

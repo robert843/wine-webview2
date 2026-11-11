@@ -321,7 +321,13 @@ impl ICoreWebView2ControllerOptions4Impl for ControllerOptions {
         Ok(self.profile_name.borrow().clone())
     }
     fn put_ProfileName(&self, _ctx: &mut Ctx, value: Option<String>) -> WvResult<()> {
-        *self.profile_name.borrow_mut() = value.unwrap_or_default();
+        // WebView2: up to 64 letters, digits and #@$()+-_~. or spaces, not ending with '.' or ' '.
+        let value = value.unwrap_or_default();
+        let valid_char = |c: char| c.is_alphanumeric() || "#@$()+-_~. ".contains(c);
+        if value.chars().count() > 64 || !value.chars().all(valid_char) || value.ends_with(['.', ' ']) {
+            return Err(E_INVALIDARG);
+        }
+        *self.profile_name.borrow_mut() = value;
         Ok(())
     }
     fn get_IsInPrivateModeEnabled(&self, _ctx: &mut Ctx) -> WvResult<bool> {
@@ -357,6 +363,8 @@ impl ICoreWebView2ControllerOptions4Impl for ControllerOptions {
 /// ICoreWebView2Profile of a view (the default profile; named and InPrivate profiles: FIXME).
 pub struct Profile {
     view: u32,
+    name: String,
+    in_private: bool,
     color_scheme: Cell<i32>,
     tracking_level: Cell<i32>,
     password_autosave: Cell<bool>,
@@ -366,13 +374,13 @@ pub struct Profile {
 
 impl ICoreWebView2Profile9Impl for Profile {
     fn get_ProfileName(&self, _ctx: &mut Ctx) -> WvResult<String> {
-        Ok("Default".into())
+        Ok(self.name.clone())
     }
     fn get_IsInPrivateModeEnabled(&self, _ctx: &mut Ctx) -> WvResult<bool> {
-        Ok(false)
+        Ok(self.in_private)
     }
     fn get_ProfilePath(&self, _ctx: &mut Ctx) -> WvResult<String> {
-        Ok(USER_DATA_DIR.with(|d| format!("{}\\EBWebView\\Default", d.borrow().trim_end_matches('\\'))))
+        Ok(USER_DATA_DIR.with(|d| format!("{}\\EBWebView\\{}", d.borrow().trim_end_matches('\\'), self.name)))
     }
     fn get_DefaultDownloadFolderPath(&self, _ctx: &mut Ctx) -> WvResult<String> {
         Ok(DOWNLOAD_FOLDER.with(|d| d.borrow().clone()))
@@ -473,12 +481,16 @@ pub struct WebView {
     next_id: Cell<u64>,
     doc_scripts: RefCell<Vec<(u64, String)>>,
     profile: RefCell<Option<ObjRef>>,
+    profile_name: String,
+    in_private: bool,
     fullscreen: Cell<bool>,
 }
 
 impl WebView {
-    fn new(view: u32) -> Self {
+    fn new(view: u32, profile_name: String, in_private: bool) -> Self {
         WebView {
+            profile_name,
+            in_private,
             view,
             events: Default::default(),
             source: RefCell::new(String::new()),
@@ -507,11 +519,16 @@ impl WebView {
     }
 }
 
-pub fn create_controller(view: u32, width: u32, height: u32) -> WvResult<ObjRef> {
-    if !crate::create_browser(view, width, height) {
-        return Err(crate::rpc::E_FAIL);
+pub fn create_controller(view: u32, width: u32, height: u32, options: &ObjRef) -> WvResult<ObjRef> {
+    let (mut profile, in_private) = options
+        .downcast::<ICoreWebView2ControllerOptions4Obj<ControllerOptions>>()
+        .map(|o| (o.0.profile_name.borrow().clone(), o.0.in_private.get()))
+        .unwrap_or_default();
+    if profile.is_empty() {
+        profile = "Default".into();
     }
-    let webview = Rc::new(ICoreWebView2_29Obj(WebView::new(view)));
+    crate::create_browser(view, width, height, &profile, in_private)?;
+    let webview = Rc::new(ICoreWebView2_29Obj(WebView::new(view, profile, in_private)));
     WEBVIEWS.with(|w| w.borrow_mut().insert(view, webview.clone()));
     let webview_ref = ObjRef::Runtime(webview);
     let controller = Rc::new(ICoreWebView2Controller4Obj(Controller {
@@ -683,6 +700,8 @@ impl ICoreWebView2_29Impl for WebView {
         Ok(p.get_or_insert_with(|| {
             rc(ICoreWebView2Profile9Obj(Profile {
                 view: self.view,
+                name: self.profile_name.clone(),
+                in_private: self.in_private,
                 color_scheme: Cell::new(0),
                 tracking_level: Cell::new(2), // BALANCED
                 password_autosave: Cell::new(false),

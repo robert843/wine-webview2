@@ -1583,9 +1583,11 @@ static void controller_created_cb(void *arg)
     free(ctx);
 }
 
-HRESULT controller_create(IUnknown *environment, HWND parent,
+HRESULT controller_create(IUnknown *environment, HWND parent, IUnknown *options,
                           ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler)
 {
+    ICoreWebView2ControllerOptions3 *options3;
+    int tries;
     struct controller_created_ctx *ctx;
     struct wv2_buffer args = {0};
     struct wv2_reader ret;
@@ -1606,6 +1608,11 @@ HRESULT controller_create(IUnknown *environment, HWND parent,
     view->visible = TRUE;
     view->cursor = LoadCursorW(NULL, (const WCHAR *)IDC_ARROW);
     view->background = default_background_color();
+    if (options && SUCCEEDED(IUnknown_QueryInterface(options, &IID_ICoreWebView2ControllerOptions3, (void **)&options3)))
+    {
+        ICoreWebView2ControllerOptions3_get_DefaultBackgroundColor(options3, &view->background);
+        ICoreWebView2ControllerOptions3_Release(options3);
+    }
     GetClientRect(parent, &view->bounds);
 
     EnterCriticalSection(&views_cs);
@@ -1620,12 +1627,19 @@ HRESULT controller_create(IUnknown *environment, HWND parent,
     if (view->hwnd) SetWindowLongPtrW(view->hwnd, GWLP_USERDATA, (LONG_PTR)view);
     else ERR("cannot create host window, error %lu\n", GetLastError());
 
-    wv2_put_iface(&args, environment);
-    wv2_put_u32(&args, view->id);
-    wv2_put_u32(&args, max(1, view->bounds.right - view->bounds.left));
-    wv2_put_u32(&args, max(1, view->bounds.bottom - view->bounds.top));
-    if (SUCCEEDED(ctx->hr = proxy_call_root(WV2_ROOT_CREATE_CONTROLLER, &args, &ret)) &&
-        !(view->controller = wv2_get_iface(&ret)))
+    /* A new profile's browser context initializes asynchronously in the helper: E_PENDING until then. */
+    for (tries = 0; tries < 500; tries++)
+    {
+        wv2_put_iface(&args, environment);
+        wv2_put_u32(&args, view->id);
+        wv2_put_u32(&args, max(1, view->bounds.right - view->bounds.left));
+        wv2_put_u32(&args, max(1, view->bounds.bottom - view->bounds.top));
+        wv2_put_iface(&args, options);
+        if ((ctx->hr = proxy_call_root(WV2_ROOT_CREATE_CONTROLLER, &args, &ret)) != E_PENDING) break;
+        wv2_reader_free(&ret);
+        Sleep(10);
+    }
+    if (SUCCEEDED(ctx->hr) && !(view->controller = wv2_get_iface(&ret)))
         ctx->hr = E_FAIL;
     wv2_reader_free(&ret);
     TRACE("view %u, parent %p, bounds %s, host window %p, controller %p, hr %#lx\n", view->id, parent,

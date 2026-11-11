@@ -21,6 +21,7 @@ pub const S_OK: i32 = 0;
 pub const E_NOTIMPL: i32 = 0x8000_4001_u32 as i32;
 pub const E_POINTER: i32 = 0x8000_4003_u32 as i32;
 pub const E_FAIL: i32 = 0x8000_4005_u32 as i32;
+pub const E_PENDING: i32 = 0x8000_000a_u32 as i32;
 pub const E_INVALIDARG: i32 = 0x8007_0057_u32 as i32;
 pub const E_INVALID_STATE: i32 = 0x8007_139f_u32 as i32; // HRESULT_FROM_WIN32(ERROR_INVALID_STATE)
 
