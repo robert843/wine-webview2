@@ -861,29 +861,28 @@ fn webview_of(obj: &ObjRef) -> Option<u32> {
 pub enum PopupDecision {
     /// Domyślne okno (natywne okno CEF, z window.opener).
     Default,
-    /// Anulować popup CEF (aplikacja obsłużyła albo decyzja zapadnie później).
+    /// Aplikacja obsłużyła (Handled bez NewWindow): popup anulowany.
     Cancel,
+    /// NewWindow: popup trafia do WebView tego widoku.
+    Adopt(u32),
+    /// Aplikacja wzięła odroczenie: decyzja przyjdzie przez `crate::popup_decided`.
+    Deferred,
 }
 
-/// Decyzja po handlerach: nawigacja w NewWindow, nic (Handled) albo okno domyślne.
-fn finish_new_window(args: &NewWindowArgs, deferred: bool) -> PopupDecision {
+fn decide_new_window(args: &NewWindowArgs) -> PopupDecision {
     if let Some(target) = webview_of(&args.new_window.borrow()) {
-        crate::navigate(target, &args.uri);
-        return PopupDecision::Cancel;
+        PopupDecision::Adopt(target)
+    } else if args.handled.get() {
+        PopupDecision::Cancel
+    } else {
+        PopupDecision::Default
     }
-    if args.handled.get() {
-        return PopupDecision::Cancel;
-    }
-    if deferred {
-        // Popup CEF już anulowany: otwieramy nowe okno bez powiązania z otwierającym.
-        crate::open_native_popup(&args.uri, args.size);
-        return PopupDecision::Cancel;
-    }
-    PopupDecision::Default
 }
 
-/// NewWindowRequested — synchronicznie z OnBeforePopup.
-pub fn on_new_window(view: u32, uri: &str, name: &str, user_initiated: bool, features: WindowFeatures) -> PopupDecision {
+/// NewWindowRequested — synchronicznie z OnBeforePopup. `popup` = numer widoku, pod którym
+/// przeglądarka popupu czeka na decyzję (przy odroczeniu).
+pub fn on_new_window(view: u32, popup: u32, uri: &str, name: &str, user_initiated: bool,
+                     features: WindowFeatures) -> PopupDecision {
     with_webview(view, |wv, sender| {
         let handlers = wv.ev(Ev::NewWindowRequested).snapshot();
         if handlers.is_empty() {
@@ -907,11 +906,11 @@ pub fn on_new_window(view: u32, uri: &str, name: &str, user_initiated: bool, fea
         }
         let later = args.clone();
         if args.0.deferral.settle(Box::new(move || {
-            finish_new_window(&later.0, true);
+            crate::popup_decided(popup, decide_new_window(&later.0), &later.0.uri, later.0.size);
         })) {
-            finish_new_window(&args.0, false)
+            decide_new_window(&args.0)
         } else {
-            PopupDecision::Cancel
+            PopupDecision::Deferred
         }
     })
     .unwrap_or(PopupDecision::Default)

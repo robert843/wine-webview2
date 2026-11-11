@@ -16,6 +16,8 @@ struct Handler : I {
     HRESULT STDMETHODCALLTYPE Invoke(A... a) override { return fn(a...); }
 };
 
+static const GUID iid_webview3 = {0xa0d6df20, 0x3b92, 0x416d, {0xaa, 0x0c, 0x43, 0x7a, 0x9c, 0x72, 0x78, 0x57}};
+static wchar_t folder[MAX_PATH];
 static const GUID iid_newwindow_args2 = {0xbbc7baed, 0x74c6, 0x4c92, {0xb6, 0x3a, 0x7f, 0x5a, 0xea, 0xe0, 0x3d, 0xe3}};
 static ICoreWebView2Environment *env;
 static ICoreWebView2 *webview, *popup_webview;
@@ -77,7 +79,19 @@ static void step(int n) {
         later(1000, 13); break; }
     case 13: run(L"String(window.clicked)", 2); break;
     case 2: popup_mode = POPUP_DEFER;
-        run(L"String(window.open('about:blank#deferred', 'win2'))", 0); later(3000, 3); break;
+        run(L"window.w2 = window.open('about:blank#deferred', 'win2'); String(!!w2)", 0); later(2500, 20); break;
+    case 20: // połączenie popup <-> otwierający
+        popup_webview->ExecuteScript(L"String(!!window.opener) + ' ' + location.href",
+            new Handler<ICoreWebView2ExecuteScriptCompletedHandler, HRESULT, LPCWSTR>([](HRESULT hr, LPCWSTR json) {
+                log("popup: opener+href -> hr=%#lx %ls", hr, json ? json : L"(null)");
+                run(L"String(!w2.closed) + ' ' + w2.location.href", 21);
+                return S_OK; }));
+        break;
+    case 21: // popup z https (host wirtualny) odsyła wiadomość do otwierającego
+        popup_mode = POPUP_DEFER;
+        run(L"window.addEventListener('message', e => chrome.webview.postMessage('opener got: ' + e.data));"
+            L"window.w4 = window.open('https://app.test/popup.html', 'win4'); String(!!w4)", 0);
+        later(4000, 3); break;
     case 3: run(L"window.close(); 'closed?'", 0); later(500, 4); break;
     case 4: {
         ICoreWebView2Settings *s; webview->get_Settings(&s);
@@ -127,6 +141,11 @@ static void register_events() {
                         popup_controller = c; c->AddRef();
                         c->get_CoreWebView2(&popup_webview);
                         RECT r = {300, 0, 600, 200}; c->put_Bounds(r);
+                        ICoreWebView2_3 *w3;
+                        if (SUCCEEDED(popup_webview->QueryInterface(iid_webview3, (void **)&w3))) {
+                            w3->SetVirtualHostNameToFolderMapping(L"app.test", folder, COREWEBVIEW2_HOST_RESOURCE_ACCESS_KIND_ALLOW);
+                            w3->Release();
+                        }
                         EventRegistrationToken t2;
                         popup_webview->add_NavigationCompleted(new Handler<ICoreWebView2NavigationCompletedEventHandler, ICoreWebView2 *, ICoreWebView2NavigationCompletedEventArgs *>(
                             [](ICoreWebView2 *s, ICoreWebView2NavigationCompletedEventArgs *) {
@@ -136,6 +155,10 @@ static void register_events() {
                         d->Complete(); d->Release(); a->Release();
                         return S_OK; }));
             }
+            return S_OK; }), &t);
+    webview->add_WebMessageReceived(new Handler<ICoreWebView2WebMessageReceivedEventHandler, ICoreWebView2 *, ICoreWebView2WebMessageReceivedEventArgs *>(
+        [](ICoreWebView2 *, ICoreWebView2WebMessageReceivedEventArgs *a) {
+            LPWSTR m = nullptr; a->TryGetWebMessageAsString(&m); log("WebMessageReceived: %ls", m ? m : L"?"); CoTaskMemFree(m);
             return S_OK; }), &t);
     webview->add_WindowCloseRequested(new Handler<ICoreWebView2WindowCloseRequestedEventHandler, ICoreWebView2 *, IUnknown *>(
         [](ICoreWebView2 *, IUnknown *) { log("WindowCloseRequested"); return S_OK; }), &t);
@@ -158,6 +181,16 @@ static LRESULT CALLBACK wndproc(HWND h, UINT msg, WPARAM wp, LPARAM lp) {
 
 int WINAPI WinMain(HINSTANCE inst, HINSTANCE, LPSTR, int) {
     CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+    GetTempPathW(MAX_PATH, folder); wcscat(folder, L"popuptest");
+    CreateDirectoryW(folder, nullptr);
+    {
+        wchar_t path[MAX_PATH]; wcscpy(path, folder); wcscat(path, L"\\popup.html");
+        static const char html[] = "<title>popup</title><script>"
+            "window.opener ? window.opener.postMessage('hi from ' + location.href, '*') : console.log('no opener');"
+            "</script>popup";
+        HANDLE f = CreateFileW(path, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, 0, nullptr);
+        DWORD n; WriteFile(f, html, sizeof(html) - 1, &n, nullptr); CloseHandle(f);
+    }
     WNDCLASSW wc = {}; wc.lpfnWndProc = wndproc; wc.hInstance = inst; wc.lpszClassName = L"popuptest";
     RegisterClassW(&wc);
     hwnd = CreateWindowW(L"popuptest", L"wine-webview2 popuptest", WS_OVERLAPPEDWINDOW | WS_VISIBLE,

@@ -332,8 +332,11 @@ wrap_request_handler! {
             if frame.is_main() == 0 {
                 return 0;
             }
-            let id = begin_navigation(self.handler.view);
             let url = CefString::from(&request.url()).to_string();
+            if crate::popup_hold_navigation(self.handler.view, &url) {
+                return 1;
+            }
+            let id = begin_navigation(self.handler.view);
             // Synchronicznie: decyzja aplikacji (Cancel) zapada, zanim żądanie wyjdzie.
             let cancel = crate::webview::on_navigation_starting(self.handler.view, id, user_gesture != 0, is_redirect != 0, &url);
             if cancel {

@@ -28,6 +28,7 @@ use std::collections::HashMap;
 use std::os::fd::AsRawFd;
 use std::path::PathBuf;
 use std::rc::Rc;
+use std::sync::atomic::{AtomicU32, Ordering};
 use std::sync::{Arc, Mutex, OnceLock};
 
 /// Katalog plików ze skryptami startowymi (przekazywany rendererom przełącznikiem).
@@ -158,6 +159,9 @@ struct View {
     height: u32,
     frames: Option<FrameBuffer>,
     dropped: bool,
+    user_agent: String,
+    /// Popup czekający na podpięcie pod WebView aplikacji (NewWindow) albo na decyzję.
+    popup: Option<PendingPopup>,
 }
 
 struct IpcState {
@@ -196,9 +200,20 @@ pub fn base64(data: &[u8]) -> String {
     out
 }
 
+/// Klient CEF widoku. Numer widoku da się zmienić: popup utworzony w OnBeforePopup zostaje
+/// potem podpięty pod WebView aplikacji (NewWindow) bez tworzenia przeglądarki od nowa.
 #[derive(Clone)]
 struct ViewClient {
-    view: u32,
+    id: Arc<AtomicU32>,
+}
+
+impl ViewClient {
+    fn new(view: u32) -> Self {
+        ViewClient { id: Arc::new(AtomicU32::new(view)) }
+    }
+    fn view(&self) -> u32 {
+        self.id.load(Ordering::Relaxed)
+    }
 }
 
 wrap_client! {
@@ -220,7 +235,7 @@ wrap_client! {
         }
 
         fn request_handler(&self) -> Option<RequestHandler> {
-            Some(resources::RequestHandlerBuilder::new(resources::ViewRequests { view: self.client.view }))
+            Some(resources::RequestHandlerBuilder::new(resources::ViewRequests { view: self.client.view() }))
         }
 
         fn life_span_handler(&self) -> Option<LifeSpanHandler> {
@@ -245,17 +260,17 @@ wrap_client! {
                 renderer::MSG_POST => {
                     let json = CefString::from(&args.string(0)).to_string();
                     let source = frame.map(|f| CefString::from(&f.url()).to_string()).unwrap_or_default();
-                    webview::on_web_message(self.client.view, &source, &json);
+                    webview::on_web_message(self.client.view(), &source, &json);
                     1
                 }
                 renderer::MSG_RESULT => {
                     let id = CefString::from(&args.string(0)).to_string().parse::<u64>().unwrap_or(0);
                     let json = CefString::from(&args.string(1)).to_string();
-                    webview::on_script_result(self.client.view, id, &json);
+                    webview::on_script_result(self.client.view(), id, &json);
                     1
                 }
                 renderer::MSG_CLOSE => {
-                    webview::on_window_close(self.client.view);
+                    webview::on_window_close(self.client.view());
                     1
                 }
                 _ => 0,
@@ -272,7 +287,7 @@ wrap_render_handler! {
     impl RenderHandler {
         fn view_rect(&self, _browser: Option<&mut Browser>, rect: Option<&mut Rect>) {
             let Some(rect) = rect else { return };
-            let (w, h) = with_state(|st| st.views.get(&self.client.view).map(|v| (v.width, v.height)))
+            let (w, h) = with_state(|st| st.views.get(&self.client.view()).map(|v| (v.width, v.height)))
                 .flatten()
                 .unwrap_or((1, 1));
             rect.x = 0;
@@ -301,7 +316,7 @@ wrap_render_handler! {
                     Some((al, at, ar, ab)) => (al.min(l), at.min(t), ar.max(rr), ab.max(b)),
                 })
             }).unwrap_or((0, 0, width, height));
-            let invalidate = with_state(|st| paint_view(st, self.client.view, src, width as u32, height as u32, dirty));
+            let invalidate = with_state(|st| paint_view(st, self.client.view(), src, width as u32, height as u32, dirty));
             if invalidate == Some(true) {
                 if let Some(host) = browser.and_then(|b| b.host()) {
                     host.invalidate(PaintElementType::VIEW);
@@ -314,7 +329,7 @@ wrap_render_handler! {
 /// Zapisuje klatkę do wolnego slotu memfd i wysyła FRAME_READY. Zwraca true, gdy trzeba
 /// natychmiast poprosić o nową klatkę (nie powinno się zdarzać).
 fn paint_view(st: &mut IpcState, view_id: u32, src: &[u8], width: u32, height: u32, dirty: (i32, i32, i32, i32)) -> bool {
-    let Some(view) = st.views.get_mut(&view_id) else { return false };
+    let Some(view) = st.views.get_mut(&view_id).filter(|v| v.popup.is_none()) else { return false };
 
     let need_new = view.frames.as_ref().is_none_or(|f| f.width != width || f.height != height);
     if need_new {
@@ -373,7 +388,7 @@ wrap_display_handler! {
             // Diagnostyka aplikacji: konsola JS na stderr (widoczna w logu Wine).
             let message = message.map(|m| m.to_string()).unwrap_or_default();
             let source = source.map(|s| s.to_string()).unwrap_or_default();
-            eprintln!("helper: console[view {}] {source}:{line}: {message}", self.client.view);
+            eprintln!("helper: console[view {}] {source}:{line}: {message}", self.client.view());
             0
         }
 
@@ -389,14 +404,14 @@ wrap_display_handler! {
             // Nowe dokumenty zgłasza on_load_start; tu zostają nawigacje w obrębie dokumentu
             // (pushState, kotwice) — wtedy URL różni się od ostatnio zgłoszonego.
             let url = url.map(|u| u.to_string()).unwrap_or_default();
-            if set_last_source(self.client.view, &url) {
-                webview::on_source_changed(self.client.view, &url);
+            if set_last_source(self.client.view(), &url) {
+                webview::on_source_changed(self.client.view(), &url);
             }
         }
 
         fn on_title_change(&self, _browser: Option<&mut Browser>, title: Option<&CefString>) {
             let title = title.map(|t| t.to_string()).unwrap_or_default();
-            webview::on_title_changed(self.client.view, &title);
+            webview::on_title_changed(self.client.view(), &title);
         }
 
         fn on_cursor_change(
@@ -407,7 +422,7 @@ wrap_display_handler! {
             _custom_cursor_info: Option<&CursorInfo>,
         ) -> ::std::os::raw::c_int {
             let kind = *type_.as_ref() as u32;
-            send_event(EVT_CURSOR, self.client.view, &Writer::default().u32(kind).u32(0).0);
+            send_event(EVT_CURSOR, self.client.view(), &Writer::default().u32(kind).u32(0).0);
             1
         }
     }
@@ -426,7 +441,7 @@ wrap_load_handler! {
             can_go_back: ::std::os::raw::c_int,
             can_go_forward: ::std::os::raw::c_int,
         ) {
-            let view = self.client.view;
+            let view = self.client.view();
             send_event(EVT_LOAD_STATE, view, &Writer::default().u32((is_loading != 0) as u32).u32(0).0);
             if is_loading == 0 {
                 // Dopiero teraz stan historii jest pewny; potem wstrzymane NavigationCompleted.
@@ -445,7 +460,7 @@ wrap_load_handler! {
         ) {
             let Some(frame) = frame.filter(|f| f.is_main() != 0) else { return };
             // Kolejność WebView2: SourceChanged -> ContentLoading -> HistoryChanged.
-            let view = self.client.view;
+            let view = self.client.view();
             let url = CefString::from(&frame.url()).to_string();
             // about:blank (i podobne) nie przechodzą przez OnBeforeBrowse: NavigationStarting tutaj
             // (bez możliwości anulowania — dokument już się ładuje).
@@ -469,7 +484,7 @@ wrap_load_handler! {
             if frame.map(|f| f.is_main() != 0) != Some(true) {
                 return;
             }
-            finish_navigation(self.client.view, browser, http_status_code, 0);
+            finish_navigation(self.client.view(), browser, http_status_code, 0);
         }
 
         fn on_load_error(
@@ -483,7 +498,7 @@ wrap_load_handler! {
             if frame.map(|f| f.is_main() != 0) != Some(true) {
                 return;
             }
-            finish_navigation(self.client.view, browser, 0, *error_code.as_ref() as i32);
+            finish_navigation(self.client.view(), browser, 0, *error_code.as_ref() as i32);
         }
     }
 }
@@ -560,6 +575,11 @@ pub fn apply_settings(view: u32, flags: u32) {
 }
 
 pub fn apply_user_agent(view: u32, ua: &str) {
+    with_state(|st| {
+        if let Some(v) = st.views.get_mut(&view) {
+            v.user_agent = ua.to_string();
+        }
+    });
     if let Some(b) = view_browser(view) {
         set_user_agent(&b, ua);
     }
@@ -630,7 +650,7 @@ wrap_life_span_handler! {
             popup_features: Option<&PopupFeatures>,
             window_info: Option<&mut WindowInfo>,
             client: Option<&mut Option<Client>>,
-            _settings: Option<&mut BrowserSettings>,
+            settings: Option<&mut BrowserSettings>,
             _extra_info: Option<&mut Option<DictionaryValue>>,
             _no_javascript_access: Option<&mut ::std::os::raw::c_int>,
         ) -> ::std::os::raw::c_int {
@@ -641,8 +661,9 @@ wrap_life_span_handler! {
                 size: popup_features.filter(|f| f.width_set != 0 && f.height_set != 0).map(|f| (f.width.max(0) as u32, f.height.max(0) as u32)),
             };
             let size = features.size;
-            match webview::on_new_window(self.client.view, &url, &name, user_gesture != 0, features) {
-                webview::PopupDecision::Cancel => 1,
+            let popup = NEXT_POPUP.fetch_add(1, Ordering::Relaxed);
+            let (adopt, osr_size) = match webview::on_new_window(self.client.view(), popup, &url, &name, user_gesture != 0, features) {
+                webview::PopupDecision::Cancel => return 1,
                 webview::PopupDecision::Default => {
                     // Natywne okno CEF (zachowuje window.opener); własny klient, żeby zdarzenia
                     // popupu nie trafiały do widoku-rodzica.
@@ -652,7 +673,201 @@ wrap_life_span_handler! {
                     if let Some(client) = client {
                         *client = Some(PopupClientBuilder::new(PopupClient));
                     }
-                    0
+                    return 0;
+                }
+                webview::PopupDecision::Adopt(target) => (Some(target), view_size(target)),
+                webview::PopupDecision::Deferred => (None, size),
+            };
+            // Prawdziwy popup CEF (off-screen), żeby window.opener i uchwyt z window.open działały;
+            // podpinany pod WebView aplikacji, gdy oba są gotowe (on_after_created + decyzja).
+            let (width, height) = osr_size.filter(|s| s.0 > 0 && s.1 > 0).unwrap_or((800, 600));
+            let popup_client = ViewClient::new(popup);
+            with_state(|st| {
+                st.views.insert(popup, View {
+                    browser: None,
+                    devtools_observer: None,
+                    doc_scripts: Vec::new(),
+                    settings: SETTINGS_DEFAULT,
+                    last_source: String::new(),
+                    pending_completion: None,
+                    width,
+                    height,
+                    frames: None,
+                    dropped: false,
+                    user_agent: String::new(),
+                    popup: Some(PendingPopup { adopt, close: false, held: None, intercepted: false, client: popup_client.clone() }),
+                })
+            });
+            if let Some(wi) = window_info {
+                *wi = WindowInfo { windowless_rendering_enabled: true as _, ..Default::default() };
+            }
+            if let Some(settings) = settings {
+                settings.windowless_frame_rate = 60;
+                settings.background_color = 0;
+            }
+            if let Some(client) = client {
+                *client = Some(ViewClientBuilder::new(popup_client));
+            }
+            0
+        }
+
+        fn on_after_created(&self, browser: Option<&mut Browser>) {
+            let (view, Some(browser)) = (self.client.view(), browser) else { return };
+            if view < POPUP_BASE {
+                return;
+            }
+            with_state(|st| {
+                if let Some(v) = st.views.get_mut(&view) {
+                    v.browser = Some(browser.clone());
+                }
+            });
+            popup_progress(view);
+        }
+    }
+}
+
+/// Numery widoków popupów czekających na decyzję (poza zakresem numerów nadawanych przez DLL).
+const POPUP_BASE: u32 = 0x4000_0000;
+static NEXT_POPUP: AtomicU32 = AtomicU32::new(POPUP_BASE);
+
+struct PendingPopup {
+    /// Decyzja: podpiąć pod ten widok.
+    adopt: Option<u32>,
+    /// Decyzja: zamknąć (Handled albo okno domyślne po odroczeniu).
+    close: bool,
+    /// Wstrzymana pierwsza nawigacja popupu (URL), puszczana po podpięciu — wtedy zdarzenia
+    /// nawigacji (NavigationStarting…) trafiają już do WebView aplikacji, jak w WebView2.
+    held: Option<String>,
+    intercepted: bool,
+    client: ViewClient,
+}
+
+fn view_size(view: u32) -> Option<(u32, u32)> {
+    with_state(|st| st.views.get(&view).map(|v| (v.width, v.height))).flatten()
+}
+
+/// Decyzja po odroczeniu (Complete() deferrala NewWindowRequested).
+pub fn popup_decided(popup: u32, decision: webview::PopupDecision, uri: &str, size: Option<(u32, u32)>) {
+    with_state(|st| {
+        let Some(p) = st.views.get_mut(&popup).and_then(|v| v.popup.as_mut()) else { return };
+        match decision {
+            webview::PopupDecision::Adopt(target) => p.adopt = Some(target),
+            webview::PopupDecision::Default => {
+                // Przeglądarka off-screen nie ma okna: nowe okno natywne (bez window.opener).
+                p.close = true;
+                open_native_popup(uri, size);
+            }
+            _ => p.close = true,
+        }
+    });
+    popup_progress(popup);
+}
+
+/// Pierwsza nawigacja popupu czekającego na podpięcie: wstrzymaj (true = anuluj w CEF).
+pub fn popup_hold_navigation(view: u32, url: &str) -> bool {
+    if view < POPUP_BASE {
+        return false;
+    }
+    let held = with_state(|st| {
+        let p = st.views.get_mut(&view)?.popup.as_mut()?;
+        if p.intercepted {
+            return Some(false);
+        }
+        p.intercepted = true;
+        p.held = Some(url.to_string());
+        Some(true)
+    })
+    .flatten()
+    .unwrap_or(false);
+    if held {
+        // Nie w OnBeforeBrowse: podpięcie może od razu puścić nawigację (load_url).
+        post_ui(move || popup_progress(view));
+    }
+    held
+}
+
+/// Wykonuje decyzję, gdy przeglądarka popupu już istnieje.
+fn popup_progress(popup: u32) {
+    let ready = with_state(|st| {
+        let v = st.views.get(&popup)?;
+        let p = v.popup.as_ref()?;
+        (v.browser.is_some() && (p.close || p.adopt.is_some())).then_some(())
+    })
+    .flatten();
+    if ready.is_none() {
+        return;
+    }
+    let Some(v) = with_state(|st| st.views.remove(&popup)).flatten() else { return };
+    let (Some(browser), Some(p)) = (v.browser, v.popup) else { return };
+    match p.adopt.filter(|_| !p.close) {
+        Some(target) => adopt_popup(browser, p, target),
+        None => {
+            if let Some(host) = browser.host() {
+                host.close_browser(1);
+            }
+        }
+    }
+}
+
+/// NewWindow: przeglądarka popupu zastępuje (jeszcze pustą) przeglądarkę widoku aplikacji.
+fn adopt_popup(browser: Browser, p: PendingPopup, target: u32) {
+    let old = with_state(|st| {
+        let v = st.views.get_mut(&target)?;
+        let old = v.browser.replace(browser.clone());
+        let observer = v.devtools_observer.take();
+        v.last_source.clear();
+        v.pending_completion = None;
+        Some((old, observer, v.settings, v.doc_scripts.clone(), v.user_agent.clone()))
+    })
+    .flatten();
+    let Some((old, observer, settings, scripts, ua)) = old else {
+        // Widok aplikacji zniknął w międzyczasie.
+        if let Some(host) = browser.host() {
+            host.close_browser(1);
+        }
+        return;
+    };
+    p.client.id.store(target, Ordering::Relaxed);
+    drop(observer);
+    if let Some(host) = old.and_then(|b| b.host()) {
+        host.close_browser(1);
+    }
+    let registration = browser.host().and_then(|h| {
+        let mut observer = DevToolsObserverBuilder::new(DevToolsObserver { view: target });
+        h.add_dev_tools_message_observer(Some(&mut observer))
+    });
+    with_state(|st| {
+        if let Some(v) = st.views.get_mut(&target) {
+            v.devtools_observer = registration;
+        }
+    });
+    set_user_agent(&browser, &ua);
+    apply_settings(target, settings);
+    set_doc_scripts(target, scripts);
+    if let Some(host) = browser.host() {
+        host.was_resized();
+        host.invalidate(PaintElementType::VIEW);
+    }
+    eprintln!("helper: popup adopted by view {target}");
+    // FIXME: dane POST pierwszej nawigacji giną (load_request z innym pochodzeniem CEF odrzuca).
+    match p.held {
+        Some(url) => {
+            if let Some(frame) = browser.main_frame() {
+                frame.load_url(Some(&url.as_str().into()));
+            }
+        }
+        None => {
+            // Dokument bez nawigacji sieciowej (about:blank) już załadowany: zdarzenia dla aplikacji.
+            let url = browser.main_frame().map(|f| CefString::from(&f.url()).to_string()).unwrap_or_default();
+            if !url.is_empty() {
+                let id = resources::begin_navigation(target);
+                webview::on_navigation_starting(target, id, false, false, &url);
+                set_last_source(target, &url);
+                webview::on_source_changed(target, &url);
+                webview::on_content_loading(target, id);
+                if browser.is_loading() == 0 {
+                    send_history(target, browser.can_go_back() != 0, browser.can_go_forward() != 0);
+                    send_navigation_completed(target, 0, 0);
                 }
             }
         }
@@ -790,7 +1005,7 @@ wrap_jsdialog_handler! {
             let uri = origin_url.map(|u| u.to_string()).unwrap_or_default();
             let message = message_text.map(|m| m.to_string()).unwrap_or_default();
             let default_text = default_prompt_text.map(|t| t.to_string()).unwrap_or_default();
-            show_dialog(self.client.view, &uri, kind, &message, &default_text, callback.clone());
+            show_dialog(self.client.view(), &uri, kind, &message, &default_text, callback.clone());
             1
         }
 
@@ -804,7 +1019,7 @@ wrap_jsdialog_handler! {
             let Some(callback) = callback else { return 0 };
             let uri = browser.and_then(|b| b.main_frame()).map(|f| CefString::from(&f.url()).to_string()).unwrap_or_default();
             let message = message_text.map(|m| m.to_string()).unwrap_or_default();
-            show_dialog(self.client.view, &uri, DIALOG_BEFOREUNLOAD, &message, "", callback.clone());
+            show_dialog(self.client.view(), &uri, DIALOG_BEFOREUNLOAD, &message, "", callback.clone());
             1
         }
 
@@ -830,13 +1045,15 @@ pub fn create_browser(view: u32, width: u32, height: u32) -> bool {
             height: height.max(1),
             frames: None,
             dropped: false,
+            user_agent: String::new(),
+            popup: None,
         })
     });
     let window_info = WindowInfo { windowless_rendering_enabled: true as _, ..Default::default() };
     // Zawsze przezroczyste: w OSR przezroczystość ustala się tylko przy tworzeniu, więc
     // DefaultBackgroundColor nakłada DLL pod klatką (kolor albo zawartość rodzica).
     let settings = BrowserSettings { windowless_frame_rate: 60, background_color: 0, ..Default::default() };
-    let mut client = ViewClientBuilder::new(ViewClient { view });
+    let mut client = ViewClientBuilder::new(ViewClient::new(view));
     let browser = browser_host_create_browser_sync(
         Some(&window_info),
         Some(&mut client),
