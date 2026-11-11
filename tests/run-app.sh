@@ -28,8 +28,8 @@ if [ "${WV2_VISIBLE:-0}" != 1 ]; then
     fi
 fi
 
-exe=$1; shift
-name=$(basename "$exe" .exe)
+exe=${1:?usage: run-app.sh PROGRAM.exe [ARGS...] | --prepare}; shift
+name=$(basename -- "$exe" .exe)
 log=${WV2_LOG:-$ROOT/build/logs/$name.log}
 mkdir -p "$(dirname "$log")" "$WINEPREFIX"
 
@@ -43,13 +43,17 @@ sleep 0.5
 
 if [ ! -f "$WINEPREFIX/system.reg" ]; then
     echo "== creating prefix $WINEPREFIX"
-    WINEDEBUG=-all "$WINE" wineboot -i >/dev/null 2>&1
+    # No Mono/Gecko install prompts: nobody clicks them on a headless runner, and the tests don't need them.
+    WINEDLLOVERRIDES="mscoree,mshtml=" WINEDEBUG=-all "$WINE" wineboot -i >/dev/null 2>&1
     "$WINESERVER" -w   # the registry files are written when wineserver exits
 fi
 
 # Install the runtime with the same script users run (helper straight from build/runtime).
 export WINE_WEBVIEW2_RUNTIME=${WINE_WEBVIEW2_RUNTIME:-$ROOT/build/runtime}
 WINE="$WINE" "$ROOT/wine-webview2" prefix "$WINEPREFIX" >/dev/null
+
+# --prepare: only create the prefix and install the runtime (CI does this once, with a longer timeout).
+[ "$exe" = --prepare ] && { echo "== prefix $WINEPREFIX ready"; exit 0; }
 
 echo "== $exe  (log: $log)"
 cd "$(dirname "$exe")"

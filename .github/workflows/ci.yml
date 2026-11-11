@@ -88,6 +88,9 @@ jobs:
           for t in navtest bgtest popuptest; do make -C tests/apps/$t WV2_SDK="$RUNNER_TEMP/sdk"; done
           make -C tests/apps/hello WV2_SDK="$RUNNER_TEMP/sdk" WEBVIEW_SRC="$RUNNER_TEMP/webview"
 
+      - name: Prepare the test prefix
+        run: timeout 600 tests/run-app.sh --prepare
+
       - name: Tests
         run: tests/check.sh
 

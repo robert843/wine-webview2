@@ -20,7 +20,7 @@ check() {
         return
     fi
     local log=$LOGS/$name.log
-    WV2_LOG=$log timeout "$timeout" "$ROOT/tests/run-app.sh" "$exe" >/dev/null 2>&1
+    WV2_LOG=$log timeout "$timeout" "$ROOT/tests/run-app.sh" "$exe" > "$LOGS/$name.run.txt" 2>&1
     rc=$?
     for pattern in "$@"; do
         grep -aqE -- "$pattern" "$log" 2>/dev/null || missing+=("$pattern")
@@ -28,6 +28,7 @@ check() {
     if [[ " $allowed " != *" $rc "* ]] || [ ${#missing[@]} -gt 0 ]; then
         echo "FAIL $name (exit $rc, log $log)"
         for pattern in "${missing[@]}"; do echo "     missing: $pattern"; done
+        grep -v "^[0-9a-f]\{4\}:" "$LOGS/$name.run.txt" | tail -n 5 | sed 's/^/     | /' 
         failed=$((failed + 1))
     else
         echo "PASS $name"
@@ -35,6 +36,7 @@ check() {
     fi
 }
 
+mkdir -p "$LOGS"
 A=$ROOT/tests/apps
 
 check navtest "$A/navtest/navtest.exe" 90 "0" \
