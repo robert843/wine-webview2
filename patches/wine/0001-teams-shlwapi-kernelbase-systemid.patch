@@ -1,0 +1,399 @@
+diff --git a/dlls/kernel32/kernel32.spec b/dlls/kernel32/kernel32.spec
+index 5d6de13..1b11366 100644
+--- a/dlls/kernel32/kernel32.spec
++++ b/dlls/kernel32/kernel32.spec
+@@ -512,6 +512,7 @@
+ @ stub FindNextVolumeMountPointA
+ @ stub FindNextVolumeMountPointW
+ @ stdcall -import FindNextVolumeW(long ptr long)
++@ stdcall -import FindPackagesByPackageFamily(wstr long ptr ptr ptr ptr ptr)
+ @ stdcall -import FindNLSString(long long wstr long wstr long ptr)
+ @ stdcall -import FindNLSStringEx(wstr long wstr long wstr long ptr ptr ptr long)
+ @ stdcall FindResourceA(long str str)
+diff --git a/dlls/kernelbase/debug.c b/dlls/kernelbase/debug.c
+index 07f64bd..6820da2 100644
+--- a/dlls/kernelbase/debug.c
++++ b/dlls/kernelbase/debug.c
+@@ -720,10 +720,20 @@ LONG WINAPI UnhandledExceptionFilter( EXCEPTION_POINTERS *epointers )
+ /***********************************************************************
+  *         WerGetFlags   (kernelbase.@)
+  */
++static LONG wer_flags;
++
+ HRESULT WINAPI /* DECLSPEC_HOTPATCH */ WerGetFlags( HANDLE process, DWORD *flags )
+ {
+-    FIXME( "(%p, %p) stub\n", process, flags );
+-    return E_NOTIMPL;
++    TRACE( "(%p, %p)\n", process, flags );
++
++    if (!flags) return E_INVALIDARG;
++    if (process != GetCurrentProcess() && GetProcessId( process ) != GetCurrentProcessId())
++    {
++        FIXME( "flags of another process not supported\n" );
++        return E_NOTIMPL;
++    }
++    *flags = ReadNoFence( &wer_flags );
++    return S_OK;
+ }
+ 
+ 
+@@ -773,7 +783,8 @@ HRESULT WINAPI /* DECLSPEC_HOTPATCH */ WerRegisterRuntimeExceptionModule( const
+  */
+ HRESULT WINAPI /* DECLSPEC_HOTPATCH */ WerSetFlags( DWORD flags )
+ {
+-    FIXME("(%ld) stub\n", flags);
++    TRACE( "(%#lx)\n", flags );
++    WriteNoFence( &wer_flags, flags );
+     return S_OK;
+ }
+ 
+diff --git a/dlls/kernelbase/kernelbase.spec b/dlls/kernelbase/kernelbase.spec
+index d004e47..12d8345 100644
+--- a/dlls/kernelbase/kernelbase.spec
++++ b/dlls/kernelbase/kernelbase.spec
+@@ -380,7 +380,7 @@
+ @ stdcall FindNextFileW(long ptr)
+ @ stdcall FindNextStreamW(long ptr)
+ @ stdcall FindNextVolumeW(long ptr long)
+-# @ stub FindPackagesByPackageFamily
++@ stdcall FindPackagesByPackageFamily(wstr long ptr ptr ptr ptr ptr)
+ @ stdcall FindResourceExW(long wstr wstr long)
+ @ stdcall FindResourceW(long wstr wstr)
+ @ stdcall FindStringOrdinal(long wstr long wstr long long)
+diff --git a/dlls/kernelbase/version.c b/dlls/kernelbase/version.c
+index 809577a..7a228e4 100644
+--- a/dlls/kernelbase/version.c
++++ b/dlls/kernelbase/version.c
+@@ -1638,6 +1638,24 @@ LONG WINAPI DECLSPEC_HOTPATCH GetPackagesByPackageFamily(const WCHAR *family_nam
+     return ERROR_SUCCESS;
+ }
+ 
++/***********************************************************************
++ *         FindPackagesByPackageFamily   (kernelbase.@)
++ */
++LONG WINAPI FindPackagesByPackageFamily(const WCHAR *family_name, UINT32 flags, UINT32 *count,
++                                        WCHAR **full_names, UINT32 *buffer_len, WCHAR *buffer, UINT32 *properties)
++{
++    FIXME( "(%s %#x %p %p %p %p %p): stub\n", debugstr_w(family_name), flags, count, full_names, buffer_len,
++           buffer, properties );
++
++    if (!family_name || !count || !buffer_len)
++        return ERROR_INVALID_PARAMETER;
++
++    /* No package deployment: no package of any family is installed. */
++    *count = 0;
++    *buffer_len = 0;
++    return ERROR_SUCCESS;
++}
++
+ /***********************************************************************
+  *         GetPackagePathByFullName   (kernelbase.@)
+  */
+diff --git a/dlls/shlwapi/ordinal.c b/dlls/shlwapi/ordinal.c
+index 4a00c6f..11e43e0 100644
+--- a/dlls/shlwapi/ordinal.c
++++ b/dlls/shlwapi/ordinal.c
+@@ -4568,3 +4568,47 @@ DWORD WINAPI SHGetObjectCompatFlags(IUnknown *pUnk, const CLSID *clsid)
+ 
+     return ret;
+ }
++
++/* Shell global counters identified by SHGLOBALCOUNTER (Vista+; the older ordinals 223, 224 and
++ * 424 take a semaphore handle instead). Windows keeps them in named semaphores shared by all
++ * processes of the session; this implementation keeps them per process. */
++static LONG global_counters[64];
++
++static LONG *get_global_counter(int id)
++{
++    if (id < 0 || id >= ARRAY_SIZE(global_counters)) return NULL;
++    return &global_counters[id];
++}
++
++/*************************************************************************
++ *      @	[SHLWAPI.632]
++ */
++LONG WINAPI SHGlobalCounterGetValue_Vista(int id)
++{
++    LONG *counter = get_global_counter(id);
++
++    TRACE("(%d)\n", id);
++    return counter ? ReadNoFence(counter) : 0;
++}
++
++/*************************************************************************
++ *      @	[SHLWAPI.633]
++ */
++LONG WINAPI SHGlobalCounterIncrement_Vista(int id)
++{
++    LONG *counter = get_global_counter(id);
++
++    TRACE("(%d)\n", id);
++    return counter ? InterlockedIncrement(counter) : 0;
++}
++
++/*************************************************************************
++ *      @	[SHLWAPI.634]
++ */
++LONG WINAPI SHGlobalCounterDecrement_Vista(int id)
++{
++    LONG *counter = get_global_counter(id);
++
++    TRACE("(%d)\n", id);
++    return counter ? InterlockedDecrement(counter) : 0;
++}
+diff --git a/dlls/shlwapi/shlwapi.spec b/dlls/shlwapi/shlwapi.spec
+index 853a938..77bc1ec 100644
+--- a/dlls/shlwapi/shlwapi.spec
++++ b/dlls/shlwapi/shlwapi.spec
+@@ -545,6 +545,9 @@
+ 549 stdcall -noname SHCoCreateInstanceAC(ptr ptr long ptr ptr)
+ 550 stub -noname GetTemplateInfoFromHandle
+ 551 stub -noname IShellFolder_CompareIDs
++632 stdcall -noname SHGlobalCounterGetValue_Vista(long)
++633 stdcall -noname SHGlobalCounterIncrement_Vista(long)
++634 stdcall -noname SHGlobalCounterDecrement_Vista(long)
+ 
+ @ stdcall AssocCreate(int128 ptr ptr)
+ @ stdcall AssocGetPerceivedType(wstr ptr ptr ptr)
+diff --git a/dlls/windows.system.profile.systemid/classes.idl b/dlls/windows.system.profile.systemid/classes.idl
+index 1ca3293..38cba16 100644
+--- a/dlls/windows.system.profile.systemid/classes.idl
++++ b/dlls/windows.system.profile.systemid/classes.idl
+@@ -25,4 +25,5 @@ import "windows.system.profile.idl";
+ 
+ namespace Windows.System.Profile {
+     runtimeclass SystemIdentification;
++    runtimeclass WindowsIntegrityPolicy;
+ }
+diff --git a/dlls/windows.system.profile.systemid/main.c b/dlls/windows.system.profile.systemid/main.c
+index b00cbc5..e311d3a 100644
+--- a/dlls/windows.system.profile.systemid/main.c
++++ b/dlls/windows.system.profile.systemid/main.c
+@@ -303,6 +303,152 @@ static struct system_id_statics system_id_statics =
+ 
+ static IActivationFactory *system_id_factory = &system_id_statics.IActivationFactory_iface;
+ 
++/* Windows.System.Profile.WindowsIntegrityPolicy (Smart App Control): never enabled. */
++struct integrity_policy_statics
++{
++    IActivationFactory IActivationFactory_iface;
++    IWindowsIntegrityPolicyStatics IWindowsIntegrityPolicyStatics_iface;
++    LONG ref;
++};
++
++static inline struct integrity_policy_statics *integrity_policy_from_IActivationFactory( IActivationFactory *iface )
++{
++    return CONTAINING_RECORD( iface, struct integrity_policy_statics, IActivationFactory_iface );
++}
++
++static HRESULT WINAPI integrity_factory_QueryInterface( IActivationFactory *iface, REFIID iid, void **out )
++{
++    struct integrity_policy_statics *impl = integrity_policy_from_IActivationFactory( iface );
++
++    TRACE( "iface %p, iid %s, out %p.\n", iface, debugstr_guid( iid ), out );
++
++    if (IsEqualGUID( iid, &IID_IUnknown ) ||
++        IsEqualGUID( iid, &IID_IInspectable ) ||
++        IsEqualGUID( iid, &IID_IAgileObject ) ||
++        IsEqualGUID( iid, &IID_IActivationFactory ))
++    {
++        *out = &impl->IActivationFactory_iface;
++        IInspectable_AddRef( *out );
++        return S_OK;
++    }
++
++    if (IsEqualGUID( iid, &IID_IWindowsIntegrityPolicyStatics ))
++    {
++        *out = &impl->IWindowsIntegrityPolicyStatics_iface;
++        IInspectable_AddRef( *out );
++        return S_OK;
++    }
++
++    FIXME( "%s not implemented, returning E_NOINTERFACE.\n", debugstr_guid( iid ) );
++    *out = NULL;
++    return E_NOINTERFACE;
++}
++
++static ULONG WINAPI integrity_factory_AddRef( IActivationFactory *iface )
++{
++    struct integrity_policy_statics *impl = integrity_policy_from_IActivationFactory( iface );
++    ULONG ref = InterlockedIncrement( &impl->ref );
++    TRACE( "iface %p, ref %lu.\n", iface, ref );
++    return ref;
++}
++
++static ULONG WINAPI integrity_factory_Release( IActivationFactory *iface )
++{
++    struct integrity_policy_statics *impl = integrity_policy_from_IActivationFactory( iface );
++    ULONG ref = InterlockedDecrement( &impl->ref );
++    TRACE( "iface %p, ref %lu.\n", iface, ref );
++    return ref;
++}
++
++static const struct IActivationFactoryVtbl integrity_factory_vtbl =
++{
++    integrity_factory_QueryInterface,
++    integrity_factory_AddRef,
++    integrity_factory_Release,
++    /* IInspectable methods */
++    factory_GetIids,
++    factory_GetRuntimeClassName,
++    factory_GetTrustLevel,
++    /* IActivationFactory methods */
++    factory_ActivateInstance,
++};
++
++DEFINE_IINSPECTABLE( integrity_policy_statics, IWindowsIntegrityPolicyStatics, struct integrity_policy_statics, IActivationFactory_iface )
++
++static HRESULT WINAPI integrity_policy_statics_get_IsEnabled( IWindowsIntegrityPolicyStatics *iface, boolean *value )
++{
++    TRACE( "iface %p, value %p.\n", iface, value );
++    if (!value) return E_POINTER;
++    *value = FALSE;
++    return S_OK;
++}
++
++static HRESULT WINAPI integrity_policy_statics_get_IsEnabledForTrial( IWindowsIntegrityPolicyStatics *iface, boolean *value )
++{
++    TRACE( "iface %p, value %p.\n", iface, value );
++    if (!value) return E_POINTER;
++    *value = FALSE;
++    return S_OK;
++}
++
++static HRESULT WINAPI integrity_policy_statics_get_CanDisable( IWindowsIntegrityPolicyStatics *iface, boolean *value )
++{
++    TRACE( "iface %p, value %p.\n", iface, value );
++    if (!value) return E_POINTER;
++    *value = FALSE;
++    return S_OK;
++}
++
++static HRESULT WINAPI integrity_policy_statics_get_IsDisableSupported( IWindowsIntegrityPolicyStatics *iface, boolean *value )
++{
++    TRACE( "iface %p, value %p.\n", iface, value );
++    if (!value) return E_POINTER;
++    *value = FALSE;
++    return S_OK;
++}
++
++static HRESULT WINAPI integrity_policy_statics_add_PolicyChanged( IWindowsIntegrityPolicyStatics *iface,
++        IEventHandler_IInspectable *handler, EventRegistrationToken *token )
++{
++    FIXME( "iface %p, handler %p, token %p stub!\n", iface, handler, token );
++    if (!token) return E_POINTER;
++    token->value = 0xdeadbeef;
++    return S_OK;
++}
++
++static HRESULT WINAPI integrity_policy_statics_remove_PolicyChanged( IWindowsIntegrityPolicyStatics *iface, EventRegistrationToken token )
++{
++    FIXME( "iface %p, token %#I64x stub!\n", iface, token.value );
++    return S_OK;
++}
++
++static const struct IWindowsIntegrityPolicyStaticsVtbl integrity_policy_statics_vtbl =
++{
++    integrity_policy_statics_QueryInterface,
++    integrity_policy_statics_AddRef,
++    integrity_policy_statics_Release,
++    /* IInspectable methods */
++    integrity_policy_statics_GetIids,
++    integrity_policy_statics_GetRuntimeClassName,
++    integrity_policy_statics_GetTrustLevel,
++    /* IWindowsIntegrityPolicyStatics methods */
++    integrity_policy_statics_get_IsEnabled,
++    integrity_policy_statics_get_IsEnabledForTrial,
++    integrity_policy_statics_get_CanDisable,
++    integrity_policy_statics_get_IsDisableSupported,
++    integrity_policy_statics_add_PolicyChanged,
++    integrity_policy_statics_remove_PolicyChanged,
++};
++
++static struct integrity_policy_statics integrity_policy_statics =
++{
++    {&integrity_factory_vtbl},
++    {&integrity_policy_statics_vtbl},
++    1,
++};
++
++static IActivationFactory *integrity_policy_factory = &integrity_policy_statics.IActivationFactory_iface;
++
+ HRESULT WINAPI DllGetClassObject( REFCLSID clsid, REFIID riid, void **out )
+ {
+     FIXME( "clsid %s, riid %s, out %p stub!\n", debugstr_guid( clsid ), debugstr_guid( riid ), out );
+@@ -319,6 +465,8 @@ HRESULT WINAPI DllGetActivationFactory( HSTRING classid, IActivationFactory **fa
+ 
+     if (!wcscmp( name, RuntimeClass_Windows_System_Profile_SystemIdentification ))
+         IActivationFactory_QueryInterface( system_id_factory, &IID_IActivationFactory, (void **)factory );
++    if (!wcscmp( name, RuntimeClass_Windows_System_Profile_WindowsIntegrityPolicy ))
++        IActivationFactory_QueryInterface( integrity_policy_factory, &IID_IActivationFactory, (void **)factory );
+ 
+     if (*factory) return S_OK;
+     return CLASS_E_CLASSNOTAVAILABLE;
+diff --git a/dlls/windows.system.profile.systemid/private.h b/dlls/windows.system.profile.systemid/private.h
+index d1bcd39..fa977ba 100644
+--- a/dlls/windows.system.profile.systemid/private.h
++++ b/dlls/windows.system.profile.systemid/private.h
+@@ -30,6 +30,7 @@
+ 
+ #include "wine/debug.h"
+ 
++#define WIDL_using_Windows_Foundation
+ #define WIDL_using_Windows_System_Profile
+ #define WIDL_using_Windows_Storage_Streams
+ #include "windows.system.profile.h"
+diff --git a/include/windows.system.profile.idl b/include/windows.system.profile.idl
+index be3cb80..9664d6d 100644
+--- a/include/windows.system.profile.idl
++++ b/include/windows.system.profile.idl
+@@ -36,10 +36,12 @@ namespace Windows.System.Profile {
+     interface IAnalyticsVersionInfo2;
+     interface ISystemIdentificationInfo;
+     interface ISystemIdentificationStatics;
++    interface IWindowsIntegrityPolicyStatics;
+     runtimeclass AnalyticsVersionInfo;
+     runtimeclass AnalyticsInfo;
+     runtimeclass SystemIdentification;
+     runtimeclass SystemIdentificationInfo;
++    runtimeclass WindowsIntegrityPolicy;
+ 
+     [contract(Windows.Foundation.UniversalApiContract, 3.0)]
+     enum SystemIdentificationSource
+@@ -95,6 +97,21 @@ namespace Windows.System.Profile {
+         HRESULT GetSystemIdForUser([in] Windows.System.User *user, [out, retval] Windows.System.Profile.SystemIdentificationInfo **result);
+     }
+ 
++    [
++        contract(Windows.Foundation.UniversalApiContract, 14.0),
++        exclusiveto(Windows.System.Profile.WindowsIntegrityPolicy),
++        uuid(7d1d81db-8d63-4789-9ea5-ddcf65a94f3c)
++    ]
++    interface IWindowsIntegrityPolicyStatics : IInspectable
++    {
++        [propget] HRESULT IsEnabled([out, retval] boolean *value);
++        [propget] HRESULT IsEnabledForTrial([out, retval] boolean *value);
++        [propget] HRESULT CanDisable([out, retval] boolean *value);
++        [propget] HRESULT IsDisableSupported([out, retval] boolean *value);
++        [eventadd] HRESULT PolicyChanged([in] Windows.Foundation.EventHandler<IInspectable *> *handler, [out, retval] EventRegistrationToken *token);
++        [eventremove] HRESULT PolicyChanged([in] EventRegistrationToken token);
++    }
++
+     [
+         contract(Windows.Foundation.UniversalApiContract, 1.0),
+         marshaling_behavior(agile),
+@@ -136,4 +153,14 @@ namespace Windows.System.Profile {
+     {
+         [default] interface Windows.System.Profile.ISystemIdentificationInfo;
+     }
++
++    [
++        contract(Windows.Foundation.UniversalApiContract, 14.0),
++        marshaling_behavior(agile),
++        static(Windows.System.Profile.IWindowsIntegrityPolicyStatics, Windows.Foundation.UniversalApiContract, 14.0),
++        threading(both)
++    ]
++    runtimeclass WindowsIntegrityPolicy
++    {
++    }
+ }
