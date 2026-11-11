@@ -76,7 +76,15 @@ copy_files() {
     [ -f "$SRC_X64/EmbeddedBrowserWebView.dll" ] || die "runtime files not found in $SRC_X64"
     mkdir -p "$rt/EBWebView/x64" "$rt/EBWebView/x86"
     cp "$SRC_X64/EmbeddedBrowserWebView.dll" "$SRC_X64/embeddedbrowserwebview.so" "$rt/EBWebView/x64/"
-    [ -f "$SRC_X86/EmbeddedBrowserWebView.dll" ] && cp "$SRC_X86/EmbeddedBrowserWebView.dll" "$rt/EBWebView/x86/"
+    # x86: in the new WoW64 mode the 32-bit DLL uses x64/embeddedbrowserwebview.so; the old mode
+    # (32-bit unix side) needs its own 32-bit library, shipped when it was built.
+    if [ -f "$SRC_X86/EmbeddedBrowserWebView.dll" ]; then
+        cp "$SRC_X86/EmbeddedBrowserWebView.dll" "$rt/EBWebView/x86/"
+        if [ -f "$SRC_X86/embeddedbrowserwebview.so" ]; then
+            cp "$SRC_X86/embeddedbrowserwebview.so" "$rt/EBWebView/x86/"
+        fi
+        ln -sfn "$helper" "$rt/EBWebView/x86/wine-webview2-helper"
+    fi
     cp "$SRC_EXE" "$rt/"
     ln -sfn "$helper" "$rt/EBWebView/x64/wine-webview2-helper"
 }

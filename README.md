@@ -30,14 +30,14 @@ Implemented: environment and controller creation, navigation and its events, `Ex
 `WindowCloseRequested`, JavaScript dialogs, mouse/keyboard/cursor input, `<select>` popups.
 
 Not yet: IME, clipboard integration, drag and drop, file chooser, DPI scaling, context menus,
-downloads, profiles, `AddHostObjectToScript`, composition mode (`CompositionController`), 32-bit
-applications.
+downloads, profiles, `AddHostObjectToScript`, composition mode (`CompositionController`).
 
 ## Requirements
 
 - **Wine 11.2 or newer**, or **Proton Experimental**. The runtime loads its Unix library with an API
   that older Wine (including the stable Proton 11.0) does not have.
-- Linux x86_64, 64-bit Windows applications.
+- Linux x86_64. 64-bit and 32-bit Windows applications (32-bit works in both Wine modes: the new
+  WoW64 mode and the classic one with a 32-bit Unix side).
 - Wine built with GnuTLS (all distribution packages are), otherwise HTTPS does not work at all.
 
 ## Installation

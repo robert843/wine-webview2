@@ -19,9 +19,9 @@ check() {
         skipped=$((skipped + 1))
         return
     fi
-    timeout "$timeout" "$ROOT/tests/run-app.sh" "$exe" >/dev/null 2>&1
+    local log=$LOGS/$name.log
+    WV2_LOG=$log timeout "$timeout" "$ROOT/tests/run-app.sh" "$exe" >/dev/null 2>&1
     rc=$?
-    local log=$LOGS/$(basename "$exe" .exe).log
     for pattern in "$@"; do
         grep -aqE -- "$pattern" "$log" 2>/dev/null || missing+=("$pattern")
     done
@@ -38,6 +38,11 @@ check() {
 A=$ROOT/tests/apps
 
 check navtest "$A/navtest/navtest.exe" 90 "0" \
+    'NavigationCompleted id=1 success=1' \
+    'Title=Page B CanGoBack=1'
+
+# 32-bit application: the x86 DLL with a 32-bit unix library (old mode) or the 64-bit one (WoW64).
+check navtest-x86 "$A/navtest/x86/navtest.exe" 90 "0" \
     'NavigationCompleted id=1 success=1' \
     'Title=Page B CanGoBack=1'
 

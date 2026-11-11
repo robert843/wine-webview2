@@ -59,7 +59,7 @@ jobs:
           sudo wget -qNP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources
           sudo apt-get update -q
           sudo apt-get install -yq --install-recommends wine-devel wine-devel-dev
-          sudo apt-get install -yq gcc-mingw-w64 g++-mingw-w64 cmake ninja-build xvfb x11-utils \
+          sudo apt-get install -yq gcc-mingw-w64 g++-mingw-w64 gcc-multilib cmake ninja-build xvfb x11-utils \
             libnss3 libnspr4 libatk1.0-0t64 libatk-bridge2.0-0t64 libatspi2.0-0t64 libcups2t64 \
             libxcomposite1 libxdamage1 libxrandr2 libgbm1 libxkbcommon0 libasound2t64 libpango-1.0-0 libcairo2
           $WINE --version

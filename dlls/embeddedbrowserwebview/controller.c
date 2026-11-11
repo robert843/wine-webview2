@@ -626,25 +626,44 @@ static DWORD WINAPI reader_thread(void *arg)
     return 0;
 }
 
-static NTSTATUS load_unixlib(void)
+static NTSTATUS try_load_unixlib(const WCHAR *path)
 {
-    WCHAR path[MAX_PATH], *p;
     UNICODE_STRING nt_name;
     unixlib_module_t module;
     NTSTATUS status;
 
+    if (!RtlDosPathNameToNtPathName_U(path, &nt_name, NULL, NULL)) return STATUS_OBJECT_PATH_INVALID;
+    status = __wine_load_unix_lib(&nt_name, &module, &unix_handle);
+    RtlFreeUnicodeString(&nt_name);
+    if (!status) TRACE("loaded unix library %s\n", debugstr_w(path));
+    return status;
+}
+
+static NTSTATUS load_unixlib(void)
+{
+    WCHAR path[MAX_PATH], *p;
+    NTSTATUS status;
+
     /* The unix library lives next to the DLL (overridable for development). */
-    if (!GetEnvironmentVariableW(L"WINE_WEBVIEW2_UNIXLIB", path, ARRAY_SIZE(path)))
+    if (GetEnvironmentVariableW(L"WINE_WEBVIEW2_UNIXLIB", path, ARRAY_SIZE(path)))
+        status = try_load_unixlib(path);
+    else
     {
         GetModuleFileNameW(webview2_instance, path, ARRAY_SIZE(path));
         if ((p = wcsrchr(path, '\\'))) p[1] = 0;
         wcscat(path, L"embeddedbrowserwebview.so");
+        status = try_load_unixlib(path);
+#ifndef _WIN64
+        /* New WoW64 mode has no 32-bit unix side: use the 64-bit library from ..\x64\ through its
+         * __wine_unix_call_wow64_funcs. */
+        if (status && p && p - path >= 4 && !wcsnicmp(p - 3, L"x86", 3))
+        {
+            memcpy(p - 3, L"x64", 3 * sizeof(WCHAR));
+            status = try_load_unixlib(path);
+        }
+#endif
     }
-    if (!RtlDosPathNameToNtPathName_U(path, &nt_name, NULL, NULL)) return STATUS_OBJECT_PATH_INVALID;
-    status = __wine_load_unix_lib(&nt_name, &module, &unix_handle);
-    RtlFreeUnicodeString(&nt_name);
     if (status) ERR("cannot load unix library %s: %#lx (Wine >= 11.2 required)\n", debugstr_w(path), status);
-    else TRACE("loaded unix library %s\n", debugstr_w(path));
     return status;
 }
 

@@ -86,6 +86,9 @@ static LRESULT CALLBACK wndproc(HWND h, UINT msg, WPARAM wp, LPARAM lp) {
     return DefWindowProcW(h, msg, wp, lp);
 }
 
+// A named CALLBACK function: 32-bit lambdas do not convert to stdcall function pointers.
+static void CALLBACK on_timeout(HWND, UINT, UINT_PTR, DWORD) { log("== timeout"); PostQuitMessage(2); }
+
 int WINAPI WinMain(HINSTANCE inst, HINSTANCE, LPSTR, int) {
     CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
     WNDCLASSW wc = {}; wc.lpfnWndProc = wndproc; wc.hInstance = inst; wc.lpszClassName = L"navtest";
@@ -118,7 +121,7 @@ int WINAPI WinMain(HINSTANCE inst, HINSTANCE, LPSTR, int) {
                 return S_OK; }));
     log("CreateCoreWebView2EnvironmentWithOptions hr=%#lx", hr);
     MSG msg;
-    SetTimer(nullptr, 0, 20000, [](HWND, UINT, UINT_PTR, DWORD) { log("== timeout"); PostQuitMessage(2); });
+    SetTimer(nullptr, 0, 20000, on_timeout);
     while (GetMessageW(&msg, nullptr, 0, 0)) { TranslateMessage(&msg); DispatchMessageW(&msg); }
     if (controller) controller->Close();
     return 0;

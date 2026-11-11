@@ -4,3 +4,4 @@
 /tests/apps/*/*.dll
 /helper/target/
 /tests/apps/apisample/out/
+/tests/apps/*/x86/

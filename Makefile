@@ -24,6 +24,8 @@ WINE_MSVCRT = -I$(WINE_INSTALL)/include/wine/msvcrt
 OBJDIR_FLAG =
 crt0_dir    = $(WINE_INSTALL)/lib/wine/$(1)-windows
 NTDLL_UNIX  = $(WINE_INSTALL)/lib/wine/x86_64-unix
+# Old (non-WoW64) 32-bit support: a 32-bit unix library when the installation has a 32-bit unix side.
+NTDLL_UNIX32 = $(wildcard $(WINE_INSTALL)/lib/wine/i386-unix/ntdll.so)
 else
 WINE_SRC   ?= $(REF)/wine
 WINE_BUILD ?= $(REF)/wine-build
@@ -54,8 +56,10 @@ LIBS     = -lole32 -luser32 -lgdi32 -lshlwapi -luxtheme -lkernel32 -luuid -lucrt
 UNIX_CFLAGS = -O2 -g -Wall -fPIC -fno-strict-aliasing -fvisibility=hidden -DWINE_UNIX_LIB -D__WINESRC__ \
               -I$(DLL) $(WINE_INCS)
 
+UNIX32 = $(if $(NTDLL_UNIX32),$(B)/i386/embeddedbrowserwebview.so)
+
 all: $(B)/x86_64/EmbeddedBrowserWebView.dll $(B)/i386/EmbeddedBrowserWebView.dll \
-     $(B)/x86_64/embeddedbrowserwebview.so $(B)/x86_64/msedgewebview2.exe runtime
+     $(B)/x86_64/embeddedbrowserwebview.so $(UNIX32) $(B)/x86_64/msedgewebview2.exe runtime
 
 # Dummy browser process: apps check that the file exists in the runtime directory.
 $(B)/x86_64/msedgewebview2.exe: programs/msedgewebview2/main.c $(B)/version.res
@@ -69,6 +73,11 @@ $(B)/x86_64/msedgewebview2.exe: programs/msedgewebview2/main.c $(B)/version.res
 $(B)/x86_64/embeddedbrowserwebview.so: $(DLL)/unixlib.c $(DLL)/unixlib.h $(DLL)/protocol.h
 	@mkdir -p $(B)/x86_64
 	gcc -shared -o $@ $< $(UNIX_CFLAGS) -L$(NTDLL_UNIX) -l:ntdll.so -Wl,-z,defs -lpthread
+
+# 32-bit unix side for the old WoW64-less mode (in the new mode the x86 DLL uses the 64-bit library).
+$(B)/i386/embeddedbrowserwebview.so: $(DLL)/unixlib.c $(DLL)/unixlib.h $(DLL)/protocol.h
+	@mkdir -p $(B)/i386
+	gcc -m32 -shared -o $@ $< $(UNIX_CFLAGS) -L$(dir $(NTDLL_UNIX32)) -l:ntdll.so -Wl,-z,defs -lpthread
 
 # Helper (Rust + CEF) and the runtime directory with the CEF files.
 runtime:
@@ -130,6 +139,7 @@ dist: all
 	cp -L $(CEF_DIR)/CREDITS.html $(DIST)/helper/CHROMIUM-CREDITS.html
 	cp $(B)/x86_64/EmbeddedBrowserWebView.dll $(B)/x86_64/embeddedbrowserwebview.so $(DIST)/prefix/x64/
 	cp $(B)/i386/EmbeddedBrowserWebView.dll $(DIST)/prefix/x86/
+	[ ! -f $(B)/i386/embeddedbrowserwebview.so ] || cp $(B)/i386/embeddedbrowserwebview.so $(DIST)/prefix/x86/
 	cp $(B)/x86_64/msedgewebview2.exe $(DIST)/prefix/
 	tar -C $(B)/dist -cJf $(B)/dist/wine-webview2-$(VERSION).tar.xz wine-webview2-$(VERSION)
 	@ls -la $(B)/dist/wine-webview2-$(VERSION).tar.xz

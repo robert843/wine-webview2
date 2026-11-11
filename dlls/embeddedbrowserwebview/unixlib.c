@@ -473,3 +473,77 @@ const unixlib_entry_t __wine_unix_call_funcs[] =
 };
 
 C_ASSERT(ARRAYSIZE(__wine_unix_call_funcs) == unix_funcs_count);
+
+#ifdef _WIN64
+
+/* 32-bit DLL in the new WoW64 mode: the same calls with 32-bit pointers in the parameters. */
+
+static NTSTATUS wow64_helper_send(void *args)
+{
+    struct
+    {
+        helper_handle_t handle;
+        UINT32 type;
+        UINT32 view;
+        ULONG data;
+        UINT32 size;
+    } *params32 = args;
+    struct helper_send_params params =
+    {
+        params32->handle, params32->type, params32->view, ULongToPtr(params32->data), params32->size
+    };
+
+    return helper_send(&params);
+}
+
+static NTSTATUS wow64_helper_recv(void *args)
+{
+    struct
+    {
+        helper_handle_t handle;
+        ULONG buffer;
+        UINT32 size;
+        struct wv2_msg_header header;
+    } *params32 = args;
+    struct helper_recv_params params = {params32->handle, ULongToPtr(params32->buffer), params32->size};
+    NTSTATUS status = helper_recv(&params);
+
+    params32->header = params.header;
+    return status;
+}
+
+static NTSTATUS wow64_helper_copy_frame(void *args)
+{
+    struct
+    {
+        helper_handle_t handle;
+        UINT32 view;
+        UINT32 slot;
+        UINT64 generation;
+        ULONG dst;
+        UINT32 dst_stride;
+        UINT32 width;
+        UINT32 height;
+    } *params32 = args;
+    struct helper_copy_frame_params params =
+    {
+        params32->handle, params32->view, params32->slot, params32->generation,
+        ULongToPtr(params32->dst), params32->dst_stride, params32->width, params32->height
+    };
+
+    return helper_copy_frame(&params);
+}
+
+/* helper_start and helper_stop have no pointers: the layout is the same on both sides. */
+const unixlib_entry_t __wine_unix_call_wow64_funcs[] =
+{
+    helper_start,
+    helper_stop,
+    wow64_helper_send,
+    wow64_helper_recv,
+    wow64_helper_copy_frame,
+};
+
+C_ASSERT(ARRAYSIZE(__wine_unix_call_wow64_funcs) == unix_funcs_count);
+
+#endif /* _WIN64 */
