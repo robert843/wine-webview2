@@ -8,7 +8,7 @@ native Linux build of Chromium ([CEF](https://bitbucket.org/chromiumembedded/cef
 [Wine Gecko](https://gitlab.winehq.org/wine/wine/-/wikis/Gecko) stands in for Internet Explorer and
 [DXVK](https://github.com/doitsujin/dxvk) for Direct3D.
 
-> **Status: 0.1.0 - preview.** It works with real applications, but many WebView2 APIs are still
+> **Status: preview.** It works with real applications, but many WebView2 APIs are still
 > stubs. Expect rough edges and please report what breaks.
 
 ## What works

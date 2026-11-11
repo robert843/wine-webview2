@@ -126,7 +126,8 @@ check: all
 	tests/check.sh
 
 # Release tarball wine-webview2-<version>.tar.xz: script + stripped helper + prefix files.
-VERSION ?= $(shell sed -n 's/^VERSION=//p' wine-webview2)
+# Default: the git version (v0.1.1-3-gabc1234 -> 0.1.1-3-gabc1234); CI passes VERSION.
+VERSION ?= $(or $(shell git describe --tags --dirty 2>/dev/null | sed 's/^v//'),dev)
 DIST    = $(B)/dist/wine-webview2-$(VERSION)
 dist: all
 	rm -rf $(DIST) && mkdir -p $(DIST)/helper $(DIST)/prefix/x64 $(DIST)/prefix/x86

@@ -25,7 +25,8 @@
 # Requires Wine >= 11.2 (Proton Experimental); older Wine cannot load the runtime's Unix library.
 set -euo pipefail
 
-VERSION=0.1.0
+# "dev" in the source tree; "make dist" writes the release version here.
+VERSION=dev
 RUNTIME_VERSION=156.0.9999.0
 CLIENT_ID='{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}'
 
@@ -266,6 +267,9 @@ case "${1:-}" in
     uninstall) shift; cmd_uninstall "$@" ;;
     steam-uninstall) shift; cmd_steam_uninstall "$@" ;;
     status) shift; cmd_status "$@" ;;
-    version|--version) echo "wine-webview2 $VERSION (runtime $RUNTIME_VERSION)" ;;
+    version|--version)
+        v=$VERSION
+        if [ "$v" = dev ] && d=$(git -C "$HERE" describe --tags --dirty 2>/dev/null); then v="dev (${d#v})"; fi
+        echo "wine-webview2 $v (runtime $RUNTIME_VERSION)" ;;
     *) sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//'; exit 1 ;;
 esac
