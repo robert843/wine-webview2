@@ -2,7 +2,7 @@
 name = "gen-stubs"
 version = "0.1.0"
 edition = "2021"
-description = "Generuje szkielet logujący obiektów COM WebView2 (C, styl Wine) z nagłówka widl + IDL"
+description = "Generates the WebView2 COM proxy (Wine-style C) and Rust API bindings from the widl header and IDL"
 publish = false
 
 [dependencies]

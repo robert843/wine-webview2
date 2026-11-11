@@ -34,7 +34,9 @@ log=${WV2_LOG:-$ROOT/build/logs/$name.log}
 mkdir -p "$(dirname "$log")" "$WINEPREFIX"
 
 # Clean start: kill leftovers of previous runs in this prefix (e.g. debugger windows).
+# Build tree: <build>/server/wineserver; installed Wine (e.g. /opt/wine-devel/bin): next to wine.
 WINESERVER=${WINESERVER:-$(dirname "$WINE")/server/wineserver}
+[ -x "$WINESERVER" ] || WINESERVER=$(dirname "$WINE")/wineserver
 [ -x "$WINESERVER" ] || WINESERVER=wineserver
 "$WINESERVER" -k >/dev/null 2>&1 || true
 sleep 0.5

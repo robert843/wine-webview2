@@ -10,7 +10,9 @@ const { listen } = window.__TAURI__.event;
     await invoke('report', { msg: 'page loaded: ' + location.href + ' ua=' + navigator.userAgent.slice(0, 60) });
     const r = await invoke('greet', { name: 'Wine' });
     log(r); await invoke('report', { msg: 'greet -> ' + r });
-    const got = new Promise(res => listen('pong', e => res(e.payload)));
+    // Wait until the listener is registered (an IPC round trip) before triggering the event.
+    let resolve; const got = new Promise(r => resolve = r);
+    await listen('pong', e => resolve(e.payload));
     await invoke('ping_event');
     const p = await got;
     log('pong ' + JSON.stringify(p)); await invoke('report', { msg: 'event pong -> ' + JSON.stringify(p) });

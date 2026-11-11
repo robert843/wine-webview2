@@ -1,0 +1,126 @@
+name: CI
+
+# Pull requests: build + tests. Push to master (merged PR): build + tests + release.
+# Version bump from commit messages since the last tag: #major, #minor, #none (no release),
+# otherwise patch. The first release is 0.1.0.
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+env:
+  WINE_INSTALL: /opt/wine-devel
+  WINE: /opt/wine-devel/bin/wine
+  CEF_PATH: ${{ github.workspace }}/../cef-rs
+  WV2_SDK_VERSION: 1.0.4314.35
+  # webview/webview revision used by the hello test
+  WEBVIEW_REV: f244320ab0d82fdab98a094e02996fc26d0ffd0c
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Next version
+        id: version
+        run: |
+          last=$(git describe --tags --abbrev=0 --match 'v[0-9]*.[0-9]*.[0-9]*' 2>/dev/null || true)
+          if [ -z "$last" ]; then
+            next=0.1.0
+          else
+            log=$(git log --format=%B "$last..HEAD")
+            IFS=. read -r major minor patch <<< "${last#v}"
+            if grep -q '#none' <<< "$log"; then next=
+            elif grep -q '#major' <<< "$log"; then next=$((major + 1)).0.0
+            elif grep -q '#minor' <<< "$log"; then next=$major.$((minor + 1)).0
+            else next=$major.$minor.$((patch + 1)); fi
+          fi
+          if [ "${{ github.event_name }}" != push ]; then
+            echo "dist=0.0.0-pr${{ github.event.number }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "dist=${next:-0.0.0-dev}" >> "$GITHUB_OUTPUT"
+          fi
+          echo "version=$next" >> "$GITHUB_OUTPUT"
+          echo "last tag: ${last:-none}, next version: ${next:-none}"
+
+      - name: Install Wine (WineHQ devel) and build dependencies
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo mkdir -pm755 /etc/apt/keyrings
+          sudo wget -qO /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+          sudo wget -qNP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources
+          sudo apt-get update -q
+          sudo apt-get install -yq --install-recommends wine-devel wine-devel-dev
+          sudo apt-get install -yq gcc-mingw-w64 g++-mingw-w64 cmake ninja-build xvfb x11-utils \
+            libnss3 libnspr4 libatk1.0-0t64 libatk-bridge2.0-0t64 libatspi2.0-0t64 libcups2t64 \
+            libxcomposite1 libxdamage1 libxrandr2 libgbm1 libxkbcommon0 libasound2t64 libpango-1.0-0 libcairo2
+          $WINE --version
+
+      - name: Cache CEF and cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ env.CEF_PATH }}
+            ~/.cargo/registry
+            helper/target
+            tools/gen-stubs/target
+          key: cef-cargo-${{ hashFiles('helper/Cargo.lock', 'tools/gen-stubs/Cargo.lock') }}
+          restore-keys: cef-cargo-
+
+      - name: Build
+        run: make -j"$(nproc)" WINE_INSTALL=$WINE_INSTALL CEF_PATH=$CEF_PATH
+
+      - name: Build test programs
+        run: |
+          mkdir -p "$RUNNER_TEMP/sdk"
+          wget -qO "$RUNNER_TEMP/sdk.nupkg" "https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/$WV2_SDK_VERSION"
+          unzip -q "$RUNNER_TEMP/sdk.nupkg" -d "$RUNNER_TEMP/sdk"
+          git clone -q https://github.com/webview/webview.git "$RUNNER_TEMP/webview"
+          git -C "$RUNNER_TEMP/webview" checkout -q "$WEBVIEW_REV"
+          for t in navtest bgtest popuptest; do make -C tests/apps/$t WV2_SDK="$RUNNER_TEMP/sdk"; done
+          make -C tests/apps/hello WV2_SDK="$RUNNER_TEMP/sdk" WEBVIEW_SRC="$RUNNER_TEMP/webview"
+
+      - name: Tests
+        run: tests/check.sh
+
+      - name: Upload test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs
+          path: build/logs/
+
+      - name: Release tarball
+        run: make dist WINE_INSTALL=$WINE_INSTALL CEF_PATH=$CEF_PATH VERSION=${{ steps.version.outputs.dist }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wine-webview2-${{ steps.version.outputs.dist }}
+          path: build/dist/wine-webview2-*.tar.xz
+
+  release:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && needs.build.outputs.version != ''
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: wine-webview2-${{ needs.build.outputs.version }}
+      - name: Tag and publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          gh release create "v$VERSION" "wine-webview2-$VERSION.tar.xz" \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+            --title "wine-webview2 $VERSION" --generate-notes

@@ -1,3 +1,3 @@
 [build]
-# libcef.so leży obok pomocnika (build/runtime/, docelowo /usr/lib/wine-webview2/)
+# libcef.so lives next to the helper (build/runtime/, or the installed helper directory)
 rustflags = ["-C", "link-arg=-Wl,-rpath,$ORIGIN"]
