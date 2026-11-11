@@ -172,7 +172,7 @@ thread_local! {
 }
 
 fn with_state<R>(f: impl FnOnce(&mut IpcState) -> R) -> Option<R> {
-    STATE.with(|s| s.borrow_mut().as_mut().map(f))
+    STATE.try_with(|s| s.try_borrow_mut().ok().and_then(|mut s| s.as_mut().map(f))).ok().flatten()
 }
 
 fn send_event(ty: u32, view: u32, payload: &[u8]) {
@@ -223,6 +223,14 @@ wrap_client! {
             Some(resources::RequestHandlerBuilder::new(resources::ViewRequests { view: self.client.view }))
         }
 
+        fn life_span_handler(&self) -> Option<LifeSpanHandler> {
+            Some(ViewLifeSpanHandlerBuilder::new(self.client.clone()))
+        }
+
+        fn jsdialog_handler(&self) -> Option<JsdialogHandler> {
+            Some(ViewDialogHandlerBuilder::new(self.client.clone()))
+        }
+
         fn on_process_message_received(
             &self,
             _browser: Option<&mut Browser>,
@@ -244,6 +252,10 @@ wrap_client! {
                     let id = CefString::from(&args.string(0)).to_string().parse::<u64>().unwrap_or(0);
                     let json = CefString::from(&args.string(1)).to_string();
                     webview::on_script_result(self.client.view, id, &json);
+                    1
+                }
+                renderer::MSG_CLOSE => {
+                    webview::on_window_close(self.client.view);
                     1
                 }
                 _ => 0,
@@ -434,8 +446,14 @@ wrap_load_handler! {
             let Some(frame) = frame.filter(|f| f.is_main() != 0) else { return };
             // Kolejność WebView2: SourceChanged -> ContentLoading -> HistoryChanged.
             let view = self.client.view;
-            let id = resources::current_navigation(view);
             let url = CefString::from(&frame.url()).to_string();
+            // about:blank (i podobne) nie przechodzą przez OnBeforeBrowse: NavigationStarting tutaj
+            // (bez możliwości anulowania — dokument już się ładuje).
+            let id = resources::active_navigation(view).unwrap_or_else(|| {
+                let id = resources::begin_navigation(view);
+                webview::on_navigation_starting(view, id, false, false, &url);
+                id
+            });
             set_last_source(view, &url);
             webview::on_source_changed(view, &url);
             webview::on_content_loading(view, id);
@@ -588,6 +606,210 @@ fn shutdown_ipc() {
         }
     }
     quit_message_loop();
+}
+
+// ======================================================================
+// Okna wyskakujące (NewWindowRequested) i dialogi JS (ScriptDialogOpening)
+// ======================================================================
+
+wrap_life_span_handler! {
+    struct ViewLifeSpanHandlerBuilder {
+        client: ViewClient,
+    }
+
+    impl LifeSpanHandler {
+        fn on_before_popup(
+            &self,
+            _browser: Option<&mut Browser>,
+            _frame: Option<&mut Frame>,
+            _popup_id: ::std::os::raw::c_int,
+            target_url: Option<&CefString>,
+            target_frame_name: Option<&CefString>,
+            _target_disposition: WindowOpenDisposition,
+            user_gesture: ::std::os::raw::c_int,
+            popup_features: Option<&PopupFeatures>,
+            window_info: Option<&mut WindowInfo>,
+            client: Option<&mut Option<Client>>,
+            _settings: Option<&mut BrowserSettings>,
+            _extra_info: Option<&mut Option<DictionaryValue>>,
+            _no_javascript_access: Option<&mut ::std::os::raw::c_int>,
+        ) -> ::std::os::raw::c_int {
+            let url = target_url.map(|u| u.to_string()).unwrap_or_default();
+            let name = target_frame_name.map(|n| n.to_string()).unwrap_or_default();
+            let features = webview::WindowFeatures {
+                position: popup_features.filter(|f| f.x_set != 0 && f.y_set != 0).map(|f| (f.x.max(0) as u32, f.y.max(0) as u32)),
+                size: popup_features.filter(|f| f.width_set != 0 && f.height_set != 0).map(|f| (f.width.max(0) as u32, f.height.max(0) as u32)),
+            };
+            let size = features.size;
+            match webview::on_new_window(self.client.view, &url, &name, user_gesture != 0, features) {
+                webview::PopupDecision::Cancel => 1,
+                webview::PopupDecision::Default => {
+                    // Natywne okno CEF (zachowuje window.opener); własny klient, żeby zdarzenia
+                    // popupu nie trafiały do widoku-rodzica.
+                    if let Some(wi) = window_info {
+                        *wi = popup_window_info(size);
+                    }
+                    if let Some(client) = client {
+                        *client = Some(PopupClientBuilder::new(PopupClient));
+                    }
+                    0
+                }
+            }
+        }
+    }
+}
+
+fn popup_window_info(size: Option<(u32, u32)>) -> WindowInfo {
+    let (width, height) = size.filter(|s| s.0 > 0 && s.1 > 0).unwrap_or((800, 600));
+    WindowInfo {
+        bounds: Rect { x: 0, y: 0, width: width as i32, height: height as i32 },
+        runtime_style: RuntimeStyle::ALLOY,
+        ..Default::default()
+    }
+}
+
+/// Okno domyślne, gdy decyzja zapadła po odroczeniu (popup CEF był już anulowany).
+pub fn open_native_popup(url: &str, size: Option<(u32, u32)>) {
+    let url = url.to_string();
+    post_ui(move || {
+        let mut client = PopupClientBuilder::new(PopupClient);
+        browser_host_create_browser(
+            Some(&popup_window_info(size)),
+            Some(&mut client),
+            Some(&url.as_str().into()),
+            Some(&BrowserSettings::default()),
+            None,
+            None,
+        );
+    });
+}
+
+#[derive(Clone)]
+struct PopupClient;
+
+wrap_client! {
+    struct PopupClientBuilder {
+        client: PopupClient,
+    }
+
+    impl Client {
+        fn on_process_message_received(
+            &self,
+            browser: Option<&mut Browser>,
+            _frame: Option<&mut Frame>,
+            _source_process: ProcessId,
+            message: Option<&mut ProcessMessage>,
+        ) -> ::std::os::raw::c_int {
+            // window.close() w natywnym popupie: zamknij okno (renderer podmienia window.close).
+            let Some(message) = message else { return 0 };
+            if CefString::from(&message.name()).to_string() == renderer::MSG_CLOSE {
+                if let Some(host) = browser.and_then(|b| b.host()) {
+                    host.close_browser(0);
+                }
+                return 1;
+            }
+            0
+        }
+    }
+}
+
+/// COREWEBVIEW2_SCRIPT_DIALOG_KIND
+const DIALOG_ALERT: i32 = 0;
+const DIALOG_CONFIRM: i32 = 1;
+const DIALOG_PROMPT: i32 = 2;
+const DIALOG_BEFOREUNLOAD: i32 = 3;
+
+thread_local! {
+    /// Dialogi domyślne czekające na odpowiedź DLL (CMD_SCRIPT_DIALOG_REPLY).
+    static DIALOGS: RefCell<HashMap<u64, JsdialogCallback>> = RefCell::new(HashMap::new());
+    static NEXT_DIALOG: std::cell::Cell<u64> = const { std::cell::Cell::new(1) };
+}
+
+/// Dialog JS: domyślne okno w aplikacji (MessageBox w DLL) albo ScriptDialogOpening.
+fn show_dialog(view: u32, uri: &str, kind: i32, message: &str, default_text: &str, callback: JsdialogCallback) {
+    let defaults = with_state(|st| st.views.get(&view).map(|v| v.settings & SETTING_SCRIPT_DIALOGS != 0))
+        .flatten()
+        .unwrap_or(true);
+    if defaults {
+        let id = NEXT_DIALOG.with(|n| {
+            let id = n.get();
+            n.set(id + 1);
+            id
+        });
+        DIALOGS.with(|d| d.borrow_mut().insert(id, callback));
+        let payload = Writer::default()
+            .u64(id)
+            .u32(kind as u32)
+            .u32(uri.len() as u32)
+            .u32(message.len() as u32)
+            .u32(default_text.len() as u32)
+            .bytes(uri.as_bytes())
+            .bytes(message.as_bytes())
+            .bytes(default_text.as_bytes());
+        send_event(EVT_SCRIPT_DIALOG, view, &payload.0);
+        return;
+    }
+    // Zadanie UI: handler aplikacji wołany synchronicznie nie może się zagnieździć w OnJSDialog.
+    let (uri, message, default_text) = (uri.to_string(), message.to_string(), default_text.to_string());
+    post_ui(move || {
+        let done: webview::DialogDone = Box::new(move |accepted, text| {
+            callback.cont(accepted as i32, Some(&text.into()));
+        });
+        webview::on_script_dialog(view, &uri, kind, &message, &default_text, done);
+    });
+}
+
+fn dialog_reply(id: u64, accepted: bool, text: &str) {
+    if let Some(callback) = DIALOGS.with(|d| d.borrow_mut().remove(&id)) {
+        callback.cont(accepted as i32, Some(&text.into()));
+    }
+}
+
+wrap_jsdialog_handler! {
+    struct ViewDialogHandlerBuilder {
+        client: ViewClient,
+    }
+
+    impl JsdialogHandler {
+        fn on_jsdialog(
+            &self,
+            _browser: Option<&mut Browser>,
+            origin_url: Option<&CefString>,
+            dialog_type: JsdialogType,
+            message_text: Option<&CefString>,
+            default_prompt_text: Option<&CefString>,
+            callback: Option<&mut JsdialogCallback>,
+            _suppress_message: Option<&mut ::std::os::raw::c_int>,
+        ) -> ::std::os::raw::c_int {
+            let Some(callback) = callback else { return 0 };
+            let kind = match dialog_type {
+                JsdialogType::CONFIRM => DIALOG_CONFIRM,
+                JsdialogType::PROMPT => DIALOG_PROMPT,
+                _ => DIALOG_ALERT,
+            };
+            let uri = origin_url.map(|u| u.to_string()).unwrap_or_default();
+            let message = message_text.map(|m| m.to_string()).unwrap_or_default();
+            let default_text = default_prompt_text.map(|t| t.to_string()).unwrap_or_default();
+            show_dialog(self.client.view, &uri, kind, &message, &default_text, callback.clone());
+            1
+        }
+
+        fn on_before_unload_dialog(
+            &self,
+            browser: Option<&mut Browser>,
+            message_text: Option<&CefString>,
+            _is_reload: ::std::os::raw::c_int,
+            callback: Option<&mut JsdialogCallback>,
+        ) -> ::std::os::raw::c_int {
+            let Some(callback) = callback else { return 0 };
+            let uri = browser.and_then(|b| b.main_frame()).map(|f| CefString::from(&f.url()).to_string()).unwrap_or_default();
+            let message = message_text.map(|m| m.to_string()).unwrap_or_default();
+            show_dialog(self.client.view, &uri, DIALOG_BEFOREUNLOAD, &message, "", callback.clone());
+            1
+        }
+
+        fn on_reset_dialog_state(&self, _browser: Option<&mut Browser>) {}
+    }
 }
 
 // ======================================================================
@@ -815,6 +1037,11 @@ fn handle_command(msg: Message) {
                 host.set_focus(focus as i32);
             }
         }
+        CMD_SCRIPT_DIALOG_REPLY => {
+            let (id, accepted, len) = (r.u64().unwrap_or(0), r.u32().unwrap_or(0) != 0, r.u32().unwrap_or(0));
+            let text = r.take(len as usize).map(|t| String::from_utf8_lossy(t).into_owned()).unwrap_or_default();
+            dialog_reply(id, accepted, &text);
+        }
         CMD_SHUTDOWN => shutdown_ipc(),
         other => eprintln!("helper: unknown command {other:#x}"),
     }
@@ -981,6 +1208,8 @@ wrap_app! {
             cl.append_switch(Some(&"no-startup-window".into()));
             cl.append_switch(Some(&"noerrdialogs".into()));
             cl.append_switch(Some(&"use-mock-keychain".into()));
+            // WebView2 nie ma blokady popupów (window.open bez gestu -> NewWindowRequested).
+            cl.append_switch(Some(&"disable-popup-blocking".into()));
             cl.append_switch(Some(&"password-store=basic".into()));
             // Diagnostyka: zdalne DevTools (chrome://inspect w zwykłym Chrome).
             if let Ok(port) = std::env::var("WINE_WEBVIEW2_DEVTOOLS_PORT") {

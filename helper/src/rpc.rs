@@ -46,7 +46,8 @@ pub struct AppHandle {
 
 impl Drop for AppHandle {
     fn drop(&mut self) {
-        let count = APPS.with(|a| a.try_borrow_mut().ok().and_then(|mut a| a.remove(&self.id)).map(|e| e.1));
+        // try_with: przy wyjściu z procesu tablica może być już zniszczona.
+        let count = APPS.try_with(|a| a.try_borrow_mut().ok().and_then(|mut a| a.remove(&self.id)).map(|e| e.1)).ok().flatten();
         if let Some(count) = count {
             let payload = Writer::default().u64(self.id).u32(count).u32(0).0;
             crate::resources::send_event(EVT_RELEASE_APP, 0, &payload);

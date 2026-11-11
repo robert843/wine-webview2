@@ -83,6 +83,7 @@ enum wv2_command
     WV2_CMD_CALL,                   /* wv2_call + arguments (docs/architektura-proxy.md) */
     WV2_CMD_INVOKE_REPLY,           /* wv2_reply + [out] values of an EVT_INVOKE */
     WV2_CMD_RELEASE,                /* wv2_release: proxies of a runtime object are gone */
+    WV2_CMD_SCRIPT_DIALOG_REPLY,    /* wv2_script_dialog_reply + UTF-8 prompt text */
 };
 
 #define WV2_SETTING_SCRIPT          0x0001
@@ -116,6 +117,24 @@ enum wv2_event
     WV2_EVT_REPLY,                  /* wv2_reply + [out] values of a CMD_CALL */
     WV2_EVT_INVOKE,                 /* wv2_call on an application object + arguments */
     WV2_EVT_RELEASE_APP,            /* wv2_release: the helper dropped an application object */
+    WV2_EVT_SCRIPT_DIALOG,          /* wv2_script_dialog + UTF-8 uri, message, default text */
+};
+
+/* Default JavaScript dialog (AreDefaultScriptDialogsEnabled = TRUE), shown by the host. */
+struct wv2_script_dialog
+{
+    UINT64 id;
+    UINT32 kind;            /* COREWEBVIEW2_SCRIPT_DIALOG_KIND */
+    UINT32 uri_len;
+    UINT32 message_len;
+    UINT32 default_len;
+};
+
+struct wv2_script_dialog_reply
+{
+    UINT64 id;
+    UINT32 accepted;
+    UINT32 text_len;        /* UTF-8 prompt text follows */
 };
 
 /* Generic calls (protocol v8). Methods are numbered by the generated API table (proxy_gen.h /

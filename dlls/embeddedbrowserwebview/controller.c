@@ -330,6 +330,196 @@ static void send_key(struct view *view, UINT msg, WPARAM wparam, LPARAM lparam)
     helper_send(view, WV2_CMD_KEY, &key, sizeof(key));
 }
 
+/* Default JavaScript dialogs (alert/confirm/prompt/beforeunload), like the browser's own:
+ * modal to the application window, title "<host> says". */
+struct prompt_dialog
+{
+    const WCHAR *message;
+    const WCHAR *default_text;
+    WCHAR *result;
+};
+
+static WCHAR *utf8_to_wide(const char *str, UINT32 len)
+{
+    int count = MultiByteToWideChar(CP_UTF8, 0, str, len, NULL, 0);
+    WCHAR *ret = malloc((count + 1) * sizeof(WCHAR));
+
+    if (!ret) return NULL;
+    MultiByteToWideChar(CP_UTF8, 0, str, len, ret, count);
+    ret[count] = 0;
+    return ret;
+}
+
+static WCHAR *dialog_title(const WCHAR *uri)
+{
+    const WCHAR *host = wcsstr(uri, L"://"), *end;
+    WCHAR *title;
+    size_t len;
+
+    if (!host || !wcsncmp(uri, L"file:", 5)) return wcsdup(L"This page says");
+    host += 3;
+    for (end = host; *end && *end != '/' && *end != '?' && *end != '#'; end++);
+    len = end - host;
+    if (!len || !(title = malloc((len + 16) * sizeof(WCHAR)))) return wcsdup(L"This page says");
+    memcpy(title, host, len * sizeof(WCHAR));
+    wcscpy(title + len, L" says");
+    return title;
+}
+
+static INT_PTR CALLBACK prompt_dlgproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    struct prompt_dialog *dialog = (struct prompt_dialog *)GetWindowLongPtrW(hwnd, DWLP_USER);
+    int len;
+
+    switch (msg)
+    {
+    case WM_INITDIALOG:
+        SetWindowLongPtrW(hwnd, DWLP_USER, lparam);
+        dialog = (struct prompt_dialog *)lparam;
+        SetDlgItemTextW(hwnd, 100, dialog->message);
+        SetDlgItemTextW(hwnd, 101, dialog->default_text);
+        SetDlgItemTextW(hwnd, IDOK, L"OK");      /* the template carries no item texts */
+        SetDlgItemTextW(hwnd, IDCANCEL, L"Cancel");
+        SendDlgItemMessageW(hwnd, 101, EM_SETSEL, 0, -1);
+        SetFocus(GetDlgItem(hwnd, 101));
+        return FALSE;
+    case WM_COMMAND:
+        if (LOWORD(wparam) == IDOK)
+        {
+            len = GetWindowTextLengthW(GetDlgItem(hwnd, 101));
+            if ((dialog->result = malloc((len + 1) * sizeof(WCHAR))))
+                GetDlgItemTextW(hwnd, 101, dialog->result, len + 1);
+            EndDialog(hwnd, IDOK);
+            return TRUE;
+        }
+        if (LOWORD(wparam) == IDCANCEL)
+        {
+            EndDialog(hwnd, IDCANCEL);
+            return TRUE;
+        }
+        break;
+    }
+    return FALSE;
+}
+
+static WORD *dialog_align(WORD *p)
+{
+    return (WORD *)(((ULONG_PTR)p + 3) & ~(ULONG_PTR)3);
+}
+
+static WORD *dialog_item(WORD *p, DWORD style, short x, short y, short cx, short cy, WORD id, WORD class)
+{
+    DLGITEMTEMPLATE *item = (DLGITEMTEMPLATE *)dialog_align(p);
+
+    item->style = style | WS_CHILD | WS_VISIBLE;
+    item->dwExtendedStyle = 0;
+    item->x = x;
+    item->y = y;
+    item->cx = cx;
+    item->cy = cy;
+    item->id = id;
+    p = (WORD *)(item + 1);
+    *p++ = 0xffff;
+    *p++ = class;           /* predefined class atom */
+    *p++ = 0;               /* no text */
+    *p++ = 0;               /* no creation data */
+    return p;
+}
+
+static INT_PTR show_prompt(HWND parent, const WCHAR *title, struct prompt_dialog *dialog)
+{
+    static const WCHAR font[] = L"MS Shell Dlg";
+    DLGTEMPLATE *tmpl;
+    INT_PTR ret;
+    WORD *p;
+
+    if (!(tmpl = calloc(1, 1024 + wcslen(title) * sizeof(WCHAR)))) return IDCANCEL;
+    tmpl->style = DS_MODALFRAME | DS_CENTER | DS_SETFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU;
+    tmpl->cdit = 4;
+    tmpl->cx = 260;
+    tmpl->cy = 90;
+    p = (WORD *)(tmpl + 1);
+    *p++ = 0;               /* no menu */
+    *p++ = 0;               /* default class */
+    wcscpy(p, title);
+    p += wcslen(title) + 1;
+    *p++ = 8;               /* point size */
+    wcscpy(p, font);
+    p += ARRAY_SIZE(font);
+    p = dialog_item(p, SS_LEFT, 7, 7, 246, 32, 100, 0x0082);
+    p = dialog_item(p, ES_AUTOHSCROLL | WS_BORDER | WS_TABSTOP, 7, 44, 246, 14, 101, 0x0081);
+    p = dialog_item(p, BS_DEFPUSHBUTTON | WS_TABSTOP, 146, 68, 50, 15, IDOK, 0x0080);
+    dialog_item(p, BS_PUSHBUTTON | WS_TABSTOP, 203, 68, 50, 15, IDCANCEL, 0x0080);
+    ret = DialogBoxIndirectParamW(GetModuleHandleW(NULL), tmpl, parent, prompt_dlgproc, (LPARAM)dialog);
+    free(tmpl);
+    return ret;
+}
+
+static void show_script_dialog(struct view *view, const void *payload, UINT32 size)
+{
+    const struct wv2_script_dialog *dialog = payload;
+    const char *strings = (const char *)(dialog + 1);
+    struct wv2_script_dialog_reply *reply;
+    WCHAR *uri, *message, *default_text, *title, *result = NULL;
+    HWND owner = GetAncestor(view->parent, GA_ROOT);
+    BOOL accepted = FALSE;
+    char *text = NULL;
+    int text_len = 0;
+
+    if (size < sizeof(*dialog) || size - sizeof(*dialog) < (UINT64)dialog->uri_len + dialog->message_len + dialog->default_len)
+        return;
+    uri = utf8_to_wide(strings, dialog->uri_len);
+    message = utf8_to_wide(strings + dialog->uri_len, dialog->message_len);
+    default_text = utf8_to_wide(strings + dialog->uri_len + dialog->message_len, dialog->default_len);
+    title = uri ? dialog_title(uri) : NULL;
+    if (!uri || !message || !default_text || !title) goto done;
+
+    TRACE("view %u: dialog kind %u %s\n", view->id, dialog->kind, debugstr_w(message));
+    switch (dialog->kind)
+    {
+    case COREWEBVIEW2_SCRIPT_DIALOG_KIND_ALERT:
+        MessageBoxW(owner, message, title, MB_OK);
+        accepted = TRUE;
+        break;
+    case COREWEBVIEW2_SCRIPT_DIALOG_KIND_CONFIRM:
+        accepted = MessageBoxW(owner, message, title, MB_OKCANCEL) == IDOK;
+        break;
+    case COREWEBVIEW2_SCRIPT_DIALOG_KIND_PROMPT:
+    {
+        struct prompt_dialog prompt = {message, default_text, NULL};
+        accepted = show_prompt(owner, title, &prompt) == IDOK;
+        result = prompt.result;
+        break;
+    }
+    case COREWEBVIEW2_SCRIPT_DIALOG_KIND_BEFOREUNLOAD:
+        accepted = MessageBoxW(owner, L"Changes you made may not be saved.", L"Leave site?",
+                               MB_OKCANCEL | MB_ICONWARNING) == IDOK;
+        break;
+    }
+    if (result && (text_len = WideCharToMultiByte(CP_UTF8, 0, result, -1, NULL, 0, NULL, NULL)) > 0)
+    {
+        if ((text = malloc(text_len))) WideCharToMultiByte(CP_UTF8, 0, result, -1, text, text_len, NULL, NULL);
+        text_len--; /* without the terminator */
+    }
+
+done:
+    if ((reply = malloc(sizeof(*reply) + text_len)))
+    {
+        reply->id = dialog->id;
+        reply->accepted = accepted;
+        reply->text_len = text ? text_len : 0;
+        if (text) memcpy(reply + 1, text, text_len);
+        helper_send(view, WV2_CMD_SCRIPT_DIALOG_REPLY, reply, sizeof(*reply) + reply->text_len);
+        free(reply);
+    }
+    free(text);
+    free(result);
+    free(title);
+    free(default_text);
+    free(message);
+    free(uri);
+}
+
 static void dispatch_event_cb(void *arg)
 {
     struct helper_event *event = arg;
@@ -364,6 +554,9 @@ static void dispatch_event_cb(void *arg)
     case WV2_EVT_LOAD_STATE:
         if (payload >= sizeof(struct wv2_flag))
             TRACE("view %u: %s\n", view->id, ((const struct wv2_flag *)event->payload)->value ? "loading" : "loaded");
+        break;
+    case WV2_EVT_SCRIPT_DIALOG:
+        show_script_dialog(view, event->payload, payload);
         break;
     case WV2_EVT_ERROR:
         ERR("view %u: helper error %s\n", view->id, debugstr_an((const char *)event->payload, payload));

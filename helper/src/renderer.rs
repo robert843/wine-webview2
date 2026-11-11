@@ -4,6 +4,7 @@
 //!   renderer -> browser  "wv2.post"   [json]                       chrome.webview.postMessage
 //!   browser  -> renderer "wv2.exec"   [id, skrypt]                 ExecuteScript
 //!   renderer -> browser  "wv2.result" [id, json]                   wynik ExecuteScript
+//!   renderer -> browser  "wv2.close"  []                         window.close() w ramce głównej
 //! Skrypty AddScriptToExecuteOnDocumentCreated: plik `<--wv2-scripts-dir>/<browser_id>.scripts`
 //! (rekordy: u32 LE długość + UTF-8), czytany przy każdym nowym kontekście JS — działa także
 //! po zmianie procesu renderera przy nawigacji między witrynami.
@@ -15,6 +16,7 @@ use std::path::PathBuf;
 pub const MSG_POST: &str = "wv2.post";
 pub const MSG_EXEC: &str = "wv2.exec";
 pub const MSG_RESULT: &str = "wv2.result";
+pub const MSG_CLOSE: &str = "wv2.close";
 pub const SCRIPTS_DIR_SWITCH: &str = "wv2-scripts-dir";
 
 /// Instaluje window.chrome.webview z użyciem natywnej funkcji __wv2_post (usuwanej zaraz potem).
@@ -148,6 +150,33 @@ wrap_v8_handler! {
     }
 }
 
+/// window.close() w ramce głównej -> WindowCloseRequested (Chromium pozwala zamknąć tylko
+/// okna otwarte skryptem; WebView2 zgłasza zdarzenie zawsze i zostawia decyzję aplikacji).
+#[derive(Clone)]
+struct CloseHandler;
+
+wrap_v8_handler! {
+    struct CloseHandlerBuilder {
+        handler: CloseHandler,
+    }
+
+    impl V8Handler {
+        fn execute(
+            &self,
+            _name: Option<&CefString>,
+            _object: Option<&mut V8Value>,
+            _arguments: Option<&[Option<V8Value>]>,
+            _retval: Option<&mut Option<V8Value>>,
+            _exception: Option<&mut CefString>,
+        ) -> ::std::os::raw::c_int {
+            if let Some(frame) = v8_context_get_current_context().and_then(|c| c.frame()) {
+                send_to_browser(&frame, MSG_CLOSE, &[]);
+            }
+            1
+        }
+    }
+}
+
 #[derive(Clone)]
 pub struct Renderer;
 
@@ -160,11 +189,16 @@ wrap_render_process_handler! {
         fn on_context_created(
             &self,
             browser: Option<&mut Browser>,
-            _frame: Option<&mut Frame>,
+            frame: Option<&mut Frame>,
             context: Option<&mut V8Context>,
         ) {
             let (Some(browser), Some(context)) = (browser, context) else { return };
             let Some(global) = context.global() else { return };
+            if frame.is_some_and(|f| f.is_main() != 0) {
+                let mut handler = CloseHandlerBuilder::new(CloseHandler);
+                let mut func = v8_value_create_function(Some(&"close".into()), Some(&mut handler));
+                global.set_value_bykey(Some(&"close".into()), func.as_mut(), V8Propertyattribute::default());
+            }
             let dir = command_line_get_global()
                 .map(|cl| CefString::from(&cl.switch_value(Some(&SCRIPTS_DIR_SWITCH.into()))).to_string())
                 .unwrap_or_default();

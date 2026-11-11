@@ -40,8 +40,9 @@ pub fn begin_navigation(view: u32) -> u64 {
     id
 }
 
-pub fn current_navigation(view: u32) -> u64 {
-    NAVIGATIONS.lock().unwrap().as_ref().and_then(|n| n.get(&view)).map(|n| n.0).unwrap_or(0)
+/// Trwająca (niezakończona) nawigacja widoku.
+pub fn active_navigation(view: u32) -> Option<u64> {
+    NAVIGATIONS.lock().unwrap().as_ref()?.get(&view).filter(|n| !n.1).map(|n| n.0)
 }
 
 /// Oznacza bieżącą nawigację jako zakończoną; None, jeśli już była zakończona.

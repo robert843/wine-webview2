@@ -51,8 +51,11 @@ enum Ev {
     DocumentTitleChanged,
     WebMessageReceived,
     WebResourceRequested,
+    NewWindowRequested,
+    WindowCloseRequested,
+    ScriptDialogOpening,
 }
-const EV_COUNT: usize = 9;
+const EV_COUNT: usize = 12;
 
 fn rc<T: Dispatch + 'static>(obj: T) -> ObjRef {
     ObjRef::Runtime(Rc::new(obj))
@@ -204,6 +207,9 @@ impl ICoreWebView2_29Impl for WebView {
         add_DocumentTitleChanged, remove_DocumentTitleChanged, DocumentTitleChanged;
         add_WebMessageReceived, remove_WebMessageReceived, WebMessageReceived;
         add_WebResourceRequested, remove_WebResourceRequested, WebResourceRequested;
+        add_NewWindowRequested, remove_NewWindowRequested, NewWindowRequested;
+        add_WindowCloseRequested, remove_WindowCloseRequested, WindowCloseRequested;
+        add_ScriptDialogOpening, remove_ScriptDialogOpening, ScriptDialogOpening;
     }
 
     fn get_Settings(&self, _ctx: &mut Ctx) -> WvResult<ObjRef> {
@@ -685,4 +691,328 @@ pub fn on_devtools_event(view: u32, method: &str, params: &str) {
 pub fn resource_handlers(view: u32) -> Option<(Vec<AppRef>, ObjRef)> {
     with_webview(view, |wv, sender| (wv.ev(Ev::WebResourceRequested).snapshot(), sender))
         .filter(|(h, _)| !h.is_empty())
+}
+
+// ===================================================================
+// Odroczenia (GetDeferral)
+// ===================================================================
+
+/// ICoreWebView2Deferral: Complete() wykonuje odłożoną akcję (raz).
+pub struct Deferral {
+    action: RefCell<Option<Box<dyn FnOnce()>>>,
+}
+
+impl ICoreWebView2DeferralImpl for Deferral {
+    fn Complete(&self, _ctx: &mut Ctx) -> WvResult<()> {
+        let action = self.action.borrow_mut().take();
+        if let Some(action) = action {
+            action();
+        }
+        Ok(())
+    }
+}
+
+/// Stan odroczenia w argumentach zdarzenia: Taken = aplikacja wzięła odroczenie, a zdarzenie
+/// jeszcze nie skończyło się wywoływać; Done = Complete() przyszło przed końcem wywołania.
+#[derive(Clone, Copy, PartialEq)]
+enum DeferralState {
+    None,
+    Taken,
+    Done,
+}
+
+/// Wspólna obsługa GetDeferral: po zakończeniu handlerów `finish` wykonuje się od razu albo przy Complete().
+struct DeferralSlot {
+    state: Cell<DeferralState>,
+    finish: RefCell<Option<Box<dyn FnOnce()>>>,
+}
+
+impl DeferralSlot {
+    fn new() -> Rc<Self> {
+        Rc::new(DeferralSlot { state: Cell::new(DeferralState::None), finish: RefCell::new(None) })
+    }
+
+    fn get(self: &Rc<Self>) -> ObjRef {
+        self.state.set(DeferralState::Taken);
+        let slot = self.clone();
+        rc(ICoreWebView2DeferralObj(Deferral {
+            action: RefCell::new(Some(Box::new(move || {
+                let finish = slot.finish.borrow_mut().take();
+                match finish {
+                    Some(f) => f(),
+                    None => slot.state.set(DeferralState::Done),
+                }
+            }))),
+        }))
+    }
+
+    /// Po wywołaniu handlerów: true = wynik gotowy teraz; false = `finish` poczeka na Complete().
+    fn settle(&self, finish: Box<dyn FnOnce()>) -> bool {
+        if self.state.get() == DeferralState::Taken {
+            *self.finish.borrow_mut() = Some(finish);
+            false
+        } else {
+            true
+        }
+    }
+}
+
+// ===================================================================
+// NewWindowRequested / WindowCloseRequested
+// ===================================================================
+
+pub struct WindowFeatures {
+    pub position: Option<(u32, u32)>,
+    pub size: Option<(u32, u32)>,
+}
+
+impl ICoreWebView2WindowFeaturesImpl for WindowFeatures {
+    fn get_HasPosition(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.position.is_some())
+    }
+    fn get_HasSize(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.size.is_some())
+    }
+    fn get_Left(&self, _ctx: &mut Ctx) -> WvResult<u32> {
+        Ok(self.position.map_or(0, |p| p.0))
+    }
+    fn get_Top(&self, _ctx: &mut Ctx) -> WvResult<u32> {
+        Ok(self.position.map_or(0, |p| p.1))
+    }
+    fn get_Width(&self, _ctx: &mut Ctx) -> WvResult<u32> {
+        Ok(self.size.map_or(0, |s| s.0))
+    }
+    fn get_Height(&self, _ctx: &mut Ctx) -> WvResult<u32> {
+        Ok(self.size.map_or(0, |s| s.1))
+    }
+    // Okno popup w Chromium: bez paska menu, statusu i narzędzi; paski przewijania tak.
+    fn get_ShouldDisplayMenuBar(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(false)
+    }
+    fn get_ShouldDisplayStatus(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(false)
+    }
+    fn get_ShouldDisplayToolbar(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(false)
+    }
+    fn get_ShouldDisplayScrollBars(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(true)
+    }
+}
+
+pub struct NewWindowArgs {
+    uri: String,
+    name: String,
+    user_initiated: bool,
+    features: ObjRef,
+    size: Option<(u32, u32)>,
+    handled: Cell<bool>,
+    new_window: RefCell<ObjRef>,
+    deferral: Rc<DeferralSlot>,
+}
+
+impl ICoreWebView2NewWindowRequestedEventArgs3Impl for NewWindowArgs {
+    fn get_Uri(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.uri.clone())
+    }
+    fn put_NewWindow(&self, _ctx: &mut Ctx, new_window: ObjRef) -> WvResult<()> {
+        // Musi to być nasz ICoreWebView2 (z innego kontrolera tego środowiska).
+        if !new_window.is_null() && webview_of(&new_window).is_none() {
+            return Err(E_INVALIDARG);
+        }
+        // Ustawienie NewWindow oznacza też Handled (dokumentacja WebView2).
+        self.handled.set(true);
+        *self.new_window.borrow_mut() = new_window;
+        Ok(())
+    }
+    fn get_NewWindow(&self, _ctx: &mut Ctx) -> WvResult<ObjRef> {
+        Ok(self.new_window.borrow().clone())
+    }
+    fn put_Handled(&self, _ctx: &mut Ctx, handled: bool) -> WvResult<()> {
+        self.handled.set(handled);
+        Ok(())
+    }
+    fn get_Handled(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.handled.get())
+    }
+    fn get_IsUserInitiated(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(self.user_initiated)
+    }
+    fn GetDeferral(&self, _ctx: &mut Ctx) -> WvResult<ObjRef> {
+        Ok(self.deferral.get())
+    }
+    fn get_WindowFeatures(&self, _ctx: &mut Ctx) -> WvResult<ObjRef> {
+        Ok(self.features.clone())
+    }
+    fn get_Name(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.name.clone())
+    }
+}
+
+/// Widok WebView, jeśli obiekt jest naszym ICoreWebView2.
+fn webview_of(obj: &ObjRef) -> Option<u32> {
+    match obj {
+        ObjRef::Runtime(o) => o.as_any().downcast_ref::<WebViewObj>().map(|w| w.0.view),
+        _ => None,
+    }
+}
+
+/// Co zrobić z popupem CEF.
+pub enum PopupDecision {
+    /// Domyślne okno (natywne okno CEF, z window.opener).
+    Default,
+    /// Anulować popup CEF (aplikacja obsłużyła albo decyzja zapadnie później).
+    Cancel,
+}
+
+/// Decyzja po handlerach: nawigacja w NewWindow, nic (Handled) albo okno domyślne.
+fn finish_new_window(args: &NewWindowArgs, deferred: bool) -> PopupDecision {
+    if let Some(target) = webview_of(&args.new_window.borrow()) {
+        crate::navigate(target, &args.uri);
+        return PopupDecision::Cancel;
+    }
+    if args.handled.get() {
+        return PopupDecision::Cancel;
+    }
+    if deferred {
+        // Popup CEF już anulowany: otwieramy nowe okno bez powiązania z otwierającym.
+        crate::open_native_popup(&args.uri, args.size);
+        return PopupDecision::Cancel;
+    }
+    PopupDecision::Default
+}
+
+/// NewWindowRequested — synchronicznie z OnBeforePopup.
+pub fn on_new_window(view: u32, uri: &str, name: &str, user_initiated: bool, features: WindowFeatures) -> PopupDecision {
+    with_webview(view, |wv, sender| {
+        let handlers = wv.ev(Ev::NewWindowRequested).snapshot();
+        if handlers.is_empty() {
+            return PopupDecision::Default;
+        }
+        let args = Rc::new(ICoreWebView2NewWindowRequestedEventArgs3Obj(NewWindowArgs {
+            uri: uri.to_string(),
+            name: name.to_string(),
+            user_initiated,
+            size: features.size,
+            features: rc(ICoreWebView2WindowFeaturesObj(features)),
+            handled: Cell::new(false),
+            new_window: RefCell::new(ObjRef::Null),
+            deferral: DeferralSlot::new(),
+        }));
+        let args_ref = ObjRef::Runtime(args.clone());
+        for h in handlers {
+            if let Err(e) = ICoreWebView2NewWindowRequestedEventHandlerApp(h).Invoke(&mut Ctx, &sender, &args_ref) {
+                eprintln!("helper: NewWindowRequested handler failed: {e:#x}");
+            }
+        }
+        let later = args.clone();
+        if args.0.deferral.settle(Box::new(move || {
+            finish_new_window(&later.0, true);
+        })) {
+            finish_new_window(&args.0, false)
+        } else {
+            PopupDecision::Cancel
+        }
+    })
+    .unwrap_or(PopupDecision::Default)
+}
+
+/// window.close() w dokumencie głównym.
+pub fn on_window_close(view: u32) {
+    with_webview(view, |wv, sender| {
+        raise_async!(wv, sender, WindowCloseRequested, ICoreWebView2WindowCloseRequestedEventHandlerApp, ObjRef::Null);
+    });
+}
+
+// ===================================================================
+// ScriptDialogOpening
+// ===================================================================
+
+pub struct ScriptDialogArgs {
+    uri: String,
+    kind: i32,
+    message: String,
+    default_text: String,
+    result_text: RefCell<String>,
+    accepted: Cell<bool>,
+    deferral: Rc<DeferralSlot>,
+}
+
+impl ICoreWebView2ScriptDialogOpeningEventArgsImpl for ScriptDialogArgs {
+    fn get_Uri(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.uri.clone())
+    }
+    fn get_Kind(&self, _ctx: &mut Ctx) -> WvResult<i32> {
+        Ok(self.kind)
+    }
+    fn get_Message(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.message.clone())
+    }
+    fn Accept(&self, _ctx: &mut Ctx) -> WvResult<()> {
+        self.accepted.set(true);
+        Ok(())
+    }
+    fn get_DefaultText(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.default_text.clone())
+    }
+    fn get_ResultText(&self, _ctx: &mut Ctx) -> WvResult<String> {
+        Ok(self.result_text.borrow().clone())
+    }
+    fn put_ResultText(&self, _ctx: &mut Ctx, text: Option<String>) -> WvResult<()> {
+        *self.result_text.borrow_mut() = text.unwrap_or_default();
+        Ok(())
+    }
+    fn GetDeferral(&self, _ctx: &mut Ctx) -> WvResult<ObjRef> {
+        Ok(self.deferral.get())
+    }
+}
+
+/// Wynik dialogu JS: (zaakceptowany, tekst prompt).
+pub type DialogDone = Box<dyn FnOnce(bool, &str)>;
+
+/// Dialog JS przy AreDefaultScriptDialogsEnabled = FALSE. Bez handlerów dialog zamyka się
+/// jak anulowany (jak w WebView2). `done` może przyjść później (GetDeferral).
+pub fn on_script_dialog(view: u32, uri: &str, kind: i32, message: &str, default_text: &str, done: DialogDone) {
+    let done = Rc::new(RefCell::new(Some(done)));
+    let deferred = with_webview(view, |wv, sender| {
+        let handlers = wv.ev(Ev::ScriptDialogOpening).snapshot();
+        if handlers.is_empty() {
+            return false;
+        }
+        let args = Rc::new(ICoreWebView2ScriptDialogOpeningEventArgsObj(ScriptDialogArgs {
+            uri: uri.to_string(),
+            kind,
+            message: message.to_string(),
+            default_text: default_text.to_string(),
+            result_text: RefCell::new(String::new()),
+            accepted: Cell::new(false),
+            deferral: DeferralSlot::new(),
+        }));
+        let args_ref = ObjRef::Runtime(args.clone());
+        for h in handlers {
+            if let Err(e) = ICoreWebView2ScriptDialogOpeningEventHandlerApp(h).Invoke(&mut Ctx, &sender, &args_ref) {
+                eprintln!("helper: ScriptDialogOpening handler failed: {e:#x}");
+            }
+        }
+        let finish = {
+            let (args, done) = (args.clone(), done.clone());
+            move || {
+                if let Some(d) = done.borrow_mut().take() {
+                    d(args.0.accepted.get(), &args.0.result_text.borrow());
+                }
+            }
+        };
+        if args.0.deferral.settle(Box::new(finish.clone())) {
+            finish();
+            return false;
+        }
+        true
+    })
+    .unwrap_or(false);
+    if !deferred {
+        // Brak WebView albo handlerów (po handlerach `done` jest już wzięte).
+        if let Some(d) = done.borrow_mut().take() {
+            d(false, "");
+        }
+    }
 }
