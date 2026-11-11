@@ -1402,6 +1402,11 @@ static void start_placeholder(void)
     TRACE("placeholder browser process %lu\n", browser_process_id);
 }
 
+DWORD webview2_browser_process_id(void)
+{
+    return browser_process_id;
+}
+
 /* One helper per process: the first environment's user data folder holds the browser data. */
 BOOL helper_ensure_started(const WCHAR *user_data_dir)
 {

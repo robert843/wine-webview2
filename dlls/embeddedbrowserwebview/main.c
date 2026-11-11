@@ -276,6 +276,7 @@ HRESULT WINAPI CreateWebViewEnvironmentWithOptionsInternal(BOOLEAN check_running
         wv2_put_iface(&args, options);
         put_drive_map(&args);
         put_download_folder(&args);
+        wv2_put_u32(&args, webview2_browser_process_id());
         if (SUCCEEDED(ctx->hr = proxy_call_root(WV2_ROOT_CREATE_ENVIRONMENT, &args, &ret)))
         {
             ctx->environment = (ICoreWebView2Environment *)wv2_get_iface(&ret);

@@ -1474,8 +1474,9 @@ fn root_call(ctx: &mut rpc::Ctx, method: u32, rd: &mut Reader, wr: &mut Writer) 
             let _options = ctx.read_objref(rd);
             paths::set_drive_map(&rd.str_opt().unwrap_or_default());
             webview::set_default_download_folder(&rd.str_opt().unwrap_or_default());
+            let browser_pid = rd.u32().unwrap_or(0);
             webview::set_user_data_dir(&user_data_dir);
-            let env = webview::Environment { user_data_dir };
+            let env = webview::Environment::new(user_data_dir, browser_pid);
             ctx.write_objref(wr, &rpc::ObjRef::Runtime(std::rc::Rc::new(api_gen::ICoreWebView2Environment15Obj(env))));
             rpc::S_OK
         }

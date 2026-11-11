@@ -45,6 +45,7 @@ HWND webview2_get_async_window(void);
 /* controller.c */
 void controller_init(void);
 BOOL helper_ensure_started(const WCHAR *user_data_dir);
+DWORD webview2_browser_process_id(void);
 HRESULT controller_create(IUnknown *environment, HWND parent, IUnknown *options,
                           ICoreWebView2CreateCoreWebView2ControllerCompletedHandler *handler);
 /* hostobject.c */

@@ -62,8 +62,10 @@ enum Ev {
     IsMutedChanged,
     IsDocumentPlayingAudioChanged,
     ContextMenuRequested,
+    IsDefaultDownloadDialogOpenChanged,
+    NotificationReceived,
 }
-const EV_COUNT: usize = 20;
+const EV_COUNT: usize = 22;
 
 fn rc<T: Dispatch + 'static>(obj: T) -> ObjRef {
     ObjRef::Runtime(Rc::new(obj))
@@ -75,6 +77,48 @@ fn rc<T: Dispatch + 'static>(obj: T) -> ObjRef {
 
 pub struct Environment {
     pub user_data_dir: String,
+    /// Windows PID of the stand-in browser process (msedgewebview2.exe placeholder of the DLL).
+    pub browser_pid: u32,
+    pub new_version: EventList,
+    pub browser_exited: EventList,
+    pub process_infos_changed: EventList,
+}
+
+impl Environment {
+    pub fn new(user_data_dir: String, browser_pid: u32) -> Self {
+        Environment {
+            user_data_dir,
+            browser_pid,
+            new_version: EventList::default(),
+            browser_exited: EventList::default(),
+            process_infos_changed: EventList::default(),
+        }
+    }
+}
+
+pub struct ProcessInfo {
+    pid: i32,
+    kind: i32,
+}
+
+impl ICoreWebView2ProcessInfoImpl for ProcessInfo {
+    fn get_ProcessId(&self, _ctx: &mut Ctx) -> WvResult<i32> {
+        Ok(self.pid)
+    }
+    fn get_Kind(&self, _ctx: &mut Ctx) -> WvResult<i32> {
+        Ok(self.kind)
+    }
+}
+
+pub struct ProcessInfos(Vec<ObjRef>);
+
+impl ICoreWebView2ProcessInfoCollectionImpl for ProcessInfos {
+    fn get_Count(&self, _ctx: &mut Ctx) -> WvResult<u32> {
+        Ok(self.0.len() as u32)
+    }
+    fn GetValueAtIndex(&self, _ctx: &mut Ctx, index: u32) -> WvResult<ObjRef> {
+        self.0.get(index as usize).cloned().ok_or(E_INVALIDARG)
+    }
 }
 
 thread_local! {
@@ -106,6 +150,31 @@ impl ICoreWebView2Environment15Impl for Environment {
         Ok(self.user_data_dir.clone())
     }
 
+    // Never raised: there are no runtime updates while the application runs.
+    fn add_NewBrowserVersionAvailable(&self, _ctx: &mut Ctx, handler: ObjRef) -> WvResult<EventRegistrationToken> {
+        self.new_version.add(handler)
+    }
+    fn remove_NewBrowserVersionAvailable(&self, _ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        self.new_version.remove(token)
+    }
+    // FIXME: the helper cannot report its own end; ProcessFailed does (raised by the DLL).
+    fn add_BrowserProcessExited(&self, _ctx: &mut Ctx, handler: ObjRef) -> WvResult<EventRegistrationToken> {
+        self.browser_exited.add(handler)
+    }
+    fn remove_BrowserProcessExited(&self, _ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        self.browser_exited.remove(token)
+    }
+    fn add_ProcessInfosChanged(&self, _ctx: &mut Ctx, handler: ObjRef) -> WvResult<EventRegistrationToken> {
+        self.process_infos_changed.add(handler)
+    }
+    fn remove_ProcessInfosChanged(&self, _ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        self.process_infos_changed.remove(token)
+    }
+    /// The browser process only: renderers are native processes with no Windows PID.
+    fn GetProcessInfos(&self, _ctx: &mut Ctx) -> WvResult<ObjRef> {
+        let browser = rc(ICoreWebView2ProcessInfoObj(ProcessInfo { pid: self.browser_pid as i32, kind: 0 }));
+        Ok(rc(ICoreWebView2ProcessInfoCollectionObj(ProcessInfos(vec![browser]))))
+    }
     fn CreateContextMenuItem(&self, _ctx: &mut Ctx, label: Option<String>, icon: Option<Vec<u8>>, kind: i32) -> WvResult<ObjRef> {
         crate::contextmenu::create_custom_item(&label.unwrap_or_default(), icon, kind)
     }
@@ -371,6 +440,7 @@ impl ICoreWebView2ControllerOptions4Impl for ControllerOptions {
 /// ICoreWebView2Profile of a view (the default profile; named and InPrivate profiles: FIXME).
 pub struct Profile {
     view: u32,
+    deleted: EventList,
     name: String,
     in_private: bool,
     color_scheme: Cell<i32>,
@@ -383,6 +453,13 @@ pub struct Profile {
 impl ICoreWebView2Profile9Impl for Profile {
     fn get_ProfileName(&self, _ctx: &mut Ctx) -> WvResult<String> {
         Ok(self.name.clone())
+    }
+    // FIXME: Delete() is not implemented, so Deleted is never raised.
+    fn add_Deleted(&self, _ctx: &mut Ctx, handler: ObjRef) -> WvResult<EventRegistrationToken> {
+        self.deleted.add(handler)
+    }
+    fn remove_Deleted(&self, _ctx: &mut Ctx, token: EventRegistrationToken) -> WvResult<()> {
+        self.deleted.remove(token)
     }
     fn get_IsInPrivateModeEnabled(&self, _ctx: &mut Ctx) -> WvResult<bool> {
         Ok(self.in_private)
@@ -495,6 +572,8 @@ pub struct WebView {
     status_text: RefCell<String>,
     favicon: RefCell<String>,
     muted: Cell<bool>,
+    download_corner: Cell<i32>,
+    download_margin: Cell<POINT>,
 }
 
 impl WebView {
@@ -519,6 +598,8 @@ impl WebView {
             status_text: RefCell::new(String::new()),
             favicon: RefCell::new(String::new()),
             muted: Cell::new(false),
+            download_corner: Cell::new(1), // TOP_RIGHT
+            download_margin: Cell::new(POINT::default()),
         }
     }
 
@@ -717,6 +798,37 @@ impl ICoreWebView2_29Impl for WebView {
         add_IsMutedChanged, remove_IsMutedChanged, IsMutedChanged;
         add_IsDocumentPlayingAudioChanged, remove_IsDocumentPlayingAudioChanged, IsDocumentPlayingAudioChanged;
         add_ContextMenuRequested, remove_ContextMenuRequested, ContextMenuRequested;
+        add_IsDefaultDownloadDialogOpenChanged, remove_IsDefaultDownloadDialogOpenChanged, IsDefaultDownloadDialogOpenChanged;
+        // FIXME: web notifications are not supported by CEF's off-screen browser; never raised.
+        add_NotificationReceived, remove_NotificationReceived, NotificationReceived;
+    }
+
+    // There is no download UI: the dialog is never open; its placement is only kept.
+    fn get_IsDefaultDownloadDialogOpen(&self, _ctx: &mut Ctx) -> WvResult<bool> {
+        Ok(false)
+    }
+    fn OpenDefaultDownloadDialog(&self, _ctx: &mut Ctx) -> WvResult<()> {
+        Ok(())
+    }
+    fn CloseDefaultDownloadDialog(&self, _ctx: &mut Ctx) -> WvResult<()> {
+        Ok(())
+    }
+    fn get_DefaultDownloadDialogCornerAlignment(&self, _ctx: &mut Ctx) -> WvResult<i32> {
+        Ok(self.download_corner.get())
+    }
+    fn put_DefaultDownloadDialogCornerAlignment(&self, _ctx: &mut Ctx, value: i32) -> WvResult<()> {
+        if !(0..=3).contains(&value) {
+            return Err(E_INVALIDARG);
+        }
+        self.download_corner.set(value);
+        Ok(())
+    }
+    fn get_DefaultDownloadDialogMargin(&self, _ctx: &mut Ctx) -> WvResult<POINT> {
+        Ok(self.download_margin.get())
+    }
+    fn put_DefaultDownloadDialogMargin(&self, _ctx: &mut Ctx, value: POINT) -> WvResult<()> {
+        self.download_margin.set(value);
+        Ok(())
     }
 
     fn get_StatusBarText(&self, _ctx: &mut Ctx) -> WvResult<String> {
@@ -766,6 +878,7 @@ impl ICoreWebView2_29Impl for WebView {
         Ok(p.get_or_insert_with(|| {
             rc(ICoreWebView2Profile9Obj(Profile {
                 view: self.view,
+                deleted: EventList::default(),
                 name: self.profile_name.clone(),
                 in_private: self.in_private,
                 color_scheme: Cell::new(0),
