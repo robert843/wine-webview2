@@ -30,6 +30,8 @@
 #include "wingdi.h"
 #include "winuser.h"
 #include "uxtheme.h"
+#include "commdlg.h"
+#include "shlobj.h"
 #include "objbase.h"
 #include "webview2.h"
 #include "webview2_private.h"
@@ -558,6 +560,123 @@ static void show_permission_prompt(struct view *view, const void *payload, UINT3
     helper_send(view, WV2_CMD_PERMISSION_REPLY, &reply, sizeof(reply));
 }
 
+/* <input type=file>: the common file dialogs of the application's Windows, Windows paths back. */
+static void show_file_dialog(struct view *view, const void *payload, UINT32 size)
+{
+    struct wv2_reader rd = {payload, size, 0, NULL};
+    struct wv2_buffer reply = {0};
+    HWND owner = GetAncestor(view->parent, GA_ROOT);
+    WCHAR *title, *default_path, *filter = NULL, *buffer = NULL, *p;
+    UINT32 mode, count, i, chosen = 0;
+    size_t filter_len = 0, buffer_len = 32768;
+    UINT64 id;
+
+    id = wv2_get_u64(&rd);
+    mode = wv2_get_u32(&rd);
+    title = wv2_get_str(&rd);
+    default_path = wv2_get_str(&rd);
+    count = wv2_get_u32(&rd);
+    /* "Description\0*.png;*.jpg\0...All files\0*.*\0\0" */
+    for (i = 0; i <= count && i < 64; i++)
+    {
+        WCHAR *description = i < count ? wv2_get_str(&rd) : wcsdup(L"All files");
+        WCHAR *pattern = i < count ? wv2_get_str(&rd) : wcsdup(L"*.*");
+        size_t len = (description ? wcslen(description) : 0) + (pattern ? wcslen(pattern) : 0) + 2;
+
+        if ((p = realloc(filter, (filter_len + len + 1) * sizeof(WCHAR))))
+        {
+            filter = p;
+            p = filter + filter_len;
+            wcscpy(p, description ? description : L"");
+            p += wcslen(p) + 1;
+            wcscpy(p, pattern ? pattern : L"*.*");
+            filter_len += len;
+            filter[filter_len] = 0;
+        }
+        free(description);
+        free(pattern);
+    }
+    TRACE("view %u: file dialog mode %u title %s default %s\n", view->id, mode, debugstr_w(title), debugstr_w(default_path));
+
+    if (!(buffer = calloc(buffer_len, sizeof(WCHAR)))) goto done;
+    if (mode == WV2_FILE_DIALOG_OPEN_FOLDER)
+    {
+        BROWSEINFOW info = {0};
+        PIDLIST_ABSOLUTE pidl;
+
+        info.hwndOwner = owner;
+        info.lpszTitle = title && *title ? title : NULL;
+        info.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE;
+        if ((pidl = SHBrowseForFolderW(&info)))
+        {
+            if (SHGetPathFromIDListW(pidl, buffer)) chosen = 1;
+            CoTaskMemFree(pidl);
+        }
+    }
+    else
+    {
+        OPENFILENAMEW ofn = {sizeof(ofn)};
+        WCHAR *name;
+
+        if (default_path && *default_path)
+        {
+            /* A directory as the initial folder, otherwise a suggested file name. */
+            if (GetFileAttributesW(default_path) != INVALID_FILE_ATTRIBUTES &&
+                (GetFileAttributesW(default_path) & FILE_ATTRIBUTE_DIRECTORY))
+                ofn.lpstrInitialDir = default_path;
+            else
+                lstrcpynW(buffer, default_path, buffer_len);
+        }
+        ofn.hwndOwner = owner;
+        ofn.lpstrFilter = filter;
+        ofn.lpstrFile = buffer;
+        ofn.nMaxFile = buffer_len;
+        ofn.lpstrTitle = title && *title ? title : NULL;
+        ofn.Flags = OFN_EXPLORER | OFN_HIDEREADONLY | OFN_NOCHANGEDIR;
+        if (mode == WV2_FILE_DIALOG_SAVE)
+        {
+            ofn.Flags |= OFN_OVERWRITEPROMPT;
+            if (GetSaveFileNameW(&ofn)) chosen = 1;
+        }
+        else
+        {
+            ofn.Flags |= OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
+            if (mode == WV2_FILE_DIALOG_OPEN_MULTIPLE) ofn.Flags |= OFN_ALLOWMULTISELECT;
+            if (GetOpenFileNameW(&ofn))
+            {
+                /* Several files: "directory\0name1\0name2\0\0". */
+                name = buffer + wcslen(buffer) + 1;
+                if (mode == WV2_FILE_DIALOG_OPEN_MULTIPLE && *name)
+                {
+                    for (; *name; name += wcslen(name) + 1) chosen++;
+                }
+                else chosen = 1;
+            }
+        }
+    }
+
+done:
+    wv2_put_u64(&reply, id);
+    wv2_put_u32(&reply, chosen);
+    if (chosen == 1) wv2_put_str(&reply, buffer);
+    else if (chosen > 1)
+    {
+        WCHAR *dir = buffer, path[MAX_PATH * 2];
+
+        for (p = buffer + wcslen(buffer) + 1; *p; p += wcslen(p) + 1)
+        {
+            swprintf(path, ARRAY_SIZE(path), L"%s\\%s", dir, p);
+            wv2_put_str(&reply, path);
+        }
+    }
+    helper_send(view, WV2_CMD_FILE_DIALOG_REPLY, reply.data, reply.size);
+    free(reply.data);
+    free(buffer);
+    free(filter);
+    free(default_path);
+    free(title);
+}
+
 /* Default context menu built by CEF, shown as a native popup menu at the click position. */
 static void show_context_menu(struct view *view, const void *payload, UINT32 size)
 {
@@ -637,6 +756,9 @@ static void dispatch_event_cb(void *arg)
         break;
     case WV2_EVT_SCRIPT_DIALOG:
         show_script_dialog(view, event->payload, payload);
+        break;
+    case WV2_EVT_FILE_DIALOG:
+        show_file_dialog(view, event->payload, payload);
         break;
     case WV2_EVT_PERMISSION_PROMPT:
         show_permission_prompt(view, event->payload, payload);

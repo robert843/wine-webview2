@@ -45,6 +45,7 @@ pub const CMD_RELEASE: u32 = 31;
 pub const CMD_SCRIPT_DIALOG_REPLY: u32 = 32;
 pub const CMD_CONTEXT_MENU_REPLY: u32 = 33;
 pub const CMD_PERMISSION_REPLY: u32 = 34;
+pub const CMD_FILE_DIALOG_REPLY: u32 = 35;
 
 pub const SETTING_SCRIPT: u32 = 0x0001;
 pub const SETTING_WEB_MESSAGE: u32 = 0x0002;
@@ -78,6 +79,7 @@ pub const EVT_RELEASE_APP: u32 = 0x1013;
 pub const EVT_SCRIPT_DIALOG: u32 = 0x1014;
 pub const EVT_CONTEXT_MENU: u32 = 0x1015;
 pub const EVT_PERMISSION_PROMPT: u32 = 0x1016;
+pub const EVT_FILE_DIALOG: u32 = 0x1017;
 
 pub const MOUSE_MOVE: u32 = 0;
 pub const MOUSE_DOWN: u32 = 1;

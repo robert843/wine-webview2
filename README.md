@@ -33,12 +33,13 @@ Controller focus events (`GotFocus`, `LostFocus`, `MoveFocusRequested`), `ZoomFa
 (`ContainsFullScreenElementChanged`), the profile (`PreferredColorScheme`, clearing browsing data),
 controller options and the environment's `UserDataFolder`.
 Downloads (`DownloadStarting`, `DownloadOperation` with progress, pause, resume and cancel, the profile's
-`DefaultDownloadFolderPath`) and `PermissionRequested` (with a native Yes/No prompt as the default UI).
+`DefaultDownloadFolderPath`) and `PermissionRequested` (with a native Yes/No prompt as the default UI), the file chooser
+(`<input type=file>` opens the application's Wine file dialog).
 
 Copy and paste works in both directions with Windows and Linux applications (CEF and Wine share
 the system clipboard).
 
-Not yet: IME, drag and drop, file chooser, DPI scaling, `ContextMenuRequested` (custom menus),
+Not yet: IME, drag and drop, DPI scaling, `ContextMenuRequested` (custom menus),
 named and InPrivate profiles, `AddHostObjectToScript`, composition mode (`CompositionController`).
 
 ## Requirements

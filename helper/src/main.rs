@@ -332,6 +332,10 @@ wrap_client! {
             Some(ViewPermissionHandlerBuilder::new(self.client.clone()))
         }
 
+        fn dialog_handler(&self) -> Option<DialogHandler> {
+            Some(ViewFileDialogHandlerBuilder::new(self.client.clone()))
+        }
+
         fn on_process_message_received(
             &self,
             _browser: Option<&mut Browser>,
@@ -576,6 +580,119 @@ wrap_display_handler! {
             1
         }
     }
+}
+
+// ======================================================================
+// File chooser (<input type=file>, showSaveFilePicker...)
+// ======================================================================
+
+/// Values of a CEF string list (borrowed from a callback).
+fn string_list(list: Option<&mut CefStringList>) -> Vec<String> {
+    let Some(list) = list else { return Vec::new() };
+    let raw: *mut cef::sys::_cef_string_list_t = list.into();
+    if raw.is_null() {
+        return Vec::new();
+    }
+    unsafe {
+        (0..cef::sys::cef_string_list_size(raw))
+            .filter_map(|i| {
+                let mut value: cef::sys::cef_string_t = std::mem::zeroed();
+                if cef::sys::cef_string_list_value(raw, i, &mut value) == 0 {
+                    return None;
+                }
+                let s = CefString::from(std::ptr::from_ref(&value)).to_string();
+                cef::sys::cef_string_utf16_clear(&mut value);
+                Some(s)
+            })
+            .collect()
+    }
+}
+
+thread_local! {
+    /// File dialogs shown by the DLL, waiting for CMD_FILE_DIALOG_REPLY.
+    static FILE_DIALOGS: RefCell<HashMap<u64, FileDialogCallback>> = RefCell::new(HashMap::new());
+    static NEXT_FILE_DIALOG: std::cell::Cell<u64> = const { std::cell::Cell::new(1) };
+}
+
+fn put_string(w: Writer, s: &str) -> Writer {
+    w.u32(s.len() as u32).bytes(s.as_bytes())
+}
+
+wrap_dialog_handler! {
+    struct ViewFileDialogHandlerBuilder {
+        client: ViewClient,
+    }
+
+    impl DialogHandler {
+        fn on_file_dialog(
+            &self,
+            _browser: Option<&mut Browser>,
+            mode: FileDialogMode,
+            title: Option<&CefString>,
+            default_file_path: Option<&CefString>,
+            accept_filters: Option<&mut CefStringList>,
+            accept_extensions: Option<&mut CefStringList>,
+            accept_descriptions: Option<&mut CefStringList>,
+            callback: Option<&mut FileDialogCallback>,
+        ) -> ::std::os::raw::c_int {
+            let Some(callback) = callback else { return 0 };
+            let filters = string_list(accept_filters);
+            let extensions = string_list(accept_extensions);
+            let descriptions = string_list(accept_descriptions);
+            // One Windows filter per accepted type: "*.png;*.jpg", described by CEF or by the type itself.
+            let mut pairs = Vec::new();
+            for (i, filter) in filters.iter().enumerate() {
+                let exts = extensions.get(i).filter(|e| !e.is_empty()).unwrap_or(filter);
+                let pattern = exts
+                    .split(';')
+                    .filter(|e| !e.is_empty())
+                    .map(|e| if e.starts_with('.') { format!("*{e}") } else { "*.*".to_string() })
+                    .collect::<Vec<_>>()
+                    .join(";");
+                let description = descriptions.get(i).filter(|d| !d.is_empty()).cloned().unwrap_or_else(|| filter.clone());
+                pairs.push((description, pattern));
+            }
+            let default_path = default_file_path.map(|p| p.to_string()).unwrap_or_default();
+            let default_path = if default_path.starts_with('/') {
+                paths::to_windows(std::path::Path::new(&default_path))
+            } else {
+                default_path // a bare suggested name
+            };
+            let id = NEXT_FILE_DIALOG.with(|n| {
+                let id = n.get();
+                n.set(id + 1);
+                id
+            });
+            FILE_DIALOGS.with(|d| d.borrow_mut().insert(id, callback.clone()));
+            let mut payload = Writer::default().u64(id).u32(mode.get_raw());
+            payload = put_string(payload, &title.map(|t| t.to_string()).unwrap_or_default());
+            payload = put_string(payload, &default_path);
+            payload = payload.u32(pairs.len() as u32);
+            for (description, pattern) in &pairs {
+                payload = put_string(put_string(payload, description), pattern);
+            }
+            send_event(EVT_FILE_DIALOG, self.client.view(), &payload.0);
+            1
+        }
+    }
+}
+
+fn file_dialog_reply(id: u64, windows_paths: Vec<String>) {
+    let Some(callback) = FILE_DIALOGS.with(|d| d.borrow_mut().remove(&id)) else { return };
+    if windows_paths.is_empty() {
+        callback.cancel();
+        return;
+    }
+    let mut list = CefStringList::new();
+    for path in &windows_paths {
+        match paths::to_unix(path) {
+            Some(unix) => {
+                list.append(&unix.to_string_lossy());
+            }
+            None => eprintln!("helper: chosen file {path:?} has no unix path"),
+        }
+    }
+    callback.cont(Some(&mut list));
 }
 
 /// CEF_PERMISSION_TYPE_* bit -> COREWEBVIEW2_PERMISSION_KIND.
@@ -1861,6 +1978,16 @@ fn handle_command(msg: Message) {
             let (id, accepted, len) = (r.u64().unwrap_or(0), r.u32().unwrap_or(0) != 0, r.u32().unwrap_or(0));
             let text = r.take(len as usize).map(|t| String::from_utf8_lossy(t).into_owned()).unwrap_or_default();
             dialog_reply(id, accepted, &text);
+        }
+        CMD_FILE_DIALOG_REPLY => {
+            let (id, count) = (r.u64().unwrap_or(0), r.u32().unwrap_or(0));
+            let mut chosen = Vec::new();
+            for _ in 0..count.min(4096) {
+                let Some(len) = r.u32() else { break };
+                let Some(bytes) = r.take(len as usize) else { break };
+                chosen.push(String::from_utf8_lossy(bytes).into_owned());
+            }
+            file_dialog_reply(id, chosen);
         }
         CMD_PERMISSION_REPLY => {
             let (id, allow) = (r.u64().unwrap_or(0), r.u32().unwrap_or(0) != 0);

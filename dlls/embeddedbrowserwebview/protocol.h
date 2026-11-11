@@ -86,6 +86,7 @@ enum wv2_command
     WV2_CMD_SCRIPT_DIALOG_REPLY,    /* wv2_script_dialog_reply + UTF-8 prompt text */
     WV2_CMD_CONTEXT_MENU_REPLY,     /* wv2_context_menu_reply */
     WV2_CMD_PERMISSION_REPLY,       /* wv2_permission_reply */
+    WV2_CMD_FILE_DIALOG_REPLY,      /* u64 id, u32 count, count x string: chosen Windows paths */
 };
 
 #define WV2_SETTING_SCRIPT          0x0001
@@ -122,6 +123,9 @@ enum wv2_event
     WV2_EVT_SCRIPT_DIALOG,          /* wv2_script_dialog + UTF-8 uri, message, default text */
     WV2_EVT_CONTEXT_MENU,           /* wv2_context_menu + count x (wv2_context_menu_item + UTF-8 label) */
     WV2_EVT_PERMISSION_PROMPT,      /* wv2_permission_prompt + UTF-8 origin */
+    WV2_EVT_FILE_DIALOG,            /* u64 id, u32 mode (WV2_FILE_DIALOG_*), string title, string default
+                                       Windows path, u32 count, count x (string description, string pattern);
+                                       strings are u32 length + UTF-8 */
 };
 
 /* Default context menu: CEF builds it, the host shows it as a native menu at (x, y) in view
@@ -147,6 +151,11 @@ struct wv2_context_menu_item
     UINT32 flags;           /* WV2_MENU_* */
     UINT32 label_len;       /* UTF-8 label follows */
 };
+
+#define WV2_FILE_DIALOG_OPEN          0
+#define WV2_FILE_DIALOG_OPEN_MULTIPLE 1
+#define WV2_FILE_DIALOG_OPEN_FOLDER   2
+#define WV2_FILE_DIALOG_SAVE          3
 
 /* Default permission prompt (PermissionRequested left the state at DEFAULT), shown by the host. */
 struct wv2_permission_prompt

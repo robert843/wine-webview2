@@ -85,6 +85,12 @@ check dltest "$A/dltest/dltest.exe" 90 "0" \
     'completed custom=0 default=1 content=deferred' \
     '^done'
 
+check filetest "$A/filetest/filetest.exe" 90 "0" \
+    'script -> hr=0 "pick.txt:picked content"' \
+    'cancelled' \
+    'still alive' \
+    '^done'
+
 # hello runs until closed: the timeout ending it is expected.
 check hello "$A/hello/hello-loader.exe" 40 "0 124" \
     'bind called with \["ping"\]'
