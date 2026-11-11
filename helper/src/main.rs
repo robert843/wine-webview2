@@ -28,7 +28,7 @@ use std::collections::HashMap;
 use std::os::fd::AsRawFd;
 use std::path::PathBuf;
 use std::rc::Rc;
-use std::sync::atomic::{AtomicU32, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex, OnceLock};
 
 /// Katalog plików ze skryptami startowymi (przekazywany rendererom przełącznikiem).
@@ -714,15 +714,47 @@ fn view_browser(view: u32) -> Option<Browser> {
     with_state(|st| st.views.get(&view).and_then(|v| v.browser.clone())).flatten()
 }
 
+/// Przeglądarki zamykane przy wyłączaniu; pętlę kończymy po OnBeforeClose ostatniej
+/// (CefShutdown przy otwartej przeglądarce blokuje się na zawsze).
+static CLOSING_BROWSERS: AtomicUsize = AtomicUsize::new(0);
+static SHUTTING_DOWN: AtomicBool = AtomicBool::new(false);
+
+/// Koniec połączenia z DLL (aplikacja zakończyła się — także bez Close()).
 fn shutdown_ipc() {
+    if SHUTTING_DOWN.swap(true, Ordering::SeqCst) {
+        return;
+    }
+    // Bezpiecznik: bez aplikacji nie ma czego ratować — proces nie może zostać (Steam czeka
+    // na wszystkie procesy gry), nawet gdy CEF nie zamknie się sam.
+    std::thread::spawn(|| {
+        std::thread::sleep(std::time::Duration::from_secs(5));
+        eprintln!("helper: CEF did not shut down in 5 s, exiting");
+        std::process::exit(0);
+    });
     let browsers: Vec<Browser> =
         with_state(|st| st.views.drain().filter_map(|(_, v)| v.browser).collect()).unwrap_or_default();
+    if browsers.is_empty() {
+        quit_message_loop();
+        return;
+    }
+    CLOSING_BROWSERS.store(browsers.len(), Ordering::SeqCst);
     for b in browsers {
         if let Some(host) = b.host() {
             host.close_browser(1);
         }
     }
-    quit_message_loop();
+}
+
+/// OnBeforeClose: przy wyłączaniu — koniec pętli po zamknięciu ostatniej przeglądarki.
+fn browser_closed() {
+    if !SHUTTING_DOWN.load(Ordering::SeqCst) {
+        return;
+    }
+    // Bez zejścia poniżej zera: przeglądarka zamknięta wcześniej przez Close() też tu trafia.
+    let prev = CLOSING_BROWSERS.fetch_update(Ordering::SeqCst, Ordering::SeqCst, |n| n.checked_sub(1));
+    if prev == Ok(1) {
+        quit_message_loop();
+    }
 }
 
 // ======================================================================
@@ -807,6 +839,10 @@ wrap_life_span_handler! {
                 *client = Some(ViewClientBuilder::new(popup_client));
             }
             0
+        }
+
+        fn on_before_close(&self, _browser: Option<&mut Browser>) {
+            browser_closed();
         }
 
         fn on_after_created(&self, browser: Option<&mut Browser>) {
